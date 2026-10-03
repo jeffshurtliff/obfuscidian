@@ -2,8 +2,9 @@
 
 **Approved planning baseline:** 3 October 2026
 
-**Status:** Thread 01 implemented and locally validated; maintainer review pending.
-Threads 02–14 remain not started.
+**Status:** Thread 01 complete, reviewed, and merged into `origin/main`.
+Thread 02 — Configuration and keys — is next and has not started.
+Threads 03–14 remain not started.
 
 **Intended first stable release:** `1.0.0` (current metadata: `1.0.0.dev0`).
 
@@ -509,7 +510,7 @@ commits, publication, or PRs are implied. Update status only after acceptance cr
 
 | ID | Increment | Dependencies | GitHub issue | Status |
 | --- | --- | --- | --- | --- |
-| 01 | Project foundation | None | [#1](https://github.com/jeffshurtliff/obfuscidian/issues/1) | Implemented; review pending |
+| 01 | Project foundation | None | [#1](https://github.com/jeffshurtliff/obfuscidian/issues/1) | Complete |
 | 02 | Configuration and keys | 01 | [#2](https://github.com/jeffshurtliff/obfuscidian/issues/2) | Not started |
 | 03 | Vault inventory and path preflight | 02 | [#3](https://github.com/jeffshurtliff/obfuscidian/issues/3) | Not started |
 | 04 | Encrypted backup format | 03 | [#4](https://github.com/jeffshurtliff/obfuscidian/issues/4) | Not started |
@@ -538,11 +539,13 @@ The thread-specific subtasks and handoff prompts follow below.
 **Goal/deliverable:** An installable Poetry/src-layout package with reproducible
 developer tooling and passing entry-point tests; no backup functionality yet.
 
-**Depends on:** None. 
+**Depends on:** None.
 
-**Status:** Implemented; maintainer review pending.
+**Status:** Complete. Maintainer reviewed, committed, and merged the foundation
+into `origin/main`; issue #1 is closed as completed.
 
-Local acceptance evidence is recorded in the handoff below; hosted CI has not run.
+Local acceptance evidence is recorded in the initial handoff below, followed by
+the maintainer-approved completion record. Thread 02 is next and has not started.
 
 1. Migrate packaging to Poetry/poetry-core while retaining PEP 621 metadata,
    static `1.0.0.dev0`, license, console entry point, and module invocation.
@@ -1103,8 +1106,10 @@ Each completed or partial thread updates its status and appends a short record
 here. Record the date, scope, commands actually run and outcomes, unresolved
 limitations, and next eligible thread. Do not add credentials, user vault paths,
 real content, or private runtime details. Keep the task index and per-thread
-status consistent. Thread 01 is implemented with local evidence and pending
-maintainer review; Threads 02–14 remain not started.
+status consistent. Thread 01 is complete following maintainer review and merge;
+Thread 02 is next and has not started. Threads 03–14 remain not started.
+Earlier handoff records describe the state at that time; later completion
+records supersede their pending-review and Git-status statements.
 The linked GitHub issues hold public progress discussion and verified
 checklists; this roadmap remains authoritative for approved scope and
 dependencies. Do not silently resolve conflicting scope or acceptance
@@ -1239,6 +1244,25 @@ Thread 12, strict Sphinx builds to Thread 13, and publication workflow replaceme
 to Thread 14. No real-vault/cloud tests were run. Thread 02 is the next eligible
 implementation increment after maintainer review of this foundation; it was not
 started. Issue closure requires the maintainer's review/decision.
+
+**Thread 01 completion — 3 October 2026:** The maintainer reviewed the
+foundation, committed it as
+[`1b7432f`](https://github.com/jeffshurtliff/obfuscidian/commit/1b7432f), and merged
+it into `origin/main` as
+[`8c9e2c8`](https://github.com/jeffshurtliff/obfuscidian/commit/8c9e2c8).
+The live GitHub `main` commit matches local `HEAD`, `main`, and `origin/main`.
+At the maintainer's explicit request, issue #1 is closed as completed and its
+review/closure checklist item is checked. Thread 01 is complete; Thread 02 —
+Configuration and keys — is the next increment and remains not started.
+The maintainer explicitly directed that Thread 02 not begin during this update.
+
+This follow-up changes only this roadmap and `README.md` to reflect completion
+and next-thread status. The earlier implementation/artifact evidence remains
+in the initial handoff; no new application tests, artifact builds, or hosted
+CI/platform checks were run for this documentation-only update. Local links,
+status consistency, Markdown fences, privacy/whitespace, and `git diff --check`
+passed. These status edits remain unstaged and uncommitted; no implementation,
+commit, PR, publication, or Thread 02 work was performed in this follow-up.
 
 ### Deferred capabilities
 

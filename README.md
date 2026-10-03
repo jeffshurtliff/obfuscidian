@@ -8,6 +8,17 @@ backups. The current foundation provides help and version information only.
 Key generation, backup, restore, and verification are planned and unavailable.
 This repository does not yet claim a published package or completed platform validation.
 
+## Project status
+
+Thread 01 — Project foundation — is complete, reviewed, and merged into
+`origin/main`; [issue #1](https://github.com/jeffshurtliff/obfuscidian/issues/1)
+is closed. The foundation includes Poetry/src packaging, developer tooling,
+help/version entry points, installation tests, and Linux CI configuration.
+
+Thread 02 — Configuration and keys — is next and has not started. Follow the
+[approved roadmap](dev/IMPLEMENTATION_PLAN.md#thread-02--configuration-and-keys)
+for its scope; key generation and vault operations remain unavailable.
+
 ## Installation from source
 
 Python 3.12 or newer is required. From a checkout, install with pip in a virtual
