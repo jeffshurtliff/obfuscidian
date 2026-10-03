@@ -1,5 +1,10 @@
 # Obfuscidian Implementation Plan
 
+> **Original design brief:** This document is preserved as the initial concept.
+> Follow [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) for the authoritative
+> implementation roadmap, approved decisions, safety requirements, and thread-sized
+> tasks. Its updated decisions take precedence wherever this brief differs.
+
 ## 1. Purpose & Big Picture
 
 The primary purpose of this project is to provide an easy-to-use CLI tool that empowers Obsidian 
