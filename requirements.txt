@@ -2,3 +2,4 @@
 # Keep this file minimal; dev/test deps should live in Poetry groups.
 
 click>=8.5.0
+cryptography>=50.0.2
