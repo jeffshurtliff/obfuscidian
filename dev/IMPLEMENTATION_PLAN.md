@@ -1071,6 +1071,24 @@ the inserted notice. Only the three authorized Markdown files changed; no
 application tests were rerun for this documentation-only task and no changes
 were staged or committed.
 
+**Contributor-guidance preparation — 3 October 2026:** By direct maintainer
+request, added root `CONTRIBUTING.md` and all sixteen SalesPyForce issue-template
+categories, adapted for Obfuscidian's CLI, privacy, and release authorization.
+The guide distinguishes current setuptools/Python 3.10+ setup from planned
+Poetry/src/Python 3.12+ tooling. Root AGENTS.md now points to the existing guide.
+This supplies preparatory contributor/security reporting guidance for Thread 13,
+not its complete documentation deliverable. Thread 13 remains not started;
+Threads 01–12, Sphinx tooling, user guides, and the release runbook are still
+pending. Thread 01 remains the next eligible implementation thread. No GitHub
+labels, private reporting configuration, issues, or publication settings were
+created or changed. Validation passed: all sixteen YAML frontmatter blocks
+parsed with Ruby Psych; source filename parity, eleven local Markdown links,
+code-fence balance, LF/final newlines, whitespace, private-path/key-marker
+scans, and source/diff review. `git diff --check` passed, with new untracked
+files checked separately. Application tests and Sphinx builds were not run for
+this documentation-only task; no dependencies were installed. Changes remain
+uncommitted and unstaged; no application or workflow files changed.
+
 ### Deferred capabilities
 
 - Password-derived keys and keychain integration: require a separately reviewed

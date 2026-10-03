@@ -8,8 +8,8 @@ contradict this file. Do not create those companions unless requested.
 
 Direct maintainer instructions define the authorized task. Read this file,
 [the implementation roadmap](dev/IMPLEMENTATION_PLAN.md), and root
-`CONTRIBUTING.md` if it exists before changing anything. A future
-`CONTRIBUTING.md` will own the detailed contributor workflow; this file owns
+[`CONTRIBUTING.md`](CONTRIBUTING.md) before changing anything.
+`CONTRIBUTING.md` owns the detailed contributor workflow; this file owns
 agent participation and summarizes the day-to-day standards. If instructions
 conflict and the conflict cannot be resolved from the maintainer's request, ask.
 
