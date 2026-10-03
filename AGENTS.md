@@ -30,6 +30,38 @@ separate locations. Git hosting and publication remain user-managed.
 - Preserve user changes. Keep work localized, reviewable, and uncommitted unless
   the maintainer explicitly authorizes committing.
 
+## Roadmap issue updates
+
+Each implementation thread has a dedicated GitHub issue linked in the roadmap's
+thread index and its individual thread section. When the maintainer requests
+work on a thread, keeping that existing issue updated is part of the authorized
+task; routine progress comments and checklist edits do not require renewed
+permission. Issue tracking does not authorize implementing other threads or
+performing Git history, release, or publication actions.
+
+- Before starting, read the linked issue and its dependency issues alongside
+  the current roadmap. Check actual code and validation evidence; an issue's
+  existence or closed state alone does not establish that a dependency works.
+- Post a concise start comment describing the requested scope and dependency
+  readiness. Update the existing issue rather than creating duplicate tracking.
+- Record meaningful progress, verified checklist completion, blockers, and
+  maintainer decisions. Keep the roadmap index, thread status, and handoff
+  record consistent with the issue; preserve existing discussion and user edits.
+- At handoff, post deliverables/file links, checks actually run and results,
+  skipped checks, remaining acceptance criteria, blockers, next eligible work,
+  and accurate Git status. Do not report uncommitted local work as merged or
+  unexecuted hosted CI as passing.
+- Leave the issue open for partial work, unmet acceptance criteria, or pending
+  maintainer review. Close it only after acceptance criteria are met and the
+  maintainer has approved completion or explicitly requested closure. Do not
+  change its assignee, milestone, or labels without a relevant maintainer request.
+- Use only public-safe planning and synthetic examples. Never post real keys,
+  vault content, credentials, identifying local paths, or sensitive security
+  details. Follow private reporting guidance for suspected vulnerabilities.
+- If GitHub access is unavailable, record the unsent update in the roadmap's
+  handoff record and report the limitation. Do not claim the issue was updated;
+  synchronize the existing issue when access becomes available.
+
 ## Current environment versus planned environment
 
 At adoption of this guide, the repository uses setuptools, a root-level

@@ -483,6 +483,15 @@ or PRs are implied. Update status only after acceptance criteria are met.
 ### Common thread contract
 
 - Inspect root agent/contributor instructions and the dependency threads first.
+- Read the linked GitHub issue and dependency issues before implementation.
+  Keep that issue updated with a start comment, verified checklist progress,
+  meaningful blockers/decisions, and a public-safe handoff. Routine updates
+  to the existing issue are part of authorized work on that thread; follow
+  [AGENTS.md issue-update guidance](../AGENTS.md#roadmap-issue-updates).
+  Synchronize issue evidence with the index, thread status, and handoff record.
+  Leave partial work and pending maintainer review open; close only after
+  acceptance criteria are met and completion is approved or closure requested.
+  If GitHub access fails, record the unsent update here and report the limitation.
 - Implement the listed subtasks, tests, help, and any documentation necessary
   to describe that increment. Do not expose an unsafe half-implemented command.
 - Follow the centralized contracts above; a necessary deviation is a maintainer
@@ -497,26 +506,33 @@ or PRs are implied. Update status only after acceptance criteria are met.
 
 ### Thread index and dependencies
 
-| ID | Increment | Dependencies | Status |
-| --- | --- | --- | --- |
-| 01 | Project foundation | None | Not started |
-| 02 | Configuration and keys | 01 | Not started |
-| 03 | Vault inventory and path preflight | 02 | Not started |
-| 04 | Encrypted backup format | 03 | Not started |
-| 05 | Safe publication and recovery | 04 | Not started |
-| 06 | Fresh backup | 05 | Not started |
-| 07 | Merge backup | 06 | Not started |
-| 08 | Read-only verification | 04; may precede 05–07 | Not started |
-| 09 | Fresh restore | 05, 07, 08 | Not started |
-| 10 | Git merge restore | 09 | Not started |
-| 11 | CLI polish | 10 | Not started |
-| 12 | Cross-platform hardening | 11 | Not started |
-| 13 | Documentation and contribution guidance | 12; incremental docs accompany earlier threads | Not started |
-| 14 | Release preparation | 13 | Not started |
+| ID | Increment | Dependencies | GitHub issue | Status |
+| --- | --- | --- | --- | --- |
+| 01 | Project foundation | None | [#1](https://github.com/jeffshurtliff/obfuscidian/issues/1) | Not started |
+| 02 | Configuration and keys | 01 | [#2](https://github.com/jeffshurtliff/obfuscidian/issues/2) | Not started |
+| 03 | Vault inventory and path preflight | 02 | [#3](https://github.com/jeffshurtliff/obfuscidian/issues/3) | Not started |
+| 04 | Encrypted backup format | 03 | [#4](https://github.com/jeffshurtliff/obfuscidian/issues/4) | Not started |
+| 05 | Safe publication and recovery | 04 | [#5](https://github.com/jeffshurtliff/obfuscidian/issues/5) | Not started |
+| 06 | Fresh backup | 05 | [#6](https://github.com/jeffshurtliff/obfuscidian/issues/6) | Not started |
+| 07 | Merge backup | 06 | [#7](https://github.com/jeffshurtliff/obfuscidian/issues/7) | Not started |
+| 08 | Read-only verification | 04; may precede 05–07 | [#8](https://github.com/jeffshurtliff/obfuscidian/issues/8) | Not started |
+| 09 | Fresh restore | 05, 07, 08 | [#9](https://github.com/jeffshurtliff/obfuscidian/issues/9) | Not started |
+| 10 | Git merge restore | 09 | [#10](https://github.com/jeffshurtliff/obfuscidian/issues/10) | Not started |
+| 11 | CLI polish | 10 | [#11](https://github.com/jeffshurtliff/obfuscidian/issues/11) | Not started |
+| 12 | Cross-platform hardening | 11 | [#12](https://github.com/jeffshurtliff/obfuscidian/issues/12) | Not started |
+| 13 | Documentation and contribution guidance | 12; incremental docs accompany earlier threads | [#13](https://github.com/jeffshurtliff/obfuscidian/issues/13) | Not started |
+| 14 | Release preparation | 13 | [#14](https://github.com/jeffshurtliff/obfuscidian/issues/14) | Not started |
+
+All fourteen issues are assigned to `jeffshurtliff` and belong to the
+[v1.0.0 milestone](https://github.com/jeffshurtliff/obfuscidian/milestone/1).
+Issue numbers are tracking identifiers; creating them does not start or
+complete implementation. Existing repository labels categorize each thread.
 
 The thread-specific subtasks and handoff prompts follow below.
 
 ### Thread 01 — Project foundation
+
+**GitHub issue:** [#1](https://github.com/jeffshurtliff/obfuscidian/issues/1)
 
 **Goal/deliverable:** An installable Poetry/src-layout package with reproducible
 developer tooling and passing entry-point tests; no backup functionality yet.
@@ -560,6 +576,8 @@ README links. Do not use an old accumulated `dist/` directory as validation.
 
 ### Thread 02 — Configuration and keys
 
+**GitHub issue:** [#2](https://github.com/jeffshurtliff/obfuscidian/issues/2)
+
 **Goal/deliverable:** Safe working `keygen` and reusable configuration/key
 resolution, without a functional vault write command.
 **Depends on:** 01. **Status:** Not started.
@@ -594,6 +612,8 @@ permission assertions guarded by platform; a manual dry run that creates no file
 
 ### Thread 03 — Vault inventory and path preflight
 
+**GitHub issue:** [#3](https://github.com/jeffshurtliff/obfuscidian/issues/3)
+
 **Goal/deliverable:** A deterministic, read-only inventory usable by backup and
 restore planning, with exclusion and filesystem safety tests.
 **Depends on:** 02. **Status:** Not started.
@@ -627,6 +647,8 @@ must explicitly skip only where the host cannot create the fixture.
 > expose backup writing yet. Update the roadmap and leave work uncommitted.
 
 ### Thread 04 — Encrypted backup format
+
+**GitHub issue:** [#4](https://github.com/jeffshurtliff/obfuscidian/issues/4)
 
 **Goal/deliverable:** A frozen v1 format with in-memory/file-helper round trips
 and compatibility fixtures, ready for orchestration.
@@ -663,6 +685,8 @@ hashes are exposed outside the encrypted manifest.
 > Record validation and status, and leave changes uncommitted.
 
 ### Thread 05 — Safe publication and recovery
+
+**GitHub issue:** [#5](https://github.com/jeffshurtliff/obfuscidian/issues/5)
 
 **Goal/deliverable:** Tested transaction primitives that preserve the previous
 complete destination during errors; public vault write commands remain gated.
@@ -701,6 +725,8 @@ recovery tests. No real vault or cloud access.
 
 ### Thread 06 — Fresh backup
 
+**GitHub issue:** [#6](https://github.com/jeffshurtliff/obfuscidian/issues/6)
+
 **Goal/deliverable:** Working `shroud fresh` using validated format and transactions.
 **Depends on:** 05. **Status:** Not started.
 
@@ -733,6 +759,8 @@ shared validator (or the `verify` command if Thread 08 is complete).
 > uncommitted; do not implement merge backup or restore in this thread.
 
 ### Thread 07 — Merge backup
+
+**GitHub issue:** [#7](https://github.com/jeffshurtliff/obfuscidian/issues/7)
 
 **Goal/deliverable:** Working additive incremental `shroud merge` with predictable
 history retention and minimal ciphertext churn.
@@ -769,6 +797,8 @@ mirror hashes and mtimes across no-op runs; verify old/new snapshot integrity.
 
 ### Thread 08 — Read-only verification
 
+**GitHub issue:** [#8](https://github.com/jeffshurtliff/obfuscidian/issues/8)
+
 **Goal/deliverable:** Public `verify` command using complete backup validation.
 **Depends on:** 04; may run before 05–07. **Status:** Not started.
 
@@ -799,6 +829,8 @@ content, file lists, mtimes, and transaction artifacts before/after invocation.
 > help/status and leave changes uncommitted.
 
 ### Thread 09 — Fresh restore
+
+**GitHub issue:** [#9](https://github.com/jeffshurtliff/obfuscidian/issues/9)
 
 **Goal/deliverable:** Working `unshroud fresh` with complete authentication before
 destination mutation and retained destination rollback.
@@ -834,6 +866,8 @@ and rollback locations and their platform-appropriate permissions.
 > checks/status and leave changes uncommitted for review.
 
 ### Thread 10 — Git merge restore
+
+**GitHub issue:** [#10](https://github.com/jeffshurtliff/obfuscidian/issues/10)
 
 **Goal/deliverable:** Working `unshroud merge` with a separate review worktree;
 original checkout and restored changes remain under user control.
@@ -871,6 +905,8 @@ verify no restore commit was created.
 
 ### Thread 11 — CLI polish
 
+**GitHub issue:** [#11](https://github.com/jeffshurtliff/obfuscidian/issues/11)
+
 **Goal/deliverable:** Consistent user-facing help, errors, progress, privacy, and
 automation behavior across the completed commands.
 **Depends on:** 10. **Status:** Not started.
@@ -907,6 +943,8 @@ output and help formatting at narrow and normal terminal widths.
 
 ### Thread 12 — Cross-platform hardening
 
+**GitHub issue:** [#12](https://github.com/jeffshurtliff/obfuscidian/issues/12)
+
 **Goal/deliverable:** Evidence for the supported OS/Python matrix and robust
 boundary/failure handling, without new product features.
 **Depends on:** 11. **Status:** Not started.
@@ -941,6 +979,8 @@ local-only handoff reports unexecuted hosted validation explicitly.
 > without authorization; leave changes reviewable and uncommitted.
 
 ### Thread 13 — Documentation and contribution guidance
+
+**GitHub issue:** [#13](https://github.com/jeffshurtliff/obfuscidian/issues/13)
 
 **Goal/deliverable:** Coherent, buildable user/contributor/security documentation
 that describes completed behavior rather than the template.
@@ -984,6 +1024,8 @@ rendered key usage/security/restore pages. Check Markdown/reST literal syntax.
 > unless separately requested. Leave changes uncommitted.
 
 ### Thread 14 — Release preparation
+
+**GitHub issue:** [#14](https://github.com/jeffshurtliff/obfuscidian/issues/14)
 
 **Goal/deliverable:** A reviewable release candidate, validated artifacts,
 maintainer runbook, and safe publication workflow proposal; no publication.
@@ -1056,6 +1098,10 @@ here. Record the date, scope, commands actually run and outcomes, unresolved
 limitations, and next eligible thread. Do not add credentials, user vault paths,
 real content, or private runtime details. Keep the task index and per-thread
 status consistent. Current application threads remain not started.
+The linked GitHub issues hold public progress discussion and verified
+checklists; this roadmap remains authoritative for approved scope and
+dependencies. Do not silently resolve conflicting scope or acceptance
+criteria: record the maintainer decision in both places before proceeding.
 
 **Planning-document handoff:** This task creates the roadmap and root agent
 instructions and adds only a notice to the original brief. It does not implement
@@ -1088,6 +1134,25 @@ scans, and source/diff review. `git diff --check` passed, with new untracked
 files checked separately. Application tests and Sphinx builds were not run for
 this documentation-only task; no dependencies were installed. Changes remain
 uncommitted and unstaged; no application or workflow files changed.
+
+**GitHub roadmap tracking — 3 October 2026:** Reviewed latest local and
+GitHub commit `e513c793084aacc6792de8769ddc452b20280e69`, including the sixteen
+issue templates and contributor/agent/roadmap guidance. Created issues #1–#14,
+one per implementation thread, with all fifty-six roadmap subtasks, dependency
+links, acceptance criteria, validation requirements, and public-safe handoff
+checklists. All are assigned to `jeffshurtliff`, associated with milestone 1
+(`v1.0.0`), and labeled using existing Obfuscidian labels, including `maintainer`
+and `codex`. Thread 13 records the existing contributor-guidance preparation;
+Thread 14 tracks preparation only and preserves separate release authorization
+checkpoints. Added issue links to the index and each thread, and agent guidance
+for progress, blockers, checklist evidence, handoff, and review before closure.
+Verified live issue metadata and bodies against the prepared requests, along
+with local link/consistency/privacy/whitespace checks and `git diff --check`.
+Only AGENTS.md and this roadmap changed locally; changes remain unstaged and
+uncommitted. No application tests or Sphinx builds were run for this tracking
+and documentation task. All implementation threads remain not started;
+Thread 01 / issue #1 is next. No labels, milestone settings, workflows, releases,
+or publication configuration were changed.
 
 ### Deferred capabilities
 
