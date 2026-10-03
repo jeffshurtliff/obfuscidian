@@ -64,29 +64,17 @@ performing Git history, release, or publication actions.
 
 ## Current environment versus planned environment
 
-At adoption of this guide, the repository uses setuptools, a root-level
-`obfuscidian/` package, Python `>=3.10`, a Click placeholder command, and one
-template test. Poetry, Ruff, Sphinx, the `src/` layout, and the planned CLI
-features are not implemented. `requirements.txt` and `pyproject.toml` disagree
-about dependencies. Thread 01 addresses this; do not assume it is complete.
+Thread 01 establishes Poetry/poetry-core, `src/obfuscidian/`, Python `>=3.12`,
+locked developer tooling, and help/version-only CLI behavior. Runtime requirements
+are authoritative in `pyproject.toml`; there is no second requirements list.
+Key generation, backup, restore, and verification remain planned. Check the
+roadmap handoff for actual validation and pending maintainer review.
 
-Current setup, if needed for the authorized task:
-
-```sh
-python -m venv .venv
-# Activate .venv using the command appropriate to the current shell and OS.
-python -m pip install -e '.[test]'
-python -m pytest -q
-python -m obfuscidian --help
-```
-
-After Thread 01 is actually complete, use Poetry for development, dependency
-management, and packaging. The target baseline is Python 3.12+, with initial CI
-validation of 3.12, 3.13, and 3.14 on Windows, macOS, and Linux. Package metadata
-and the CI matrix are the operational source of truth; do not silently change
-support requirements.
-
-Target commands, available only after their tooling is added:
+Use Poetry 2.2 or newer, below 3.0, for development, dependencies, and packaging.
+Initial CI targets Linux/Python 3.12, 3.13, and 3.14; broader OS hardening belongs
+to Thread 12. Local results do not prove hosted or supported-platform validation.
+Package metadata and the CI matrix are the operational source of truth; do not
+silently change support requirements.
 
 ```sh
 poetry install --with dev
@@ -207,7 +195,7 @@ clarify verified identifiers but must not hard-code a stale model.
 
 ## Tests and validation
 
-Use pytest, with `tests/unit/` and `tests/integration/` established by Thread 01.
+Use pytest, with `tests/unit/` and `tests/integration/`.
 Behavior changes require meaningful tests; fixes require regression tests. Use
 `tmp_path`, temporary vaults, and temporary Git repositories. Tests must be
 deterministic, isolated, and offline. Local synthetic integration tests run in
@@ -234,7 +222,7 @@ accurately. Do not claim passing tests from a failed or unexecuted command.
 
 Keep the roadmap's status and decisions accurate. Update user-facing docs and
 docstrings for public behavior changes, and `docs/CHANGELOG.md` under
-`[Unreleased]` once Thread 01 establishes it. Use Keep a Changelog categories.
+`[Unreleased]`. Use Keep a Changelog categories.
 Internal refactors, tooling, CI, and dependency maintenance belong in the
 changelog rather than public usage explanations or public version directives.
 

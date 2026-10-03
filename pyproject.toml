@@ -11,24 +11,70 @@ maintainers = [
 ]
 license = "Apache-2.0"
 license-files = ["LICENSE"]
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 classifiers = []
 dependencies = [
-    "click"
+    "click>=8.5.0",
+    "cryptography>=50.0.2"
 ]
 
 [build-system]
-requires = ["setuptools"]
-build-backend = "setuptools.build_meta"
+requires = ["poetry-core>=2.2.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
 
 [project.urls]
 Homepage = "https://github.com/jeffshurtliff/obfuscidian"
-Changelog = "https://github.com/jeffshurtliff/obfuscidian/releases"
+Changelog = "https://github.com/jeffshurtliff/obfuscidian/blob/main/docs/CHANGELOG.md"
 Issues = "https://github.com/jeffshurtliff/obfuscidian/issues"
 CI = "https://github.com/jeffshurtliff/obfuscidian/actions"
 
 [project.scripts]
 obfuscidian = "obfuscidian.cli:cli"
 
-[project.optional-dependencies]
-test = ["pytest"]
+[tool.poetry]
+requires-poetry = ">=2.2,<3.0"
+packages = [{ include = "obfuscidian", from = "src" }]
+include = [
+    { path = "poetry.lock", format = "sdist" },
+    { path = "docs/CHANGELOG.md", format = "sdist" },
+]
+# Use a small package boundary, plus explicit exclusions for private/generated content.
+exclude = [
+    "local", ".env", ".env.*", "*.key", "**/*.key", "scratch.txt", "**/scratch.txt",
+    "tempCodeRunnerFile.py", "**/tempCodeRunnerFile.py", "**/__pycache__", "**/*.pyc",
+    "**/.DS_Store", "**/._*", ".venv", "dist", "build", "docs/_build",
+]
+
+[tool.ruff]
+line-length = 130
+target-version = "py312"
+# Historical concept scripts are reference material, outside application/test lint scope.
+extend-exclude = ["dev"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+# Preserve the maintainer-required UTF-8 declaration in module headers.
+ignore = ["UP009"]
+
+[tool.ruff.format]
+quote-style = "single"
+indent-style = "space"
+line-ending = "lf"
+
+[tool.pytest.ini_options]
+testpaths = ["tests/unit", "tests/integration"]
+addopts = "--import-mode=importlib"
+
+[tool.coverage.run]
+source = ["obfuscidian"]
+branch = true
+
+[dependency-groups]
+dev = [
+    "pytest (>=8.4,<10)",
+    "coverage (>=7.10,<8)",
+    "ruff (>=0.13,<1)",
+    "bandit (>=1.8,<2)",
+    "twine (>=6.2,<7)",
+    "poetry-core (>=2.2,<3) ; python_version >= \"3.12\" and python_version < \"4.0\""
+]
