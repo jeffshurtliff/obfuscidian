@@ -1,6 +1,36 @@
 name: Test
 
-on: [push, pull_request]
+on:
+  push:
+    paths-ignore:
+      - README.md
+      - CONTRIBUTING.md
+      - AGENTS.md
+      - CLAUDE.md
+      - GEMINI.md
+      - LICENSE
+      - .readthedocs.yaml
+      - .env.example
+      - dev/**
+      - docs/**
+      - examples/**
+      - .github/ISSUE_TEMPLATE/**
+      - .gemini/**
+  pull_request:
+    paths-ignore:
+      - README.md
+      - CONTRIBUTING.md
+      - AGENTS.md
+      - CLAUDE.md
+      - GEMINI.md
+      - LICENSE
+      - .readthedocs.yaml
+      - .env.example
+      - dev/**
+      - docs/**
+      - examples/**
+      - .github/ISSUE_TEMPLATE/**
+      - .gemini/**
 
 permissions:
   contents: read
