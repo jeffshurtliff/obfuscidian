@@ -2,7 +2,8 @@
 
 **Approved planning baseline:** 3 October 2026
 
-**Status:** Documentation prepared; application implementation has not started.
+**Status:** Thread 01 implemented and locally validated; maintainer review pending.
+Threads 02–14 remain not started.
 
 **Intended first stable release:** `1.0.0` (current metadata: `1.0.0.dev0`).
 
@@ -476,9 +477,9 @@ Both installed console and module entry points must offer identical behavior.
 
 ## 4. Implementation threads
 
-All fourteen threads start **not started**. Each is a bounded implementation
-request, not permission to perform the entire roadmap. No commits, publication,
-or PRs are implied. Update status only after acceptance criteria are met.
+All fourteen threads initially started **not started**; the index below records current status. 
+Each is a bounded implementation request, not permission to perform the entire roadmap. No 
+commits, publication, or PRs are implied. Update status only after acceptance criteria are met.
 
 ### Common thread contract
 
@@ -508,7 +509,7 @@ or PRs are implied. Update status only after acceptance criteria are met.
 
 | ID | Increment | Dependencies | GitHub issue | Status |
 | --- | --- | --- | --- | --- |
-| 01 | Project foundation | None | [#1](https://github.com/jeffshurtliff/obfuscidian/issues/1) | Not started |
+| 01 | Project foundation | None | [#1](https://github.com/jeffshurtliff/obfuscidian/issues/1) | Implemented; review pending |
 | 02 | Configuration and keys | 01 | [#2](https://github.com/jeffshurtliff/obfuscidian/issues/2) | Not started |
 | 03 | Vault inventory and path preflight | 02 | [#3](https://github.com/jeffshurtliff/obfuscidian/issues/3) | Not started |
 | 04 | Encrypted backup format | 03 | [#4](https://github.com/jeffshurtliff/obfuscidian/issues/4) | Not started |
@@ -536,7 +537,12 @@ The thread-specific subtasks and handoff prompts follow below.
 
 **Goal/deliverable:** An installable Poetry/src-layout package with reproducible
 developer tooling and passing entry-point tests; no backup functionality yet.
-**Depends on:** None. **Status:** Not started.
+
+**Depends on:** None. 
+
+**Status:** Implemented; maintainer review pending.
+
+Local acceptance evidence is recorded in the handoff below; hosted CI has not run.
 
 1. Migrate packaging to Poetry/poetry-core while retaining PEP 621 metadata,
    static `1.0.0.dev0`, license, console entry point, and module invocation.
@@ -1097,7 +1103,8 @@ Each completed or partial thread updates its status and appends a short record
 here. Record the date, scope, commands actually run and outcomes, unresolved
 limitations, and next eligible thread. Do not add credentials, user vault paths,
 real content, or private runtime details. Keep the task index and per-thread
-status consistent. Current application threads remain not started.
+status consistent. Thread 01 is implemented with local evidence and pending
+maintainer review; Threads 02–14 remain not started.
 The linked GitHub issues hold public progress discussion and verified
 checklists; this roadmap remains authoritative for approved scope and
 dependencies. Do not silently resolve conflicting scope or acceptance
@@ -1153,6 +1160,85 @@ uncommitted. No application tests or Sphinx builds were run for this tracking
 and documentation task. All implementation threads remain not started;
 Thread 01 / issue #1 is next. No labels, milestone settings, workflows, releases,
 or publication configuration were changed.
+
+**Thread 01 foundation handoff — 3 October 2026:** Implemented only the four
+foundation subtasks on the existing `chore/1-thread-01-project-foundation` branch,
+which started clean at the same commit as `main`. Issue #1 has no dependencies;
+its live scope matched the roadmap. No keygen, backup, restore, verification,
+cryptography behavior, or backup-format implementation was added.
+
+- Packaging now uses PEP 621, static `1.0.0.dev0`, Python `>=3.12`, and
+  Poetry/poetry-core with `src/obfuscidian/`. Apache-2.0 license metadata and both
+  entry-point names are retained. Poetry 2.4.2 generated `poetry.lock` through
+  `poetry add --group dev --lock`; no lockfile edits were made by hand.
+- `pyproject.toml` is the sole runtime declaration, retaining `click>=8.5.0` and
+  `cryptography>=50.0.2`. cryptography is reserved for the approved later Fernet
+  implementation. Removed `requirements.txt`. Added pytest, coverage, Ruff,
+  Bandit, Twine, and poetry-core to `dev`; the backend is needed for offline
+  artifact builds in tests. Its developer marker excludes Python 4, matching
+  upstream metadata without changing the approved package minimum. Docs tooling
+  remains deferred. Ruff uses the approved style; UP009 is excluded specifically
+  to retain the required module encoding header, and historical `dev/` scripts
+  are outside application/test lint scope.
+- Removed the template command; help states that later commands are unavailable.
+  Console/module help and version output agree, with the product name in version
+  output. reST return/version directives remain in the docstring and are hidden
+  from Click help. Added `tests/unit/`, `tests/integration/`, `docs/CHANGELOG.md`,
+  and current README/contributor/agent development guidance.
+- Linux CI now targets Python 3.12–3.14 with Poetry lock checks, Ruff, pytest,
+  coverage, Bandit, fresh builds, strict Twine checks, and wheelhouse-backed
+  installation tests. The release publication workflow was not changed or
+  triggered; its old template assumptions remain for Thread 14 to replace.
+
+**Executed local validation:** macOS ARM64 with Poetry 2.4.2 and Python 3.12.7,
+3.13.15, and 3.14.7. `poetry install --with dev --no-interaction`,
+`poetry check --lock --strict`, `poetry run ruff check .`,
+`poetry run ruff format --check .`, `poetry run pytest -q`, and
+`poetry run bandit -r src/obfuscidian` passed on all three interpreters. Each
+normal offline suite passed **11 tests**; Bandit reported no issues. Python
+3.13/3.14 used separate temporary source copies and environments. Console/module
+help/version were also executed directly from the Python 3.12 developer install.
+`poetry run coverage run -m pytest -q` and `poetry run coverage report` passed
+on Python 3.12, reporting 44% in-process application coverage; this does not
+measure the separate installed entry-point subprocesses, and no coverage
+threshold is established.
+
+`poetry build --output <fresh-candidate-directory>` created exactly
+`obfuscidian-1.0.0.dev0-py3-none-any.whl` and `obfuscidian-1.0.0.dev0.tar.gz`.
+`poetry run twine check --strict <candidate-wheel> <candidate-sdist>` passed.
+Archive allowlists verified package modules, entry-point/dependency/Python/license
+metadata, and absence of private/scratch/generated content. The sdist additionally
+contains the lockfile and changelog. Normal tests seed synthetic private/key/cache/
+scratch sentinels in a temporary source copy and verify their exclusion.
+
+After downloading top-level dependencies pinned to the installed environment,
+fully isolated offline installation checks passed on Python 3.12–3.14 using
+`poetry run pytest -q tests/integration/test_packaging.py --artifact-dir
+<fresh-candidate-directory> --wheelhouse <dependency-wheelhouse>`. Each artifact
+was installed with dependencies in its own fresh virtual environment, with no
+system site packages or source-path override. Tests verified the imported module
+resides in that environment, matched console/module help/version outside the
+checkout, and ran `pip check`. The default suite explicitly shares installed
+development dependencies; it does not claim that stronger isolation mode.
+
+Candidate SHA-256 values:
+
+- Wheel: `2b73895bd85c31303ffc6ed2ce55000addcf696fa2f37305d75f0bd32500cf37`
+- Sdist: `84fae88a152c7e306c585c880a98fc1eb07ba143b6501344af97a7196a5c62ee`
+
+README/changelog and other modified guidance passed local link, code-fence,
+line-ending, and diff checks; test workflow YAML and embedded shell syntax were
+validated. Source/diff and proposed-file privacy review found no private data.
+Issue #1 receives the matching checklist/handoff update and remains open for
+maintainer review. Local changes are unstaged and uncommitted; no branch, commit,
+PR, tag, release, deployment, or publication was created by this task.
+
+**Remaining/deferred:** All Thread 01 local acceptance criteria are met. Hosted
+Linux CI has not run; Windows validation and broader OS hardening belong to
+Thread 12, strict Sphinx builds to Thread 13, and publication workflow replacement
+to Thread 14. No real-vault/cloud tests were run. Thread 02 is the next eligible
+implementation increment after maintainer review of this foundation; it was not
+started. Issue closure requires the maintainer's review/decision.
 
 ### Deferred capabilities
 

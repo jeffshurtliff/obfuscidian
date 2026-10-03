@@ -15,17 +15,15 @@ format.
 
 ## Current project status
 
-Application implementation has not started. The repository currently has a
-root-level `obfuscidian/` package, setuptools packaging, Python `>=3.10`, a Click
-placeholder command, and one template test. Backup, restore, verification, and
-key generation are planned functionality.
+Thread 01 establishes Poetry/poetry-core packaging, `src/obfuscidian/`, Python
+3.12+, locked developer tools, foundation CLI help/version, and offline unit and
+installation tests. Key generation, backup, restore, and verification remain
+planned. Local handoff evidence and review status live in the roadmap.
 
-Thread 01 will introduce Poetry, the `src/` layout, Python 3.12+, Ruff, developer
-tools, `tests/unit/`, `tests/integration/`, and `docs/CHANGELOG.md`. Thread 12 will
-expand validation to Windows, macOS, and Linux for Python 3.12–3.14. Thread 13
-will introduce Sphinx/reST/MyST and `pydata_sphinx_theme`. These are targets,
-not claims of completed tooling or supported-platform validation. Recheck actual
-package metadata, workflows, and roadmap evidence as implementation advances.
+The initial test workflow targets Linux/Python 3.12–3.14; configured jobs do not
+prove hosted results. Thread 12 adds broader Windows/macOS/Linux hardening.
+Thread 13 introduces Sphinx/reST/MyST and `pydata_sphinx_theme`. Recheck actual
+metadata, workflows, and roadmap evidence as implementation advances.
 
 ## Development workflow
 
@@ -95,38 +93,9 @@ An issue checklist does not grant Git or release authorization.
 
 ## Developer setup and checks
 
-### Current setuptools setup
+### Poetry setup
 
-From the repository root, create a virtual environment:
-
-```sh
-python -m venv .venv
-```
-
-Activate it for your shell:
-
-| Shell | Activation |
-| --- | --- |
-| POSIX shell | `source .venv/bin/activate` |
-| PowerShell | `.venv\Scripts\Activate.ps1` |
-| Windows cmd | `.venv\Scripts\activate.bat` |
-
-Then install and check the current scaffold:
-
-```sh
-python -m pip install -e '.[test]'
-python -m pytest -q
-python -m obfuscidian --help
-```
-
-`pyproject.toml` and `requirements.txt` currently disagree about runtime
-dependencies. Use the package's declared test extra for this setup; Thread 01
-will reconcile dependencies and remove the second manually maintained list.
-Do not mistake successful help/version checks for working backup functionality.
-
-### After Thread 01 is complete
-
-Use these commands only after the corresponding tooling and configuration exist:
+Install Poetry 2.2 or newer, below 3.0, and Python 3.12+. From the repository root:
 
 ```sh
 poetry install --with dev
@@ -134,9 +103,63 @@ poetry check --lock --strict
 poetry run ruff check .
 poetry run ruff format --check .
 poetry run pytest -q
+poetry run coverage run -m pytest -q
+poetry run coverage report
 poetry run bandit -r src/obfuscidian
 poetry build
 ```
+
+Poetry manages the development environment; a separate activation step is not
+required. Choose an interpreter explicitly with `poetry env use python3.12`
+(or the appropriate executable path). Successful help/version checks establish
+only the current CLI foundation.
+
+### Fresh artifact validation
+
+Build in a newly created temporary candidate directory, then run strict Twine
+validation against exactly its wheel and sdist. The following example is for a
+POSIX shell; use equivalent temporary directories in PowerShell/cmd.
+
+```sh
+CANDIDATE=$(mktemp -d)
+WHEELHOUSE=$(mktemp -d)
+poetry build --output "$CANDIDATE"
+poetry run twine check --strict "$CANDIDATE"/*
+```
+
+Populate the wheelhouse before running the offline tests. This command reads
+the authoritative runtime/build requirements and pins their top-level versions
+to the installed Poetry environment; it downloads dependencies without uploading:
+
+```sh
+poetry run python - "$WHEELHOUSE" <<'PYTHON'
+import subprocess
+import sys
+import tomllib
+from importlib.metadata import version
+from packaging.requirements import Requirement
+
+with open('pyproject.toml', 'rb') as source:
+    project = tomllib.load(source)
+requirements = project['project']['dependencies'] + project['build-system']['requires']
+pinned = [f'{Requirement(item).name}=={version(Requirement(item).name)}' for item in requirements]
+subprocess.run([
+    sys.executable, '-m', 'pip', 'download', '--only-binary=:all:',
+    '--dest', sys.argv[1], *pinned,
+], check=True)
+PYTHON
+poetry run pytest -q tests/integration/test_packaging.py --artifact-dir "$CANDIDATE" --wheelhouse "$WHEELHOUSE"
+```
+
+Each artifact is installed in its own temporary virtual environment, without
+system site packages, using dependencies from the wheelhouse. Tests run console
+and module help/version outside the checkout, verify the import location, and
+run `pip check`. The default offline suite uses available development dependencies
+through an explicit dependency path instead; report these two validation modes
+distinctly.
+Do not validate old artifacts accumulated in `dist/`. The sdist includes the
+lockfile and changelog; wheel content is limited to application and distribution
+metadata. Docs build tooling remains deferred to Thread 13.
 
 Use Poetry to add dependencies and regenerate `poetry.lock`; never edit the
 lockfile by hand. Justify new runtime dependencies and maintain one authoritative
@@ -153,8 +176,10 @@ poetry run sphinx-build -W --keep-going -E -a -b html docs docs/_build/html
 Run `git diff --check` and inspect new, untracked files as well. Documentation-only
 work needs link, consistency, privacy, and whitespace checks; it does not require
 installing dependencies or changing application code. Report missing tools and
-unexecuted checks accurately. Current CI tests only on Linux and ignores several
-documentation paths; it does not enforce all planned checks.
+unexecuted checks accurately. Foundation CI runs Poetry checks, Ruff,
+pytest/coverage, Bandit, and fresh artifact validation on Linux/Python 3.12–3.14. It ignores several documentation
+paths. Broader OS checks and strict Sphinx builds remain deferred; configured
+CI is not evidence that a hosted run has passed.
 
 ## Code standards
 
@@ -212,7 +237,7 @@ updating. Do not update unrelated headers.
 
 Behavior changes require meaningful tests; fixes require regression tests. Use
 pytest, deterministic offline fixtures, `tmp_path`, temporary vaults, temporary
-generated keys, and temporary Git repositories. Thread 01 establishes
+generated keys, and temporary Git repositories. Tests live in
 `tests/unit/` and `tests/integration/`. Local synthetic integration tests belong
 in the normal suite; real vault/cloud tests require separate explicit authorization.
 
@@ -288,7 +313,7 @@ planned until implemented. Internal refactors, tooling, CI, and dependency
 maintenance belong in the changelog rather than public usage explanations or
 public version directives.
 
-Once Thread 01 establishes `docs/CHANGELOG.md`, add entries under `[Unreleased]`
+Add entries to `docs/CHANGELOG.md` under `[Unreleased]`
 using Keep a Changelog categories. Preserve version compatibility; public
 interface and backup-format changes require maintainer review. Package version
 and backup-format version are separate contracts. Version promotion requires
