@@ -17,8 +17,10 @@ format.
 
 Thread 01 establishes Poetry/poetry-core packaging, `src/obfuscidian/`, Python
 3.12+, locked developer tools, foundation CLI help/version, and offline unit and
-installation tests. Key generation, backup, restore, and verification remain
-planned. Local handoff evidence and review status live in the roadmap.
+installation tests. Thread 02 adds configuration/key resolution, secure keygen,
+and internal key loading; local validation is complete and maintainer review is
+pending. Backup, restore, and verification remain planned. Local handoff evidence
+and platform limitations live in the roadmap.
 
 The initial test workflow targets Linux/Python 3.12–3.14; configured jobs do not
 prove hosted results. Thread 12 adds broader Windows/macOS/Linux hardening.
@@ -111,8 +113,8 @@ poetry build
 
 Poetry manages the development environment; a separate activation step is not
 required. Choose an interpreter explicitly with `poetry env use python3.12`
-(or the appropriate executable path). Successful help/version checks establish
-only the current CLI foundation.
+(or the appropriate executable path). Help/version and keygen checks establish
+the current CLI increment; vault operations remain planned.
 
 ### Fresh artifact validation
 
@@ -205,12 +207,25 @@ using Sphinx/reST fields (`:param name:`, `:returns:`, `:raises ExceptionType:`)
 Do not repeat clear signature types. Document constructors on the class rather
 than duplicating parameter documentation in `__init__`.
 
-New public callables, classes, and exceptions need `.. versionadded:: X.Y.Z`;
-public behavior or signature changes need `.. versionchanged:: X.Y.Z`. Preserve
-earlier directives and put new ones after the field list. Derive the intended
-stable release version from `pyproject.toml` without development/prerelease
-suffixes: `1.0.0.dev0` means `1.0.0`. Private helpers and internal refactors receive
-no public version directives. The CLI is the initial public contract; do not
+Version-history directives are required only for releases after `1.0.0`: new
+public callables, classes, and exceptions need `.. versionadded:: X.Y.Z`, and
+public behavior or signature changes need `.. versionchanged:: X.Y.Z`. Initial
+`1.0.0` development does not need summarized docstring changes or
+`.. versionchanged:: 1.0.0`, because it will be the first released version.
+
+For that first release, each public callable in `src/obfuscidian/cli.py` retains
+or includes one bare `.. versionadded:: 1.0.0` line, including additional public
+CLI callables. Place it below `\f` and above the Sphinx field list (`:param`,
+`:returns:`, `:raises`), without a summarized change description. Other
+initial-release public callables, classes, and exceptions do not require version
+directives. See [the canonical agent guidance](AGENTS.md#docstrings-and-module-headers).
+
+For later releases, preserve earlier directives. In CLI docstrings, keep version
+directives below `\f` and above the field list; elsewhere, place new directives
+after the field list. Derive the intended stable
+release version from `pyproject.toml` without development/prerelease suffixes:
+`1.0.0.dev0` means `1.0.0`. Private helpers and internal refactors receive no
+public version directives. The CLI is the initial public contract; do not
 incidentally expose an unsupported Python library API.
 
 New Python modules and tests use this header convention:

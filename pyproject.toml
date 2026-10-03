@@ -37,6 +37,7 @@ packages = [{ include = "obfuscidian", from = "src" }]
 include = [
     { path = "poetry.lock", format = "sdist" },
     { path = "docs/CHANGELOG.md", format = "sdist" },
+    { path = "docs/CONFIGURATION.md", format = "sdist" },
 ]
 # Use a small package boundary, plus explicit exclusions for private/generated content.
 exclude = [
