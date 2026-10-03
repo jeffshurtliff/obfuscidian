@@ -4,8 +4,8 @@
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://github.com/jeffshurtliff/obfuscidian/blob/main/LICENSE)
 
 Obfuscidian is a Python CLI being developed to create encrypted Obsidian vault
-backups. The current foundation provides help and version information only.
-Key generation, backup, restore, and verification are planned and unavailable.
+backups. The current CLI provides help, version information, and secure key
+generation. Backup, restore, and verification are planned and unavailable.
 This repository does not yet claim a published package or completed platform validation.
 
 ## Project status
@@ -15,9 +15,12 @@ Thread 01 — Project foundation — is complete, reviewed, and merged into
 is closed. The foundation includes Poetry/src packaging, developer tooling,
 help/version entry points, installation tests, and Linux CI configuration.
 
-Thread 02 — Configuration and keys — is next and has not started. Follow the
+Thread 02 — Configuration and keys — is implemented and locally validated,
+with maintainer review pending. It adds configuration resolution, secure
+`keygen`, and internal key loading. Follow the
 [approved roadmap](dev/IMPLEMENTATION_PLAN.md#thread-02--configuration-and-keys)
-for its scope; key generation and vault operations remain unavailable.
+for evidence and remaining platform validation. Thread 03 is next after review;
+vault operations remain unavailable.
 
 ## Installation from source
 
@@ -39,13 +42,25 @@ python -m obfuscidian --version
 ```
 
 Both entry points offer the same CLI behavior. No vault operations are available yet.
+Use an existing private key directory outside both vaults and cloud repositories:
+
+```sh
+obfuscidian keygen --alias primary --dir ./keys --non-interactive --dry-run
+obfuscidian keygen --alias primary --dir ./keys --non-interactive
+```
+
+Keys are created exclusively; collisions never overwrite. POSIX keys use mode
+`0600`; Windows uses a protected owner-only DACL on ACL-capable volumes, with
+platform validation pending. Keep a separate offline key backup. Unattended
+paths are redacted unless `--verbose` is selected. See
+[configuration, precedence, permissions, and custody](docs/CONFIGURATION.md).
 
 ## Development
 
 Use Poetry 2.2 or newer, below 3.0. Runtime dependencies are declared in
 `pyproject.toml`; developer tools use its `dev` group, and `poetry.lock` records
 resolved dependencies. cryptography is included for the approved Fernet design;
-no encryption behavior is implemented in this foundation.
+key creation/loading uses its standard Fernet recipe. Vault encryption remains planned.
 
 ```sh
 poetry install --with dev

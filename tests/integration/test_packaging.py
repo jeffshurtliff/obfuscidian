@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 :Module:            tests.integration.test_packaging
-:Synopsis:          Build, inspect, and install foundation artifacts offline
+:Synopsis:          Build, inspect, and install configuration/key artifacts offline
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6)
 :Modified Date:     03 Oct 2026
@@ -36,7 +36,8 @@ def artifacts(pytestconfig: pytest.Config, tmp_path_factory: pytest.TempPathFact
             shutil.copy2(root / name, source / name)
         shutil.copytree(root / 'src', source / 'src', ignore=shutil.ignore_patterns('__pycache__', '*.pyc'))
         (source / 'docs').mkdir()
-        shutil.copy2(root / 'docs/CHANGELOG.md', source / 'docs/CHANGELOG.md')
+        for name in ('CHANGELOG.md', 'CONFIGURATION.md'):
+            shutil.copy2(root / 'docs' / name, source / 'docs' / name)
         # Deliberately seed obvious synthetic private/scratch content, never real vault data.
         for name in (
             'local/private.txt',
@@ -70,7 +71,7 @@ def artifacts(pytestconfig: pytest.Config, tmp_path_factory: pytest.TempPathFact
 def _run(arguments: list[str], cwd: Path) -> subprocess.CompletedProcess[str]:
     """Run a subprocess outside the checkout with no source-path overrides."""
     environment = os.environ.copy()
-    for name in ('PYTHONPATH', 'PYTHONHOME'):
+    for name in ('PYTHONPATH', 'PYTHONHOME', 'OBFUSCIDIAN_KEY_PATH', 'OBFUSCIDIAN_KEY_ALIAS', 'OBFUSCIDIAN_KEY_DIR'):
         environment.pop(name, None)
     result = subprocess.run(arguments, cwd=cwd, env=environment, capture_output=True, text=True, check=False, timeout=180)
     assert result.returncode == 0, result.stdout + result.stderr
@@ -91,7 +92,7 @@ def _assert_metadata(data: bytes) -> None:
 def test_artifact_contents(artifacts: tuple[Path, Path]) -> None:
     """Allow only package files and explicit distribution metadata/documentation."""
     wheel, sdist = artifacts
-    modules = {'__init__.py', '__main__.py', 'cli.py'}
+    modules = {'__init__.py', '__main__.py', 'cli.py', 'config.py', 'constants.py', 'errors.py', 'keys.py', '_windows.py'}
     with zipfile.ZipFile(wheel) as archive:
         prefix = 'obfuscidian-1.0.0.dev0.dist-info/'
         assert set(archive.namelist()) == {f'obfuscidian/{name}' for name in modules} | {
@@ -106,7 +107,16 @@ def test_artifact_contents(artifacts: tuple[Path, Path]) -> None:
         prefix = 'obfuscidian-1.0.0.dev0/'
         names = {member.name for member in archive.getmembers() if member.isfile()}
         assert names == {prefix + f'src/obfuscidian/{name}' for name in modules} | {
-            prefix + name for name in ('pyproject.toml', 'poetry.lock', 'README.md', 'LICENSE', 'PKG-INFO', 'docs/CHANGELOG.md')
+            prefix + name
+            for name in (
+                'pyproject.toml',
+                'poetry.lock',
+                'README.md',
+                'LICENSE',
+                'PKG-INFO',
+                'docs/CHANGELOG.md',
+                'docs/CONFIGURATION.md',
+            )
         }
         metadata_file = archive.extractfile(prefix + 'PKG-INFO')
         assert metadata_file is not None
@@ -166,8 +176,25 @@ def test_installation_entry_points(
             assert console_result.stdout == 'obfuscidian, version 1.0.0.dev0\n'
         else:
             assert 'Usage: obfuscidian [OPTIONS]' in console_result.stdout
-            assert 'planned and unavailable' in console_result.stdout
-            assert 'Commands:' not in console_result.stdout
+            assert 'planned' in console_result.stdout and 'unavailable' in console_result.stdout
+            assert 'Commands:' in console_result.stdout and 'keygen' in console_result.stdout
+    key_directory = (tmp_path / 'synthetic-keys').resolve()
+    key_directory.mkdir()
+    for arguments in (
+        ['keygen', '--help'],
+        ['keygen', '--alias', 'dry-run', '--dir', str(key_directory), '--non-interactive', '--dry-run'],
+    ):
+        console_result = _run([str(console), *arguments], outside)
+        module_result = _run([str(python), '-m', 'obfuscidian', *arguments], outside)
+        assert console_result.stdout == module_result.stdout
+        assert console_result.stderr == module_result.stderr == ''
+        assert list(key_directory.iterdir()) == []
+    for entry_point, alias in (([str(console)], 'console'), ([str(python), '-m', 'obfuscidian'], 'module')):
+        result = _run([*entry_point, 'keygen', '--alias', alias, '--dir', str(key_directory), '--non-interactive'], outside)
+        key = key_directory / f'obfuscidian-{alias}.key'
+        assert key.exists()
+        assert key.read_bytes().decode() not in result.stdout + result.stderr
+        assert str(key_directory) not in result.stdout + result.stderr
     if wheelhouse is not None:
         _run([str(python), '-m', 'pip', 'check'], outside)
     assert list(outside.iterdir()) == []

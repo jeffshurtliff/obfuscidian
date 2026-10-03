@@ -3,7 +3,7 @@
 **Approved planning baseline:** 3 October 2026
 
 **Status:** Thread 01 complete, reviewed, and merged into `origin/main`.
-Thread 02 — Configuration and keys — is next and has not started.
+Thread 02 — Configuration and keys — is implemented and locally validated; maintainer review is pending.
 Threads 03–14 remain not started.
 
 **Intended first stable release:** `1.0.0` (current metadata: `1.0.0.dev0`).
@@ -511,7 +511,7 @@ commits, publication, or PRs are implied. Update status only after acceptance cr
 | ID | Increment | Dependencies | GitHub issue | Status |
 | --- | --- | --- | --- | --- |
 | 01 | Project foundation | None | [#1](https://github.com/jeffshurtliff/obfuscidian/issues/1) | Complete |
-| 02 | Configuration and keys | 01 | [#2](https://github.com/jeffshurtliff/obfuscidian/issues/2) | Not started |
+| 02 | Configuration and keys | 01 | [#2](https://github.com/jeffshurtliff/obfuscidian/issues/2) | Local criteria met; review pending |
 | 03 | Vault inventory and path preflight | 02 | [#3](https://github.com/jeffshurtliff/obfuscidian/issues/3) | Not started |
 | 04 | Encrypted backup format | 03 | [#4](https://github.com/jeffshurtliff/obfuscidian/issues/4) | Not started |
 | 05 | Safe publication and recovery | 04 | [#5](https://github.com/jeffshurtliff/obfuscidian/issues/5) | Not started |
@@ -545,7 +545,7 @@ developer tooling and passing entry-point tests; no backup functionality yet.
 into `origin/main`; issue #1 is closed as completed.
 
 Local acceptance evidence is recorded in the initial handoff below, followed by
-the maintainer-approved completion record. Thread 02 is next and has not started.
+the maintainer-approved completion record. Thread 02 status and evidence follow below.
 
 1. Migrate packaging to Poetry/poetry-core while retaining PEP 621 metadata,
    static `1.0.0.dev0`, license, console entry point, and module invocation.
@@ -589,7 +589,7 @@ README links. Do not use an old accumulated `dist/` directory as validation.
 
 **Goal/deliverable:** Safe working `keygen` and reusable configuration/key
 resolution, without a functional vault write command.
-**Depends on:** 01. **Status:** Not started.
+**Depends on:** 01. **Status:** Implemented and locally validated; maintainer review pending.
 
 1. Add shared constants, operational/configuration errors, and independent key
    and path resolution helpers. Implement the documented CLI/environment matrix
@@ -1107,7 +1107,8 @@ here. Record the date, scope, commands actually run and outcomes, unresolved
 limitations, and next eligible thread. Do not add credentials, user vault paths,
 real content, or private runtime details. Keep the task index and per-thread
 status consistent. Thread 01 is complete following maintainer review and merge;
-Thread 02 is next and has not started. Threads 03–14 remain not started.
+Thread 02 is implemented and locally validated with review pending. Threads 03–14
+remain not started; Thread 03 is next after review.
 Earlier handoff records describe the state at that time; later completion
 records supersede their pending-review and Git-status statements.
 The linked GitHub issues hold public progress discussion and verified
@@ -1263,6 +1264,87 @@ CI/platform checks were run for this documentation-only update. Local links,
 status consistency, Markdown fences, privacy/whitespace, and `git diff --check`
 passed. These status edits remain unstaged and uncommitted; no implementation,
 commit, PR, publication, or Thread 02 work was performed in this follow-up.
+
+**Thread 02 handoff — 3 October 2026:** Implemented only configuration and
+keys on the pre-existing `feature/2-thread-02-config-and-keys` branch, initially
+clean and matching `main`/`origin/main` at `0d0b909`. Thread 01 is confirmed
+complete from actual code/packaging, closed issue #1 and its maintainer review
+record, the successful hosted Test run for foundation merge `8c9e2c8`, and
+this task's passing lock check and 11 baseline tests.
+
+- Added internal [configuration resolution](../src/obfuscidian/config.py),
+  [shared constants](../src/obfuscidian/constants.py),
+  [redacted errors](../src/obfuscidian/errors.py), and
+  [key I/O](../src/obfuscidian/keys.py). Implemented CLI/environment selector
+  precedence and conflicts, explicit-invalid-value refusal, cwd/home expansion,
+  literal shell variables, and independent optional vault-path resolution.
+  Vault inventory, overlap, and key-in-vault preflight remain Thread 03 work.
+- Added [keygen](../src/obfuscidian/cli.py) with exclusive creation, ASCII aliases,
+  local timestamp prompt defaults, terminal-only prompts, EOF/interrupt handling,
+  non-interactive operation, read-only dry runs, and controlled path output.
+  POSIX uses mode 0600 and no-follow directory handles with identity rechecks.
+  [Windows creation](../src/obfuscidian/_windows.py) applies an owner-only
+  protected DACL at creation and refuses volumes without persistent ACLs;
+  native runtime validation is pending. Failed writes clean only the owned new
+  entry; changed targets/failed cleanup are preserved and reported for inspection.
+- Loading reads a bounded complete canonical Fernet key, optionally with one
+  LF/CRLF ending; invalid/missing selected keys never trigger fallback or key
+  generation. Permission warnings do not chmod or rewrite existing keys.
+  Synthetic authenticated binary round trips, wrong-key rejection, collisions,
+  genuine and injected permission failures, race/cleanup failure preservation,
+  and output privacy satisfy all local acceptance criteria.
+- Updated README, contributor/agent current-status notes, changelog,
+  [configuration/custody guide](../docs/CONFIGURATION.md), and installed help.
+  The configuration guide is included in the sdist; package/dependency versions
+  and the lockfile are unchanged. Keygen exposes only its implemented options;
+  logging remains deferred to Thread 11 and unsupported options are rejected.
+  No vault write/restore/verify command or backup-format behavior was added.
+
+**Executed validation:** Poetry 2.4.2 on macOS ARM64; Python 3.12.7 in the
+checkout and Python 3.13.15/3.14.7 in temporary public-safe source copies.
+Lock checks, Ruff lint/format, pytest, and Bandit passed for all three:
+**121 passed, 1 skipped** each. The skip requires native Windows ACL APIs.
+Temporary Poetry installs initially failed due to sandbox network restrictions;
+retrying the same locked installs with authorized network access succeeded.
+No dependencies or lock entries were changed. Final Python 3.12 coverage
+run/report passed, reporting 76% in-process coverage, including unexecuted
+Windows code. Installed entry-point subprocesses are separately tested and
+not included in that measurement.
+
+Fresh `poetry build --output <fresh-candidate-directory>` and strict Twine checks
+passed for exactly one new wheel and sdist. Updated offline archive allowlists
+and default installation tests pass within the normal suite. Fully isolated
+wheelhouse-backed wheel/sdist installation tests passed on Python 3.12
+(**3 passed**), checking imports outside the checkout, console/module help and
+version, keygen help/dry run/creation, output privacy, and `pip check`.
+A direct manual synthetic dry run through both developer entry points created
+no files. Local Markdown links/fences, LF/whitespace, proposed-file privacy,
+source/diff inspection, and `git diff --check` passed.
+
+**Tracking/remaining:** Issue #2 receives matching start, progress, handoff,
+and verified checklist updates and remains open for maintainer review. All
+Thread 02 local acceptance criteria are met; native Windows/ACL behavior and
+hosted CI for these uncommitted changes remain unexecuted. Broader OS validation
+belongs to Thread 12; Sphinx tooling/build to Thread 13; logging completion to
+Thread 11. No real keys, vaults, or cloud backups were used. Thread 03 is next
+following review; Threads 03–14 were not started.
+
+All proposed changes are unstaged and uncommitted on the existing Thread 02
+branch. No branch, staging, commit, push, PR, merge, tag, release, or publication
+was performed, and no workflow was edited or triggered.
+
+**Thread 02 documentation follow-up — 3 October 2026:** At the maintainer's
+request, clarified AGENTS.md and CONTRIBUTING.md: summarized `versionadded` and
+`versionchanged` history is required only for releases after 1.0.0. Public
+initial-release CLI callables retain/include one bare `.. versionadded:: 1.0.0`
+below `\f` and above their Sphinx field lists, without change summaries.
+The current CLI docstrings already matched the maintainer's convention and
+were preserved. Updated the changelog and issue #2 with this decision. Verified
+directive count/order using AST docstring inspection, guidance consistency,
+Markdown fences/local links, and `git diff --check`. No application behavior
+changed; application tests and artifact/platform checks were not rerun for this
+documentation-only follow-up. Changes remain unstaged and uncommitted; issue #2
+remains open, and no Git history or publication action was performed.
 
 ### Deferred capabilities
 

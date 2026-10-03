@@ -67,8 +67,11 @@ performing Git history, release, or publication actions.
 Thread 01 establishes Poetry/poetry-core, `src/obfuscidian/`, Python `>=3.12`,
 locked developer tooling, and help/version-only CLI behavior. Runtime requirements
 are authoritative in `pyproject.toml`; there is no second requirements list.
-Key generation, backup, restore, and verification remain planned. Check the
-roadmap handoff for actual validation and pending maintainer review.
+
+Thread 02 adds configuration/key resolution, secure keygen, and internal key
+loading; it is locally validated and pending maintainer review. Backup, restore,
+and verification remain planned. Check the roadmap handoff for actual validation
+and platform limitations.
 
 Use Poetry 2.2 or newer, below 3.0, for development, dependencies, and packaging.
 Initial CI targets Linux/Python 3.12, 3.13, and 3.14; broader OS hardening belongs
@@ -128,9 +131,22 @@ important usage limitations. Use Sphinx/reST field lists (`:param name:`,
 Document constructors on the class rather than duplicating full parameter
 documentation in both the class and `__init__`.
 
-New public callables/classes/exceptions need `.. versionadded:: X.Y.Z`; public
-behavior or signature changes need `.. versionchanged:: X.Y.Z`. Preserve earlier
-directives and place new directives after the field list. Use the intended stable
+Version-history directives are required only for releases after `1.0.0`: new
+public callables/classes/exceptions need `.. versionadded:: X.Y.Z`, and public
+behavior or signature changes need `.. versionchanged:: X.Y.Z`. During initial
+`1.0.0` development, do not maintain summarized docstring changes or add
+`.. versionchanged:: 1.0.0`; it will be the first released version.
+
+The initial-release exception is `src/obfuscidian/cli.py`: retain the existing
+`.. versionadded:: 1.0.0` lines and include this single, bare directive on each
+additional public CLI callable introduced for the first release. Place it below
+the `\f` line and above the Sphinx field list (`:param`, `:returns:`, `:raises`),
+without a summarized change description. Other initial-release public
+callables/classes/exceptions do not require version directives.
+
+For later releases, preserve earlier directives. In CLI docstrings, keep version
+directives below `\f` and above the field list; elsewhere, place new directives
+after the field list. Use the intended stable
 release version derived from `pyproject.toml` without development/prerelease
 suffixes (`1.0.0.dev0` means `1.0.0`). Private helpers and internal refactors do
 not receive public version directives. The CLI is the initial public contract;
