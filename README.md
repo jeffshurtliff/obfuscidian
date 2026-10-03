@@ -15,12 +15,15 @@ Thread 01 — Project foundation — is complete, reviewed, and merged into
 is closed. The foundation includes Poetry/src packaging, developer tooling,
 help/version entry points, installation tests, and Linux CI configuration.
 
-Thread 02 — Configuration and keys — is implemented and locally validated,
-with maintainer review pending. It adds configuration resolution, secure
-`keygen`, and internal key loading. Follow the
-[approved roadmap](dev/IMPLEMENTATION_PLAN.md#thread-02--configuration-and-keys)
-for evidence and remaining platform validation. Thread 03 is next after review;
-vault operations remain unavailable.
+Thread 02 — Configuration and keys — is complete, reviewed, and merged into
+`origin/main`; [issue #2](https://github.com/jeffshurtliff/obfuscidian/issues/2)
+is closed. It adds configuration resolution, secure `keygen`, and internal key
+loading. Linux CI passed on Python 3.12–3.14 for the merged implementation.
+
+Thread 03 — Vault inventory and path preflight — is next and has not started.
+Follow the [approved roadmap](dev/IMPLEMENTATION_PLAN.md#thread-03--vault-inventory-and-path-preflight)
+for its scope. Vault operations remain unavailable; broader OS validation is
+still deferred to Thread 12.
 
 ## Installation from source
 

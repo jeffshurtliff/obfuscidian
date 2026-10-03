@@ -17,10 +17,16 @@ format.
 
 Thread 01 establishes Poetry/poetry-core packaging, `src/obfuscidian/`, Python
 3.12+, locked developer tools, foundation CLI help/version, and offline unit and
-installation tests. Thread 02 adds configuration/key resolution, secure keygen,
-and internal key loading; local validation is complete and maintainer review is
-pending. Backup, restore, and verification remain planned. Local handoff evidence
-and platform limitations live in the roadmap.
+installation tests. 
+
+Thread 02 adds configuration/key resolution, secure keygen,
+and internal key loading; it is complete, reviewed, and merged into `origin/main`,
+with issue #2 closed and Linux CI passing on Python 3.12–3.14. 
+
+Thread 03 — Vault
+inventory and path preflight — is next and has not started. Backup, restore, and
+verification remain planned. Handoff evidence and platform limitations live in
+the roadmap.
 
 The initial test workflow targets Linux/Python 3.12–3.14; configured jobs do not
 prove hosted results. Thread 12 adds broader Windows/macOS/Linux hardening.

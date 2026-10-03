@@ -69,9 +69,12 @@ locked developer tooling, and help/version-only CLI behavior. Runtime requiremen
 are authoritative in `pyproject.toml`; there is no second requirements list.
 
 Thread 02 adds configuration/key resolution, secure keygen, and internal key
-loading; it is locally validated and pending maintainer review. Backup, restore,
-and verification remain planned. Check the roadmap handoff for actual validation
-and platform limitations.
+loading; it is complete, reviewed, and merged into `origin/main`, with issue #2
+closed and Linux CI passing on Python 3.12–3.14. 
+
+Thread 03 — Vault inventory and path preflight — is next and has not started. 
+Backup, restore, and verification remain planned. Check the roadmap handoff 
+for validation and platform limitations.
 
 Use Poetry 2.2 or newer, below 3.0, for development, dependencies, and packaging.
 Initial CI targets Linux/Python 3.12, 3.13, and 3.14; broader OS hardening belongs

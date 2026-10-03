@@ -3,8 +3,10 @@
 **Approved planning baseline:** 3 October 2026
 
 **Status:** Thread 01 complete, reviewed, and merged into `origin/main`.
-Thread 02 — Configuration and keys — is implemented and locally validated; maintainer review is pending.
-Threads 03–14 remain not started.
+Thread 02 — Configuration and keys — is complete, reviewed, and merged into
+`origin/main`; issue #2 is closed and Linux CI passed on Python 3.12–3.14.
+Thread 03 — Vault inventory and path preflight — is next and has not started.
+Threads 04–14 remain not started.
 
 **Intended first stable release:** `1.0.0` (current metadata: `1.0.0.dev0`).
 
@@ -511,7 +513,7 @@ commits, publication, or PRs are implied. Update status only after acceptance cr
 | ID | Increment | Dependencies | GitHub issue | Status |
 | --- | --- | --- | --- | --- |
 | 01 | Project foundation | None | [#1](https://github.com/jeffshurtliff/obfuscidian/issues/1) | Complete |
-| 02 | Configuration and keys | 01 | [#2](https://github.com/jeffshurtliff/obfuscidian/issues/2) | Local criteria met; review pending |
+| 02 | Configuration and keys | 01 | [#2](https://github.com/jeffshurtliff/obfuscidian/issues/2) | Complete |
 | 03 | Vault inventory and path preflight | 02 | [#3](https://github.com/jeffshurtliff/obfuscidian/issues/3) | Not started |
 | 04 | Encrypted backup format | 03 | [#4](https://github.com/jeffshurtliff/obfuscidian/issues/4) | Not started |
 | 05 | Safe publication and recovery | 04 | [#5](https://github.com/jeffshurtliff/obfuscidian/issues/5) | Not started |
@@ -589,7 +591,11 @@ README links. Do not use an old accumulated `dist/` directory as validation.
 
 **Goal/deliverable:** Safe working `keygen` and reusable configuration/key
 resolution, without a functional vault write command.
-**Depends on:** 01. **Status:** Implemented and locally validated; maintainer review pending.
+**Depends on:** 01. **Status:** Complete. Maintainer reviewed, committed, and
+merged the implementation into `origin/main`; issue #2 is closed as completed.
+Linux CI passed on Python 3.12–3.14. Local acceptance evidence, platform limits,
+and the completion record are preserved in the handoff below. Thread 03 is next
+and has not started.
 
 1. Add shared constants, operational/configuration errors, and independent key
    and path resolution helpers. Implement the documented CLI/environment matrix
@@ -1107,8 +1113,8 @@ here. Record the date, scope, commands actually run and outcomes, unresolved
 limitations, and next eligible thread. Do not add credentials, user vault paths,
 real content, or private runtime details. Keep the task index and per-thread
 status consistent. Thread 01 is complete following maintainer review and merge;
-Thread 02 is implemented and locally validated with review pending. Threads 03–14
-remain not started; Thread 03 is next after review.
+Thread 02 is complete following maintainer review, merge, and successful Linux
+CI. Threads 03–14 remain not started; Thread 03 is next.
 Earlier handoff records describe the state at that time; later completion
 records supersede their pending-review and Git-status statements.
 The linked GitHub issues hold public progress discussion and verified
@@ -1345,6 +1351,30 @@ Markdown fences/local links, and `git diff --check`. No application behavior
 changed; application tests and artifact/platform checks were not rerun for this
 documentation-only follow-up. Changes remain unstaged and uncommitted; issue #2
 remains open, and no Git history or publication action was performed.
+
+**Thread 02 completion — 3 October 2026:** The maintainer reviewed and
+accepted Thread 02, committed it as
+[`472a6ac`](https://github.com/jeffshurtliff/obfuscidian/commit/472a6ac), and merged
+and pushed it into `origin/main` as
+[`26a5929`](https://github.com/jeffshurtliff/obfuscidian/commit/26a5929).
+Verified that live GitHub `main` matches local `HEAD`, `main`, and `origin/main`.
+The [hosted Test run](https://github.com/jeffshurtliff/obfuscidian/actions/runs/37157742622)
+completed successfully for that merge, including the Linux/Python 3.12, 3.13,
+and 3.14 jobs. At the maintainer's explicit request, issue #2 is closed as
+completed and its review/closure checklist item is checked. The earlier handoff
+records retain their evidence and historical Git/review status; this completion
+record supersedes their pending-review and unexecuted-hosted-CI statements.
+Native Windows ACL validation and broader OS hardening remain Thread 12 work.
+
+Updated README.md, CONTRIBUTING.md, AGENTS.md, and this roadmap to reflect
+completion and the next step. Thread 03 — Vault inventory and path preflight —
+is next and remains not started; the maintainer explicitly prohibited beginning
+it during this update. This documentation-only follow-up verifies local links,
+Markdown fences, status consistency, privacy/whitespace, and `git diff --check`;
+it does not rerun application tests, builds, or platform checks. The status edits
+remain unstaged and uncommitted on `main`. No application changes, Thread 03
+work, staging, commit, push, branch, PR, or publication was performed by this
+follow-up.
 
 ### Deferred capabilities
 
