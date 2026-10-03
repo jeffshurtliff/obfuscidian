@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 :Module:            tests.integration.test_packaging
-:Synopsis:          Build, inspect, and install configuration/key artifacts offline
+:Synopsis:          Build, inspect, and install package artifacts offline
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6)
 :Modified Date:     03 Oct 2026
@@ -36,7 +36,7 @@ def artifacts(pytestconfig: pytest.Config, tmp_path_factory: pytest.TempPathFact
             shutil.copy2(root / name, source / name)
         shutil.copytree(root / 'src', source / 'src', ignore=shutil.ignore_patterns('__pycache__', '*.pyc'))
         (source / 'docs').mkdir()
-        for name in ('CHANGELOG.md', 'CONFIGURATION.md'):
+        for name in ('CHANGELOG.md', 'CONFIGURATION.md', 'INVENTORY.md'):
             shutil.copy2(root / 'docs' / name, source / 'docs' / name)
         # Deliberately seed obvious synthetic private/scratch content, never real vault data.
         for name in (
@@ -92,7 +92,18 @@ def _assert_metadata(data: bytes) -> None:
 def test_artifact_contents(artifacts: tuple[Path, Path]) -> None:
     """Allow only package files and explicit distribution metadata/documentation."""
     wheel, sdist = artifacts
-    modules = {'__init__.py', '__main__.py', 'cli.py', 'config.py', 'constants.py', 'errors.py', 'keys.py', '_windows.py'}
+    modules = {
+        '__init__.py',
+        '__main__.py',
+        'cli.py',
+        'config.py',
+        'constants.py',
+        'errors.py',
+        'keys.py',
+        '_windows.py',
+        'inventory.py',
+        'paths.py',
+    }
     with zipfile.ZipFile(wheel) as archive:
         prefix = 'obfuscidian-1.0.0.dev0.dist-info/'
         assert set(archive.namelist()) == {f'obfuscidian/{name}' for name in modules} | {
@@ -116,6 +127,7 @@ def test_artifact_contents(artifacts: tuple[Path, Path]) -> None:
                 'PKG-INFO',
                 'docs/CHANGELOG.md',
                 'docs/CONFIGURATION.md',
+                'docs/INVENTORY.md',
             )
         }
         metadata_file = archive.extractfile(prefix + 'PKG-INFO')

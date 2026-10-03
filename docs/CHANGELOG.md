@@ -7,6 +7,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Internal deterministic read-only vault inventory with binary/hidden/config/empty-directory inclusion and typed identity records.
+- Mandatory exclusions and portable case-sensitive component globs with pruning and encountered-entry totals.
+- Read-only path/target safety, selected-key custody, mirror namespace checks, stable binary reads, and final inventory comparison.
+- Exact bounded Fernet estimates, actual-manifest accounting hooks, and staging/rollback payload/free-space checks.
+- Synthetic preservation, exclusion, permission, unsafe-path, size-boundary, and changing-source tests; internal inventory documentation.
+
 - Secure `keygen` with CLI/environment resolution, terminal-only alias prompts, non-interactive operation, and read-only dry runs.
 - Exclusive mode-0600 POSIX key creation and protected owner-only Windows DACL creation on ACL-capable volumes.
 - Internal configuration/key-loading helpers with selector conflicts, full bounded Fernet key validation, and permission warnings.
