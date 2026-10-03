@@ -23,10 +23,12 @@ Thread 02 adds configuration/key resolution, secure keygen,
 and internal key loading; it is complete, reviewed, and merged into `origin/main`,
 with issue #2 closed and Linux CI passing on Python 3.12–3.14. 
 
-Thread 03 — Vault
-inventory and path preflight — is next and has not started. Backup, restore, and
-verification remain planned. Handoff evidence and platform limitations live in
-the roadmap.
+Thread 03 — Vault inventory and path preflight — is implemented locally and
+awaits maintainer review. Internal read-only inventory/path/resource helpers
+are documented in [the inventory guide](docs/INVENTORY.md). 
+
+Thread 04 is next after review. Backup, restore, and verification remain planned. 
+Handoff evidence and platform limitations live in the roadmap.
 
 The initial test workflow targets Linux/Python 3.12–3.14; configured jobs do not
 prove hosted results. Thread 12 adds broader Windows/macOS/Linux hardening.

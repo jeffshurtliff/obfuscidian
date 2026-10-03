@@ -5,8 +5,9 @@
 **Status:** Thread 01 complete, reviewed, and merged into `origin/main`.
 Thread 02 — Configuration and keys — is complete, reviewed, and merged into
 `origin/main`; issue #2 is closed and Linux CI passed on Python 3.12–3.14.
-Thread 03 — Vault inventory and path preflight — is next and has not started.
-Threads 04–14 remain not started.
+Thread 03 — Vault inventory and path preflight — is implemented locally;
+acceptance criteria are met and maintainer review is pending. 
+Thread 04 is next after review. Threads 04–14 remain not started.
 
 **Intended first stable release:** `1.0.0` (current metadata: `1.0.0.dev0`).
 
@@ -514,7 +515,7 @@ commits, publication, or PRs are implied. Update status only after acceptance cr
 | --- | --- | --- | --- | --- |
 | 01 | Project foundation | None | [#1](https://github.com/jeffshurtliff/obfuscidian/issues/1) | Complete |
 | 02 | Configuration and keys | 01 | [#2](https://github.com/jeffshurtliff/obfuscidian/issues/2) | Complete |
-| 03 | Vault inventory and path preflight | 02 | [#3](https://github.com/jeffshurtliff/obfuscidian/issues/3) | Not started |
+| 03 | Vault inventory and path preflight | 02 | [#3](https://github.com/jeffshurtliff/obfuscidian/issues/3) | Implemented locally; review pending |
 | 04 | Encrypted backup format | 03 | [#4](https://github.com/jeffshurtliff/obfuscidian/issues/4) | Not started |
 | 05 | Safe publication and recovery | 04 | [#5](https://github.com/jeffshurtliff/obfuscidian/issues/5) | Not started |
 | 06 | Fresh backup | 05 | [#6](https://github.com/jeffshurtliff/obfuscidian/issues/6) | Not started |
@@ -594,8 +595,8 @@ resolution, without a functional vault write command.
 **Depends on:** 01. **Status:** Complete. Maintainer reviewed, committed, and
 merged the implementation into `origin/main`; issue #2 is closed as completed.
 Linux CI passed on Python 3.12–3.14. Local acceptance evidence, platform limits,
-and the completion record are preserved in the handoff below. Thread 03 is next
-and has not started.
+and the completion record are preserved in the handoff below. Thread 03 is
+implemented locally and awaits maintainer review.
 
 1. Add shared constants, operational/configuration errors, and independent key
    and path resolution helpers. Implement the documented CLI/environment matrix
@@ -631,7 +632,9 @@ permission assertions guarded by platform; a manual dry run that creates no file
 
 **Goal/deliverable:** A deterministic, read-only inventory usable by backup and
 restore planning, with exclusion and filesystem safety tests.
-**Depends on:** 02. **Status:** Not started.
+**Depends on:** 02. **Status:** Implemented locally; acceptance criteria met,
+maintainer review pending. Issue #3 remains open. See the handoff record for
+executed validation and platform limits.
 
 1. Add typed inventory records for included relative files/directories, sizes,
    times, and filesystem identities; include empty directories and all binary
@@ -1112,9 +1115,15 @@ Each completed or partial thread updates its status and appends a short record
 here. Record the date, scope, commands actually run and outcomes, unresolved
 limitations, and next eligible thread. Do not add credentials, user vault paths,
 real content, or private runtime details. Keep the task index and per-thread
-status consistent. Thread 01 is complete following maintainer review and merge;
+status consistent. 
+
+Thread 01 is complete following maintainer review and merge;
+
 Thread 02 is complete following maintainer review, merge, and successful Linux
-CI. Threads 03–14 remain not started; Thread 03 is next.
+CI. Thread 03 is implemented locally and awaits maintainer review; issue #3
+remains open. 
+
+Threads 04–14 remain not started; Thread 04 is next after review.
 Earlier handoff records describe the state at that time; later completion
 records supersede their pending-review and Git-status statements.
 The linked GitHub issues hold public progress discussion and verified
@@ -1375,6 +1384,100 @@ it does not rerun application tests, builds, or platform checks. The status edit
 remain unstaged and uncommitted on `main`. No application changes, Thread 03
 work, staging, commit, push, branch, PR, or publication was performed by this
 follow-up.
+
+**Thread 03 handoff — 3 October 2026:** Implemented only deterministic read-only
+inventory and path preflight on the pre-existing
+`feature/3-thread-03-vault-inv-and-path-preflight` branch. It began clean and
+matched local/live `main` and `origin/main` at `f48a5c5`. Dependencies were
+verified from actual configuration/key/packaging code, closed issues #1/#2 with
+maintainer review records, today's **121 passed, 1 skipped** baseline, and the
+successful [Thread 02 merge Test run](https://github.com/jeffshurtliff/obfuscidian/actions/runs/37157742622)
+for Linux/Python 3.12–3.14. The GitHub connector returned 404; authenticated
+GitHub CLI access succeeded and was used for issue tracking.
+
+- Added internal [inventory](../src/obfuscidian/inventory.py) and
+  [path preflight](../src/obfuscidian/paths.py), using shared
+  [limits/names](../src/obfuscidian/constants.py). Typed immutable records include
+  relative names, file sizes, signed nanosecond times, and filesystem identities.
+  Metadata-only scanning includes empty directories, all regular binary/hidden/
+  config files, and vaults without `.obsidian`. All included records are sorted
+  case-sensitively, independent of locale. No vault command is exposed.
+- Mandatory Git/key exclusions and validated component globs prune before
+  descent; excluded totals count encountered entries rather than unseen
+  descendants. Git metadata is never traversed. The representative fixture
+  inventories twice as **6 files, 5 directories, 7 excluded entries**, with
+  identical source names/types/identities/modes/mtime/ctime and SHA-256 file
+  hashes after scanning and stable binary reads. Access time is intentionally
+  omitted because filesystem reads may update it.
+- Preflight rejects roots, missing source/parents, links/junctions/special files,
+  same/nested locations by spelling or identity, selected keys inside vaults and
+  encountered file aliases, and unmanaged mirror names/types. Mirror inspection
+  validates namespace only; authenticated format/completeness checks remain
+  Thread 04, and Git-control legitimacy/publication remain later work.
+- Stable reads are bounded binary I/O, with POSIX no-follow anchored handles,
+  identity/size/mode/time comparisons, and post-read inventory rechecks. Synthetic
+  changes during enumeration and reads, additions/deletions/renames/replacements,
+  permission/allocation failures, and unsafe substitutions fail without accepting
+  partial results. Unrelated sibling changes do not invalidate source inventory.
+- Exact Fernet estimates agree with real tokens at empty/block/Base64 boundaries;
+  objects and actual serialized-manifest accounting hooks enforce the 50 MiB cap.
+  Staging hooks explicitly account for retained ciphertext and additional rollback
+  copies, with read-only access/free-space checks. Safe staging-location selection,
+  filesystem allocation/journal overhead, authentication, and writes remain later
+  threads; no resource helper creates or reserves paths.
+- Target helpers validate relative syntax, Windows reserved names, explicit
+  case/Unicode comparison, ancestor-prefix collisions, and component/full-path
+  bounds without renaming or filesystem probes. Native target comparison/length
+  policy validation remains Thread 12; callers must supply actual filesystem rules.
+- Added [unit inventory tests](../tests/unit/test_inventory.py),
+  [unit path tests](../tests/unit/test_paths.py), and
+  [synthetic integration scenarios](../tests/integration/test_inventory.py).
+  Updated package archive allowlists and included the
+  [inventory guide](../docs/INVENTORY.md) in the sdist. README, agent/contributor
+  current-status notes, and changelog now describe this increment. Versions,
+  runtime dependencies, lockfile, CLI, and workflows are unchanged.
+
+**Executed validation:** Poetry 2.4.2 / Python 3.12.7 on macOS ARM64:
+
+- `poetry check --lock --strict`, Ruff lint/format checks, full offline pytest
+  through `poetry run coverage run -m pytest -q`, coverage reporting, and Bandit
+  all passed: **258 passed, 2 skipped**. The skips require native Windows ACL
+  APIs and native junction creation. Targeted inventory/path/integration tests
+  passed separately: **137 passed, 1 skipped** (native junction).
+- Coverage is **88%** overall; new inventory/path modules report **95%/97%**.
+  Native Windows code remains unexecuted locally; installed CLI subprocesses
+  are separately verified rather than included in this in-process measurement.
+- Fresh `poetry build --output <fresh-candidate-directory>` produced exactly
+  one wheel and sdist; strict Twine checks passed for both. Default offline
+  archive/installation tests passed in the full suite. The same freshly built
+  candidate artifacts passed an explicit `--artifact-dir` package-content and
+  separate wheel/sdist installation run: **3 passed**, using available developer
+  dependencies outside the checkout. Fully isolated wheelhouse-backed installs
+  were not rerun because runtime dependencies/entry points were unchanged.
+- Proposed-file local Markdown links/fences, LF, private absolute-path exclusion,
+  Python AST/model/date headers, read-only mutation-call inspection, source/diff
+  review, and `git diff --check` passed. The normal suite uses synthetic fixtures
+  only; no source preservation claim comes from a real vault.
+
+Python 3.13/3.14, hosted Linux CI for these uncommitted changes, native Windows
+execution, broader OS validation, and Sphinx builds were not run. The verified
+Linux/Python 3.12–3.14 result above belongs to the merged Thread 02 dependency,
+not this change. Sphinx tooling/build remains Thread 13.
+
+**Tracking/remaining:** Issue #3 receives matching start/progress/checklist/handoff
+updates and stays open for maintainer review. All Thread 03 local acceptance
+criteria are met; no remaining local blockers. Detection is best effort rather
+than an atomic filesystem snapshot. Native Windows race/ACL/junction validation,
+filesystem-specific comparison/length policy validation, and broader supported-OS
+hardening remain Thread 12. Thread 04 — Encrypted backup format — is next after
+review; Threads 04–14 were not implemented. No real vaults, keys, or cloud tests
+were used, and no backup-writing/restore/verify command or format serializer was
+exposed.
+
+All proposed changes remain **unstaged and uncommitted** on the existing Thread 03
+branch. No branch creation, staging, commit, push, PR, merge, tag, release,
+publication, or workflow change/trigger was performed. Issue #3 remains open;
+maintainer approval is still required for completion/closure.
 
 ### Deferred capabilities
 
