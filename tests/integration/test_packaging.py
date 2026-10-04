@@ -36,7 +36,7 @@ def artifacts(pytestconfig: pytest.Config, tmp_path_factory: pytest.TempPathFact
             shutil.copy2(root / name, source / name)
         shutil.copytree(root / 'src', source / 'src', ignore=shutil.ignore_patterns('__pycache__', '*.pyc'))
         (source / 'docs').mkdir()
-        for name in ('CHANGELOG.md', 'CONFIGURATION.md', 'INVENTORY.md', 'FORMAT.md'):
+        for name in ('CHANGELOG.md', 'CONFIGURATION.md', 'INVENTORY.md', 'FORMAT.md', 'TRANSACTIONS.md'):
             shutil.copy2(root / 'docs' / name, source / 'docs' / name)
         # Deliberately seed obvious synthetic private/scratch content, never real vault data.
         for name in (
@@ -105,6 +105,7 @@ def test_artifact_contents(artifacts: tuple[Path, Path]) -> None:
         'paths.py',
         'crypto.py',
         'manifest.py',
+        'transactions.py',
     }
     with zipfile.ZipFile(wheel) as archive:
         prefix = 'obfuscidian-1.0.0.dev0.dist-info/'
@@ -131,6 +132,7 @@ def test_artifact_contents(artifacts: tuple[Path, Path]) -> None:
                 'docs/CONFIGURATION.md',
                 'docs/INVENTORY.md',
                 'docs/FORMAT.md',
+                'docs/TRANSACTIONS.md',
             )
         }
         metadata_file = archive.extractfile(prefix + 'PKG-INFO')

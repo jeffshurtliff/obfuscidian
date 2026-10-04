@@ -9,10 +9,19 @@ Thread 03 — Vault inventory and path preflight — is complete, reviewed, and
 merged into `origin/main`; issue #3 is closed and Linux CI passed on Python
 3.12–3.14. Thread 04 — Encrypted backup format — is complete, reviewed, and
 merged into `origin/main`; issue #4 is closed and Linux CI passed on Python
-3.12–3.14. Threads 05–14 remain not started; Thread 05 was explicitly excluded
-from this completion update.
+3.12–3.14. Thread 05 is implemented locally pending maintainer review;
+see its handoff for validation and platform limits. Threads 06–14 remain not started.
 
 **Intended first stable release:** `1.0.0` (current metadata: `1.0.0.dev0`).
+
+**Codex model selection — maintainer confirmed 4 October 2026:** Use
+`GPT-6.1 Sol` for all Obfuscidian project threads performed by Codex unless
+the maintainer explicitly states otherwise. This is the maintainer-confirmed
+model selection, not an inference from an app name or earlier headers. For
+Python files changed by Codex, use
+`Jeff Shurtliff (via GPT-6.1 Sol)` in `Last Modified`, retain `Created By`, and
+update `Modified Date` to the current local date. An explicit model override
+supersedes this default for the affected thread; do not update unrelated headers.
 
 This is the authoritative implementation plan for the Python/Click Obfuscidian
 CLI. [PLANS.md](PLANS.md) is the preserved original design brief; this roadmap
@@ -521,7 +530,7 @@ commits, publication, or PRs are implied. Update status only after acceptance cr
 | 02 | Configuration and keys | 01 | [#2](https://github.com/jeffshurtliff/obfuscidian/issues/2) | Complete |
 | 03 | Vault inventory and path preflight | 02 | [#3](https://github.com/jeffshurtliff/obfuscidian/issues/3) | Complete |
 | 04 | Encrypted backup format | 03 | [#4](https://github.com/jeffshurtliff/obfuscidian/issues/4) | Complete |
-| 05 | Safe publication and recovery | 04 | [#5](https://github.com/jeffshurtliff/obfuscidian/issues/5) | Not started |
+| 05 | Safe publication and recovery | 04 | [#5](https://github.com/jeffshurtliff/obfuscidian/issues/5) | Implemented locally; pending review |
 | 06 | Fresh backup | 05 | [#6](https://github.com/jeffshurtliff/obfuscidian/issues/6) | Not started |
 | 07 | Merge backup | 06 | [#7](https://github.com/jeffshurtliff/obfuscidian/issues/7) | Not started |
 | 08 | Read-only verification | 04; may precede 05–07 | [#8](https://github.com/jeffshurtliff/obfuscidian/issues/8) | Not started |
@@ -717,7 +726,9 @@ hashes are exposed outside the encrypted manifest.
 
 **Goal/deliverable:** Tested transaction primitives that preserve the previous
 complete destination during errors; public vault write commands remain gated.
-**Depends on:** 04. **Status:** Not started.
+**Depends on:** 04. **Status:** Implemented locally; pending maintainer review.
+Issue #5 remains open; no hosted CI or merge is claimed. See the handoff and
+[transaction guide](../docs/TRANSACTIONS.md) for evidence and platform limits.
 
 1. Implement safe same-filesystem staging/rollback location selection outside
    vaults and Git worktrees, permission/space preflight, exclusive ownership,
@@ -1133,8 +1144,13 @@ CI. Thread 03 is complete following maintainer review, merge, and successful
 Linux CI; issue #3 is closed.
 
 Thread 04 is complete following maintainer review, merge/push, and successful
-Linux CI; issue #4 is closed. Threads 05–14 remain not started. Thread 05 is
-next sequentially and was explicitly excluded from this completion update.
+Linux CI; issue #4 is closed. 
+
+Thread 05 is implemented locally pending maintainer
+review, with issue #5 open. 
+
+Thread 06 is next sequentially; Threads 06–14 remain
+not started. See the Thread 05 handoff for evidence and platform limits.
 Earlier handoff records describe the state at that time; later completion
 records supersede their pending-review and Git-status statements.
 The linked GitHub issues hold public progress discussion and verified
@@ -1648,6 +1664,81 @@ tests, builds, and additional platform checks were not rerun. These four edits
 remain **unstaged and uncommitted on `main`** for the maintainer to handle.
 No application/Thread 05 work, staging, commit, push, branch, PR, merge, tag,
 release, publication, or workflow change/trigger was performed by this follow-up.
+
+**Thread 05 local handoff — 4 October 2026:** Implemented only safe publication
+and recovery primitives. The runtime behavior is implemented locally; the thread
+is not formally complete, merged, or closed. The maintainer confirmed
+`GPT-6.1 Sol`; all five pending headers now use that attribution. Maintainer
+review remains pending.
+
+**Deliverables:**
+
+- `src/obfuscidian/transactions.py`: read-only preflight/target rules, safe
+  same-filesystem workspace selection outside vaults/enclosing Git markers,
+  resource/access checks, exclusive POSIX OS ownership, bounded private
+  write-ahead journals, complete proposal checks, and checked publication.
+- Mirror publication replaces the `.obfuscidian` unit. Restore primitives leave
+  root `.git` file/directory and `.gitignore` in place and optionally preserve
+  root `.obsidian`. Nested repositories, unsafe payloads, target collisions,
+  unmanaged mirrors, and unexpected changes are refused.
+- Fresh success retains old payload outside Git. Durable observations/hash
+  binding and conservative explicit recovery restore previous complete payloads
+  without deleting uncertain/user-modified data. Interrupted recovery can be
+  retried. Only a proven empty transaction-created root may be removed.
+- Shared consent does not infer yes from non-interactive mode. Dry-run execution
+  invokes no builder/verifier/prompt and creates no paths or transaction artifacts.
+- `tests/unit/test_transactions.py` and
+  `tests/integration/test_transactions.py`: 197 targeted cases, including
+  synthetic byte/empty-directory preservation, temporary Git controls, every
+  observed mutation boundary, short writes, before/after journal and rename
+  failure, process death, competing live ownership, rollback failure,
+  recovery interruption/retry, changed data/ancestors/containers, and privacy.
+- [Transaction guide](../docs/TRANSACTIONS.md), unchanged-format integration
+  notes, status/changelog synchronization, sdist documentation allowlist and
+  artifact-content tests. No public vault command, new dependency, lockfile or
+  crypto/backup-format change, or later-thread implementation was introduced.
+
+**Dependency evidence:** Thread 04 code and closed issue #4 were checked,
+including its maintainer review/merge and Linux/Python 3.12–3.14 evidence.
+The targeted format baseline passed 162 cases. GitHub connector reads returned
+404; authenticated CLI issue access works. Issue #5 has start/progress comments.
+
+**Validation:** Poetry 2.4.2 / Python 3.12.7 / macOS ARM64. Full offline suite
+passed 651 tests with 2 native Windows skips; targeted transaction tests passed
+197. Strict Poetry lock, Ruff lint/format, Bandit, diff whitespace, Python
+AST/date, local Markdown links/fences, LF/privacy/scope checks passed. Fresh
+wheel/sdist, strict Twine and separate offline artifact-content/installed-entry
+checks passed (3 cases), repeated against fresh final candidates after the last
+safety edits. Coverage is 90% overall and 89% for `transactions.py`. Developer
+dependencies were used for installation checks; fully isolated wheelhouse
+installs were not repeated. The attribution follow-up checked all five updated
+headers against the maintainer-confirmed `GPT-6.1 Sol` selection, verified
+unchanged executable Python ASTs, and passed Ruff lint/format and diff whitespace
+checks. Runtime tests and packaging were not rerun for the header/documentation-only
+follow-up; the results above belong to the implementation validation.
+
+**Limits/remaining:** Native Windows mutation intentionally fails closed until
+Thread 12 adds locking/private-directory ACL support. Hosted Linux CI,
+Python 3.13/3.14, Windows execution, network/cloud filesystems, and actual
+power-loss validation were not run. Sphinx tooling remains Thread 13. No real
+vault/key/cloud access occurred. Private rollback for restore contains plaintext;
+there is no retention pruning. Callback orchestration must authenticate complete
+restore source objects, estimate staged allocation, and recheck source inventory.
+These primitives detect filesystem changes best effort, coordinate cooperating
+writers, and do not guarantee power-loss recovery. An unconfirmed fsync after
+terminal ownership unlink returns an explicit durability warning; the complete
+new payload and retained old data remain available. Uncertain early ownership
+or an unrecorded created-root identity remains blocked for deliberate inspection.
+
+**Tracking/Git:** Issue #5 remains open for maintainer review. Generating-model
+attribution is resolved by the maintainer's explicit confirmation of
+`GPT-6.1 Sol`; future Codex threads use the model-selection default above unless
+explicitly overridden. The 14 proposed files are unstaged/uncommitted on
+the pre-existing `feature/5-thread-05-safe-pub-and-recovery` branch at `c71d16c`.
+No branch creation, stage, commit, push, PR, merge, tag, release, publication or
+workflow change/trigger occurred. Thread 06 — Fresh backup — is next sequentially
+and **not started**; Threads 06–14 remain unimplemented. Thread 08 may separately
+proceed under the approved dependency graph, but was not started here.
 
 ### Deferred capabilities
 

@@ -80,7 +80,9 @@ Thread 04 — Encrypted backup format — is complete, reviewed, and merged into
 `origin/main`; issue #4 is closed and Linux CI passed on Python 3.12–3.14.
 Internal codecs and complete read-only validation are documented in
 [the format guide](docs/FORMAT.md). Thread 05 — Safe publication and recovery —
-is next and remains not started.
+is implemented locally pending maintainer review; see
+[the transaction guide](docs/TRANSACTIONS.md) and roadmap handoff for evidence
+and platform limitations. Thread 06 is next and remains not started.
 Backup, restore, and verification commands remain planned. Check the roadmap handoff for
 validation and platform limitations.
 

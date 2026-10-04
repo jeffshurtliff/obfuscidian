@@ -1,8 +1,9 @@
 # V1 encrypted backup format
 
 Thread 04 implements internal byte codecs and complete read-only validation.
+Thread 05 adds [internal publication and recovery](TRANSACTIONS.md).
 The CLI still provides only help, version, and keygen. Backup, restore,
-publication, recovery, and a verification command remain planned. These helpers
+recovery options, and a verification command remain planned. These helpers
 are internal boundaries, not a supported Python library API.
 
 ## Managed layout
@@ -21,8 +22,9 @@ A complete mirror requires both the manifest and the objects directory, even
 for an empty snapshot. Objects are flat: each included file has exactly one
 opaque ID and one standard Fernet token. Empty directories live in the
 manifest. Root Git controls are inspected for safe types but never traversed,
-authenticated, interpreted, or modified by the format validator. Git-control
-legitimacy and publication are later work.
+authenticated, interpreted, or modified by the format validator. Publication
+preserves these controls in place; transaction preflight also recognizes
+enclosing Git markers without interpreting Git contents.
 
 Unknown root or managed entries, unexpected objects, missing objects,
 links/junctions, and special files fail validation. No override is provided.
@@ -97,7 +99,8 @@ only after every object passes. It retains no aggregate plaintext/ciphertext
 payload. Reading content or reusing a token through a validated result rechecks
 recorded filesystem state and repeats object validation. Results describe a
 read-only observation, not a durable capability or an atomic snapshot. Readers
-must recheck immediately before publication; transactions remain Thread 05.
+must recheck immediately before publication; Thread 05 implements the internal
+transaction boundary described in the [transaction guide](TRANSACTIONS.md).
 
 Unchanged content must keep its ID and exact validated token. Metadata-only
 updates can use that token with a changed `mtime_ns`. Changed content at the

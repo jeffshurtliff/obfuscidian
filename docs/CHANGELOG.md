@@ -7,6 +7,11 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Internal private same-filesystem staging, exclusive POSIX ownership, durable bounded journal, and checked payload publication.
+- Retained fresh rollback outside Git worktrees, protected Git/settings controls, and conservative explicit recovery with shared consent.
+- Synthetic mutation-boundary, process-death, competing-writer, interrupted recovery, privacy, and user-change preservation tests.
+- Transaction integration and durability/platform-limit documentation; public vault write commands remain gated.
+
 - Internal frozen v1 UTF-8 manifest schema, canonical serialization, secure opaque IDs, and bounded standard Fernet byte codecs.
 - Complete read-only mirror authentication with encrypted hash/size binding, safe token reads, state rechecks, and validated reuse.
 - Immutable synthetic compatibility artifacts and adversarial substitution, hostile JSON/path, size, race, and preservation tests.
