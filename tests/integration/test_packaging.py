@@ -3,8 +3,8 @@
 :Module:            tests.integration.test_packaging
 :Synopsis:          Build, inspect, and install package artifacts offline
 :Created By:        Jeff Shurtliff
-:Last Modified:     Jeff Shurtliff (via GPT-6)
-:Modified Date:     03 Oct 2026
+:Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
+:Modified Date:     04 Oct 2026
 """
 
 from __future__ import annotations
@@ -36,7 +36,7 @@ def artifacts(pytestconfig: pytest.Config, tmp_path_factory: pytest.TempPathFact
             shutil.copy2(root / name, source / name)
         shutil.copytree(root / 'src', source / 'src', ignore=shutil.ignore_patterns('__pycache__', '*.pyc'))
         (source / 'docs').mkdir()
-        for name in ('CHANGELOG.md', 'CONFIGURATION.md', 'INVENTORY.md'):
+        for name in ('CHANGELOG.md', 'CONFIGURATION.md', 'INVENTORY.md', 'FORMAT.md'):
             shutil.copy2(root / 'docs' / name, source / 'docs' / name)
         # Deliberately seed obvious synthetic private/scratch content, never real vault data.
         for name in (
@@ -103,6 +103,8 @@ def test_artifact_contents(artifacts: tuple[Path, Path]) -> None:
         '_windows.py',
         'inventory.py',
         'paths.py',
+        'crypto.py',
+        'manifest.py',
     }
     with zipfile.ZipFile(wheel) as archive:
         prefix = 'obfuscidian-1.0.0.dev0.dist-info/'
@@ -128,6 +130,7 @@ def test_artifact_contents(artifacts: tuple[Path, Path]) -> None:
                 'docs/CHANGELOG.md',
                 'docs/CONFIGURATION.md',
                 'docs/INVENTORY.md',
+                'docs/FORMAT.md',
             )
         }
         metadata_file = archive.extractfile(prefix + 'PKG-INFO')
@@ -179,6 +182,26 @@ def test_installation_entry_points(
     )
     installed = _run([str(python), '-c', 'import obfuscidian; print(obfuscidian.__file__)'], outside)
     assert Path(installed.stdout.strip()).is_relative_to(environment)
+    # Import installed format modules outside the checkout and read the frozen
+    # synthetic fixture without creating any vault command or destination.
+    fixture = Path(__file__).resolve().parents[1] / 'fixtures/v1'
+    format_check = _run(
+        [
+            str(python),
+            '-c',
+            'import sys; from pathlib import Path; from cryptography.fernet import Fernet; '
+            'from obfuscidian import manifest; '
+            'assert Path(manifest.__file__).is_relative_to(Path(sys.prefix)); '
+            'root=Path(sys.argv[1]); key=Fernet((root/"synthetic-fernet-key.txt").read_bytes().strip()); '
+            'result=manifest._verify_mirror(root/"mirror", key); '
+            'assert manifest._read_validated_file(result, result.manifest.files[-1], key)==b""; '
+            'print(result.file_count, result.directory_count)',
+            str(fixture),
+        ],
+        outside,
+    )
+    assert format_check.stdout == '5 4\n'
+    assert format_check.stderr == ''
     for option in ('--help', '--version'):
         console_result = _run([str(console), option], outside)
         module_result = _run([str(python), '-m', 'obfuscidian', option], outside)

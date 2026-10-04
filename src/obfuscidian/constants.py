@@ -3,8 +3,8 @@
 :Module:            obfuscidian.constants
 :Synopsis:          Shared configuration, key, path, and resource constants
 :Created By:        Jeff Shurtliff
-:Last Modified:     Jeff Shurtliff (via GPT-6)
-:Modified Date:     03 Oct 2026
+:Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
+:Modified Date:     04 Oct 2026
 """
 
 ENV_KEY_PATH = 'OBFUSCIDIAN_KEY_PATH'
@@ -53,3 +53,15 @@ WINDOWS_RESERVED_NAMES = frozenset(
         for suffix in ('1', '2', '3', '4', '5', '6', '7', '8', '9', '¹', '²', '³')
     }
 )
+
+# Frozen v1 format: independent of the application/package version.
+FORMAT_VERSION = 1
+ID_RANDOM_BYTES = 16
+ID_PATTERN = r'[0-9a-f]{32}'
+SHA256_PATTERN = r'[0-9a-f]{64}'
+CREATED_AT_PATTERN = r'[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\.[0-9]{1,6})?Z'
+MANIFEST_FIELDS = frozenset({'format_version', 'vault_id', 'snapshot_id', 'created_at', 'directories', 'files'})
+DIRECTORY_FIELDS = frozenset({'path', 'mtime_ns'})
+FILE_FIELDS = frozenset({'path', 'object_id', 'size', 'mtime_ns', 'plaintext_sha256', 'ciphertext_sha256'})
+# Root object -> record array -> record object; deeper containers cannot belong to v1.
+MANIFEST_MAX_DEPTH = 3

@@ -7,6 +7,11 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Internal frozen v1 UTF-8 manifest schema, canonical serialization, secure opaque IDs, and bounded standard Fernet byte codecs.
+- Complete read-only mirror authentication with encrypted hash/size binding, safe token reads, state rechecks, and validated reuse.
+- Immutable synthetic compatibility artifacts and adversarial substitution, hostile JSON/path, size, race, and preservation tests.
+- V1 format, key custody, target constraints, and threat-limit documentation; vault commands remain unavailable.
+
 - Internal deterministic read-only vault inventory with binary/hidden/config/empty-directory inclusion and typed identity records.
 - Mandatory exclusions and portable case-sensitive component globs with pruning and encountered-entry totals.
 - Read-only path/target safety, selected-key custody, mirror namespace checks, stable binary reads, and final inventory comparison.

@@ -7,8 +7,9 @@ Thread 02 — Configuration and keys — is complete, reviewed, and merged into
 `origin/main`; issue #2 is closed and Linux CI passed on Python 3.12–3.14.
 Thread 03 — Vault inventory and path preflight — is complete, reviewed, and
 merged into `origin/main`; issue #3 is closed and Linux CI passed on Python
-3.12–3.14. Thread 04 — Encrypted backup format — is next and has not started.
-Threads 04–14 remain not started.
+3.12–3.14. Thread 04 — Encrypted backup format — is implemented and locally
+validated; maintainer review is pending and issue #4 remains open.
+Threads 05–14 remain not started.
 
 **Intended first stable release:** `1.0.0` (current metadata: `1.0.0.dev0`).
 
@@ -134,8 +135,9 @@ root files or unknown managed-tree entries cause refusal with guidance to move
 them outside the mirror; `--yes` cannot override this validation. Future support
 for additional mirror control files belongs in a separately approved task.
 
-Specify the following schema in Thread 04 and freeze it with compatibility
-fixtures before backup commands use it:
+Thread 04 specifies this schema in the [v1 format guide](../docs/FORMAT.md)
+and freezes it with synthetic compatibility fixtures before backup commands
+use it:
 
 | Manifest field | Contract |
 | --- | --- |
@@ -517,7 +519,7 @@ commits, publication, or PRs are implied. Update status only after acceptance cr
 | 01 | Project foundation | None | [#1](https://github.com/jeffshurtliff/obfuscidian/issues/1) | Complete |
 | 02 | Configuration and keys | 01 | [#2](https://github.com/jeffshurtliff/obfuscidian/issues/2) | Complete |
 | 03 | Vault inventory and path preflight | 02 | [#3](https://github.com/jeffshurtliff/obfuscidian/issues/3) | Complete |
-| 04 | Encrypted backup format | 03 | [#4](https://github.com/jeffshurtliff/obfuscidian/issues/4) | Not started |
+| 04 | Encrypted backup format | 03 | [#4](https://github.com/jeffshurtliff/obfuscidian/issues/4) | Implemented; pending review |
 | 05 | Safe publication and recovery | 04 | [#5](https://github.com/jeffshurtliff/obfuscidian/issues/5) | Not started |
 | 06 | Fresh backup | 05 | [#6](https://github.com/jeffshurtliff/obfuscidian/issues/6) | Not started |
 | 07 | Merge backup | 06 | [#7](https://github.com/jeffshurtliff/obfuscidian/issues/7) | Not started |
@@ -672,7 +674,9 @@ must explicitly skip only where the host cannot create the fixture.
 
 **Goal/deliverable:** A frozen v1 format with in-memory/file-helper round trips
 and compatibility fixtures, ready for orchestration.
-**Depends on:** 03. **Status:** Not started.
+**Depends on:** 03. **Status:** Implemented and locally validated; all four
+subtasks and local acceptance criteria are met. Pending maintainer review;
+issue #4 remains open. See the Thread 04 handoff for checks and limitations.
 
 1. Implement the schema and managed layout in Section 2, bounded parsing,
    canonical sorting, validation of paths/IDs/types, and format-version errors.
@@ -1125,8 +1129,8 @@ Thread 02 is complete following maintainer review, merge, and successful Linux
 CI. Thread 03 is complete following maintainer review, merge, and successful
 Linux CI; issue #3 is closed.
 
-Threads 04–14 remain not started; Thread 04 is next and awaits a separate
-implementation request.
+Thread 04 is implemented and locally validated, pending maintainer review;
+issue #4 remains open. Threads 05–14 remain not started.
 Earlier handoff records describe the state at that time; later completion
 records supersede their pending-review and Git-status statements.
 The linked GitHub issues hold public progress discussion and verified
@@ -1512,6 +1516,102 @@ not rerun application tests, artifact builds, or platform tests; existing hosted
 CI results were verified without triggering a workflow. These four documentation
 edits remain unstaged and uncommitted on `main`. No application or Thread 04
 work, staging, commit, push, branch, PR, or publication was performed.
+
+**Thread 04 handoff — 4 October 2026:** Implemented only the approved v1
+format increment on the pre-existing `main` checkout, initially clean at
+`a0d25b9`. Dependency readiness was verified from actual inventory/path/resource,
+configuration/key, and packaging code, the closed issue #3 completion/merge/CI
+record, and today's **258 passed, 2 skipped** baseline. The GitHub connector
+returned 404; authenticated GitHub CLI access succeeded for issue tracking.
+
+- Added internal [Fernet byte helpers](../src/obfuscidian/crypto.py) and
+  [v1 manifest/complete validation](../src/obfuscidian/manifest.py), separate
+  from the unchanged Click layer. Shared [format constants](../src/obfuscidian/constants.py)
+  are independent of the unchanged package version `1.0.0.dev0`. No custom
+  cryptography, new dependency, lockfile change, TTL, or vault command was added.
+- Froze exact schema fields, compact canonical UTF-8 JSON, path sorting,
+  32-lowercase-hex lineage/snapshot/object identifiers, UTC calendar timestamps,
+  signed nanosecond times, and full SHA-256 bindings in the
+  [format guide](../docs/FORMAT.md) and
+  [immutable synthetic fixture](../tests/fixtures/v1/README.md). Parsing checks
+  the 50 MiB encrypted limit, bounded plaintext/depth, duplicate JSON keys,
+  exact types/fields, versions, unsafe paths, mandatory exclusions, duplicate
+  IDs/paths, file/directory conflicts, and every required parent directory.
+  Writers check actual serialized bytes and projected standard token length.
+- Complete read-only validation requires the managed manifest/objects layout
+  and exact object set. Every object passes ciphertext hash, Fernet
+  authentication, plaintext size, and plaintext hash checks. Objects are read
+  one at a time using bounded stable I/O; no aggregate payload is retained.
+  Structured metadata is returned only after all objects and final namespace/
+  identity checks pass. Validated reads/reuse repeat state and object checks.
+  Unchanged content retains exact ciphertext and ID; metadata-only changes can
+  reuse that token. Changed same-path content keeps its ID with a new token.
+- [Unit crypto tests](../tests/unit/test_crypto.py),
+  [unit schema tests](../tests/unit/test_manifest.py), and
+  [synthetic integration tests](../tests/integration/test_format.py) prove exact
+  mixed-byte reconstruction and source/mirror preservation. The fixed fixture
+  contains **5 files and 4 directories**, including all 256 byte values, CRLF,
+  Unicode, hidden/config content, zero bytes, and an empty directory. Its
+  timestamp-zero tokens decrypt without a TTL; independent pinned artifact
+  hashes prevent silent fixture replacement. Tests mutate temporary copies only.
+- Tests reject equal-length valid token swaps, identical-plaintext re-encryption,
+  wrong manifest/object keys, changed/truncated/missing/unexpected objects,
+  incorrect bound size/hashes, hostile authenticated JSON/paths, target case/
+  Unicode/Windows/length conflicts, links/special files, oversize sparse tokens,
+  changed identities/content during open/read/complete verification, stale reuse,
+  and access/allocation failures. Stream-construction failure closes the opened
+  descriptor. Unrelated sibling changes do not invalidate the mirror. Existing
+  and absent synthetic destinations remain unchanged; helpers emit no output.
+- Updated README, contributor/agent current status, changelog, and sdist guide
+  inclusion. Archive allowlists include the two modules and format guide, while
+  excluding test keys/fixtures/private/generated material. Installed wheel and
+  sdist imports validate the frozen fixture outside the checkout.
+
+**Executed validation:** Poetry 2.4.2 / Python 3.12.7 on macOS ARM64:
+
+- `poetry check --lock --strict`, `poetry run ruff check .`,
+  `poetry run ruff format --check .`, full offline pytest via
+  `poetry run coverage run -m pytest -q`, coverage reporting, and
+  `poetry run bandit -r src/obfuscidian` passed: **454 passed, 2 skipped**.
+  Skips require native Windows ACL APIs and junction creation. Overall coverage
+  is **90%**, with **100% crypto / 95% manifest**; installed subprocess checks
+  are verified separately. The new format tests account for 196 passing cases.
+- Fresh `poetry build --output <fresh-candidate-directory>` built exactly one
+  wheel and sdist, and strict Twine checks passed for both. The same candidates
+  passed explicit archive/content and separate wheel/sdist installation checks:
+  **3 passed**, using available developer dependencies outside the checkout.
+  Fully isolated wheelhouse installs were not repeated; dependencies/entry
+  points are unchanged. Default offline packaging checks also passed in the
+  full suite.
+- Proposed-file Markdown links/fences, LF/whitespace, AST/model/date headers,
+  privacy and mirror artifact inspection, read-only mutation-call inspection,
+  scope/source/diff review, and `git diff --check` passed. No real vault, real
+  key, cloud service, release, or publication was used.
+
+**Tracking/remaining:** All four subtasks and Thread 04 local acceptance criteria
+are met. Issue #4 has start, progress, verified checklist, and handoff updates
+and stays open for maintainer review. These local changes have not run hosted
+Linux CI, Python 3.13/3.14, native Windows execution, broader OS validation,
+or Sphinx. The dependency's recorded Linux matrix is not evidence for this
+change. Windows/target-filesystem hardening remains Thread 12; docs tooling
+remains Thread 13. No local acceptance blockers remain.
+
+Validation is a best-effort read-only observation, not an atomic snapshot or
+security certification. It cannot detect replay of a complete valid historic
+snapshot; the key holder can forge valid data. Visible encrypted sizes/counts,
+token times, and change patterns remain threat limits. The token cap is not a
+total-vault resource quota. Root Git controls are inspected only for names/types,
+not authenticated or interpreted. Actual target naming rules must be provided
+by callers; timestamp representability belongs to restore. All publication,
+locking/recovery, snapshot/no-op orchestration, Git operations, and vault commands
+remain later work. Thread 05 — Safe publication and recovery — is the next
+sequential thread after review; Thread 08 may separately precede it as approved
+in the dependency index. Neither was started.
+
+All 24 proposed files remain **unstaged and uncommitted on `main`**. No branch
+creation, staging, commit, push, PR, merge, tag, release, publication, or workflow
+edit/trigger occurred. New deliverables are local and will become available
+remotely only through the maintainer's separately authorized Git workflow.
 
 ### Deferred capabilities
 

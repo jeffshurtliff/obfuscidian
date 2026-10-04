@@ -28,8 +28,10 @@ merged into `origin/main`; issue #3 is closed and Linux CI passed on Python
 3.12–3.14. Internal read-only inventory/path/resource helpers are documented
 in [the inventory guide](docs/INVENTORY.md).
 
-Thread 04 — Encrypted backup format — is next and has not started. Backup,
-restore, and verification remain planned. Handoff evidence and platform
+Thread 04 — Encrypted backup format — is implemented and locally validated,
+pending maintainer review; issue #4 remains open. Internal codecs and complete
+read-only validation are documented in [the format guide](docs/FORMAT.md).
+Backup, restore, and verification commands remain planned. Handoff evidence and platform
 limitations live in the roadmap.
 
 The initial test workflow targets Linux/Python 3.12–3.14; configured jobs do not
