@@ -65,3 +65,19 @@ DIRECTORY_FIELDS = frozenset({'path', 'mtime_ns'})
 FILE_FIELDS = frozenset({'path', 'object_id', 'size', 'mtime_ns', 'plaintext_sha256', 'ciphertext_sha256'})
 # Root object -> record array -> record object; deeper containers cannot belong to v1.
 MANIFEST_MAX_DEPTH = 3
+
+# Private transaction control layout, independent of the encrypted backup format.
+OBSIDIAN_DIRECTORY = '.obsidian'
+TRANSACTION_PREFIX = '.obfuscidian-transaction-'
+TRANSACTION_VERSION = 1
+TRANSACTION_STAGE = 'stage'
+TRANSACTION_ROLLBACK = 'rollback'
+TRANSACTION_JOURNAL = 'journal.json'
+TRANSACTION_READ_BYTES = 1024 * 1024
+TRANSACTION_RESERVE_BYTES = 1024 * 1024
+TRANSACTION_JOURNAL_BYTES = 16 * 1024 * 1024
+TRANSACTION_LOCK_BYTES = 4096
+
+TRANSACTION_PHASES = frozenset(
+    {'preparing', 'ready', 'creating-root', 'publishing', 'published', 'recovering', 'removing-root', 'recovered'}
+)

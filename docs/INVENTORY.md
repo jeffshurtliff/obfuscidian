@@ -108,4 +108,6 @@ copies; already allocated destination data is not charged again. Read-only
 free-space/access checks operate on an existing chosen parent without reserving
 space. These are payload estimates: filesystem allocation, journals, metadata,
 and later changes to available space must be accounted for by Thread 05.
-Safe staging-location selection and destination publication remain unimplemented.
+Thread 05 implements [safe staging and publication primitives](TRANSACTIONS.md).
+Callers must still supply complete staging estimates, authenticate format data,
+and recheck source inventory; public vault commands remain planned.
