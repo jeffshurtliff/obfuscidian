@@ -5,9 +5,10 @@
 **Status:** Thread 01 complete, reviewed, and merged into `origin/main`.
 Thread 02 — Configuration and keys — is complete, reviewed, and merged into
 `origin/main`; issue #2 is closed and Linux CI passed on Python 3.12–3.14.
-Thread 03 — Vault inventory and path preflight — is implemented locally;
-acceptance criteria are met and maintainer review is pending. 
-Thread 04 is next after review. Threads 04–14 remain not started.
+Thread 03 — Vault inventory and path preflight — is complete, reviewed, and
+merged into `origin/main`; issue #3 is closed and Linux CI passed on Python
+3.12–3.14. Thread 04 — Encrypted backup format — is next and has not started.
+Threads 04–14 remain not started.
 
 **Intended first stable release:** `1.0.0` (current metadata: `1.0.0.dev0`).
 
@@ -515,7 +516,7 @@ commits, publication, or PRs are implied. Update status only after acceptance cr
 | --- | --- | --- | --- | --- |
 | 01 | Project foundation | None | [#1](https://github.com/jeffshurtliff/obfuscidian/issues/1) | Complete |
 | 02 | Configuration and keys | 01 | [#2](https://github.com/jeffshurtliff/obfuscidian/issues/2) | Complete |
-| 03 | Vault inventory and path preflight | 02 | [#3](https://github.com/jeffshurtliff/obfuscidian/issues/3) | Implemented locally; review pending |
+| 03 | Vault inventory and path preflight | 02 | [#3](https://github.com/jeffshurtliff/obfuscidian/issues/3) | Complete |
 | 04 | Encrypted backup format | 03 | [#4](https://github.com/jeffshurtliff/obfuscidian/issues/4) | Not started |
 | 05 | Safe publication and recovery | 04 | [#5](https://github.com/jeffshurtliff/obfuscidian/issues/5) | Not started |
 | 06 | Fresh backup | 05 | [#6](https://github.com/jeffshurtliff/obfuscidian/issues/6) | Not started |
@@ -596,7 +597,7 @@ resolution, without a functional vault write command.
 merged the implementation into `origin/main`; issue #2 is closed as completed.
 Linux CI passed on Python 3.12–3.14. Local acceptance evidence, platform limits,
 and the completion record are preserved in the handoff below. Thread 03 is
-implemented locally and awaits maintainer review.
+also complete following maintainer review and merge.
 
 1. Add shared constants, operational/configuration errors, and independent key
    and path resolution helpers. Implement the documented CLI/environment matrix
@@ -632,8 +633,9 @@ permission assertions guarded by platform; a manual dry run that creates no file
 
 **Goal/deliverable:** A deterministic, read-only inventory usable by backup and
 restore planning, with exclusion and filesystem safety tests.
-**Depends on:** 02. **Status:** Implemented locally; acceptance criteria met,
-maintainer review pending. Issue #3 remains open. See the handoff record for
+**Depends on:** 02. **Status:** Complete. Maintainer reviewed, committed, and
+merged the implementation into `origin/main`; issue #3 is closed as completed.
+Linux CI passed on Python 3.12–3.14. See the handoff and completion records for
 executed validation and platform limits.
 
 1. Add typed inventory records for included relative files/directories, sizes,
@@ -1120,10 +1122,11 @@ status consistent.
 Thread 01 is complete following maintainer review and merge;
 
 Thread 02 is complete following maintainer review, merge, and successful Linux
-CI. Thread 03 is implemented locally and awaits maintainer review; issue #3
-remains open. 
+CI. Thread 03 is complete following maintainer review, merge, and successful
+Linux CI; issue #3 is closed.
 
-Threads 04–14 remain not started; Thread 04 is next after review.
+Threads 04–14 remain not started; Thread 04 is next and awaits a separate
+implementation request.
 Earlier handoff records describe the state at that time; later completion
 records supersede their pending-review and Git-status statements.
 The linked GitHub issues hold public progress discussion and verified
@@ -1478,6 +1481,37 @@ All proposed changes remain **unstaged and uncommitted** on the existing Thread 
 branch. No branch creation, staging, commit, push, PR, merge, tag, release,
 publication, or workflow change/trigger was performed. Issue #3 remains open;
 maintainer approval is still required for completion/closure.
+
+**Thread 03 completion — 3 October 2026:** The maintainer confirmed review,
+commit, merge/push, and completion, and explicitly requested closure of issue #3.
+The implementation commit
+[`982dae8`](https://github.com/jeffshurtliff/obfuscidian/commit/982dae8) is merged
+into `origin/main` as
+[`33c19fb`](https://github.com/jeffshurtliff/obfuscidian/commit/33c19fb).
+Verified live GitHub `main` matches local `HEAD`, `main`, and `origin/main` at
+[`51be612`](https://github.com/jeffshurtliff/obfuscidian/commit/51be612), which
+contains that merge and subsequent maintainer changes. The
+[Thread 03 merge Test run](https://github.com/jeffshurtliff/obfuscidian/actions/runs/37163121904)
+and [current-main Test run](https://github.com/jeffshurtliff/obfuscidian/actions/runs/37164444283)
+completed successfully, with all Linux/Python 3.12, 3.13, and 3.14 jobs passing.
+Issue #3 is closed as completed and its maintainer-review/closure checklist item
+is checked. All four subtasks and acceptance criteria are complete.
+
+The earlier handoff retains its historical local-test, pending-review, Git,
+and unexecuted-hosted-CI evidence; this completion record supersedes those
+status statements. Native Windows runtime checks, filesystem-specific target
+comparison/length policy validation, and broader OS hardening remain Thread 12.
+Backup, restore, and verification commands remain unavailable.
+
+Updated README.md, CONTRIBUTING.md, AGENTS.md, and this roadmap to reflect
+completion and the next step. Thread 04 — Encrypted backup format — is next and
+remains not started; the maintainer explicitly prohibited beginning it during
+this follow-up. This documentation-only update checks local links, Markdown
+fences/LF, status consistency, privacy, scope, and `git diff --check`. It does
+not rerun application tests, artifact builds, or platform tests; existing hosted
+CI results were verified without triggering a workflow. These four documentation
+edits remain unstaged and uncommitted on `main`. No application or Thread 04
+work, staging, commit, push, branch, PR, or publication was performed.
 
 ### Deferred capabilities
 

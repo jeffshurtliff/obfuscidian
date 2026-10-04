@@ -72,12 +72,13 @@ Thread 02 adds configuration/key resolution, secure keygen, and internal key
 loading; it is complete, reviewed, and merged into `origin/main`, with issue #2
 closed and Linux CI passing on Python 3.12–3.14. 
 
-Thread 03 — Vault inventory and path preflight — is implemented locally and
-awaits maintainer review. It adds internal read-only helpers; no vault command
-is exposed. 
+Thread 03 — Vault inventory and path preflight — is complete, reviewed, and
+merged into `origin/main`; issue #3 is closed and Linux CI passed on Python
+3.12–3.14. It adds internal read-only helpers; no vault command is exposed.
 
-Thread 04 is next after review. Backup, restore, and verification
-remain planned. Check the roadmap handoff for validation and platform limitations.
+Thread 04 — Encrypted backup format — is next and has not started. Backup,
+restore, and verification remain planned. Check the roadmap handoff for
+validation and platform limitations.
 
 Use Poetry 2.2 or newer, below 3.0, for development, dependencies, and packaging.
 Initial CI targets Linux/Python 3.12, 3.13, and 3.14; broader OS hardening belongs

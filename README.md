@@ -20,15 +20,16 @@ Thread 02 — Configuration and keys — is complete, reviewed, and merged into
 is closed. It adds configuration resolution, secure `keygen`, and internal key
 loading. Linux CI passed on Python 3.12–3.14 for the merged implementation.
 
-Thread 03 — Vault inventory and path preflight — is implemented locally and
-awaits maintainer review. It adds internal read-only inventory, exclusion/path
-checks, stable binary reads, and resource estimates. See the
-[inventory/preflight guide](docs/INVENTORY.md) and the 
-[approved roadmap](dev/IMPLEMENTATION_PLAN.md#thread-03--vault-inventory-and-path-preflight) 
-for its scope and validation evidence. 
+Thread 03 — Vault inventory and path preflight — is complete, reviewed, and
+merged into `origin/main`; [issue #3](https://github.com/jeffshurtliff/obfuscidian/issues/3)
+is closed. It adds internal read-only inventory, exclusion/path checks, stable
+binary reads, and resource estimates. Linux CI passed on Python 3.12–3.14. See
+the [inventory/preflight guide](docs/INVENTORY.md) and the
+[approved roadmap](dev/IMPLEMENTATION_PLAN.md#thread-03--vault-inventory-and-path-preflight)
+for its scope and validation evidence.
 
-Thread 04 — Encrypted backup format — is next after review. Vault operations 
-remain unavailable; broader OS validation is still deferred to Thread 12.
+Thread 04 — Encrypted backup format — is next and has not started. Vault
+operations remain unavailable; broader OS validation is still deferred to Thread 12.
 
 ## Installation from source
 
