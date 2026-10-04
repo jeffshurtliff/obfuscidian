@@ -32,11 +32,16 @@ Thread 04 — Encrypted backup format — is complete, reviewed, and merged into
 `origin/main`; [issue #4](https://github.com/jeffshurtliff/obfuscidian/issues/4)
 is closed. It adds internal v1 codecs, complete read-only validation, and
 synthetic compatibility fixtures; see [the format guide](docs/FORMAT.md).
-Linux CI passed on Python 3.12–3.14 for Thread 04. Thread 05 — Safe publication
-and recovery — is implemented locally pending maintainer review; see the
-[transaction guide](docs/TRANSACTIONS.md) for retained rollback, conservative
-recovery, and POSIX/platform limits. Thread 06 remains not started. Vault commands
-remain unavailable; broader OS validation is deferred to Thread 12.
+Linux CI passed on Python 3.12–3.14 for Thread 04.
+
+Thread 05 — Safe publication and recovery — is complete, reviewed, and
+merged/pushed into `origin/main`; [issue #5](https://github.com/jeffshurtliff/obfuscidian/issues/5)
+is closed. Linux CI passed on Python 3.12–3.14. See the
+[transaction guide](docs/TRANSACTIONS.md) and
+[roadmap completion record](dev/IMPLEMENTATION_PLAN.md#tracking-and-handoff-record)
+for retained rollback, conservative recovery, validation, and platform limits.
+Thread 06 — Fresh backup — remains **not started**. Vault commands remain
+unavailable; broader OS validation is deferred to Thread 12.
 
 ## Installation from source
 
