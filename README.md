@@ -28,11 +28,13 @@ the [inventory/preflight guide](docs/INVENTORY.md) and the
 [approved roadmap](dev/IMPLEMENTATION_PLAN.md#thread-03--vault-inventory-and-path-preflight)
 for its scope and validation evidence.
 
-Thread 04 — Encrypted backup format — is implemented and locally validated,
-pending maintainer review; [issue #4](https://github.com/jeffshurtliff/obfuscidian/issues/4)
-remains open. It adds internal v1 codecs, complete read-only validation, and
+Thread 04 — Encrypted backup format — is complete, reviewed, and merged into
+`origin/main`; [issue #4](https://github.com/jeffshurtliff/obfuscidian/issues/4)
+is closed. It adds internal v1 codecs, complete read-only validation, and
 synthetic compatibility fixtures; see [the format guide](docs/FORMAT.md).
-Vault commands remain unavailable; broader OS validation is deferred to Thread 12.
+Linux CI passed on Python 3.12–3.14. Thread 05 — Safe publication and recovery —
+is next and remains not started. Vault commands remain unavailable; broader
+OS validation is deferred to Thread 12.
 
 ## Installation from source
 

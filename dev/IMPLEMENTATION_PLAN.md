@@ -7,9 +7,10 @@ Thread 02 — Configuration and keys — is complete, reviewed, and merged into
 `origin/main`; issue #2 is closed and Linux CI passed on Python 3.12–3.14.
 Thread 03 — Vault inventory and path preflight — is complete, reviewed, and
 merged into `origin/main`; issue #3 is closed and Linux CI passed on Python
-3.12–3.14. Thread 04 — Encrypted backup format — is implemented and locally
-validated; maintainer review is pending and issue #4 remains open.
-Threads 05–14 remain not started.
+3.12–3.14. Thread 04 — Encrypted backup format — is complete, reviewed, and
+merged into `origin/main`; issue #4 is closed and Linux CI passed on Python
+3.12–3.14. Threads 05–14 remain not started; Thread 05 was explicitly excluded
+from this completion update.
 
 **Intended first stable release:** `1.0.0` (current metadata: `1.0.0.dev0`).
 
@@ -519,7 +520,7 @@ commits, publication, or PRs are implied. Update status only after acceptance cr
 | 01 | Project foundation | None | [#1](https://github.com/jeffshurtliff/obfuscidian/issues/1) | Complete |
 | 02 | Configuration and keys | 01 | [#2](https://github.com/jeffshurtliff/obfuscidian/issues/2) | Complete |
 | 03 | Vault inventory and path preflight | 02 | [#3](https://github.com/jeffshurtliff/obfuscidian/issues/3) | Complete |
-| 04 | Encrypted backup format | 03 | [#4](https://github.com/jeffshurtliff/obfuscidian/issues/4) | Implemented; pending review |
+| 04 | Encrypted backup format | 03 | [#4](https://github.com/jeffshurtliff/obfuscidian/issues/4) | Complete |
 | 05 | Safe publication and recovery | 04 | [#5](https://github.com/jeffshurtliff/obfuscidian/issues/5) | Not started |
 | 06 | Fresh backup | 05 | [#6](https://github.com/jeffshurtliff/obfuscidian/issues/6) | Not started |
 | 07 | Merge backup | 06 | [#7](https://github.com/jeffshurtliff/obfuscidian/issues/7) | Not started |
@@ -674,9 +675,11 @@ must explicitly skip only where the host cannot create the fixture.
 
 **Goal/deliverable:** A frozen v1 format with in-memory/file-helper round trips
 and compatibility fixtures, ready for orchestration.
-**Depends on:** 03. **Status:** Implemented and locally validated; all four
-subtasks and local acceptance criteria are met. Pending maintainer review;
-issue #4 remains open. See the Thread 04 handoff for checks and limitations.
+**Depends on:** 03. **Status:** Complete. Maintainer reviewed, committed, and
+merged/pushed the implementation into `origin/main`; issue #4 is closed as
+completed. All four subtasks and acceptance criteria are met. Linux CI passed
+on Python 3.12–3.14. See the handoff and completion records for validation and
+platform limits.
 
 1. Implement the schema and managed layout in Section 2, bounded parsing,
    canonical sorting, validation of paths/IDs/types, and format-version errors.
@@ -1129,8 +1132,9 @@ Thread 02 is complete following maintainer review, merge, and successful Linux
 CI. Thread 03 is complete following maintainer review, merge, and successful
 Linux CI; issue #3 is closed.
 
-Thread 04 is implemented and locally validated, pending maintainer review;
-issue #4 remains open. Threads 05–14 remain not started.
+Thread 04 is complete following maintainer review, merge/push, and successful
+Linux CI; issue #4 is closed. Threads 05–14 remain not started. Thread 05 is
+next sequentially and was explicitly excluded from this completion update.
 Earlier handoff records describe the state at that time; later completion
 records supersede their pending-review and Git-status statements.
 The linked GitHub issues hold public progress discussion and verified
@@ -1612,6 +1616,38 @@ All 24 proposed files remain **unstaged and uncommitted on `main`**. No branch
 creation, staging, commit, push, PR, merge, tag, release, publication, or workflow
 edit/trigger occurred. New deliverables are local and will become available
 remotely only through the maintainer's separately authorized Git workflow.
+
+**Thread 04 completion — 4 October 2026:** The maintainer confirmed review,
+commit, merge/push, and acceptance of Thread 04 and explicitly requested closure
+of issue #4. The implementation commit
+[`caf62b1`](https://github.com/jeffshurtliff/obfuscidian/commit/caf62b14c566e411605de00ab4c4ef74244c67d7)
+is merged into `origin/main` as
+[`9729772`](https://github.com/jeffshurtliff/obfuscidian/commit/9729772acf554fcb5504f1b9acba9b2af0b1b4a5).
+Verified live GitHub `main` matches local `HEAD`, `main`, and `origin/main` at
+that merge. The [Thread 04 merge Test run](https://github.com/jeffshurtliff/obfuscidian/actions/runs/37217437014)
+completed successfully, including all Linux/Python 3.12, 3.13, and 3.14 jobs
+and their style/security, offline-test/coverage, and fresh-artifact steps.
+Issue #4 is closed as completed and its maintainer-review/closure checklist
+item is checked. All four subtasks and acceptance criteria are complete.
+
+The earlier handoff retains its historical local validation, pending-review,
+uncommitted Git status, and unexecuted-hosted-CI evidence. This completion record
+supersedes those status statements. Native Windows execution, target-filesystem
+hardening, and broader supported-OS validation remain Thread 12 work; Sphinx
+tooling remains Thread 13. Vault backup, restore, and verification commands
+remain unavailable.
+
+Updated README.md, CONTRIBUTING.md, AGENTS.md, and the roadmap's current status,
+index, thread section, and completion record. Thread 05 — Safe publication and
+recovery — is next sequentially and remains **not started**; the maintainer
+explicitly prohibited beginning it during this follow-up. Threads 05–14 remain
+not started. This documentation-only update verifies local Markdown links,
+fences/LF, privacy, status consistency, four-file scope, and `git diff --check`.
+Existing hosted CI was verified without triggering a workflow; application
+tests, builds, and additional platform checks were not rerun. These four edits
+remain **unstaged and uncommitted on `main`** for the maintainer to handle.
+No application/Thread 05 work, staging, commit, push, branch, PR, merge, tag,
+release, publication, or workflow change/trigger was performed by this follow-up.
 
 ### Deferred capabilities
 
