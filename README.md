@@ -28,8 +28,11 @@ the [inventory/preflight guide](docs/INVENTORY.md) and the
 [approved roadmap](dev/IMPLEMENTATION_PLAN.md#thread-03--vault-inventory-and-path-preflight)
 for its scope and validation evidence.
 
-Thread 04 — Encrypted backup format — is next and has not started. Vault
-operations remain unavailable; broader OS validation is still deferred to Thread 12.
+Thread 04 — Encrypted backup format — is implemented and locally validated,
+pending maintainer review; [issue #4](https://github.com/jeffshurtliff/obfuscidian/issues/4)
+remains open. It adds internal v1 codecs, complete read-only validation, and
+synthetic compatibility fixtures; see [the format guide](docs/FORMAT.md).
+Vault commands remain unavailable; broader OS validation is deferred to Thread 12.
 
 ## Installation from source
 
@@ -69,7 +72,8 @@ paths are redacted unless `--verbose` is selected. See
 Use Poetry 2.2 or newer, below 3.0. Runtime dependencies are declared in
 `pyproject.toml`; developer tools use its `dev` group, and `poetry.lock` records
 resolved dependencies. cryptography is included for the approved Fernet design;
-key creation/loading uses its standard Fernet recipe. Vault encryption remains planned.
+key creation/loading and internal v1 byte codecs use its standard Fernet recipe.
+Vault command orchestration remains planned.
 
 ```sh
 poetry install --with dev
