@@ -12,7 +12,24 @@ maintainers = [
 license = "Apache-2.0"
 license-files = ["LICENSE"]
 requires-python = ">=3.12"
-classifiers = []
+classifiers = [
+    # Project maturity
+    "Development Status :: 2 - Pre-Alpha",
+
+    # Intended audience and environment
+    "Intended Audience :: End Users/Desktop",
+    "Environment :: Console",
+    "Topic :: Security :: Cryptography",
+    "Topic :: System :: Archiving :: Backup",
+    "Topic :: Utilities",
+
+    # Supported Python versions
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+]
 dependencies = [
     "click>=8.5.0",
     "cryptography>=50.0.2"
