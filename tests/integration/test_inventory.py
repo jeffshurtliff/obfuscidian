@@ -3,8 +3,8 @@
 :Module:            tests.integration.test_inventory
 :Synopsis:          Synthetic preservation and changing-source preflight scenarios
 :Created By:        Jeff Shurtliff
-:Last Modified:     Jeff Shurtliff (via GPT-6)
-:Modified Date:     03 Oct 2026
+:Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
+:Modified Date:     04 Oct 2026
 """
 
 from __future__ import annotations
@@ -261,13 +261,14 @@ def test_external_key_hardlink(vault: Path, alias_name: str) -> None:
         inv._inventory_vault(paths)
 
 
-def test_no_backup_commands_exposed() -> None:
-    """Keep future vault writes inaccessible from both CLI parsing and help."""
+def test_only_fresh_backup_exposed() -> None:
+    """Keep future vault writes inaccessible while exposing complete fresh backup."""
     runner = CliRunner()
-    assert set(cli.commands) == {'keygen'}
-    for command in ('shroud', 'unshroud', 'verify'):
+    assert set(cli.commands) == {'keygen', 'shroud'}
+    for command in ('unshroud', 'verify'):
         result = runner.invoke(cli, [command])
         assert result.exit_code == 2 and 'No such command' in result.output
+    assert runner.invoke(cli, ['shroud', 'merge']).exit_code == 2
 
 
 def test_unrelated_sibling_changes_are_not_source_changes(vault: Path) -> None:

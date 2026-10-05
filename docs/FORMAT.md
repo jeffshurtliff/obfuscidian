@@ -2,8 +2,8 @@
 
 Thread 04 implements internal byte codecs and complete read-only validation.
 Thread 05 adds [internal publication and recovery](TRANSACTIONS.md).
-The CLI still provides only help, version, and keygen. Backup, restore,
-recovery options, and a verification command remain planned. These helpers
+Thread 06 exposes [fresh backup and explicit recovery](BACKUP.md).
+Merge backup, restore and a verification command remain planned. These helpers
 are internal boundaries, not a supported Python library API.
 
 ## Managed layout

@@ -1,8 +1,8 @@
 # Inventory and path preflight
 
-Thread 03 adds internal read-only helpers for future backup/restore planning.
-The CLI still exposes only help, version, and `keygen`. `shroud`, `unshroud`,
-`verify`, and backup writing remain unavailable. These helpers are implementation
+Thread 03 adds internal read-only helpers now used by
+[Thread 06 fresh backup](BACKUP.md). The CLI exposes `keygen` and `shroud fresh`;
+merge backup, `unshroud` and `verify` remain planned. These helpers are implementation
 boundaries, not a supported Python library API.
 
 ## Included contents and deterministic totals
@@ -110,4 +110,4 @@ space. These are payload estimates: filesystem allocation, journals, metadata,
 and later changes to available space must be accounted for by Thread 05.
 Thread 05 implements [safe staging and publication primitives](TRANSACTIONS.md).
 Callers must still supply complete staging estimates, authenticate format data,
-and recheck source inventory; public vault commands remain planned.
+and recheck source inventory. Thread 06 supplies those checks for `shroud fresh`.

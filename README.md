@@ -4,8 +4,9 @@
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://github.com/jeffshurtliff/obfuscidian/blob/main/LICENSE)
 
 Obfuscidian is a Python CLI being developed to create encrypted Obsidian vault
-backups. The current CLI provides help, version information, and secure key
-generation. Backup, restore, and verification are planned and unavailable.
+backups. The current CLI provides help, version information, secure key
+generation, and `shroud fresh`. Merge backup, restore, and verification commands
+are planned and unavailable.
 This repository does not yet claim a published package or completed platform validation.
 
 ## Project status
@@ -40,8 +41,11 @@ is closed. Linux CI passed on Python 3.12–3.14. See the
 [transaction guide](docs/TRANSACTIONS.md) and
 [roadmap completion record](dev/IMPLEMENTATION_PLAN.md#tracking-and-handoff-record)
 for retained rollback, conservative recovery, validation, and platform limits.
-Thread 06 — Fresh backup — remains **not started**. Vault commands remain
-unavailable; broader OS validation is deferred to Thread 12.
+Thread 06 — Fresh backup — is implemented locally and awaits maintainer review;
+[issue #6](https://github.com/jeffshurtliff/obfuscidian/issues/6) remains open.
+See the [fresh backup guide](docs/BACKUP.md) for preservation, consent, no-op,
+dry-run and recovery behavior. Thread 07 remains **not started**; broader OS
+validation is deferred to Thread 12. Native Windows mutation fails closed.
 
 ## Installation from source
 
@@ -62,7 +66,7 @@ python -m obfuscidian --help
 python -m obfuscidian --version
 ```
 
-Both entry points offer the same CLI behavior. No vault operations are available yet.
+Both entry points offer the same CLI behavior.
 Use an existing private key directory outside both vaults and cloud repositories:
 
 ```sh
@@ -76,13 +80,30 @@ platform validation pending. Keep a separate offline key backup. Unattended
 paths are redacted unless `--verbose` is selected. See
 [configuration, precedence, permissions, and custody](docs/CONFIGURATION.md).
 
+With an existing key and vault, preview and then publish a fresh snapshot:
+
+```sh
+obfuscidian shroud fresh --help
+obfuscidian shroud fresh --origin ./vault --mirror ./vault-encrypted --key ./keys/obfuscidian-primary.key --dry-run
+obfuscidian shroud fresh --origin ./vault --mirror ./vault-encrypted --key ./keys/obfuscidian-primary.key --non-interactive --yes
+```
+
+Fresh excludes deleted or newly excluded old entries from the new snapshot,
+retaining the complete old encrypted snapshot outside the mirror and Git
+worktrees. Source data and root mirror Git controls stay in place. Replacing
+existing contents or removing old paths requires confirmation; metadata-only
+updates, additions and no-ops do not. A no-op or dry run creates no write
+artifacts. Pause editing and sync during writes; see [backup safety and explicit
+recovery](docs/BACKUP.md). No Git operations run automatically.
+
 ## Development
 
 Use Poetry 2.2 or newer, below 3.0. Runtime dependencies are declared in
 `pyproject.toml`; developer tools use its `dev` group, and `poetry.lock` records
 resolved dependencies. cryptography is included for the approved Fernet design;
 key creation/loading and internal v1 byte codecs use its standard Fernet recipe.
-Vault command orchestration remains planned.
+Fresh backup uses those codecs and existing private transaction primitives;
+later backup/restore/verification orchestration remains planned.
 
 ```sh
 poetry install --with dev

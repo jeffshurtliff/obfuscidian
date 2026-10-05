@@ -586,12 +586,13 @@ tx._execute_transaction(plan, build, lambda p: None, yes=True)
 
 
 def test_no_public_partial_write_commands() -> None:
-    """Thread 05 adds internal primitives only; no staged/unsafe vault command is exposed."""
-    assert set(cli.commands) == {'keygen'}
+    """Only complete fresh backup is exposed; later modes and standalone recovery stay gated."""
+    assert set(cli.commands) == {'keygen', 'shroud'}
     runner = CliRunner()
-    for name in ('shroud', 'unshroud', 'recover', 'verify'):
+    for name in ('unshroud', 'recover', 'verify'):
         result = runner.invoke(cli, [name])
         assert result.exit_code == 2
+    assert runner.invoke(cli, ['shroud', 'merge']).exit_code == 2
 
 
 @pytest.mark.parametrize('boundary', ['fsync', 'write', 'mkdir', 'replace', 'rename', 'unlink', 'write-open'])
