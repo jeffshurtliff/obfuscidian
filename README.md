@@ -49,12 +49,13 @@ is closed. Linux CI passed on Python 3.12–3.14; see the
 See the [fresh backup guide](docs/BACKUP.md) for preservation, consent, no-op,
 dry-run and recovery behavior. 
 
-Thread 07 — Merge backup — is locally implemented and validated, with changes
-uncommitted and pending maintainer review; [issue #7](https://github.com/jeffshurtliff/obfuscidian/issues/7)
-remains open. See the [handoff evidence](dev/IMPLEMENTATION_PLAN.md#thread-07--merge-backup-handoff-5-october-2026).
+Thread 07 — Merge backup — is complete, reviewed, and merged/pushed into
+`origin/main`; [issue #7](https://github.com/jeffshurtliff/obfuscidian/issues/7)
+is closed. Linux CI passed on Python 3.12–3.14; see the
+[completion record](dev/IMPLEMENTATION_PLAN.md#thread-07--merge-backup-completion-record-5-october-2026).
 
-Thread 08 remains **not started**. Hosted CI has not run for these edits;
-broader OS validation is deferred to Thread 12. Native Windows mutation fails closed.
+Thread 08 remains **not started**; broader OS validation is deferred to
+Thread 12. Native Windows mutation fails closed.
 
 ## Installation from source
 

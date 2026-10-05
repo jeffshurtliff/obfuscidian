@@ -41,12 +41,12 @@ completion record for evidence and platform limits.
 Thread 06 — Fresh backup — is complete, reviewed, and merged/pushed into
 `origin/main`; issue #6 is closed and Linux CI passed on Python 3.12–3.14.
 See [fresh backup](docs/BACKUP.md) and the roadmap completion record for
-validation and platform limits. `shroud fresh` and additive `shroud merge` are available locally;
-restore, verification and optional logging remain planned.
+validation and platform limits. `shroud fresh` and additive `shroud merge` are
+available; restore, verification and optional logging remain planned.
 
-Thread 07 is locally implemented and validated, unstaged/uncommitted and
-pending maintainer review; issue #7 remains open. See its roadmap handoff for
-evidence. 
+Thread 07 — Merge backup — is complete, reviewed, and merged/pushed into
+`origin/main`; issue #7 is closed and Linux CI passed on Python 3.12–3.14.
+See the backup guide and roadmap completion record for evidence and limits.
 
 Thread 08 remains **not started**. Native Windows mutation still fails closed
 pending Thread 12; local checks do not establish hosted CI.

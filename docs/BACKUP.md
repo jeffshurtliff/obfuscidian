@@ -5,9 +5,10 @@
 and optional file logging remain planned. The internal [v1 validator](FORMAT.md)
 authenticates produced snapshots; it is not a supported Python library API.
 No Git commands, commits, pushes, merges or worktrees are created by backup.
-Thread 06 is reviewed/merged with green Linux CI. Thread 07 is locally implemented,
-uncommitted and pending maintainer review; hosted CI has not run for these edits.
-See the [Thread 07 handoff](../dev/IMPLEMENTATION_PLAN.md#thread-07--merge-backup-handoff-5-october-2026).
+Threads 06–07 are reviewed and merged/pushed into `origin/main`, with issues
+#6–#7 closed and green Linux CI on Python 3.12–3.14. See the
+[Thread 07 completion record](../dev/IMPLEMENTATION_PLAN.md#thread-07--merge-backup-completion-record-5-october-2026)
+for validation and platform limits. Thread 08 remains **not started**.
 
 ## Usage and selection
 
