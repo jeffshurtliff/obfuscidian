@@ -4,7 +4,7 @@
 :Synopsis:          Internal staged publication and conservative explicit recovery
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     04 Oct 2026
+:Modified Date:     05 Oct 2026
 """
 
 from __future__ import annotations
@@ -73,12 +73,13 @@ class _TransactionPlan:
 
 @dataclass(frozen=True, repr=False)
 class _TransactionResult:
-    """Return private retained locations for deliberate caller reporting."""
+    """Return private locations and retention status for deliberate caller reporting."""
 
     workspace: Path
     rollback: Path
     plaintext: bool
     warnings: tuple[str, ...] = ()
+    retained: bool = True
 
 
 def _identity(info: os.stat_result) -> list[int]:
@@ -448,6 +449,7 @@ def _execute_transaction(
     prompt: Callable[[], bool] | None = None,
     dry_run: bool = False,
     prepublish: Callable[[], None] | None = None,
+    retain_rollback: bool = True,
 ) -> _TransactionResult | None:
     """Stage, completely verify, then journal and publish an internal payload.
 
@@ -464,7 +466,8 @@ def _execute_transaction(
     :param prompt: Trusted terminal-aware caller confirmation.
     :param dry_run: Recheck observations only, without builder, prompt, or artifacts.
     :param prepublish: Recheck caller-owned source content immediately before publication.
-    :returns: Retained private rollback locations, or no result for dry run.
+    :param retain_rollback: Keep recovery data after success; merge may clean its proven workspace.
+    :returns: Private rollback locations and retention status, or no result for dry run.
     :raises _TransactionError: Failed work was rolled back or remains blocked.
     :raises KeyboardInterrupt: Interrupt after attempted conservative rollback.
     :raises _OperationalError: Preflight/confirmation failed before ownership.
@@ -590,7 +593,7 @@ def _execute_transaction(
         journal['phase'] = 'published'
         _checkpoint(workspace, journal)
         warnings = _release_lock(plan, descriptor)
-        return _TransactionResult(workspace, rollback, not plan.mirror, warnings)
+        result = _TransactionResult(workspace, rollback, not plan.mirror, warnings)
     except BaseException as error:
         if descriptor is None:
             if isinstance(error, (KeyboardInterrupt, SystemExit)):
@@ -621,6 +624,77 @@ def _execute_transaction(
     finally:
         if descriptor is not None:
             os.close(descriptor)
+    if not retain_rollback and not result.warnings:
+        try:
+            _cleanup_published(plan, workspace, journal)
+        except (OSError, _ConfigurationError, _OperationalError, ValueError, KeyError, TypeError, RecursionError, MemoryError):
+            return _TransactionResult(
+                workspace,
+                rollback,
+                not plan.mirror,
+                ('Snapshot published; temporary recovery cleanup incomplete or durability unconfirmed.',),
+                retained=_entry_exists(workspace),
+            )
+        return _TransactionResult(workspace, rollback, not plan.mirror, retained=False)
+    return result
+
+
+def _remove_captured(path: Path, expected: dict) -> None:
+    """Remove only an unchanged captured entry, anchored through no-follow handles.
+
+    Recheck the complete tree before the first unlink and every descendant at
+    removal. Partial cleanup may leave proven data; uncertain data is never
+    recursively swept. This is best effort against same-authority writers.
+    """
+    if _capture(path) != expected:
+        raise _OperationalError('Temporary recovery data changed; remaining artifacts are retained.')
+    state = _inspect_path(path, kind='directory' if 'children' in expected else 'file')
+    with _directory_handle(_inspect_path(path.parent)) as parent:
+        if 'children' not in expected:
+            if _capture(path) != expected:
+                raise _OperationalError('Temporary recovery file changed; artifacts are retained.')
+            os.unlink(path.name, dir_fd=parent)
+        else:
+            with _directory_handle(state):
+                # Keep the terminal journal until other owned entries are removed.
+                for name in sorted(expected['children'], key=lambda name: (name == const.TRANSACTION_JOURNAL, name)):
+                    _remove_captured(path / name, expected['children'][name])
+                _recheck_path(state)
+                if any(path.iterdir()):
+                    raise _OperationalError('Unexpected temporary data appeared; artifacts are retained.')
+            os.rmdir(path.name, dir_fd=parent)
+        os.fsync(parent)
+
+
+def _cleanup_published(plan: _TransactionPlan, workspace: Path, journal: dict) -> None:
+    """Clean only this successfully published operation after ownership release.
+
+    Compare complete namespaces, identities and bytes against the publication
+    journal before removing anything. Never scan or prune older workspaces.
+    Cleanup failures cannot trigger rollback of an already published snapshot.
+    """
+    if _entry_exists(plan.lock) or not _outside_git(plan.workspace_parent):
+        raise _OperationalError('Cleanup ownership or location is uncertain; artifacts are retained.')
+    _check_destination(plan, journal['after'])
+    with _directory_handle(_inspect_path(workspace)):
+        if {path.name for path in workspace.iterdir()} != {
+            const.TRANSACTION_STAGE,
+            const.TRANSACTION_ROLLBACK,
+            const.TRANSACTION_JOURNAL,
+        }:
+            raise _OperationalError('Unexpected temporary recovery entries; artifacts are retained.')
+    if _read_private_json(workspace / const.TRANSACTION_JOURNAL, const.TRANSACTION_JOURNAL_BYTES) != journal:
+        raise _OperationalError('Published journal changed; artifacts are retained.')
+    captured = _capture(workspace)
+    children = captured.get('children', {})
+    if (
+        captured['identity'] != journal['workspace_identity']
+        or set(children) != {const.TRANSACTION_STAGE, const.TRANSACTION_ROLLBACK, const.TRANSACTION_JOURNAL}
+        or children[const.TRANSACTION_STAGE] != {'identity': journal['containers']['stage'], 'children': {}}
+        or children[const.TRANSACTION_ROLLBACK] != {'identity': journal['containers']['rollback'], 'children': journal['before']}
+    ):
+        raise _OperationalError('Temporary recovery namespace changed; artifacts are retained.')
+    _remove_captured(workspace, captured)
 
 
 def _with_destination_state(plan: _TransactionPlan) -> _TransactionPlan:

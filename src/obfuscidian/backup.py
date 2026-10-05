@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 """
 :Module:            obfuscidian.backup
-:Synopsis:          Internal read-only fresh planning and encrypted publication
+:Synopsis:          Internal read-only fresh/merge planning and encrypted publication
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     04 Oct 2026
+:Modified Date:     05 Oct 2026
 """
 
 from __future__ import annotations
@@ -19,11 +19,11 @@ from cryptography.fernet import Fernet
 
 from obfuscidian import constants as const
 from obfuscidian import crypto, inventory, keys, manifest, paths, transactions
-from obfuscidian.errors import _OperationalError
+from obfuscidian.errors import _ConfigurationError, _OperationalError
 
 
 @dataclass(frozen=True, repr=False)
-class _FreshPlan:
+class _BackupPlan:
     """Keep a private, bounded logical proposal without staged bytes or randomness."""
 
     locations: paths._VaultPaths
@@ -35,12 +35,25 @@ class _FreshPlan:
     warnings: tuple[str, ...]
     no_op: bool
     confirmation: bool
+    merge: bool
+    changes: _Changes
+
+
+@dataclass(frozen=True)
+class _Changes:
+    """Classify current files and retained absent/excluded files without exposing names."""
+
+    new: int = 0
+    changed: int = 0
+    metadata_only: int = 0
+    unchanged: int = 0
+    retained: int = 0
 
 
 def _mirror_rules(parent: Path) -> paths._TargetRules:
     """Restrict managed ASCII names and coordinate even case/Unicode path aliases.
 
-    Fresh writes only fixed lowercase ASCII names and opaque lowercase hex IDs,
+    Backup writes only fixed lowercase ASCII names and opaque lowercase hex IDs,
     so their comparisons agree on case-sensitive and insensitive filesystems.
     Conservative lock comparison also serializes case/Unicode aliases of the
     destination without a writable probe. Source names live only in encrypted
@@ -62,18 +75,30 @@ def _mirror_rules(parent: Path) -> paths._TargetRules:
         raise _OperationalError('Cannot establish destination naming limits read-only.') from None
 
 
-def _plan_fresh(origin: Path, mirror: Path, key: Path, *, exclusions: tuple[str, ...] = ()) -> _FreshPlan:
+def _plan_fresh(origin: Path, mirror: Path, key: Path, *, exclusions: tuple[str, ...] = ()) -> _BackupPlan:
+    """Plan the current included inventory, dropping absent/excluded historic paths."""
+    return _plan_backup(origin, mirror, key, exclusions=exclusions, merge=False)
+
+
+def _plan_merge(origin: Path, mirror: Path, key: Path, *, exclusions: tuple[str, ...] = ()) -> _BackupPlan:
+    """Plan the additive union, retaining absent/excluded historic files and directories."""
+    return _plan_backup(origin, mirror, key, exclusions=exclusions, merge=True)
+
+
+def _plan_backup(origin: Path, mirror: Path, key: Path, *, exclusions: tuple[str, ...], merge: bool) -> _BackupPlan:
     """Authenticate, hash one source file at a time, and plan without writes.
 
     Placeholder IDs/hashes/timestamps have the same serialized widths as the
     eventual values. No-op planning never generates IDs, timestamps or tokens.
     Existing object IDs, content bindings and lineage come only from complete
-    authenticated mirror validation; no stale records survive fresh planning.
+    authenticated mirror validation. Merge retains old absent/excluded records;
+    fresh drops them. Neither infers renames from matching content.
 
     :param origin: Existing read-only source.
     :param mirror: Existing mirror or missing final component.
     :param key: Selected existing external key.
     :param exclusions: Portable original-relative component globs.
+    :param merge: Retain absent/excluded historic paths instead of dropping them.
     :returns: Private proposal, exact ciphertext estimate and consent requirement.
     :raises _ConfigurationError: Unsafe locations, content, or exclusions.
     :raises _OperationalError: Integrity, stability, resource or I/O failure.
@@ -86,6 +111,13 @@ def _plan_fresh(origin: Path, mirror: Path, key: Path, *, exclusions: tuple[str,
     source = inventory._inventory_vault(locations, exclusions=exclusions)
     previous = manifest._verify_mirror(mirror, fernet) if const.MANAGED_DIRECTORY in initial.before else None
     old_files = {record.path: record for record in previous.manifest.files} if previous else {}
+    old_directories = {record.path: record for record in previous.manifest.directories} if previous else {}
+    current_files = {entry.path for entry in source.entries if entry.kind == 'file'}
+    current_directories = {entry.path for entry in source.entries if entry.kind == 'directory'}
+    if merge and (current_files & old_directories.keys() or current_directories & old_files.keys()):
+        raise _ConfigurationError('Merge cannot discard a retained file/directory type conflict; use shroud fresh.')
+    retained = tuple(record for name, record in old_files.items() if name not in current_files) if merge else ()
+    counts = {'new': 0, 'changed': 0, 'metadata_only': 0, 'unchanged': 0, 'retained': len(retained)}
     reserved = {record.object_id for record in old_files.values()}
     records = []
     placeholder = 0
@@ -104,6 +136,15 @@ def _plan_fresh(origin: Path, mirror: Path, key: Path, *, exclusions: tuple[str,
         else:
             object_id = old.object_id
         same = old is not None and old.size == entry.size and old.plaintext_sha256 == digest
+        if old is None:
+            category = 'new'
+        elif not same:
+            category = 'changed'
+        elif old.mtime_ns != entry.mtime_ns:
+            category = 'metadata_only'
+        else:
+            category = 'unchanged'
+        counts[category] += 1
         records.append(
             manifest._FileRecord(
                 entry.path, object_id, entry.size, entry.mtime_ns, digest, old.ciphertext_sha256 if same else '0' * 64
@@ -112,6 +153,12 @@ def _plan_fresh(origin: Path, mirror: Path, key: Path, *, exclusions: tuple[str,
     directories = tuple(
         manifest._DirectoryRecord(entry.path, entry.mtime_ns) for entry in source.entries if entry.kind == 'directory'
     )
+    if merge:
+        records.extend(retained)
+        directory_union = dict(old_directories)
+        directory_union.update({record.path: record for record in directories})
+        directories = tuple(sorted(directory_union.values(), key=lambda record: record.path))
+    records.sort(key=lambda record: record.path)
     proposal = manifest._Manifest(
         const.FORMAT_VERSION,
         previous.manifest.vault_id if previous else '0' * 32,
@@ -130,7 +177,8 @@ def _plan_fresh(origin: Path, mirror: Path, key: Path, *, exclusions: tuple[str,
         for name, record in old_files.items()
     )
     serialized = manifest._serialize_manifest(proposal)
-    estimate = inventory._estimate_resources(source, manifest_plaintext_bytes=len(serialized))
+    retained_bytes = sum(inventory._fernet_size(record.size) for record in retained)
+    estimate = inventory._estimate_resources(source, manifest_plaintext_bytes=len(serialized), retained_bytes=retained_bytes)
     transaction = transactions._plan_transaction(
         origin,
         mirror,
@@ -143,7 +191,9 @@ def _plan_fresh(origin: Path, mirror: Path, key: Path, *, exclusions: tuple[str,
     locations._recheck()
     if previous is not None:
         manifest._recheck_mirror(previous)
-    return _FreshPlan(locations, source, previous, proposal, transaction, fernet, warnings, no_op, confirmation)
+    return _BackupPlan(
+        locations, source, previous, proposal, transaction, fernet, warnings, no_op, confirmation, merge, _Changes(**counts)
+    )
 
 
 def _write_token(parent: Path, name: str, token: bytes) -> None:
@@ -155,8 +205,8 @@ def _write_token(parent: Path, name: str, token: bytes) -> None:
                 raise _OperationalError('Incomplete staged token write; no partial snapshot is accepted.')
 
 
-def _build_fresh(plan: _FreshPlan, stage: Path) -> None:
-    """Re-read stable source bytes, reuse validated tokens, and write a complete proposal."""
+def _build_backup(plan: _BackupPlan, stage: Path) -> None:
+    """Build either mode from stable current bytes and authenticated retained ciphertext."""
     managed = stage / const.MANAGED_DIRECTORY
     objects = managed / const.OBJECTS_DIRECTORY
     for parent, child in ((stage, managed), (managed, objects)):
@@ -167,7 +217,15 @@ def _build_fresh(plan: _FreshPlan, stage: Path) -> None:
     reserved = {record.object_id for record in old_files.values()}
     records = []
     for proposed in plan.proposal.files:
-        entry = entries[proposed.path]
+        entry = entries.get(proposed.path)
+        if entry is None:
+            # Only additive merge proposals can contain a historic, absent path.
+            token, data = manifest._validated_token(plan.previous, proposed, plan.fernet)
+            del data
+            _write_token(objects, f'{proposed.object_id}.obf', token)
+            del token
+            records.append(proposed)
+            continue
         data = inventory._read_file(plan.source, entry)
         if len(data) != proposed.size or crypto._sha256(data) != proposed.plaintext_sha256:
             raise _OperationalError('Source content changed after planning; no snapshot was published.')
@@ -193,21 +251,21 @@ def _build_fresh(plan: _FreshPlan, stage: Path) -> None:
     _write_token(managed, const.MANIFEST_FILENAME, manifest._encrypt_manifest(final, plan.fernet))
 
 
-def _recheck_source(plan: _FreshPlan) -> None:
+def _recheck_source(plan: _BackupPlan) -> None:
     """Re-inventory all included names/content marks and recheck selected key custody."""
     inventory._verify_inventory(plan.source)
     paths._recheck_path(plan.locations.key, content=True)
 
 
-def _publish_fresh(
-    plan: _FreshPlan,
+def _publish_backup(
+    plan: _BackupPlan,
     *,
     yes: bool = False,
     non_interactive: bool = False,
     prompt: Callable[[], bool] | None = None,
     dry_run: bool = False,
 ) -> transactions._TransactionResult | None:
-    """Publish only a changed verified fresh snapshot, or perform no writes.
+    """Publish a changed verified backup in either mode, or perform no writes.
 
     :param plan: Complete read-only proposal.
     :param yes: Explicit consent for replacement.
@@ -225,17 +283,18 @@ def _publish_fresh(
     read_only = dry_run or plan.no_op
     return transactions._execute_transaction(
         plan.transaction,
-        lambda stage: _build_fresh(plan, stage),
+        lambda stage: _build_backup(plan, stage),
         lambda stage: _recheck_source(plan),
         yes=yes or not plan.confirmation,
         non_interactive=non_interactive,
         prompt=prompt,
         dry_run=read_only,
         prepublish=lambda: _recheck_source(plan),
+        retain_rollback=not plan.merge,
     )
 
 
-def _recover_fresh(
+def _recover_backup(
     origin: Path,
     mirror: Path,
     key: Path,

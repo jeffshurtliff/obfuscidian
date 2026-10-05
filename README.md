@@ -5,7 +5,7 @@
 
 Obfuscidian is a Python CLI being developed to create encrypted Obsidian vault
 backups. The current CLI provides help, version information, secure key
-generation, and `shroud fresh`. Merge backup, restore, and verification commands
+generation, and `shroud fresh|merge`. Restore and verification commands
 are planned and unavailable.
 This repository does not yet claim a published package or completed platform validation.
 
@@ -49,8 +49,12 @@ is closed. Linux CI passed on Python 3.12–3.14; see the
 See the [fresh backup guide](docs/BACKUP.md) for preservation, consent, no-op,
 dry-run and recovery behavior. 
 
-Thread 07 remains **not started**; broader OS
-validation is deferred to Thread 12. Native Windows mutation fails closed.
+Thread 07 — Merge backup — is locally implemented and validated, with changes
+uncommitted and pending maintainer review; [issue #7](https://github.com/jeffshurtliff/obfuscidian/issues/7)
+remains open. See the [handoff evidence](dev/IMPLEMENTATION_PLAN.md#thread-07--merge-backup-handoff-5-october-2026).
+
+Thread 08 remains **not started**. Hosted CI has not run for these edits;
+broader OS validation is deferred to Thread 12. Native Windows mutation fails closed.
 
 ## Installation from source
 
@@ -101,14 +105,22 @@ updates, additions and no-ops do not. A no-op or dry run creates no write
 artifacts. Pause editing and sync during writes; see [backup safety and explicit
 recovery](docs/BACKUP.md). No Git operations run automatically.
 
+For additive retention, use `shroud merge` with the same options. It keeps
+deleted, renamed and excluded old paths, so **deleted notes can return during
+restore**. Existing-path edits keep their IDs; unchanged or metadata-only files
+keep exact ciphertext. Only existing content replacements need consent; supply
+`--yes` for unattended replacements. Merge refuses file/directory type conflicts
+with guidance to use fresh. A successful merge cleans only its own proven
+temporary recovery data, preserving earlier fresh rollback copies.
+
 ## Development
 
 Use Poetry 2.2 or newer, below 3.0. Runtime dependencies are declared in
 `pyproject.toml`; developer tools use its `dev` group, and `poetry.lock` records
 resolved dependencies. cryptography is included for the approved Fernet design;
 key creation/loading and internal v1 byte codecs use its standard Fernet recipe.
-Fresh backup uses those codecs and existing private transaction primitives;
-later backup/restore/verification orchestration remains planned.
+Fresh and merge backup use those codecs and existing private transaction
+primitives; restore and verification orchestration remains planned.
 
 ```sh
 poetry install --with dev

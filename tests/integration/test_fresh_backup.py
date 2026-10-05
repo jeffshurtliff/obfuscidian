@@ -4,7 +4,7 @@
 :Synopsis:          Synthetic end-to-end fresh backup, preservation and recovery
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     04 Oct 2026
+:Modified Date:     05 Oct 2026
 """
 
 from __future__ import annotations
@@ -198,7 +198,7 @@ def test_noop_has_no_writes_randomness_or_new_snapshot(vaults: tuple[Path, Path,
     monkeypatch.setattr(crypto, '_new_id', forbidden)
     monkeypatch.setattr(crypto, '_encrypt_bytes', forbidden)
     monkeypatch.setattr(tx, '_lock_descriptor', forbidden)
-    monkeypatch.setattr(backup, '_build_fresh', forbidden)
+    monkeypatch.setattr(backup, '_build_backup', forbidden)
     result = _invoke(vaults)
     assert result.exit_code == 0, result.output
     assert 'no-op' in result.output
@@ -387,7 +387,7 @@ def test_detected_source_changes_never_publish(
         monkeypatch.setattr(tx, '_checkpoint', checkpoint)
     source_after_edit = _snapshot(source)
     with pytest.raises(_OperationalError):
-        backup._publish_fresh(plan, yes=True, non_interactive=True)
+        backup._publish_backup(plan, yes=True, non_interactive=True)
     assert _verified(vaults).manifest == old.manifest
     assert _snapshot(source) == source_after_edit
 
