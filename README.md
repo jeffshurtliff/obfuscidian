@@ -41,10 +41,15 @@ is closed. Linux CI passed on Python 3.12–3.14. See the
 [transaction guide](docs/TRANSACTIONS.md) and
 [roadmap completion record](dev/IMPLEMENTATION_PLAN.md#tracking-and-handoff-record)
 for retained rollback, conservative recovery, validation, and platform limits.
-Thread 06 — Fresh backup — is implemented locally and awaits maintainer review;
-[issue #6](https://github.com/jeffshurtliff/obfuscidian/issues/6) remains open.
+
+Thread 06 — Fresh backup — is complete, reviewed, and merged/pushed into
+`origin/main`; [issue #6](https://github.com/jeffshurtliff/obfuscidian/issues/6)
+is closed. Linux CI passed on Python 3.12–3.14; see the
+[completion record](dev/IMPLEMENTATION_PLAN.md#thread-06--fresh-backup-completion-record-5-october-2026).
 See the [fresh backup guide](docs/BACKUP.md) for preservation, consent, no-op,
-dry-run and recovery behavior. Thread 07 remains **not started**; broader OS
+dry-run and recovery behavior. 
+
+Thread 07 remains **not started**; broader OS
 validation is deferred to Thread 12. Native Windows mutation fails closed.
 
 ## Installation from source

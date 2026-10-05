@@ -4,7 +4,10 @@ Thread 06 implements `shroud fresh`. Merge backup, restore, public verification,
 and optional file logging remain planned. The internal
 [v1 validator](FORMAT.md) authenticates produced snapshots; it is not a supported
 Python library API. No Git commands, commits, pushes, merges or worktrees are
-created by backup. Changes in this thread await maintainer review.
+created by backup. Thread 06 is reviewed, merged/pushed into `origin/main`, and
+issue #6 is closed. Linux CI passed on Python 3.12–3.14; see the
+[completion record](../dev/IMPLEMENTATION_PLAN.md#thread-06--fresh-backup-completion-record-5-october-2026)
+for validation and remaining platform limits. Thread 07 remains **not started**.
 
 ## Usage and selection
 

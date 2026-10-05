@@ -11,10 +11,10 @@ merged into `origin/main`; issue #3 is closed and Linux CI passed on Python
 merged into `origin/main`; issue #4 is closed and Linux CI passed on Python
 3.12–3.14. Thread 05 — Safe publication and recovery — is complete, reviewed,
 and merged/pushed into `origin/main`; issue #5 is closed and Linux CI passed on
-Python 3.12–3.14. Thread 06 is implemented locally, pending maintainer review;
-issue #6 remains open and changes are uncommitted. Thread 07 is next sequentially
-and remains **not started**, as do Threads 07–14. See the Thread 06 handoff for
-local validation and limitations; no hosted CI for this increment is claimed.
+Python 3.12–3.14. Thread 06 — Fresh backup — is complete, reviewed, and
+merged/pushed into `origin/main`; issue #6 is closed and Linux CI passed on
+Python 3.12–3.14. Thread 07 is next sequentially and remains **not started**,
+as do Threads 07–14. See the Thread 06 completion record for evidence and limits.
 
 **Intended first stable release:** `1.0.0` (current metadata: `1.0.0.dev0`).
 
@@ -537,7 +537,7 @@ commits, publication, or PRs are implied. Update status only after acceptance cr
 | 03 | Vault inventory and path preflight | 02 | [#3](https://github.com/jeffshurtliff/obfuscidian/issues/3) | Complete |
 | 04 | Encrypted backup format | 03 | [#4](https://github.com/jeffshurtliff/obfuscidian/issues/4) | Complete |
 | 05 | Safe publication and recovery | 04 | [#5](https://github.com/jeffshurtliff/obfuscidian/issues/5) | Complete |
-| 06 | Fresh backup | 05 | [#6](https://github.com/jeffshurtliff/obfuscidian/issues/6) | Implemented; pending review |
+| 06 | Fresh backup | 05 | [#6](https://github.com/jeffshurtliff/obfuscidian/issues/6) | Complete |
 | 07 | Merge backup | 06 | [#7](https://github.com/jeffshurtliff/obfuscidian/issues/7) | Not started |
 | 08 | Read-only verification | 04; may precede 05–07 | [#8](https://github.com/jeffshurtliff/obfuscidian/issues/8) | Not started |
 | 09 | Fresh restore | 05, 07, 08 | [#9](https://github.com/jeffshurtliff/obfuscidian/issues/9) | Not started |
@@ -737,7 +737,7 @@ and merged/pushed the implementation into `origin/main`; issue #5 is closed as
 completed. All four subtasks and acceptance criteria are met. Linux CI passed
 on Python 3.12–3.14. See the handoff/completion records and
 [transaction guide](../docs/TRANSACTIONS.md) for evidence and platform limits.
-Thread 06 is now implemented locally, pending maintainer review; see its later handoff.
+Thread 06 is complete; see its later completion record for merge/CI evidence.
 
 1. Implement safe same-filesystem staging/rollback location selection outside
    vaults and Git worktrees, permission/space preflight, exclusive ownership,
@@ -775,11 +775,12 @@ recovery tests. No real vault or cloud access.
 **GitHub issue:** [#6](https://github.com/jeffshurtliff/obfuscidian/issues/6)
 
 **Goal/deliverable:** Working `shroud fresh` using validated format and transactions.
-**Depends on:** 05. **Status:** Implemented locally; pending maintainer review.
-All four subtasks and the synthetic acceptance/demo are implemented. Issue #6
-remains open; changes are unstaged/uncommitted on `codex/feature/6-shroud-fresh`.
-See the Thread 06 handoff and [fresh backup guide](../docs/BACKUP.md) for actual
-validation, CLI behavior and platform limits. Thread 07 remains **not started**.
+**Depends on:** 05. **Status:** Complete. The maintainer reviewed, committed,
+and merged/pushed the implementation into `origin/main`; issue #6 is closed as
+completed. All four subtasks and acceptance criteria are met. Linux CI passed
+on Python 3.12–3.14. See the Thread 06 completion record and
+[fresh backup guide](../docs/BACKUP.md) for evidence, CLI behavior and platform
+limits. Thread 07 remains **not started**.
 
 1. Wire CLI options into read-only preflight, complete origin inventory,
    selected-key validation, existing-mirror authentication, and confirmation.
@@ -1162,9 +1163,10 @@ Linux CI; issue #4 is closed.
 Thread 05 is complete following maintainer review, commit, merge/push, and
 successful Linux CI on Python 3.12–3.14; issue #5 is closed as completed.
 
-Thread 06 is implemented locally, pending maintainer review; issue #6 remains
-open and changes are uncommitted. Thread 07 is next sequentially, not started;
-Threads 07–14 remain not started. See the Thread 06 handoff for evidence and limits.
+Thread 06 is complete following maintainer review, commit, merge/push, and
+successful Linux CI on Python 3.12–3.14; issue #6 is closed as completed.
+Thread 07 is next sequentially and **not started**; Threads 07–14 remain
+not started. See the Thread 06 completion record for evidence and limits.
 Earlier handoff records describe the state at that time; later completion
 records supersede their pending-review and Git-status statements.
 The linked GitHub issues hold public progress discussion and verified
@@ -1908,6 +1910,66 @@ push, PR, merge, tag, release, publication or workflow trigger occurred. Only
 temporary synthetic vaults, generated test keys and Git metadata were used;
 no private local reference content or real vault/key/cloud data was inspected.
 The new branch is the only Git setup mutation. Issue #6 stays open for review.
+
+#### Thread 06 — Fresh backup completion record (5 October 2026)
+
+**Maintainer decision:** The maintainer confirmed that the changes were reviewed,
+committed, merged, pushed and green in CI, explicitly requested closure of issue
+#6, and prohibited beginning Thread 07. All four subtasks and acceptance criteria
+are met; no Thread 06 acceptance blocker remains. Earlier implementation/handoff
+records are historical; this record supersedes their pending-review, local-only
+validation and uncommitted-implementation statements.
+
+**Verified implementation and remote state:** Implementation commit `6d3bf28`
+is included in pushed `main` merge
+[`fea9217`](https://github.com/jeffshurtliff/obfuscidian/commit/fea92170736e16038b87d6c391b517c752f28e24).
+Local `HEAD`/`main`, `origin/main` and the live remote `main` ref all matched
+`fea92170736e16038b87d6c391b517c752f28e24` before this documentation-only update.
+The checkout was clean on `main`; no Git history operation was needed.
+
+**Hosted validation:** The
+[merged-commit Test run](https://github.com/jeffshurtliff/obfuscidian/actions/runs/37315634336)
+completed successfully on Linux/Python **3.12, 3.13 and 3.14** for that exact
+merge SHA. Each job reported **718 passed, 2 skipped**, **90% overall coverage**,
+and **3 passing fully isolated wheelhouse artifact checks**. Strict Poetry lock
+checks, Ruff lint/format, Bandit, fresh wheel/sdist builds and strict Twine
+validation also passed. The skips require native Windows ACL/junction APIs;
+Linux results do not establish native Windows validation.
+
+**Merged deliverables:**
+
+- [Fresh orchestration](../src/obfuscidian/backup.py) and
+  [CLI](../src/obfuscidian/cli.py): `shroud fresh` with stable binary reads,
+  complete mirror authentication, ciphertext reuse, stale removal, retained
+  external encrypted rollback, consent, no-write no-op/dry-run behavior, and
+  explicit recovery/retry. Origin and Git controls stay preserved.
+- [Transaction integration](../src/obfuscidian/transactions.py),
+  [fresh integration tests](../tests/integration/test_fresh_backup.py),
+  [installed-artifact tests](../tests/integration/test_packaging.py), and
+  [backup guide](../docs/BACKUP.md). The format, runtime dependencies, package
+  version and CI/workflow configuration remain unchanged by this follow-up.
+
+**Tracking and documentation handoff:** Issue #6 is closed as completed with
+the maintainer review/closure checkbox checked and merge/CI evidence recorded.
+README, AGENTS, CONTRIBUTING, the backup guide, and this roadmap's summary,
+index and per-thread status are synchronized. Local Markdown links/anchors/
+fences, current-status consistency, privacy, LF, scope and `git diff --check`
+passed. Runtime tests/builds were not rerun because only documentation changed;
+the hosted results above were inspected directly.
+
+**Limits and next work:** Native Windows mutation fails closed until Thread 12;
+broader OS/network/cloud and actual power-loss validation remain deferred.
+Change detection is best effort, and multi-step publication is not universally
+atomic or guaranteed recovery. Sphinx remains Thread 13. No real vault/key/cloud
+tests or supported-platform/security certification are claimed.
+Thread 07 — Merge backup — is next sequentially and **not started**; Threads
+07–14 remain not started. No later-thread implementation was performed.
+
+**Current Git status:** These **five documentation edits remain unstaged and
+uncommitted on `main`** for maintainer review. No application, tests, dependency,
+format or workflow files were changed. No branch creation, staging, commit,
+push, PR, merge, tag, release, publication or workflow trigger occurred during
+this closure follow-up.
 
 ### Deferred capabilities
 
