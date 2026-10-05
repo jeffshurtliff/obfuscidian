@@ -3,9 +3,11 @@
 :Module:            tests.unit.test_cli
 :Synopsis:          Verify keygen help, prompts, privacy, and no-mutation behavior
 :Created By:        Jeff Shurtliff
-:Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
+:Last Modified:     Jeff Shurtliff
 :Modified Date:     05 Oct 2026
 """
+
+from __future__ import annotations
 
 import importlib
 import io

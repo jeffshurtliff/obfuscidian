@@ -3,9 +3,11 @@
 :Module:            tests.conftest
 :Synopsis:          Configure optional fully isolated artifact validation
 :Created By:        Jeff Shurtliff
-:Last Modified:     Jeff Shurtliff (via GPT-6)
-:Modified Date:     03 Oct 2026
+:Last Modified:     Jeff Shurtliff
+:Modified Date:     05 Oct 2026
 """
+
+from __future__ import annotations
 
 from pathlib import Path
 

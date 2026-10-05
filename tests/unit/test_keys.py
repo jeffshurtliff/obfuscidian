@@ -3,9 +3,11 @@
 :Module:            tests.unit.test_keys
 :Synopsis:          Verify synthetic key loading, exclusive creation, and failures
 :Created By:        Jeff Shurtliff
-:Last Modified:     Jeff Shurtliff (via GPT-6)
-:Modified Date:     03 Oct 2026
+:Last Modified:     Jeff Shurtliff
+:Modified Date:     05 Oct 2026
 """
+
+from __future__ import annotations
 
 import os
 import stat

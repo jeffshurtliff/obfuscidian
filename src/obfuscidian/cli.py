@@ -3,9 +3,10 @@
 :Module:            obfuscidian.cli
 :Synopsis:          Secure keys, encrypted backups, and read-only verification CLI
 :Created By:        Jeff Shurtliff
-:Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
+:Last Modified:     Jeff Shurtliff
 :Modified Date:     05 Oct 2026
 """
+
 from __future__ import annotations
 
 import os
