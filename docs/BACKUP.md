@@ -2,7 +2,8 @@
 
 `shroud fresh` backs up the current included inventory; Thread 07 adds
 `shroud merge` for additive history retention. Thread 08 exposes
-[read-only verification](VERIFY.md). [Fresh restore](RESTORE.md) is available; optional file logging remains planned. 
+[read-only verification](VERIFY.md). [Fresh restore](RESTORE.md) is available;
+optional private logging is available locally; see the [CLI contract](CLI.md).
 The internal [v1 validator](FORMAT.md) authenticates produced snapshots; 
 it is not a supported Python library API.
 No Git commands, commits, pushes, merges or worktrees are created by backup.
@@ -17,7 +18,8 @@ Thread 09 is complete, reviewed and merged/pushed; see
 [fresh restore](RESTORE.md) for the accepted Python 3.14 CI gap. Thread 10 is
 complete, reviewed and merged/pushed, with issue #10 closed and Linux CI passing
 on Python 3.12–3.14; see
-[additive Git merge restore](RESTORE.md#additive-git-merge-restore). Thread 11 remains **not started**.
+[additive Git merge restore](RESTORE.md#additive-git-merge-restore). Thread 11 is
+**implemented locally, pending maintainer review**; see the [CLI contract](CLI.md).
 
 ## Usage and selection
 
@@ -120,7 +122,9 @@ A no-op compares the complete proposed logical records: included paths for fresh
 and old/current union for merge, with sizes, plaintext hashes and file/directory
 modification times. Deletion or exclusion alone can be a merge no-op if the
 retained union and included directory metadata are unchanged. It leaves tokens,
-manifest, snapshot ID and timestamp unchanged, creates no randomness or write artifacts, and does not prompt.
+manifest, snapshot ID and timestamp unchanged, creates no randomness or transaction
+artifacts, and does not prompt. An explicitly requested private operational log
+may record the no-op; no default logging occurs.
 Source and mirror identities/content marks are rechecked even for no-ops.
 
 ## Publication, failure and recovery
@@ -182,5 +186,6 @@ Identity/hash rechecks are best effort, not an atomic source snapshot or a
 guarantee against hostile same-authority writers. Local synthetic process-death
 tests do not establish power-loss, network/cloud-filesystem or supported-platform
 guarantees. Hosted CI must be reported separately. Public verification is
-available through Thread 08. Restore Threads 09–10 and optional logging/CLI
-polish Thread 11 remain planned. Sphinx remains Thread 13.
+available through Thread 08. Restore Threads 09–10 are complete; Thread 11
+logging/CLI polish is implemented locally pending review. See the
+[CLI contract](CLI.md) for optional no-op logs. Sphinx remains Thread 13.

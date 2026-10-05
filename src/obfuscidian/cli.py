@@ -12,23 +12,176 @@ from __future__ import annotations
 import os
 import shlex
 import sys
+from functools import wraps
 from pathlib import Path
 
 import click
 
-from obfuscidian import backup, config, git_restore, keys, restore, verification
+from obfuscidian import backup, config, git_restore, keys, output, restore, verification
 from obfuscidian import constants as const
 from obfuscidian.errors import _ConfigurationError, _OperationalError
 from obfuscidian.transactions import _TransactionError, _TransactionResult
 
 
-@click.group(invoke_without_command=True, no_args_is_help=True)
+class _PrivateCommand(click.Command):
+    """Reject malformed arguments without echoing arbitrary private input."""
+
+    def parse_args(self, ctx: click.Context, args: list[str]) -> list[str]:
+        try:
+            return super().parse_args(ctx, args)
+        except click.UsageError as error:
+            _parser_error(error, ctx)
+
+
+def _parser_error(error: click.UsageError, ctx: click.Context) -> None:
+    """Render usage failures without arbitrary option values, names or positional inputs."""
+    if isinstance(error, click.exceptions.NoArgsIsHelpError):
+        raise error
+    if isinstance(error, click.BadParameter) and error.param is not None:
+        label = error.param.opts[0] if error.param.opts else error.param.name
+        message = f'Invalid or missing {label}; see --help for allowed values.'
+    elif isinstance(error, click.NoSuchOption):
+        message = 'No such option; see --help for supported options.'
+    else:
+        message = 'Unsupported or incomplete arguments; see --help for required mode and supported options.'
+    raise click.UsageError(message, ctx) from None
+
+
+class _PrivateGroup(click.Group):
+    """Keep parsing and entry-point failures private, with one product name."""
+
+    command_class = _PrivateCommand
+
+    def parse_args(self, ctx: click.Context, args: list[str]) -> list[str]:
+        try:
+            return super().parse_args(ctx, args)
+        except click.UsageError as error:
+            _parser_error(error, ctx)
+
+    def resolve_command(self, ctx: click.Context, args: list[str]):
+        try:
+            return super().resolve_command(ctx, args)
+        except click.UsageError:
+            raise click.UsageError('Unknown command; choose keygen, shroud, unshroud or verify (see --help).', ctx) from None
+
+    def main(self, *args, **kwargs):
+        kwargs.setdefault('prog_name', 'obfuscidian')
+        # Application expansion is explicit and identical for console/module on Windows.
+        kwargs.setdefault('windows_expand_args', False)
+        standalone = kwargs.pop('standalone_mode', True)
+        try:
+            result = super().main(*args, standalone_mode=False, **kwargs)
+        except click.Abort as error:
+            interrupted = isinstance(error.__context__, KeyboardInterrupt)
+            code = 130 if interrupted else 1
+            click.echo(
+                'Operation interrupted; inspect retained recovery before retrying.'
+                if interrupted
+                else 'Input ended; no successful operation is reported.',
+                err=True,
+            )
+            if standalone:
+                raise SystemExit(code) from None
+            return code
+        except click.ClickException as error:
+            if not standalone:
+                raise
+            error.show()
+            raise SystemExit(error.exit_code) from None
+        except Exception:
+            # Entry-point failures outside a command must not produce a raw traceback.
+            error = click.ClickException('Operation could not complete; inspect its state before retrying.')
+            if not standalone:
+                raise error from None
+            error.show()
+            raise SystemExit(1) from None
+        if standalone:
+            raise SystemExit(result if isinstance(result, int) else 0)
+        return result
+
+
+def _operation(*, logging: bool = True):
+    """Apply one invocation's logging policy and suppress unexpected exception payloads."""
+
+    def decorate(function):
+        @wraps(function)
+        def run(*args, **kwargs):
+            log_file = kwargs.pop('log_file', None)
+            log_paths = kwargs.pop('log_paths', False)
+            if log_file is not None and kwargs.get('dry_run'):
+                raise click.UsageError('--log-file cannot be combined with --dry-run; dry runs never write logs.')
+            if log_paths and log_file is None:
+                raise click.UsageError('--log-paths requires --log-file.')
+            command = function.__name__ + (f' {kwargs["mode"]}' if 'mode' in kwargs else '')
+            current = output._Output(command, None, log_paths)
+            click.get_current_context().meta['output'] = current
+            try:
+                if log_file is not None:
+                    current.log = config._expand_path(log_file, '--log-file')
+                function(*args, **kwargs)
+                current._record('completed', exit_code=0)
+                if current.log is not None:
+                    click.echo('Requested private operational log recorded; handoff locations remain redacted in logs.')
+            except (Exception, KeyboardInterrupt) as error:
+                code = (
+                    error.exit_code
+                    if isinstance(error, (click.ClickException, click.exceptions.Exit))
+                    else (130 if isinstance(error, KeyboardInterrupt) else 2 if isinstance(error, _ConfigurationError) else 1)
+                )
+                try:
+                    current._record('failed', exit_code=code)
+                except (_ConfigurationError, _OperationalError, OSError, KeyboardInterrupt):
+                    click.echo('Warning: log recording failed; inspect operation and recovery state before retrying.', err=True)
+                if isinstance(error, (click.ClickException, click.exceptions.Exit)):
+                    raise
+                if isinstance(error, _ConfigurationError):
+                    raise click.UsageError(str(error)) from None
+                if isinstance(error, KeyboardInterrupt):
+                    click.echo('Operation interrupted; inspect retained recovery before retrying.', err=True)
+                    raise click.exceptions.Exit(130) from None
+                if isinstance(error, _OperationalError):
+                    raise click.ClickException(str(error)) from None
+                raise click.ClickException(
+                    'Operation could not complete; inspect its state and retained recovery before retrying. '
+                    'No success is reported.'
+                ) from None
+            finally:
+                failed = sys.exc_info()[0] is not None
+                try:
+                    current._close()
+                except KeyboardInterrupt:
+                    click.echo('Log close interrupted; inspect operation state before retrying.', err=True)
+                    raise click.exceptions.Exit(130) from None
+                except OSError:
+                    if not failed:
+                        raise click.ClickException('Private log close failed; inspect operation state before retrying.') from None
+                    click.echo('Warning: private log close failed; inspect operation state before retrying.', err=True)
+
+        if logging:
+            run = click.option(
+                '--log-paths',
+                is_flag=True,
+                help='Permit escaped relative names in the log; requires --log-file. Never absolute paths.',
+            )(run)
+            run = click.option(
+                '--log-file',
+                type=str,
+                help='Private JSON lines log outside vaults/Git/recovery trees; existing parent; no dry run.',
+            )(run)
+        return run
+
+    return decorate
+
+
+@click.group(cls=_PrivateGroup, invoke_without_command=True, no_args_is_help=True)
 @click.version_option(package_name='obfuscidian', prog_name='obfuscidian')
 def cli() -> None:
     """Generate keys, back up and restore vaults, and verify encrypted mirrors.
 
     Keygen, shroud fresh/merge, unshroud fresh/merge, and read-only verify are available.
-    Optional logging is planned and unavailable.
+    Write commands support private --log-file records and explicit --log-paths.
+    Operation options follow the command; shroud/unshroud require fresh or merge.
+    Exit codes: 0 success/dry run/no-op; 1 failure/refusal; 2 usage; 130 interrupt.
 
     \f
 
@@ -62,6 +215,7 @@ def _prompt_alias(*, generation: bool) -> str:
     '--dry-run', is_flag=True, help='Validate the target read-only; generate no key and create no files or directories.'
 )
 @click.option('--verbose', is_flag=True, help='Show the escaped output path even when unattended; never show key bytes.')
+@_operation()
 def keygen(alias: str | None, directory: str | None, non_interactive: bool, dry_run: bool, verbose: bool) -> None:
     """Create obfuscidian-ALIAS.key exclusively; never overwrite an existing entry.
 
@@ -75,7 +229,7 @@ def keygen(alias: str | None, directory: str | None, non_interactive: bool, dry_
     Keep keys outside both vaults and cloud repositories, with a separate offline
     backup. A lost key prevents decryption; no reset or recovery bypass exists.
 
-    No force, --yes, --recover, or logging options are available. Unattended
+    No force, --yes or --recover is available. Logs require an explicit --log-file. Unattended
     paths are redacted unless --verbose is selected. Dry run performs the same
     target/collision checks without generating random key material or writing.
 
@@ -99,6 +253,20 @@ def keygen(alias: str | None, directory: str | None, non_interactive: bool, dry_
             directory=directory,
             alias_prompt=(lambda: _prompt_alias(generation=True)) if interactive else None,
         )
+        protected = ()
+        if output._current().log is not None:
+            protected = tuple(
+                config._expand_path(value, 'vault')
+                for name in (const.ENV_ORIGIN, const.ENV_MIRROR)
+                if (value := os.environ.get(name)) is not None
+            )
+        output._prepare(protected=protected, key=path)
+        output._phase('Validating key target.')
+        if not dry_run:
+            if output._current().log is not None:
+                keys._generate_key(path, dry_run=True)
+            output._start()
+            output._phase('Creating key exclusively.')
         warnings = keys._generate_key(path, dry_run=dry_run)
     except _ConfigurationError as error:
         raise click.UsageError(str(error)) from None
@@ -127,7 +295,7 @@ def _prompt_backup(label: str, *, confirmation: bool = False) -> str | bool:
     except click.Abort as error:
         if isinstance(error.__context__, KeyboardInterrupt):
             raise KeyboardInterrupt from None
-        raise _OperationalError('Input ended; no backup transaction was started.') from None
+        raise _OperationalError('Input ended; no publication or recovery was started.') from None
 
 
 def _show_retained(result: _TransactionResult, *, show_paths: bool) -> None:
@@ -167,6 +335,7 @@ def _show_retained(result: _TransactionResult, *, show_paths: bool) -> None:
 @click.option(
     '--verbose', is_flag=True, help='Show escaped relative names and private rollback locations; never key bytes/content.'
 )
+@_operation()
 def shroud(
     mode: str,
     origin: str | None,
@@ -194,9 +363,9 @@ def shroud(
     Confirm replacement of existing contents or removal of old files/directories
     in fresh, or existing file content in merge, after preflight. Metadata-only
     updates and additions need no replacement prompt. Unattended replacement/recovery
-    requires --yes. A no-op changes no files, timestamps or snapshot IDs and creates
-    no write artifacts. Dry run never prompts for replacement or repairs pending
-    transactions.
+    requires --yes. A no-op preserves vault files, timestamps and snapshot IDs,
+    creating no transaction artifacts; an explicit log may record it. Dry run
+    never prompts for replacement or repairs pending transactions.
 
     Mandatory exclusions: .git components, .gitignore and obfuscidian-*.key files
     at every depth. Other secrets require explicit exclusions. Patterns cannot
@@ -205,7 +374,7 @@ def shroud(
     fails before replacement; no automatic rekeying or key generation exists.
 
     Use unshroud fresh to restore, or verify for read-only integrity checks.
-    Optional logging remains planned.
+    Optional --log-file records are redacted; --log-paths permits only relative names.
     Native Windows mutation fails closed pending platform hardening; read-only
     dry runs are available.
 
@@ -247,7 +416,11 @@ def shroud(
             keydir=keydir,
             alias_prompt=(lambda: _prompt_alias(generation=False)) if interactive else None,
         )
+        output._prepare(protected=(source, destination), key=selected_key)
+        output._phase(f'Planning {mode} backup and authenticating any existing snapshot.')
         if recover:
+            output._start()
+            output._phase('Recovering the previous encrypted state before retrying.')
             recovered = backup._recover_backup(
                 source,
                 destination,
@@ -276,9 +449,14 @@ def shroud(
                 f'{counts.unchanged} unchanged, {counts.retained} retained absent/excluded.'
             )
             click.echo('Merge retains historic paths; deleted or renamed notes can return during restore.')
-        if verbose:
-            for entry in plan.source.entries:
-                click.echo(f'Included {entry.kind}: {entry.path!r}')
+        if not recover and not dry_run:
+            output._start()
+        output._counts(
+            files=plan.source.file_count, directories=plan.source.directory_count, plaintext_bytes=plan.source.plaintext_bytes
+        )
+        for entry in plan.source.entries:
+            output._relative(f'Included {entry.kind}', entry.path, verbose=verbose)
+        output._phase('Checking publication consent and stability.' if not dry_run else 'Rechecking read-only proposal.')
         result = backup._publish_backup(
             plan,
             yes=yes,
@@ -300,7 +478,9 @@ def shroud(
                 f'Dry run: {plan.transaction.required_bytes} staged bytes estimated; no files or transaction artifacts created.'
             )
         elif plan.no_op:
-            click.echo(f'{mode.capitalize()} backup unchanged (no-op); no files or transaction artifacts created.')
+            click.echo(f'{mode.capitalize()} backup unchanged (no-op); no vault files or transaction artifacts created.')
+            if output._current() is not None:
+                output._current()._record('no-op')
         else:
             click.echo(
                 f'{mode.capitalize()} encrypted snapshot published; origin preserved. '
@@ -332,6 +512,7 @@ def shroud(
 @click.option('--keydir', type=str, help='Alias directory; CLI overrides OBFUSCIDIAN_KEY_DIR, then home.')
 @click.option('--non-interactive', is_flag=True, help='Never prompt; require mirror and key selectors from CLI/environment.')
 @click.option('--verbose', is_flag=True, help='Show escaped authenticated relative names after complete validation.')
+@_operation(logging=False)
 def verify(
     mirror: str | None,
     key: str | None,
@@ -390,6 +571,7 @@ def verify(
             keydir=keydir,
             alias_prompt=(lambda: _prompt_alias(generation=False)) if interactive else None,
         )
+        output._phase('Authenticating the complete encrypted snapshot.')
         result, warnings = verification._verify_backup(destination, selected_key)
         for warning in warnings:
             click.echo(f'Warning: {warning}', err=True)
@@ -397,11 +579,10 @@ def verify(
             f'Verified complete v1 mirror: {result.file_count} files, {result.directory_count} directories, '
             f'{result.plaintext_bytes} plaintext bytes, {result.encrypted_bytes} encrypted bytes.'
         )
-        if verbose:
-            for record in result.manifest.directories:
-                click.echo(f'Verified directory: {record.path!r}')
-            for record in result.manifest.files:
-                click.echo(f'Verified file: {record.path!r}')
+        for record in result.manifest.directories:
+            output._relative('Verified directory', record.path, verbose=verbose)
+        for record in result.manifest.files:
+            output._relative('Verified file', record.path, verbose=verbose)
         click.echo('Best-effort read-only observation; no application writes performed. OS reads may update access times.')
     except _ConfigurationError as error:
         raise click.UsageError(str(error)) from None
@@ -433,6 +614,7 @@ def verify(
 @click.option('--dry-run', is_flag=True, help='Verify and plan read-only; create no plaintext, directories or locks.')
 @click.option('--recover', is_flag=True, help='Explicitly recover old plaintext before replanning and retrying fresh restore.')
 @click.option('--verbose', is_flag=True, help='Show escaped authenticated relative names and sensitive recovery locations.')
+@_operation()
 def unshroud(
     mode: str,
     origin: str | None,
@@ -471,7 +653,7 @@ def unshroud(
     Ignored origin data is refused. --gitdir/--worktree/--branch/--base-branch are
     merge-only. Merge --recover is unavailable: retain uncertain artifacts for
     manual inspection. No commit, merge, fetch or push is automatic.
-    Logging remains unavailable. Native Windows writes fail
+    Optional --log-file records are redacted; --log-paths permits relative names. Native Windows writes fail
     closed pending platform hardening; read-only dry runs remain available.
 
     \f
@@ -520,6 +702,11 @@ def unshroud(
             keydir=keydir,
             alias_prompt=(lambda: _prompt_alias(generation=False)) if interactive else None,
         )
+        protected = (destination, source)
+        if worktree is not None:
+            protected += (config._expand_path(worktree, '--worktree'),)
+        output._prepare(protected=protected, key=selected_key)
+        output._phase(f'Planning {mode} restore and authenticating all objects.')
         if mode == 'merge':
             _unshroud_merge(
                 destination,
@@ -536,6 +723,8 @@ def unshroud(
             )
             return
         if recover:
+            output._start()
+            output._phase('Recovering the previous plaintext state before retrying.')
             recovered = restore._recover_restore(
                 destination,
                 source,
@@ -558,9 +747,12 @@ def unshroud(
         )
         if preserve_config:
             click.echo('Root Obsidian configuration preserved; backup configuration is verified and skipped.')
-        if verbose:
-            for record in (*plan.directories, *plan.files):
-                click.echo(f'Restore entry: {record.path!r}')
+        if not recover and not dry_run:
+            output._start()
+        output._counts(files=len(plan.files), directories=len(plan.directories), plaintext_bytes=sum(r.size for r in plan.files))
+        for record in (*plan.directories, *plan.files):
+            output._relative('Restore entry', record.path, verbose=verbose)
+        output._phase('Checking publication consent and stability.' if not dry_run else 'Rechecking read-only proposal.')
         result = restore._publish_restore(
             plan,
             yes=yes,
@@ -638,6 +830,17 @@ def _unshroud_merge(
         f'{len(plan.reconstruction.directories)} directories, '
         f'{sum(r.size for r in plan.reconstruction.files)} plaintext bytes.'
     )
+    output._prepare(protected=(origin, mirror, plan.output, plan.gitdir, plan.common), key=key)
+    if not dry_run:
+        output._start()
+    output._counts(
+        files=len(plan.reconstruction.files),
+        directories=len(plan.reconstruction.directories),
+        plaintext_bytes=sum(r.size for r in plan.reconstruction.files),
+    )
+    for record in (*plan.reconstruction.directories, *plan.reconstruction.files):
+        output._relative('Restore entry', record.path, verbose=verbose)
+    output._phase('Preparing isolated uncommitted restore.' if not dry_run else 'Rechecking read-only Git proposal.')
     result = git_restore._publish_merge(plan, dry_run=dry_run)
     if dry_run:
         click.echo('Dry run: no plaintext, branch, worktree, locks or recovery artifacts created.')
@@ -651,9 +854,8 @@ def _unshroud_merge(
         f'Ignored restored/base files requiring manual review: {len(result.ignored)}. '
         'Inspect git status --ignored; selected ignored files may require git add -f.'
     )
-    if verbose:
-        for relative in result.ignored:
-            click.echo(f'Ignored review entry: {relative!r}')
+    for relative in result.ignored:
+        output._relative('Ignored review entry', relative, verbose=verbose)
     if show_paths:
         click.echo(f'Restore branch: {result.branch!r}; worktree: {str(result.output)!r}')
         review = shlex.quote(str(result.output))

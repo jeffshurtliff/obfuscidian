@@ -659,3 +659,20 @@ def test_timestamp_operation_failure_warns_and_keeps_bytes(vaults, monkeypatch) 
     assert result.exit_code == 0, result.output
     assert 'Some modification times could not be preserved' in result.output
     assert (vaults[2] / 'nested/binary.bin').read_bytes() == bytes(range(256))
+
+
+def test_pending_plaintext_recovery_with_redacted_log(vaults, monkeypatch) -> None:
+    """Restore recovery/retry logs contain categories/counts rather than plaintext custody paths."""
+    _block_restore(vaults, monkeypatch)
+    source, mirror, destination, key = vaults
+    log = source.parent / 'synthetic-restore-recovery.jsonl'
+    source_before = _snapshot(mirror)
+    result = _invoke(vaults, '--recover', '--yes', '--verbose', '--log-file', str(log))
+    assert result.exit_code == 0, result.output
+    assert 'Previous state recovered' in result.stdout
+    assert (destination / 'note.md').read_bytes() == (source / 'note.md').read_bytes()
+    assert _snapshot(mirror) == source_before
+    text = log.read_text()
+    assert 'Recovering' in text and 'completed' in text
+    assert str(source.parent) not in text and const.TRANSACTION_PREFIX not in text
+    assert 'note.md' not in text and key.read_text() not in text

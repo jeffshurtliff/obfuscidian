@@ -98,3 +98,6 @@ GIT_PENDING_NAMES = (
     'sequencer',
     'index.lock',
 )
+
+# Optional operational logs contain no captured terminal streams or exception text.
+LOG_MODE = 0o600

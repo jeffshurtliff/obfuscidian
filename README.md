@@ -6,7 +6,7 @@
 Obfuscidian is a Python CLI being developed to create encrypted Obsidian vault
 backups. The current CLI provides help, version information, secure key
 generation, `shroud fresh|merge`, read-only `verify`, and `unshroud fresh|merge`.
-Git merge restore is available; optional logging remains planned and unavailable.
+Git merge restore and optional private operational logging are available locally.
 This repository does not yet claim a published package or completed platform validation.
 
 ## Project status
@@ -73,7 +73,8 @@ is closed as completed. Linux CI passed on Python 3.12–3.14. See
 [merge restore](docs/RESTORE.md#additive-git-merge-restore) and the
 [completion record](dev/IMPLEMENTATION_PLAN.md#thread-10--git-merge-restore-completion-record-5-october-2026).
 
-Thread 11 remains **not started**. Broader OS validation is deferred to Thread 12;
+Thread 11 is **implemented locally, pending maintainer review**; see the
+[CLI contract](docs/CLI.md). Broader OS validation is deferred to Thread 12;
 native Windows mutation fails closed.
 
 ## Installation from source
@@ -121,9 +122,11 @@ Fresh excludes deleted or newly excluded old entries from the new snapshot,
 retaining the complete old encrypted snapshot outside the mirror and Git
 worktrees. Source data and root mirror Git controls stay in place. Replacing
 existing contents or removing old paths requires confirmation; metadata-only
-updates, additions and no-ops do not. A no-op or dry run creates no write
-artifacts. Pause editing and sync during writes; see [backup safety and explicit
-recovery](docs/BACKUP.md). No Git operations run automatically.
+updates, additions and no-ops do not. A no-op creates no transaction artifacts
+and preserves vault bytes/times; an explicitly requested operational log may
+still record it. Dry runs create no write artifacts. 
+Pause editing and sync during writes; see [backup safety and explicit recovery](docs/BACKUP.md). 
+No Git operations run automatically.
 
 For additive retention, use `shroud merge` with the same options. It keeps
 deleted, renamed and excluded old paths, so **deleted notes can return during
@@ -167,6 +170,12 @@ obfuscidian unshroud merge --origin ./vault --mirror ./encrypted-mirror \
 The origin must be clean, including ignored/untracked data. Base-only files remain;
 review ignored files and commit selected changes manually before any merge. See
 [merge restore](docs/RESTORE.md#additive-git-merge-restore) for validation and failure cleanup.
+
+Shared privacy, logging, progress, prompts and exit codes are documented in the
+[CLI contract](docs/CLI.md). Write commands support an explicit private
+`--log-file` outside both vaults, Git and recovery trees. `--verbose` permits
+terminal paths; only `--log-paths` permits relative names in logs. Dry runs and
+`verify` reject logging options and remain read-only.
 
 ## Development
 

@@ -45,6 +45,7 @@ def artifacts(pytestconfig: pytest.Config, tmp_path_factory: pytest.TempPathFact
             'BACKUP.md',
             'VERIFY.md',
             'RESTORE.md',
+            'CLI.md',
         ):
             shutil.copy2(root / 'docs' / name, source / 'docs' / name)
         # Deliberately seed obvious synthetic private/scratch content, never real vault data.
@@ -119,6 +120,7 @@ def test_artifact_contents(artifacts: tuple[Path, Path]) -> None:
         'verification.py',
         'restore.py',
         'git_restore.py',
+        'output.py',
     }
     with zipfile.ZipFile(wheel) as archive:
         prefix = 'obfuscidian-1.0.0.dev0.dist-info/'
@@ -149,6 +151,7 @@ def test_artifact_contents(artifacts: tuple[Path, Path]) -> None:
                 'docs/BACKUP.md',
                 'docs/VERIFY.md',
                 'docs/RESTORE.md',
+                'docs/CLI.md',
             )
         }
         metadata_file = archive.extractfile(prefix + 'PKG-INFO')
@@ -246,6 +249,83 @@ def test_installation_entry_points(
         path.relative_to(verify_mirror): (path.read_bytes() if path.is_file() else None, path.stat().st_mtime_ns)
         for path in (verify_mirror, *verify_mirror.rglob('*'))
     } == before_verify
+    # Operational integrity failure uses identical streams and exit 1 in both installed entry points.
+    corrupt = tmp_path.resolve() / 'synthetic-corrupt-mirror'
+    shutil.copytree(fixture / 'mirror', corrupt)
+    next((corrupt / '.obfuscidian/objects').iterdir()).write_bytes(b'SYNTHETIC CORRUPTION')
+    failures = []
+    for prefix in ([str(console)], [str(python), '-m', 'obfuscidian']):
+        failures.append(
+            subprocess.run(
+                [*prefix, 'verify', '--mirror', str(corrupt), '--key', str(verify_key), '--non-interactive'],
+                cwd=outside,
+                capture_output=True,
+                text=True,
+                timeout=30,
+            )
+        )
+    assert failures[0].returncode == failures[1].returncode == 1
+    assert failures[0].stdout == failures[1].stdout
+    assert failures[0].stderr == failures[1].stderr
+    assert str(corrupt) not in failures[0].stdout + failures[0].stderr
+    # Inject an interrupt in installed code before key creation, then execute each actual entry script.
+    interrupts = []
+    script = (
+        'import runpy,sys\nfrom obfuscidian import keys\n'
+        'def stop(*args, **kwargs):\n    raise KeyboardInterrupt\n'
+        'keys._generate_key=stop\n'
+        'target=sys.argv[1]\nsys.argv=["obfuscidian","keygen","--alias","synthetic",'
+        '"--dir",sys.argv[2],"--non-interactive"]\n'
+        'runpy.run_module("obfuscidian",run_name="__main__") if target=="module" '
+        'else runpy.run_path(target,run_name="__main__")'
+    )
+    for target in (str(console), 'module'):
+        interrupts.append(
+            subprocess.run(
+                [str(python), '-c', script, target, str(tmp_path.resolve())],
+                cwd=outside,
+                capture_output=True,
+                text=True,
+                timeout=30,
+            )
+        )
+    assert interrupts[0].returncode == interrupts[1].returncode == 130
+    assert interrupts[0].stdout == interrupts[1].stdout
+    assert interrupts[0].stderr == interrupts[1].stderr
+    assert 'interrupted' in interrupts[0].stderr and 'Traceback' not in interrupts[0].stderr
+    # All installed command help uses the same product name and options.
+    for command in ('keygen', 'shroud', 'unshroud', 'verify'):
+        console_result = _run([str(console), command, '--help'], outside)
+        module_result = _run([str(python), '-m', 'obfuscidian', command, '--help'], outside)
+        assert console_result.stdout == module_result.stdout
+        assert console_result.stderr == module_result.stderr == ''
+    # Misuse/EOF codes and diagnostics must match, without echoing arbitrary values.
+    for arguments, code in (
+        ([], 2),
+        (['shroud'], 2),
+        (['unshroud'], 2),
+        (['shroud', 'SYNTHETIC_PRIVATE_NAME'], 2),
+        (['--SYNTHETIC_PRIVATE_NAME'], 2),
+        (['verify', '--log-file', 'SYNTHETIC_PRIVATE_NAME'], 2),
+        (['keygen', '--alias', 'synthetic', '--dry-run', '--log-file', 'SYNTHETIC_PRIVATE_NAME'], 2),
+        (['keygen', '--log-paths'], 2),
+        (['keygen', '--log-file', ''], 2),
+        (['keygen'], 2),
+    ):
+
+        def failure_run(prefix, command_arguments=arguments):
+            environment = {k: v for k, v in os.environ.items() if not k.startswith('OBFUSCIDIAN_') and k != 'PYTHONPATH'}
+            return subprocess.run(
+                [*prefix, *command_arguments], cwd=outside, env=environment, input='', capture_output=True, text=True, timeout=30
+            )
+
+        console_result = failure_run([str(console)])
+        module_result = failure_run([str(python), '-m', 'obfuscidian'])
+        assert console_result.returncode == module_result.returncode == code
+        assert console_result.stdout == module_result.stdout
+        assert console_result.stderr == module_result.stderr
+        assert 'SYNTHETIC_PRIVATE_NAME' not in console_result.stdout + console_result.stderr
+        assert 'Traceback' not in console_result.stderr
     for option in ('--help', '--version'):
         console_result = _run([str(console), option], outside)
         module_result = _run([str(python), '-m', 'obfuscidian', option], outside)
@@ -255,7 +335,7 @@ def test_installation_entry_points(
             assert console_result.stdout == 'obfuscidian, version 1.0.0.dev0\n'
         else:
             assert 'Usage: obfuscidian [OPTIONS]' in console_result.stdout
-            assert 'planned' in console_result.stdout and 'unavailable' in console_result.stdout
+            assert '--log-file' in console_result.stdout and 'Exit codes:' in console_result.stdout
             assert (
                 'Commands:' in console_result.stdout and 'keygen' in console_result.stdout and 'shroud' in console_result.stdout
             )
@@ -276,6 +356,26 @@ def test_installation_entry_points(
         assert key.exists()
         assert key.read_bytes().decode() not in result.stdout + result.stderr
         assert str(key_directory) not in result.stdout + result.stderr
+    operational_log = tmp_path.resolve() / 'events.jsonl'
+    for entry_point, alias in (([str(console)], 'logged-console'), ([str(python), '-m', 'obfuscidian'], 'logged-module')):
+        logged = _run(
+            [
+                *entry_point,
+                'keygen',
+                '--alias',
+                alias,
+                '--dir',
+                str(key_directory),
+                '--non-interactive',
+                '--verbose',
+                '--log-file',
+                str(operational_log),
+            ],
+            outside,
+        )
+        assert str(key_directory) not in operational_log.read_text()
+        assert 'Key target:' in logged.stdout
+        assert (key_directory / f'obfuscidian-{alias}.key').read_text() not in operational_log.read_text()
     origin = (tmp_path / 'synthetic-origin').resolve()
     origin.mkdir()
     (origin / 'note.md').write_bytes(b'SYNTHETIC INSTALLED NOTE\r\n')
@@ -289,7 +389,7 @@ def test_installation_entry_points(
         preview = _run([*entry_point, *arguments, '--dry-run'], outside)
         assert 'Dry run:' in preview.stdout and not mirror.exists()
         if os.name == 'posix':
-            published = _run([*entry_point, *arguments], outside)
+            published = _run([*entry_point, *arguments, '--log-file', str(operational_log)], outside)
             assert 'snapshot published' in published.stdout
             unchanged = _run([*entry_point, *arguments], outside)
             assert 'no-op' in unchanged.stdout
@@ -419,7 +519,8 @@ def test_installation_entry_points(
             ]
             preview = _run([*entry_point, *merge_arguments, '--dry-run'], outside)
             assert 'Dry run:' in preview.stdout and not review.exists()
-            merged = _run([*entry_point, *merge_arguments], outside)
+            merged = _run([*entry_point, *merge_arguments, '--log-file', str(operational_log), '--log-paths'], outside)
+            assert str(review) not in operational_log.read_text()
             assert 'unstaged and uncommitted' in merged.stdout and str(review) not in merged.stdout
             assert (review / 'note.md').read_bytes() == b'SYNTHETIC INSTALLED NOTE\r\n'
             assert (review / 'attachment.bin').read_bytes() == bytes(range(256))

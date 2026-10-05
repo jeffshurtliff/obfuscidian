@@ -683,3 +683,20 @@ def test_options_and_exclusion_validation_precede_writes(vaults: tuple[Path, Pat
         result = _invoke(vaults, *options, '--yes')
         assert result.exit_code == 2, result.output
         assert _snapshot(vaults[0].parent) == before
+
+
+def test_pending_recovery_with_private_log_keeps_locations_redacted(vaults, monkeypatch) -> None:
+    """Recover and retry through the same log without copying private transaction locations."""
+    _block_replacement(vaults, monkeypatch)
+    log = vaults[0].parent / 'synthetic-recovery.jsonl'
+    source_before = _snapshot(vaults[0])
+    result = _invoke(vaults, '--recover', '--yes', '--verbose', '--log-file', str(log))
+    assert result.exit_code == 0, result.output
+    assert 'Previous state recovered' in result.stdout
+    assert _payload(vaults)['note.md'] == b'SYNTHETIC CHANGED'
+    assert _snapshot(vaults[0]) == source_before
+    text = log.read_text()
+    assert 'Recovering' in text and 'completed' in text
+    assert str(vaults[0].parent) not in text
+    assert 'note.md' not in text and vaults[2].read_text() not in text
+    assert const.TRANSACTION_PREFIX not in text

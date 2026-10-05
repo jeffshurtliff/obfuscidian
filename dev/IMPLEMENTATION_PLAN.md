@@ -23,7 +23,8 @@ into `origin/main`; issue #9 is closed as completed. Linux CI passed on Python
 a validation gap explicitly accepted by the maintainer for closure. Thread 10
 is complete, reviewed and merged/pushed into `origin/main`; issue #10 is closed
 as completed and Linux CI passed on Python 3.12–3.14.
-Thread 11 is **not started**; Threads 11–14 remain planned. See the Thread 10
+Thread 11 is **implemented locally, pending maintainer review**; Threads 12–14
+remain not started. See the Thread 11 handoff below. See the Thread 10
 completion record below and Thread 09 completion record for evidence and limits.
 
 **Intended first stable release:** `1.0.0` (current metadata: `1.0.0.dev0`).
@@ -474,6 +475,8 @@ synthetic commits and disabled external hooks/configuration.
   intentional interactive handoff exceptions to counts-only progress. Redact
   them in unattended output unless verbose was explicitly selected; private
   recovery records retain actionable locations without putting them in Git.
+- An explicitly requested operational log may record a no-op; vault bytes/times
+  and transaction artifacts remain unchanged. Dry run and verify never write logs.
 - Suppress animated progress when output is redirected. Escape display values;
   failure summaries state what was preserved and whether recovery is needed.
 
@@ -552,7 +555,7 @@ commits, publication, or PRs are implied. Update status only after acceptance cr
 | 08 | Read-only verification | 04; may precede 05–07 | [#8](https://github.com/jeffshurtliff/obfuscidian/issues/8) | Complete |
 | 09 | Fresh restore | 05, 07, 08 | [#9](https://github.com/jeffshurtliff/obfuscidian/issues/9) | Complete; 3.14 CI gap accepted |
 | 10 | Git merge restore | 09 | [#10](https://github.com/jeffshurtliff/obfuscidian/issues/10) | Complete; reviewed/merged; Linux CI passed |
-| 11 | CLI polish | 10 | [#11](https://github.com/jeffshurtliff/obfuscidian/issues/11) | Not started |
+| 11 | CLI polish | 10 | [#11](https://github.com/jeffshurtliff/obfuscidian/issues/11) | Implemented locally; pending review |
 | 12 | Cross-platform hardening | 11 | [#12](https://github.com/jeffshurtliff/obfuscidian/issues/12) | Not started |
 | 13 | Documentation and contribution guidance | 12; incremental docs accompany earlier threads | [#13](https://github.com/jeffshurtliff/obfuscidian/issues/13) | Not started |
 | 14 | Release preparation | 13 | [#14](https://github.com/jeffshurtliff/obfuscidian/issues/14) | Not started |
@@ -999,7 +1002,9 @@ verify no restore commit was created.
 
 **Goal/deliverable:** Consistent user-facing help, errors, progress, privacy, and
 automation behavior across the completed commands.
-**Depends on:** 10. **Status:** Not started.
+**Depends on:** 10. **Status:** Implemented locally, pending maintainer review;
+issue #11 remains open. See the Thread 11 handoff below for executed validation
+and limits. Thread 12 remains not started.
 
 1. Audit options/help at group and subcommand levels, required modes, precedence,
    incompatible options, defaults, and exit-code mapping; ensure console/module
@@ -1065,6 +1070,12 @@ comparison/capability detection. Fresh restore currently rejects ambiguous
 case-folded/NFC names conservatively even when a case-sensitive filesystem
 could preserve them distinctly. Broaden native Windows destination observation
 and mutation validation without weakening the fail-closed write boundary.
+
+**Thread 11 discovery for future work:** Validate private append permissions and
+ownership for existing Windows operational logs. Thread 11 creates new logs
+using the established keygen protected DACL helper but refuses existing Windows
+log appends until their file ACL can be checked. Exercise this boundary in the
+broader matrix without relaxing private log custody. Thread 12 remains not started.
 
 **Copy-ready prompt:**
 
@@ -1221,7 +1232,7 @@ CI passed; the maintainer accepted the runner-unavailable Python 3.14 cancellati
 for closure. See its completion record below. Thread 10 is complete following
 maintainer review, commit and merge/push, with issue #10 closed as completed and
 Linux CI passing on Python 3.12–3.14. See its completion record below.
-Thread 11 is **not started**. Threads 11–14 remain planned.
+Thread 11 is implemented locally, pending maintainer review. Threads 12–14 remain not started.
 Earlier handoff records describe the state at that time; later completion
 records supersede their pending-review and Git-status statements.
 The linked GitHub issues hold public progress discussion and verified
@@ -2692,3 +2703,89 @@ Git capability and durable ownership recovery work stays in the roadmap.
 Thread 11 — CLI polish — is **not started**, explicitly excluded by the
 maintainer. No implementation or delegation of Thread 11 was initiated.
 Threads 11–14 remain planned.
+
+### Thread 11 — CLI polish implementation handoff (5 October 2026)
+
+**Status:** Implemented locally, pending maintainer review. All four requested
+subtasks and the local acceptance/demo are met; issue #11 remains open for the
+review/closure decision. Thread 10 code, temporary Git/installed-artifact tests
+and its accepted merged Linux CI evidence were inspected before work. Actual
+Thread 11 synthetic runs additionally exercised the dependency behavior.
+
+**Deliverables and audit:**
+
+- [CLI](../src/obfuscidian/cli.py): required modes, command option placement,
+  selector precedence, supported combinations and helpful misuse diagnostics;
+  static phase progress; terminal-only interactive/verbose handoff exceptions;
+  prompt refusal/EOF, non-terminal input, non-interactive/consent separation,
+  read-only dry run/verification and recovery behavior; consistent exit codes
+  `0`/`1`/`2`/`130`, including interrupts outside callbacks and logging failures.
+- [Private output/logging](../src/obfuscidian/output.py) and
+  [constants](../src/obfuscidian/constants.py): private JSON lines operational
+  records from deliberately supplied fields, never captured streams/prompts or
+  exception text. `--verbose` cannot add log names; `--log-paths` explicitly
+  permits relative names and never absolute handoff locations, content or keys.
+  Log custody, parent/file identity, permissions and link/special/hard-link
+  refusal precede mutation. Git ownership is rechecked before opening/records.
+  Existing private POSIX logs append; default logging remains disabled.
+- [Shared CLI contract tests](../tests/integration/test_cli_contract.py): 71
+  synthetic privacy/UX checks, including both streams, control-character names,
+  independent terminal/log disclosure, safe/no-op/read-only behavior, refused
+  or changed log locations, permissions, interrupts and each exit category.
+  Existing [CLI unit tests](../tests/unit/test_cli.py) match the completed help.
+  Backup/restore recovery log regressions and Git merge log/handoff tests are in
+  their existing integration suites; all fixtures remain temporary and synthetic.
+- [Installed-artifact parity](../tests/integration/test_packaging.py): wheel and
+  sdist content allowlists, each command's help, version, parser/operational/
+  interrupt exits, dry runs, redacted logs and byte-preserving backup/restore/Git
+  workflows outside the checkout. Restored differences remain uncommitted.
+- [Shared CLI guide](../docs/CLI.md), configuration/backup/restore/verify guides,
+  README, contributor/agent status and [changelog](../docs/CHANGELOG.md) are
+  synchronized. `pyproject.toml` includes the CLI guide in the sdist; runtime
+  dependencies, lockfile, cryptography and v1 format/data semantics are unchanged.
+
+**Checks actually executed:**
+
+- `poetry check --lock --strict`, `poetry run ruff check .`,
+  `poetry run ruff format --check .` and `poetry run bandit -r src/obfuscidian`
+  passed. Bandit found no issues; the two existing documented Git subprocess
+  suppressions remain unchanged.
+- Final `poetry run coverage run -m pytest -q`: **1165 passed, 2 native Windows
+  skips** on local macOS/Python 3.12.7. `poetry run coverage report`: **90% total**,
+  **89% CLI**, **86% output/logging**. These are local results, not hosted matrix
+  evidence. A separate targeted run of all 71 shared CLI tests also passed.
+- Fresh `poetry build --output <temporary-candidate>` and strict Twine validation
+  of exactly that wheel/sdist passed. `test_packaging.py` using the fresh artifacts
+  and an existing compatible dependency wheelhouse: **3 passed**, with isolated
+  installs and `pip check`. The normal suite separately tested offline installs
+  with explicitly shared development dependencies.
+- All seven roadmap command examples plus the optional logging example ran with
+  exit `0` in a temporary synthetic workspace, with correct external key/log
+  custody and a clean committed synthetic Git origin. Redirected output was
+  private/static; restored binary/note bytes matched. Help was manually inspected
+  at 40 and 100 columns and covered by width tests.
+- Local Markdown links/anchors/fences, LF/privacy, required Python headers,
+  `git diff --check`, full proposed diff/new-file inspection and scope/status
+  checks passed. No real vault/cloud/key tests ran.
+
+**Limits and next work:** Hosted CI and broader supported-platform validation
+were not executed or triggered. Sphinx tooling/build remains Thread 13. Windows
+vault mutation remains fail-closed; new Windows logs reuse the established keygen
+DACL helper, while existing Windows log appends await file ACL validation in
+Thread 12. Filesystem identity observations remain best effort against concurrent
+writers. A logging failure after data publication returns failure but may leave a
+complete publication; inspect state/recovery before retrying. An explicitly
+requested no-op log may be created/appended, while vault bytes/times and all
+transaction artifacts remain unchanged. Private plaintext recovery artifacts
+remain sensitive. No implementation acceptance blocker remains; maintainer
+review/closure and any later hosted validation remain pending. Next eligible
+implementation is Thread 12 after acceptance; **Thread 12 is not started**.
+
+**Git and issue tracking:** All **20 proposed files are unstaged/uncommitted on
+`main`**; no staging, development commit, push, PR, merge, tag, release or
+publication occurred. Temporary fixture commits/worktrees served only offline
+integration checks. Issue #11 start/progress/checklists/handoff were synchronized
+through the authenticated GitHub CLI after the connector's comment endpoint
+returned permission-denied; labels, assignee, milestone and open state are
+unchanged. Historical handoffs describe their original state and are not claims
+that later threads remain unimplemented today.

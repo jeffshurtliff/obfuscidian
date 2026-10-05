@@ -5,7 +5,7 @@ is the plaintext destination. Thread 10 adds additive Git merge restore and is
 reviewed and merged/pushed into `origin/main`; issue #10 is closed as completed.
 Linux CI passed on Python 3.12–3.14; see the
 [Git merge restore completion record](../dev/IMPLEMENTATION_PLAN.md#thread-10--git-merge-restore-completion-record-5-october-2026).
-Thread 11 remains **not started**.
+Thread 11 is **implemented locally, pending maintainer review**; see the [CLI contract](CLI.md).
 
 Thread 09 is reviewed and merged/pushed into `origin/main`; issue #9 is closed
 as completed. Linux CI passed on Python 3.12/3.13; Python 3.14 was canceled
@@ -116,7 +116,7 @@ coordinates Obfuscidian processes, not unrelated writers. Multi-entry publicatio
 is journaled and recoverable under tested failures; it is not universally atomic
 or a guarantee against power loss. Native Windows mutation fails closed pending
 Thread 12; read-only preflight/dry runs remain available. Fresh mode performs no
-Git operations. Optional logging remains planned.
+Git operations. Optional private logging follows the [CLI contract](CLI.md).
 
 
 ## Additive Git merge restore

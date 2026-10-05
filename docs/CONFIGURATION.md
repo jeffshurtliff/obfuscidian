@@ -118,6 +118,8 @@ keyboard interrupt after cleanup is attempted. Failed cleanup reports that an
 incomplete entry may remain rather than reporting success.
 
 Keygen currently supports `--alias`, `--dir`, `--non-interactive`, `--dry-run`,
-and `--verbose`. Logging options are deferred to Thread 11 and are rejected;
-no logging is silently enabled, including during dry runs. `--recover` and
+and `--verbose`, plus optional `--log-file`/`--log-paths`. Logs are private and
+redacted by default; key target locations never enter them. `--log-file` is
+rejected with dry run, and `--log-paths` requires an explicit log file. See the
+[shared CLI contract](CLI.md). `--recover` and
 `--yes` do not apply to keygen.

@@ -815,3 +815,20 @@ def test_unsupported_timestamp_preservation_warns_and_preserves_required_bytes(r
     assert 'Some modification times could not be preserved' in result.warnings[-1]
     assert (repositories[4] / 'nested/new.bin').read_bytes() == bytes(range(256))
     assert (repositories[4] / 'nested/empty').is_dir()
+
+
+@pytest.mark.parametrize('log_paths', [False, True])
+def test_private_merge_log_never_captures_verbose_handoff(repositories, log_paths):
+    """Verbose handoff and optional relative log names have independent disclosure policies."""
+    origin, source, mirror, key, worktree = repositories
+    log = origin.parent / 'synthetic-merge.jsonl'
+    before = _snapshot(origin)
+    result = _invoke(repositories, '--verbose', '--log-file', str(log), *(['--log-paths'] if log_paths else []))
+    assert result.exit_code == 0, result.output
+    assert 'Manual command' in result.stdout and str(worktree) in result.stdout
+    assert _snapshot(origin) == before
+    text = log.read_text()
+    assert str(origin.parent) not in text and 'Manual command' not in text
+    assert key.read_text() not in text and 'SYNTHETIC BACKUP' not in text
+    assert ('ignored.bin' in text) == log_paths
+    assert (worktree / 'note.md').read_bytes() == (source / 'note.md').read_bytes()

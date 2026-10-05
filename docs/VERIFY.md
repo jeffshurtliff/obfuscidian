@@ -86,4 +86,4 @@ Thread 10 is complete, reviewed and merged/pushed, with issue #10 closed and
 Linux CI passing on Python 3.12–3.14; see
 [additive Git merge restore](RESTORE.md#additive-git-merge-restore). 
 
-Thread 11 remains **not started**.
+Thread 11 is **implemented locally, pending maintainer review**; see the [CLI contract](CLI.md).

@@ -7,6 +7,11 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Thread 11 shared CLI contract: static phase progress, private JSON lines logs, and independent terminal/log path disclosure.
+- Optional `--log-file`/`--log-paths` on write commands with custody, permissions, link and identity validation before mutation.
+- Privacy/UX tests for streams, logs, malformed arguments, control-character names, no-ops, recovery and exit categories.
+- Installed console/module command/help/error/logging parity and shared CLI guidance; locally implemented pending review.
+
 - `unshroud merge` with clean-origin (including ignored data), local base/ref, Git-directory and new-output validation.
 - Private authenticated additive reconstruction before isolated branch/worktree creation; restored differences remain uncommitted.
 - Raw base-blob reconstruction, hook/filter/config isolation, protected Git controls and optional base-settings preservation.
@@ -63,6 +68,9 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Linux CI for Python 3.12, 3.13, and 3.14, including fresh wheel/sdist validation.
 
 ### Changed
+
+- Redacted parser misuse and unexpected exception payloads while preserving useful help and exit-code categories.
+- Dry runs reject explicit logging and verification remains read-only; verbose handoff locations never enter operational logs.
 
 - Shared fresh/merge planning, staging and recovery reuse the existing v1 validators and transaction primitives.
 - Successful merge cleans only its own proven temporary recovery workspace; uncertain data stays retained with a warning.
