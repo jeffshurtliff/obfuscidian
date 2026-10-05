@@ -1,8 +1,12 @@
 # Plaintext restore
 
 Thread 09 adds `unshroud fresh`. The encrypted mirror is the source; the origin
-is the plaintext destination. Thread 10 adds additive Git merge restore locally
-for maintainer review; changes remain uncommitted and hosted CI has not run.
+is the plaintext destination. Thread 10 adds additive Git merge restore and is
+reviewed and merged/pushed into `origin/main`; issue #10 is closed as completed.
+Linux CI passed on Python 3.12–3.14; see the
+[Git merge restore completion record](../dev/IMPLEMENTATION_PLAN.md#thread-10--git-merge-restore-completion-record-5-october-2026).
+Thread 11 remains **not started**.
+
 Thread 09 is reviewed and merged/pushed into `origin/main`; issue #9 is closed
 as completed. Linux CI passed on Python 3.12/3.13; Python 3.14 was canceled
 before executing any steps because no hosted runner acquired the job. The
@@ -248,6 +252,7 @@ recovery. Retain uncertain artifacts and make an explicit manual recovery
 decision before retrying with new names. Journaled publication attempts
 rollback to the new worktree's prior state under tested ordinary failures;
 it does not guarantee atomic Git/filesystem publication or power-loss recovery.
-Native Windows writes remain fail-closed pending Thread 12. All Thread 10
-validation uses synthetic temporary repositories; hosted and broader platform
-validation are not established by these local results.
+Native Windows writes remain fail-closed pending Thread 12. Thread 10 tests use
+synthetic temporary repositories; local macOS checks and hosted Linux CI on
+Python 3.12–3.14 passed. Broader supported-platform and universal filesystem
+validation remain deferred.

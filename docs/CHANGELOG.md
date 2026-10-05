@@ -12,7 +12,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Raw base-blob reconstruction, hook/filter/config isolation, protected Git controls and optional base-settings preservation.
 - Ignored-file/manual review guidance, no-write dry runs and conservative cleanup that preserves user edits and uncertain artifacts.
 - Offline temporary-repository round trips, ref/path/corruption/dirty-state checks, fault/interrupt and cleanup-preservation tests.
-- Extended restore guide and roadmap evidence for locally implemented Thread 10; later threads remain not started.
+- Extended restore guide and roadmap evidence for completed Thread 10; later threads remain not started.
 
 - `unshroud fresh` with complete mirror authentication and conservative target checks before private plaintext staging.
 - Exact binary/hidden/empty-directory reconstruction, supported times, protected Git controls and optional settings preservation.

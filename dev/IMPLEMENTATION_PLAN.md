@@ -21,9 +21,10 @@ CI passed on Python 3.12–3.14. Thread 09 is complete, reviewed and merged/push
 into `origin/main`; issue #9 is closed as completed. Linux CI passed on Python
 3.12/3.13; Python 3.14 was canceled before execution due to runner availability,
 a validation gap explicitly accepted by the maintainer for closure. Thread 10
-is implemented locally and awaits maintainer review; issue #10 remains open.
+is complete, reviewed and merged/pushed into `origin/main`; issue #10 is closed
+as completed and Linux CI passed on Python 3.12–3.14.
 Thread 11 is **not started**; Threads 11–14 remain planned. See the Thread 10
-handoff below and Thread 09 completion record for evidence and limits.
+completion record below and Thread 09 completion record for evidence and limits.
 
 **Intended first stable release:** `1.0.0` (current metadata: `1.0.0.dev0`).
 
@@ -490,7 +491,7 @@ the original error and report recovery requirements without sensitive payloads.
 
 The key directory exists already; paths and aliases below are placeholders.
 Keygen, `shroud fresh|merge`, and read-only `verify` are implemented locally.
-`unshroud fresh` and `unshroud merge` are implemented; Thread 10 awaits local-change review.
+`unshroud fresh` and `unshroud merge` are implemented, reviewed and merged/pushed.
 
 ```sh
 obfuscidian keygen --alias primary --dir ./keys --non-interactive
@@ -550,7 +551,7 @@ commits, publication, or PRs are implied. Update status only after acceptance cr
 | 07 | Merge backup | 06 | [#7](https://github.com/jeffshurtliff/obfuscidian/issues/7) | Complete |
 | 08 | Read-only verification | 04; may precede 05–07 | [#8](https://github.com/jeffshurtliff/obfuscidian/issues/8) | Complete |
 | 09 | Fresh restore | 05, 07, 08 | [#9](https://github.com/jeffshurtliff/obfuscidian/issues/9) | Complete; 3.14 CI gap accepted |
-| 10 | Git merge restore | 09 | [#10](https://github.com/jeffshurtliff/obfuscidian/issues/10) | Implemented locally; review pending |
+| 10 | Git merge restore | 09 | [#10](https://github.com/jeffshurtliff/obfuscidian/issues/10) | Complete; reviewed/merged; Linux CI passed |
 | 11 | CLI polish | 10 | [#11](https://github.com/jeffshurtliff/obfuscidian/issues/11) | Not started |
 | 12 | Cross-platform hardening | 11 | [#12](https://github.com/jeffshurtliff/obfuscidian/issues/12) | Not started |
 | 13 | Documentation and contribution guidance | 12; incremental docs accompany earlier threads | [#13](https://github.com/jeffshurtliff/obfuscidian/issues/13) | Not started |
@@ -918,7 +919,8 @@ the job; the maintainer accepted that validation gap for closure. See
 [fresh restore](../docs/RESTORE.md) and the
 [completion record](#thread-09--fresh-restore-completion-record-5-october-2026)
 for commit alignment, job evidence and platform limits. Thread 10 is now
-implemented locally for review; Thread 11 remains **not started**.
+complete, reviewed and merged/pushed with Linux CI passing on Python 3.12–3.14;
+Thread 11 remains **not started**.
 
 1. Resolve restore direction correctly: mirror is source; origin is destination.
    Validate every manifest/object and target name before staging plaintext.
@@ -955,9 +957,11 @@ and rollback locations and their platform-appropriate permissions.
 
 **Goal/deliverable:** Working `unshroud merge` with a separate review worktree;
 original checkout and restored changes remain under user control.
-**Depends on:** 09. **Status:** Implemented locally; maintainer review pending.
-Issue #10 stays open; changes are uncommitted and hosted CI has not run.
-See the Thread 10 handoff below for executed evidence and limits.
+**Depends on:** 09. **Status:** Complete, reviewed and merged/pushed into
+`origin/main`; issue #10 is closed as completed. Linux CI passed on Python
+3.12–3.14. See the
+[completion record](#thread-10--git-merge-restore-completion-record-5-october-2026)
+for commit alignment, acceptance evidence and platform limits.
 
 1. Validate Git availability, origin repository/root, clean tracked/untracked
    and ignored vault data, local base branch, explicit Git directory, branch
@@ -1214,8 +1218,10 @@ successful Linux CI on Python 3.12–3.14; issue #8 is closed as completed. See
 its completion record below. Thread 09 is complete following maintainer review,
 commit and merge/push, with issue #9 closed as completed. Linux Python 3.12/3.13
 CI passed; the maintainer accepted the runner-unavailable Python 3.14 cancellation
-for closure. See its completion record below. Thread 10 is implemented locally
-and awaits maintainer review; Thread 11 is **not started**. Threads 11–14 remain planned.
+for closure. See its completion record below. Thread 10 is complete following
+maintainer review, commit and merge/push, with issue #10 closed as completed and
+Linux CI passing on Python 3.12–3.14. See its completion record below.
+Thread 11 is **not started**. Threads 11–14 remain planned.
 Earlier handoff records describe the state at that time; later completion
 records supersede their pending-review and Git-status statements.
 The linked GitHub issues hold public progress discussion and verified
@@ -2613,10 +2619,76 @@ returned HTTP 403 on the start comment; authenticated CLI access successfully
 posted that update. The final public-safe handoff and verified checklist/status update were posted
 with the CLI and read back successfully; the issue remains open and its labels,
 assignee and milestone are unchanged. See the
-[handoff comment](https://github.com/jeffshurtliff/obfuscidian/issues/10#issuecomment-6002981556).. All 16 proposed files remain **unstaged and
+[handoff comment](https://github.com/jeffshurtliff/obfuscidian/issues/10#issuecomment-6002981556). All 16 proposed files remain **unstaged and
 uncommitted** on the pre-existing `feature/10-thread-10-git-merge-restore` branch
 at `4507563`. No development branch/worktree creation, stage, commit, push, PR,
 merge, tag, release or publication was performed. Git commits/staging/worktrees
 were created only inside explicitly authorized synthetic temporary fixtures.
 Next eligible implementation is Thread 11 after review/acceptance; it is not
 started.
+
+### Thread 10 — Git merge restore completion record (5 October 2026)
+
+**Maintainer decision and status:** The maintainer reviewed, committed, merged
+and pushed Thread 10, reported all three CI jobs green, and explicitly requested
+closure of issue #10. All four subtasks and the acceptance/demo are met.
+Thread 10 is **complete**; issue #10 is closed as completed. The implementation
+handoff above retains its historical local/uncommitted state; this completion
+record supersedes its pending review, Git publication and hosted CI statements.
+
+**Commit and remote evidence:** Implementation commit
+[`8e41e30`](https://github.com/jeffshurtliff/obfuscidian/commit/8e41e30619ffb3eabde8a4146f88e2b97053c9d8)
+is an ancestor of pushed main merge
+[`f448b2c`](https://github.com/jeffshurtliff/obfuscidian/commit/f448b2c61211ac4e02414b992f31f82e39cde4f5).
+Local HEAD/main, origin/main and the live remote main ref all matched that exact
+merge when checked. The checkout was clean before this documentation follow-up.
+
+**Acceptance evidence:** The merged implementation and synthetic tests establish
+clean-origin/base/branch/output validation, authenticated additive restoration
+into a separate worktree, unchanged origin HEAD/index/content, uncommitted
+restored differences, ignored-file reporting and manual review/commit/merge
+guidance. Failure cleanup removes only proven unchanged owned artifacts and
+retains uncertain artifacts or later user edits. The implementation handoff
+links the deliverables and records the 97 temporary-repository cases; no real
+vault or cloud tests were used.
+
+**Hosted validation:** The
+[merged-commit Test run](https://github.com/jeffshurtliff/obfuscidian/actions/runs/37385531508)
+completed successfully on the exact merge SHA. All three Linux jobs passed:
+
+| Linux job | Verified result |
+| --- | --- |
+| [Python 3.12](https://github.com/jeffshurtliff/obfuscidian/actions/runs/37385531508/job/112017748843) | Success; 1092 tests passed, 2 native Windows skips; 90% total coverage; 3 isolated artifact checks passed |
+| [Python 3.13](https://github.com/jeffshurtliff/obfuscidian/actions/runs/37385531508/job/112017748409) | Success; 1092 tests passed, 2 native Windows skips; 90% total coverage; 3 isolated artifact checks passed |
+| [Python 3.14](https://github.com/jeffshurtliff/obfuscidian/actions/runs/37385531508/job/112017748751) | Success; 1092 tests passed, 2 native Windows skips; 90% total coverage; 3 isolated artifact checks passed |
+
+Each job also passed strict Poetry lock/metadata validation, Ruff lint/format,
+Bandit, fresh wheel/sdist builds and strict Twine checks. Git restore coverage
+was 91% in each hosted job; the historical 91% total coverage was a local result,
+not the hosted total. No workflow retry or support-matrix change was performed
+by this follow-up.
+
+**Documentation-only closure checks and Git status:** Updated the roadmap index,
+Thread 10 status/completion record, README, agent/contributor status, changelog
+wording and related backup/restore/verification guides. Checked local Markdown
+links, anchors/fences, status consistency, privacy, LF, diff whitespace and final
+Git status. No
+application files, tests, dependencies or workflows changed. Application tests,
+builds and Sphinx were not rerun for these documentation edits; hosted results
+above were read from the completed run and its logs. The documentation follow-up
+remains unstaged/uncommitted on `main`; no stage, commit, push, PR, merge, tag,
+release or publication action was performed by the agent. The existing issue
+body/checklist and a
+[completion comment](https://github.com/jeffshurtliff/obfuscidian/issues/10#issuecomment-6005075868)
+were updated; closure was read back as `closed` with reason `completed`, and
+the exact body, labels, assignee and milestone were verified unchanged except
+for the requested completion update.
+
+**Limits and next thread:** Native Windows mutation remains fail-closed pending
+Thread 12; broader platform/filesystem and universal power-loss validation remain
+unestablished. Incomplete Git creation/process death and uncertain recovery data
+require manual review; merge `--recover` remains refused. Existing deferred
+Git capability and durable ownership recovery work stays in the roadmap.
+Thread 11 — CLI polish — is **not started**, explicitly excluded by the
+maintainer. No implementation or delegation of Thread 11 was initiated.
+Threads 11–14 remain planned.
