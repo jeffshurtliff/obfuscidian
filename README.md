@@ -54,11 +54,13 @@ Thread 07 — Merge backup — is complete, reviewed, and merged/pushed into
 is closed. Linux CI passed on Python 3.12–3.14; see the
 [completion record](dev/IMPLEMENTATION_PLAN.md#thread-07--merge-backup-completion-record-5-october-2026).
 
-Thread 08 — Read-only verification — is implemented and locally validated,
-pending maintainer review; [issue #8](https://github.com/jeffshurtliff/obfuscidian/issues/8)
-remains open and changes are uncommitted. See [verification](docs/VERIFY.md).
-Thread 09 remains **not started**. Hosted CI has not run for Thread 08; broader
-OS validation is deferred to Thread 12. Native Windows mutation fails closed.
+Thread 08 — Read-only verification — is complete, reviewed, and merged/pushed
+into `origin/main`; [issue #8](https://github.com/jeffshurtliff/obfuscidian/issues/8)
+is closed as completed. Linux CI passed on Python 3.12–3.14; see the
+[completion record](dev/IMPLEMENTATION_PLAN.md#thread-08--read-only-verification-completion-record-5-october-2026).
+See [verification](docs/VERIFY.md) for behavior and limits. Thread 09 remains
+**not started**. Broader OS validation is deferred to Thread 12; native Windows
+mutation fails closed.
 
 ## Installation from source
 

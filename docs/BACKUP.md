@@ -8,8 +8,11 @@ No Git commands, commits, pushes, merges or worktrees are created by backup.
 Threads 06–07 are reviewed and merged/pushed into `origin/main`, with issues
 #6–#7 closed and green Linux CI on Python 3.12–3.14. See the
 [Thread 07 completion record](../dev/IMPLEMENTATION_PLAN.md#thread-07--merge-backup-completion-record-5-october-2026)
-for validation and platform limits. Thread 08 is implemented locally, pending
-maintainer review; issue #8 remains open. Thread 09 remains **not started**.
+for validation and platform limits. Thread 08 is complete, reviewed and
+merged/pushed, with issue #8 closed and Linux Python 3.12–3.14 CI passing; see
+[verification](VERIFY.md) and its
+[completion record](../dev/IMPLEMENTATION_PLAN.md#thread-08--read-only-verification-completion-record-5-october-2026).
+Thread 09 remains **not started**.
 
 ## Usage and selection
 

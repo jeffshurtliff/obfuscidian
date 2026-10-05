@@ -49,11 +49,12 @@ Thread 07 — Merge backup — is complete, reviewed, and merged/pushed into
 `origin/main`; issue #7 is closed and Linux CI passed on Python 3.12–3.14.
 See the backup guide and roadmap completion record for evidence and limits.
 
-Thread 08 — Read-only verification — is implemented and locally validated,
-pending maintainer review; issue #8 remains open and changes are uncommitted.
-See [verification](docs/VERIFY.md) and the roadmap handoff. Thread 09 remains
-**not started**; hosted CI has not run for Thread 08. Native Windows mutation
-still fails closed pending Thread 12; local checks do not establish hosted CI.
+Thread 08 — Read-only verification — is complete, reviewed, and merged/pushed
+into `origin/main`; issue #8 is closed as completed. Linux CI passed on Python
+3.12–3.14. See [verification](docs/VERIFY.md) and the roadmap completion record
+for evidence and limits. Thread 09 remains **not started**. Native Windows
+mutation still fails closed pending Thread 12; Linux CI does not establish
+broader supported-platform validation.
 
 The initial test workflow targets Linux/Python 3.12–3.14; configured jobs do not
 prove hosted results. Thread 12 adds broader Windows/macOS/Linux hardening.

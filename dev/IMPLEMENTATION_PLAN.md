@@ -15,8 +15,10 @@ Python 3.12–3.14. Thread 06 — Fresh backup — is complete, reviewed, and
 merged/pushed into `origin/main`; issue #6 is closed and Linux CI passed on
 Python 3.12–3.14. Thread 07 — Merge backup — is complete, reviewed, and
 merged/pushed into `origin/main`; issue #7 is closed and Linux CI passed on
-Python 3.12–3.14. Thread 08 is next and **not started**, as are Threads 08–14.
-See the Thread 07 completion record for evidence and limits.
+Python 3.12–3.14. Thread 08 — Read-only verification — is complete, reviewed,
+and merged/pushed into `origin/main`; issue #8 is closed as completed and Linux
+CI passed on Python 3.12–3.14. Thread 09 is next and **not started**; Threads
+09–14 remain planned. See the Thread 08 completion record for evidence and limits.
 
 **Intended first stable release:** `1.0.0` (current metadata: `1.0.0.dev0`).
 
@@ -541,7 +543,7 @@ commits, publication, or PRs are implied. Update status only after acceptance cr
 | 05 | Safe publication and recovery | 04 | [#5](https://github.com/jeffshurtliff/obfuscidian/issues/5) | Complete |
 | 06 | Fresh backup | 05 | [#6](https://github.com/jeffshurtliff/obfuscidian/issues/6) | Complete |
 | 07 | Merge backup | 06 | [#7](https://github.com/jeffshurtliff/obfuscidian/issues/7) | Complete |
-| 08 | Read-only verification | 04; may precede 05–07 | [#8](https://github.com/jeffshurtliff/obfuscidian/issues/8) | Implemented locally; pending review |
+| 08 | Read-only verification | 04; may precede 05–07 | [#8](https://github.com/jeffshurtliff/obfuscidian/issues/8) | Complete |
 | 09 | Fresh restore | 05, 07, 08 | [#9](https://github.com/jeffshurtliff/obfuscidian/issues/9) | Not started |
 | 10 | Git merge restore | 09 | [#10](https://github.com/jeffshurtliff/obfuscidian/issues/10) | Not started |
 | 11 | CLI polish | 10 | [#11](https://github.com/jeffshurtliff/obfuscidian/issues/11) | Not started |
@@ -782,8 +784,8 @@ and merged/pushed the implementation into `origin/main`; issue #6 is closed as
 completed. All four subtasks and acceptance criteria are met. Linux CI passed
 on Python 3.12–3.14. See the Thread 06 completion record and
 [fresh backup guide](../docs/BACKUP.md) for evidence, CLI behavior and platform
-limits. Thread 07 is complete; see its completion record. Thread 08 is
-implemented locally, pending review; see its handoff record.
+limits. Threads 07–08 are complete; see their completion records. Thread 09
+remains **not started**.
 
 1. Wire CLI options into read-only preflight, complete origin inventory,
    selected-key validation, existing-mirror authentication, and confirmation.
@@ -824,7 +826,7 @@ and merged/pushed the implementation into `origin/main`; issue #7 is closed as
 completed. All four subtasks and acceptance criteria are met. Linux CI passed
 on Python 3.12–3.14. See the [completion record](#thread-07--merge-backup-completion-record-5-october-2026)
 and [backup guide](../docs/BACKUP.md) for evidence, behavior and platform limits.
-Thread 08 is implemented locally, pending maintainer review; see its handoff record.
+Thread 08 is complete; see its completion record. Thread 09 remains **not started**.
 
 1. Validate the old mirror, union old/current logical paths, and classify new,
    changed, metadata-only, unchanged, and retained stale entries. Initialize
@@ -860,11 +862,13 @@ mirror hashes and mtimes across no-op runs; verify old/new snapshot integrity.
 **GitHub issue:** [#8](https://github.com/jeffshurtliff/obfuscidian/issues/8)
 
 **Goal/deliverable:** Public `verify` command using complete backup validation.
-**Depends on:** 04; may run before 05–07. **Status:** Implemented and locally
-validated; pending maintainer review. All four subtasks and local acceptance
-criteria are met. Issue #8 remains open; changes are unstaged/uncommitted.
-Hosted CI has not run for this change. See [verification](../docs/VERIFY.md)
-and the Thread 08 handoff record. Thread 09 remains **not started**.
+**Depends on:** 04; may run before 05–07. **Status:** Complete. The maintainer
+reviewed, committed and merged/pushed the implementation into `origin/main`;
+issue #8 is closed as completed. All four subtasks and acceptance criteria
+are met. Linux CI passed on Python 3.12–3.14. See
+[verification](../docs/VERIFY.md) and the
+[completion record](#thread-08--read-only-verification-completion-record-5-october-2026)
+for evidence and limits. Thread 09 remains **not started**.
 
 1. Add `verify` with mirror/key resolution, non-interactive behavior, counts,
    controlled verbose diagnostics, help, and integrity failure exit status.
@@ -1181,9 +1185,10 @@ successful Linux CI on Python 3.12–3.14; issue #6 is closed as completed.
 Thread 07 is complete following maintainer review, commit, merge/push, and
 successful Linux CI on Python 3.12–3.14; issue #7 is closed as completed.
 
-Thread 08 is implemented and locally validated, pending maintainer review;
-issue #8 remains open and changes are unstaged/uncommitted. See its handoff
-record below. Thread 09 is next and **not started**; Threads 09–14 remain planned.
+Thread 08 is complete following maintainer review, commit, merge/push and
+successful Linux CI on Python 3.12–3.14; issue #8 is closed as completed. See
+its completion record below. Thread 09 is next and **not started**; Threads
+09–14 remain planned.
 Earlier handoff records describe the state at that time; later completion
 records supersede their pending-review and Git-status statements.
 The linked GitHub issues hold public progress discussion and verified
@@ -2161,6 +2166,10 @@ relevant implementation thread instead of pinning assumptions indefinitely.
 
 ### Thread 08 — Read-only verification handoff (5 October 2026)
 
+This historical handoff records the pre-review state. The completion record
+below supersedes its pending-review, local-only CI and uncommitted-implementation
+statements.
+
 **Status:** Implemented and locally validated; pending maintainer review.
 All four Thread 08 subtasks and local acceptance criteria are met. Issue #8
 remains open. Changes are unstaged/uncommitted on the pre-existing
@@ -2261,3 +2270,74 @@ unstaged/uncommitted. New/updated code and docs will become remotely available
 only through a separately authorized Git workflow. No local acceptance blocker
 remains; maintainer review and hosted validation are outstanding. Thread 09
 was not started.
+
+
+### Thread 08 — Read-only verification completion record (5 October 2026)
+
+The maintainer confirmed merge/push into `origin/main`, green CI and acceptance
+of Thread 08, and explicitly requested issue #8 closure. All four subtasks and
+acceptance criteria are complete; issue #8 is closed as completed and its
+maintainer-review/closure checkbox is checked. The
+[issue completion evidence](https://github.com/jeffshurtliff/obfuscidian/issues/8#issuecomment-6000104604)
+records the verified merge and CI results.
+
+**Verified Git evidence:** Implementation commit
+[`9c232a5`](https://github.com/jeffshurtliff/obfuscidian/commit/9c232a5)
+and annotation follow-up
+[`26e8dec`](https://github.com/jeffshurtliff/obfuscidian/commit/26e8dec)
+were merged through
+[`ce3cf78`](https://github.com/jeffshurtliff/obfuscidian/commit/ce3cf78e29803e175ab0303627cf144fb21ac056).
+The subsequent style correction
+[`3d3425b`](https://github.com/jeffshurtliff/obfuscidian/commit/3d3425b6a10e529b1e608fe93b4fb2d883db3a16)
+is the exact CI-verified commit. Local `HEAD`, `main` and `origin/main` and the
+live GitHub `main` commit all matched
+`3d3425b6a10e529b1e608fe93b4fb2d883db3a16` at verification. The implementation
+and annotation commits are ancestors of that head; the checkout was clean
+before these documentation-only completion edits.
+
+**Hosted validation:** GitHub Actions
+[Test run 37349183494](https://github.com/jeffshurtliff/obfuscidian/actions/runs/37349183494)
+completed successfully on the exact head above. All Linux Python **3.12, 3.13
+and 3.14** jobs passed, each reporting **903 tests passed, 2 skipped**, plus
+**3 fully isolated wheel/sdist artifact checks passed**. Logs confirm strict
+Poetry lock checks, Ruff lint/format, Bandit with no issues, coverage reporting,
+fresh wheel/sdist builds, strict Twine validation, dependency wheelhouse
+creation and installed-artifact validation. The two main-suite skips require
+native Windows ACL APIs and junction creation. These results establish hosted
+Linux validation separately from the earlier macOS local handoff.
+
+**Merged deliverables:**
+[Click verify/help](https://github.com/jeffshurtliff/obfuscidian/blob/3d3425b6a10e529b1e608fe93b4fb2d883db3a16/src/obfuscidian/cli.py),
+[read-only verification adapter](https://github.com/jeffshurtliff/obfuscidian/blob/3d3425b6a10e529b1e608fe93b4fb2d883db3a16/src/obfuscidian/verification.py),
+[synthetic verify tests](https://github.com/jeffshurtliff/obfuscidian/blob/3d3425b6a10e529b1e608fe93b4fb2d883db3a16/tests/integration/test_verify.py),
+[installed-entry checks](https://github.com/jeffshurtliff/obfuscidian/blob/3d3425b6a10e529b1e608fe93b4fb2d883db3a16/tests/integration/test_packaging.py)
+and [verification guide](https://github.com/jeffshurtliff/obfuscidian/blob/3d3425b6a10e529b1e608fe93b4fb2d883db3a16/docs/VERIFY.md).
+The existing complete v1 validator authenticates all manifest/object data;
+verification detects pending ownership without repair and rejects write/log/
+recovery/exclusion options. Synthetic tests cover valid/corrupt/privacy cases
+and zero application writes. Earlier handoff records/comments remain historical;
+this completion record supersedes their pending-review, local-only CI and
+uncommitted-implementation statements.
+
+The roadmap summary, index, Thread 08 status and completion record, README,
+AGENTS, CONTRIBUTING, backup guide and verification guide now reflect reviewed/
+merged completion and issue closure. Local links/anchors/fences, status
+consistency, privacy/LF/scope checks and `git diff --check` passed for this
+follow-up. Runtime tests and builds were not rerun locally; hosted merged-commit
+results and logs were verified. No application, test, dependency, format or
+workflow file was changed for closure.
+
+Native Windows mutation remains deferred/fails closed until Thread 12. Broader
+OS/network/cloud filesystems, actual power loss and Sphinx retain their documented
+limits. Linux CI does not establish native Windows validation or security
+certification. Verification remains a best-effort observation, with possible
+OS access-time changes on reads. No real vault/key/cloud access was performed.
+
+**Thread 09 — Fresh restore — remains not started**; Threads 09–14 remain
+planned. No work on Thread 09 was initiated or delegated.
+
+**Current Git status:** These **six documentation edits remain unstaged and
+uncommitted on `main`** for maintainer review. No branch creation, staging,
+commit, push, PR, merge, tag, release, publication or workflow trigger occurred
+during this follow-up. The implementation's commit/merge/push were performed
+by the maintainer before this request.

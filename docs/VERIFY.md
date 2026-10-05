@@ -68,5 +68,13 @@ key holders can forge valid data. Root Git controls are checked for allowed
 names/types, not authenticated as vault data. See the
 [format threat limits](FORMAT.md#read-only-behavior-and-threat-limits).
 
-Local synthetic checks do not establish hosted CI or supported-platform
-validation. Broader platform hardening remains Thread 12.
+Thread 08 is complete following maintainer review and merge/push into
+`origin/main`; [issue #8](https://github.com/jeffshurtliff/obfuscidian/issues/8)
+is closed as completed. The
+[verified Linux CI run](https://github.com/jeffshurtliff/obfuscidian/actions/runs/37349183494)
+passed on Python 3.12–3.14 at commit `3d3425b`, with 903 tests passed and two
+native Windows skips in each job, plus three fully isolated artifact checks.
+See the [completion record](../dev/IMPLEMENTATION_PLAN.md#thread-08--read-only-verification-completion-record-5-october-2026)
+for commit alignment and validation evidence. Broader platform hardening remains
+Thread 12; Linux CI does not establish native Windows or universal filesystem
+validation. Thread 09 remains **not started**.
