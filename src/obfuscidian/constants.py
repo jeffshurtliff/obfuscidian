@@ -7,9 +7,6 @@
 :Modified Date:     05 Oct 2026
 """
 
-from __future__ import annotations
-
-
 ENV_KEY_PATH = 'OBFUSCIDIAN_KEY_PATH'
 ENV_KEY_ALIAS = 'OBFUSCIDIAN_KEY_ALIAS'
 ENV_KEY_DIR = 'OBFUSCIDIAN_KEY_DIR'
