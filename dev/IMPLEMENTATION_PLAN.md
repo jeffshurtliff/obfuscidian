@@ -21,8 +21,9 @@ CI passed on Python 3.12–3.14. Thread 09 is complete, reviewed and merged/push
 into `origin/main`; issue #9 is closed as completed. Linux CI passed on Python
 3.12/3.13; Python 3.14 was canceled before execution due to runner availability,
 a validation gap explicitly accepted by the maintainer for closure. Thread 10
-is next and **not started**; Threads 10–14 remain planned. See the Thread 09
-completion record for exact evidence and limits.
+is implemented locally and awaits maintainer review; issue #10 remains open.
+Thread 11 is **not started**; Threads 11–14 remain planned. See the Thread 10
+handoff below and Thread 09 completion record for evidence and limits.
 
 **Intended first stable release:** `1.0.0` (current metadata: `1.0.0.dev0`).
 
@@ -489,7 +490,7 @@ the original error and report recovery requirements without sensitive payloads.
 
 The key directory exists already; paths and aliases below are placeholders.
 Keygen, `shroud fresh|merge`, and read-only `verify` are implemented locally.
-`unshroud fresh` is implemented locally; `unshroud merge` remains planned for Thread 10.
+`unshroud fresh` and `unshroud merge` are implemented; Thread 10 awaits local-change review.
 
 ```sh
 obfuscidian keygen --alias primary --dir ./keys --non-interactive
@@ -549,7 +550,7 @@ commits, publication, or PRs are implied. Update status only after acceptance cr
 | 07 | Merge backup | 06 | [#7](https://github.com/jeffshurtliff/obfuscidian/issues/7) | Complete |
 | 08 | Read-only verification | 04; may precede 05–07 | [#8](https://github.com/jeffshurtliff/obfuscidian/issues/8) | Complete |
 | 09 | Fresh restore | 05, 07, 08 | [#9](https://github.com/jeffshurtliff/obfuscidian/issues/9) | Complete; 3.14 CI gap accepted |
-| 10 | Git merge restore | 09 | [#10](https://github.com/jeffshurtliff/obfuscidian/issues/10) | Not started |
+| 10 | Git merge restore | 09 | [#10](https://github.com/jeffshurtliff/obfuscidian/issues/10) | Implemented locally; review pending |
 | 11 | CLI polish | 10 | [#11](https://github.com/jeffshurtliff/obfuscidian/issues/11) | Not started |
 | 12 | Cross-platform hardening | 11 | [#12](https://github.com/jeffshurtliff/obfuscidian/issues/12) | Not started |
 | 13 | Documentation and contribution guidance | 12; incremental docs accompany earlier threads | [#13](https://github.com/jeffshurtliff/obfuscidian/issues/13) | Not started |
@@ -916,7 +917,8 @@ Python 3.14 was canceled before running any steps because no hosted runner acqui
 the job; the maintainer accepted that validation gap for closure. See
 [fresh restore](../docs/RESTORE.md) and the
 [completion record](#thread-09--fresh-restore-completion-record-5-october-2026)
-for commit alignment, job evidence and platform limits. Thread 10 remains **not started**.
+for commit alignment, job evidence and platform limits. Thread 10 is now
+implemented locally for review; Thread 11 remains **not started**.
 
 1. Resolve restore direction correctly: mirror is source; origin is destination.
    Validate every manifest/object and target name before staging plaintext.
@@ -953,7 +955,9 @@ and rollback locations and their platform-appropriate permissions.
 
 **Goal/deliverable:** Working `unshroud merge` with a separate review worktree;
 original checkout and restored changes remain under user control.
-**Depends on:** 09. **Status:** Not started.
+**Depends on:** 09. **Status:** Implemented locally; maintainer review pending.
+Issue #10 stays open; changes are uncommitted and hosted CI has not run.
+See the Thread 10 handoff below for executed evidence and limits.
 
 1. Validate Git availability, origin repository/root, clean tracked/untracked
    and ignored vault data, local base branch, explicit Git directory, branch
@@ -1210,8 +1214,8 @@ successful Linux CI on Python 3.12–3.14; issue #8 is closed as completed. See
 its completion record below. Thread 09 is complete following maintainer review,
 commit and merge/push, with issue #9 closed as completed. Linux Python 3.12/3.13
 CI passed; the maintainer accepted the runner-unavailable Python 3.14 cancellation
-for closure. See its completion record below. Thread 10 is next and **not started**;
-Threads 10–14 remain planned.
+for closure. See its completion record below. Thread 10 is implemented locally
+and awaits maintainer review; Thread 11 is **not started**. Threads 11–14 remain planned.
 Earlier handoff records describe the state at that time; later completion
 records supersede their pending-review and Git-status statements.
 The linked GitHub issues hold public progress discussion and verified
@@ -2148,6 +2152,11 @@ by the maintainer before this request.
 
 ### Deferred capabilities
 
+- Thread 12: validate minimum Git capabilities and broader platforms for isolated
+  worktree plumbing, raw-byte/conversion constraints and local object availability.
+  Merge retained-artifact recovery after process death is manual; automated
+  Git ownership recovery needs a separately approved durable recovery design.
+
 - Password-derived keys and keychain integration: require a separately reviewed
   KDF/storage/recovery design; do not treat a password as a Fernet key.
 - Automated key rotation/rekeying and multiple-key support: include format and
@@ -2502,3 +2511,112 @@ as documented in [fresh restore](../docs/RESTORE.md).
 **Next thread:** Thread 10 — Git merge restore — remains **not started**,
 explicitly excluded by the maintainer. No implementation or delegation of
 Thread 10 was initiated. All later threads remain planned.
+
+### Thread 10 — Git merge restore implementation handoff (5 October 2026)
+
+**Scope/status:** Implemented only Thread 10 and its necessary CLI, tests and
+public-safe documentation. All four thread subtasks and the synthetic acceptance
+demo are met locally; maintainer review remains pending and issue #10 stays open.
+Thread 11 — CLI polish — is **not started**. No later command, logging,
+cross-platform hardening, release or publication capability was implemented.
+
+**Dependency and baseline evidence:** Thread 09 implementation and its accepted
+completion record are present at clean baseline `4507563` on the existing
+`feature/10-thread-10-git-merge-restore` branch. Read issue #10 and dependency
+issue #9; the latter is closed and records the maintainer-accepted Python 3.14
+runner gap. Existing fresh reconstruction, format verification and journaled
+transaction helpers were reused. No private `local/` content, real keys or
+vaults were inspected; `local/vendor_docs/` is absent.
+
+**Deliverables and acceptance evidence:**
+
+- [Git orchestration](../src/obfuscidian/git_restore.py) requires a committed
+  non-bare worktree root, an index matching HEAD, raw committed tracked bytes
+  and executable flags, and no untracked/ignored entries or pending Git state.
+  It validates exact optional Git administration, local base branch, mandatory
+  `obfuscidian/` suffix, namespace/timestamp collisions, absent output/existing
+  parent, overlap/identity aliases, keys, target names/types and staging space.
+  Partial/promisor clones are refused before object resolution.
+- Complete mirror authentication precedes private reconstruction. The complete
+  additive union is checked before branch/worktree creation. Raw base blobs
+  avoid checkout filters; the new worktree uses `--no-checkout` and `read-tree`
+  only to initialize its index to the committed base. Journaled publication
+  preserves the new `.git` file and base `.gitignore`; base-only content remains.
+  Settings are additive by default; `--preserve-config` retains base settings,
+  including absence. Required binary bytes, empty directories and supported
+  times are preserved; unsupported times warn. Base-only executable flags use
+  restrictive owner-only permissions without executing their contents.
+- [CLI](../src/obfuscidian/cli.py) exposes `unshroud merge` and rejects merge
+  options in fresh mode. Dry run creates no plaintext, refs, worktrees, locks or
+  journals. Restored differences remain unstaged/uncommitted, with ignored-file
+  review counts, opt-in escaped locations/names and quoted manual status,
+  add/commit and later merge guidance. It explicitly says changes cannot merge
+  until committed. Original checkout/HEAD/index/controls stay unchanged;
+  only the requested shared branch/worktree metadata is added.
+- Git subprocesses use argument lists, suppress raw diagnostics, ignore ambient
+  Git selectors/global/system configuration, disable hooks/fsmonitor/automatic
+  maintenance/lazy fetching and avoid status/diff/checkout attribute conversion.
+  Original observations and configuration are rechecked at mutation boundaries.
+- Ordinary failure removes only proven unchanged owned branch/worktree artifacts.
+  Unknown partial creation, pending recovery, modified index/branch/controls,
+  ignored files, user edits and changed private staging are retained. In
+  particular, cleanup snapshots remain bound to verified contents, rather than
+  accepting later staging edits as owned. Private journaled recovery data is
+  retained after failed publication; it is sensitive plaintext. Interrupts exit
+  130 without claiming success.
+- [Temporary Git tests](../tests/integration/test_merge_restore.py) cover these
+  behaviors offline with synthetic commits and generated test keys. Independent
+  before/after comparisons prove original content/controls/index/HEAD unchanged,
+  base-only retention, no restore commit, uncommitted differences and ignored
+  review. Tests include custom/default bases, linked origins, Git metadata files,
+  ref/path conflicts, wrong keys/corruption, dirty/ignored/untracked data,
+  hooks/filters/config isolation, resource/timestamp limits, staged/source changes,
+  failures before/after partial creation, publication failure, interrupts and
+  later user edits. Existing command-gating tests were updated for the new mode.
+- [Artifact checks](../tests/integration/test_packaging.py) include the new module
+  and run both installed console/module merge restores in separate temporary
+  repositories, including read-only dry runs and origin/index/commit preservation.
+  [Restore guide](../docs/RESTORE.md#additive-git-merge-restore), README, changelog,
+  related guides, agent/contributor status, roadmap index and this handoff are
+  synchronized. Changed Python headers use `GPT-6.1 Sol` and `05 Oct 2026`.
+
+**Validation actually executed:** Local macOS, Python 3.12.7 and Git 2.55.0.
+
+- Strict Poetry lock/metadata validation, Ruff lint and formatting passed.
+- Final full suite with coverage: **1092 passed, 2 native Windows skips**. Coverage: **91% total and 91% Git restore orchestration**.
+- Thread 10 temporary-repository suite: **97 passed**.
+- Bandit: no findings, with two local documented subprocess suppressions for
+  resolved Git argument-list plumbing without a shell or checkout helpers.
+- Fresh wheel/sdist build and strict Twine checks passed. Offline isolated
+  wheelhouse packaging checks: **3 passed**; both artifacts include console
+  and module merge restore smoke tests and `pip check`. The full suite separately
+  exercises development-dependency installs.
+- Markdown links/anchors/fences, changed headers/LF, privacy/scope, diff whitespace
+  and final Git/status checks passed, including review of new untracked files.
+
+**Limits and remaining work:** Hosted CI, local Python 3.13/3.14, native Windows
+mutation, broader OS/filesystem validation, universal power-loss behavior and
+Sphinx builds were not executed. Native Windows mutation remains fail-closed
+pending Thread 12; docs tooling remains Thread 13. Git worktree/ref creation and
+filesystem publication are not universally atomic. Incomplete creation or
+process death is retained for manual review; merge `--recover` is explicitly
+refused. Raw-byte checks conservatively refuse checkout conversions/filters,
+non-UTF-8 names and case/normalization ambiguity; base blobs use the bounded
+plaintext reconstruction limit. Advanced filesystem metadata is not imported.
+Exclusive journal ownership coordinates Obfuscidian processes, not other
+writers. Future Git capability/platform and durable Git ownership recovery work
+is recorded in deferred capabilities. Maintainer review, separately authorized
+Git history/publication and hosted validation remain outstanding.
+
+**Issue synchronization and Git status:** The connector could read issues but
+returned HTTP 403 on the start comment; authenticated CLI access successfully
+posted that update. The final public-safe handoff and verified checklist/status update were posted
+with the CLI and read back successfully; the issue remains open and its labels,
+assignee and milestone are unchanged. See the
+[handoff comment](https://github.com/jeffshurtliff/obfuscidian/issues/10#issuecomment-6002981556).. All 16 proposed files remain **unstaged and
+uncommitted** on the pre-existing `feature/10-thread-10-git-merge-restore` branch
+at `4507563`. No development branch/worktree creation, stage, commit, push, PR,
+merge, tag, release or publication was performed. Git commits/staging/worktrees
+were created only inside explicitly authorized synthetic temporary fixtures.
+Next eligible implementation is Thread 11 after review/acceptance; it is not
+started.

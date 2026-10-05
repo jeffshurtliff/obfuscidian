@@ -42,8 +42,8 @@ Thread 06 — Fresh backup — is complete, reviewed, and merged/pushed into
 `origin/main`; issue #6 is closed and Linux CI passed on Python 3.12–3.14.
 See [fresh backup](docs/BACKUP.md) and the roadmap completion record for
 validation and platform limits. `shroud fresh` and additive `shroud merge` are
-available; `verify` performs complete read-only validation. Fresh restore is
-available; Git merge restore and optional logging remain planned.
+available; `verify` performs complete read-only validation. Fresh and additive
+Git merge restore are available locally; optional logging remains planned.
 
 Thread 07 — Merge backup — is complete, reviewed, and merged/pushed into
 `origin/main`; issue #7 is closed and Linux CI passed on Python 3.12–3.14.
@@ -60,7 +60,11 @@ Thread 09 — Fresh restore — is complete, reviewed and merged/pushed into
 acquired the job. The maintainer accepted that validation gap for closure; see
 [fresh restore](docs/RESTORE.md) and the roadmap completion record. 
 
-Thread 10 remains **not started**. Native Windows mutation still fails closed pending
+Thread 10 — Git merge restore — is implemented locally and awaits maintainer
+review; issue #10 remains open. Changes are uncommitted and hosted CI has not
+run for them. See [merge restore](docs/RESTORE.md#additive-git-merge-restore).
+
+Thread 11 remains **not started**. Native Windows mutation still fails closed pending
 Thread 12; Linux CI does not establish broader supported-platform validation.
 
 The initial test workflow targets Linux/Python 3.12–3.14; configured jobs do not

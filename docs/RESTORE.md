@@ -1,7 +1,8 @@
-# Fresh plaintext restore
+# Plaintext restore
 
 Thread 09 adds `unshroud fresh`. The encrypted mirror is the source; the origin
-is the plaintext destination. Git merge restore remains planned for Thread 10.
+is the plaintext destination. Thread 10 adds additive Git merge restore locally
+for maintainer review; changes remain uncommitted and hosted CI has not run.
 Thread 09 is reviewed and merged/pushed into `origin/main`; issue #9 is closed
 as completed. Linux CI passed on Python 3.12/3.13; Python 3.14 was canceled
 before executing any steps because no hosted runner acquired the job. The
@@ -110,5 +111,143 @@ Checks are best-effort observations, not an atomic snapshot. Exclusive ownership
 coordinates Obfuscidian processes, not unrelated writers. Multi-entry publication
 is journaled and recoverable under tested failures; it is not universally atomic
 or a guarantee against power loss. Native Windows mutation fails closed pending
-Thread 12; read-only preflight/dry runs remain available. No Git merge restore,
-branch/worktree creation, commit, push, release or optional logging is included.
+Thread 12; read-only preflight/dry runs remain available. Fresh mode performs no
+Git operations. Optional logging remains planned.
+
+
+## Additive Git merge restore
+
+`unshroud merge` restores into a new local `obfuscidian/` branch and separate
+worktree. It retains base-only files and directories, overlays backup files with
+exact bytes, and leaves all differences unstaged and uncommitted. It is an
+additive review result, not an exact backup snapshot. The original checkout,
+branch and index stay unchanged; only the requested new shared branch/worktree
+metadata is added. No restore commit, origin checkout switch, stash, reset,
+fetch, merge, remote or push is performed.
+
+```sh
+obfuscidian unshroud merge --origin ./vault --mirror ./encrypted-mirror \
+  --key ./keys/obfuscidian-primary.key --base-branch main --branch review \
+  --worktree ./vault-review --non-interactive --dry-run
+obfuscidian unshroud merge --origin ./vault --mirror ./encrypted-mirror \
+  --key ./keys/obfuscidian-primary.key --base-branch main --branch review \
+  --worktree ./vault-review --non-interactive --verbose
+```
+
+### Origin, base, branch and output checks
+
+Git must be on PATH. Origin must be the worktree root of an existing local
+non-bare repository with a commit. Linked origin worktrees with a legitimate
+root `.git` file are supported. `--gitdir`, if selected, must match the exact
+Git administration directory discovered for that origin; it cannot redirect
+operations into a different repository.
+
+The index must match HEAD, and tracked files must match raw committed bytes
+and executable status. All untracked and ignored vault entries are refused;
+even untracked empty directories are conservatively refused. Pending merge,
+rebase, cherry-pick, revert, bisect, sequencer or index-lock state blocks the
+operation. Links, special files, nested Git controls and submodule layouts are
+unsupported. Partial/promisor clones are refused before object resolution to
+prevent implicit fetching. Pause all writers during restore.
+
+`--base-branch` names an existing local committed branch, default `main`.
+Tags, remote branches and implicit `master` fallback are not selected.
+`--branch` is a suffix under mandatory `obfuscidian/`; its default is
+`restore-YYYYMMDD-HHmmss`. Complete refs are validated with Git, and existing
+branches, ref namespace conflicts and timestamp collisions are refused.
+No branch is reset.
+
+`--worktree` selects a new absent output whose parent already exists. Without
+it, output is a sibling named `<origin-name>-restore-YYYYMMDD-HHmmss`. The
+parent must be outside Git worktrees. Output cannot overlap origin, mirror,
+key, Git administration or registered worktrees. Source/key custody, actual
+length limits and conservative case/Unicode collisions are checked before
+writes. File/directory conflicts between base and backup are refused with
+fresh-mode guidance. Git options are merge-only and rejected by fresh mode.
+
+### Staging, Git isolation and settings
+
+Every encrypted object is authenticated before plaintext staging. The entire
+additive union is reconstructed privately and checked before creating any
+branch/worktree. The chosen base is read as raw Git blobs, without checkout
+filters or attribute conversion. The new worktree is created with
+`--no-checkout`; only its index is initialized to the committed base with
+`read-tree`. Journaled publication installs the verified union and preserves
+the new `.git` file and the base root `.gitignore`.
+
+`--preserve-config` keeps base `.obsidian` content unchanged, including its
+absence; backup settings are still authenticated. Without it, settings are
+additive too: backup settings overwrite matching base settings and base-only
+settings remain. Git does not track empty directories, although restore
+reconstructs them on disk. Files and directories use private POSIX permissions;
+backup executable modes, ACLs and other extended metadata are not imported.
+The executable flag of base-only Git blobs is retained with owner-only access.
+Supported backup modification times are preserved; limitations warn.
+
+Git subprocesses use argument lists, suppress raw Git diagnostics and ignore
+inherited Git selectors and global/system configuration. External hooks and
+fsmonitor are disabled; no checkout, status or diff conversion executes
+repository filters. Lazy fetching and automatic maintenance are disabled.
+Repository configuration and original HEAD/index/content are rechecked.
+Repositories whose checked-out bytes differ because of line-ending conversion
+or filters are conservatively refused. Base blobs also use the bounded
+plaintext reconstruction limit derived from the existing v1 object cap; no
+unbounded base-file allocation is attempted.
+
+### Manual review and ignored data
+
+Completion reports ignored untracked files as a review count. Interactive or
+`--verbose` output discloses escaped worktree/branch locations and quoted POSIX
+shell guidance; `--verbose` additionally lists ignored relative paths. Review
+all changed, untracked and ignored content before staging selected paths.
+Manual commands in terminal output are represented as escaped strings to
+avoid terminal control characters; remove the representation quoting before
+executing them. For ordinary paths, the workflow is:
+
+```sh
+git -C ./vault-review status --ignored
+git -C ./vault-review diff --no-ext-diff --no-textconv
+git -C ./vault-review add -- reviewed-note.md
+# Only after explicit review of the ignored file:
+git -C ./vault-review add -f -- ignored-attachment.bin
+git -C ./vault-review commit
+# Later, after reviewing the original checkout and the restore commit:
+git -C ./vault merge -- obfuscidian/review
+```
+
+**Uncommitted differences cannot be merged.** These steps are manual;
+Obfuscidian never stages restored differences, commits or merges them. Git
+may apply the user's configured filters when the user subsequently runs their
+own review/staging commands; restored bytes are the raw validated bytes.
+Merge mode creates a new review output, so destructive confirmation is not
+needed; `--yes` does not bypass any validation. Dry run creates no plaintext,
+branch, worktree, lock or journal.
+
+### Failure cleanup and retained artifacts
+
+Normal failure attempts cleanup only of the operation's newly created branch
+and worktree. Cleanup compares output identity, complete content including
+ignored data, protected controls, index, branch commit, registration, original
+state and pending transaction ownership. Changed, unknown or partially created
+artifacts are retained with guidance. The branch is removed only if it still
+points at the captured base and no worktree is using it. No other worktree or
+branch is removed or pruned. Interrupts exit 130 and do not claim success.
+
+Known unchanged private reconstruction staging is removed after success or
+failure. Failed incomplete staging and journaled transaction recovery data
+remain **sensitive plaintext**. A cleanup warning after successful publication
+does not undo the result. Use interactive/verbose failure locations and inspect
+private `.obfuscidian-git-stage-*` and `.obfuscidian-transaction-*` siblings
+outside all worktrees. Do not delete unknown contents or locks based on age.
+
+After process termination, incomplete creation or user edits, inspect the
+retained worktree, branch and private journal/staging manually. Existing output,
+branch collisions and pending ownership refuse a retry. Merge mode does not
+provide automated `--recover`; that option remains for fresh-mode journal
+recovery. Retain uncertain artifacts and make an explicit manual recovery
+decision before retrying with new names. Journaled publication attempts
+rollback to the new worktree's prior state under tested ordinary failures;
+it does not guarantee atomic Git/filesystem publication or power-loss recovery.
+Native Windows writes remain fail-closed pending Thread 12. All Thread 10
+validation uses synthetic temporary repositories; hosted and broader platform
+validation are not established by these local results.

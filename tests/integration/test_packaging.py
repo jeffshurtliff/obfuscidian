@@ -118,6 +118,7 @@ def test_artifact_contents(artifacts: tuple[Path, Path]) -> None:
         'backup.py',
         'verification.py',
         'restore.py',
+        'git_restore.py',
     }
     with zipfile.ZipFile(wheel) as archive:
         prefix = 'obfuscidian-1.0.0.dev0.dist-info/'
@@ -364,6 +365,69 @@ def test_installation_entry_points(
             assert (restored / 'note.md').read_bytes() == b'SYNTHETIC INSTALLED NOTE\r\n'
             assert (restored / 'attachment.bin').read_bytes() == bytes(range(256))
             assert (restored / 'empty').is_dir()
+            review_origin = (tmp_path / f'{mirror.name}-git-origin').resolve()
+            review_origin.mkdir()
+
+            # Real Git fixtures remain temporary; no global/system hooks or config.
+            def fixture_git(*args: str, repository: Path = review_origin) -> str:
+                environment = {k: v for k, v in os.environ.items() if not k.startswith('GIT_')}
+                environment.update(GIT_CONFIG_NOSYSTEM='1', GIT_CONFIG_GLOBAL=os.devnull)
+                command = subprocess.run(
+                    [
+                        'git',
+                        '-c',
+                        'core.hooksPath=' + os.devnull,
+                        '-c',
+                        'core.fsmonitor=false',
+                        '-c',
+                        'user.name=Synthetic Tester',
+                        '-c',
+                        'user.email=synthetic@example.invalid',
+                        '-C',
+                        str(repository),
+                        *args,
+                    ],
+                    env=environment,
+                    capture_output=True,
+                    text=True,
+                    check=True,
+                    timeout=30,
+                )
+                return command.stdout
+
+            fixture_git('init', '-qb', 'main')
+            (review_origin / 'base-only.md').write_bytes(b'SYNTHETIC INSTALLED BASE')
+            fixture_git('add', '--all')
+            fixture_git('commit', '-qm', 'Created synthetic installed fixture')
+            original_head = fixture_git('rev-parse', 'HEAD')
+            original_index = (review_origin / '.git/index').read_bytes()
+            review = (tmp_path / f'{mirror.name}-review').resolve()
+            merge_arguments = [
+                'unshroud',
+                'merge',
+                '--origin',
+                str(review_origin),
+                '--mirror',
+                str(mirror),
+                '--key',
+                str(key),
+                '--worktree',
+                str(review),
+                '--branch',
+                'installed-review',
+                '--non-interactive',
+            ]
+            preview = _run([*entry_point, *merge_arguments, '--dry-run'], outside)
+            assert 'Dry run:' in preview.stdout and not review.exists()
+            merged = _run([*entry_point, *merge_arguments], outside)
+            assert 'unstaged and uncommitted' in merged.stdout and str(review) not in merged.stdout
+            assert (review / 'note.md').read_bytes() == b'SYNTHETIC INSTALLED NOTE\r\n'
+            assert (review / 'attachment.bin').read_bytes() == bytes(range(256))
+            assert (review / 'base-only.md').read_bytes() == b'SYNTHETIC INSTALLED BASE'
+            assert (review / '.git').is_file()
+            assert fixture_git('rev-parse', 'HEAD') == original_head
+            assert fixture_git('rev-parse', 'obfuscidian/installed-review') == original_head
+            assert (review_origin / '.git/index').read_bytes() == original_index
             (origin / 'renamed.md').rename(origin / 'note.md')
         assert (origin / 'note.md').read_bytes() == b'SYNTHETIC INSTALLED NOTE\r\n'
     if wheelhouse is not None:

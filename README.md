@@ -5,8 +5,8 @@
 
 Obfuscidian is a Python CLI being developed to create encrypted Obsidian vault
 backups. The current CLI provides help, version information, secure key
-generation, `shroud fresh|merge`, read-only `verify`, and `unshroud fresh`.
-Git merge restore and optional logging remain planned and unavailable.
+generation, `shroud fresh|merge`, read-only `verify`, and `unshroud fresh|merge`.
+Git merge restore is implemented locally for review; optional logging remains planned and unavailable.
 This repository does not yet claim a published package or completed platform validation.
 
 ## Project status
@@ -67,7 +67,11 @@ canceled before execution due to hosted runner availability; the maintainer
 accepted that validation gap for closure. See [fresh restore](docs/RESTORE.md)
 and the [completion record](dev/IMPLEMENTATION_PLAN.md#thread-09--fresh-restore-completion-record-5-october-2026).
 
-Thread 10 remains **not started**. Broader OS validation is deferred to Thread 12;
+Thread 10 — Git merge restore — is implemented locally and awaits maintainer
+review; issue #10 remains open. Changes are uncommitted and hosted CI has not
+run for them. See [merge restore](docs/RESTORE.md#additive-git-merge-restore).
+
+Thread 11 remains **not started**. Broader OS validation is deferred to Thread 12;
 native Windows mutation fails closed.
 
 ## Installation from source
@@ -149,8 +153,18 @@ obfuscidian unshroud fresh --mirror ./encrypted-mirror --origin ./restored-vault
 Use `--yes` for unattended replacement and `--preserve-config` to leave root
 `.obsidian` in place. Root Git controls remain in place; old payload is retained
 externally as **sensitive plaintext rollback**. See [fresh restore](docs/RESTORE.md)
-for confirmation, recovery, metadata and filesystem limits. Git merge restore
-remains unavailable.
+for confirmation, recovery, metadata and filesystem limits. Additive Git merge
+restore uses a separate uncommitted review worktree:
+
+```sh
+obfuscidian unshroud merge --origin ./vault --mirror ./encrypted-mirror \
+  --key ./keys/obfuscidian-primary.key --base-branch main --branch review \
+  --worktree ./vault-review --non-interactive --verbose
+```
+
+The origin must be clean, including ignored/untracked data. Base-only files remain;
+review ignored files and commit selected changes manually before any merge. See
+[merge restore](docs/RESTORE.md#additive-git-merge-restore) for validation and failure cleanup.
 
 ## Development
 
@@ -160,7 +174,8 @@ resolved dependencies. cryptography is included for the approved Fernet design;
 key creation/loading and internal v1 byte codecs use its standard Fernet recipe.
 Fresh and merge backup use those codecs and existing private transaction
 primitives; read-only verification uses the complete v1 validator. Restore
-orchestration remains planned.
+orchestration reuses authenticated validators and journaled publication; Git
+merge restore initializes only the new worktree index to its base.
 
 ```sh
 poetry install --with dev
