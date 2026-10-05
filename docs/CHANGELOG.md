@@ -7,6 +7,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- `unshroud fresh` with complete mirror authentication and conservative target checks before private plaintext staging.
+- Exact binary/hidden/empty-directory reconstruction, supported times, protected Git controls and optional settings preservation.
+- Journaled fresh publication with sensitive external plaintext rollback, consent, no-write dry run and verified-source recovery/retry.
+- Synthetic round-trip, corruption, safety, source/stage-change, fault, interrupt and process-death tests plus installed entry checks.
+- Fresh restore guide; Git merge restore remains deferred to Thread 10.
+
 - Read-only `verify` with mirror/key resolution, complete v1 manifest/object validation, counts and escaped opt-in relative names.
 - Pending-ownership inspection without recovery and rejection of write, exclusion, recovery, restore and logging options.
 - Synthetic corrupt/valid/privacy/no-write verification tests, installed console/module parity, and verification documentation.

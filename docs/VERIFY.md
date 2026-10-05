@@ -2,7 +2,7 @@
 
 Thread 08 exposes `obfuscidian verify` through the same console and module
 entry points. It uses the complete [v1 validator](FORMAT.md), without changing
-the backup format or requiring an origin vault. Restore remains planned.
+the backup format or requiring an origin vault. [Fresh restore](RESTORE.md) also uses complete validation.
 
 ```sh
 obfuscidian verify --help
@@ -77,4 +77,4 @@ native Windows skips in each job, plus three fully isolated artifact checks.
 See the [completion record](../dev/IMPLEMENTATION_PLAN.md#thread-08--read-only-verification-completion-record-5-october-2026)
 for commit alignment and validation evidence. Broader platform hardening remains
 Thread 12; Linux CI does not establish native Windows or universal filesystem
-validation. Thread 09 remains **not started**.
+validation. Thread 09 is implemented locally and awaiting review; see [fresh restore](RESTORE.md). Thread 10 remains **not started**.

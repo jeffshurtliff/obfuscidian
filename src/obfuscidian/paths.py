@@ -3,8 +3,8 @@
 :Module:            obfuscidian.paths
 :Synopsis:          Internal read-only filesystem and target path preflight
 :Created By:        Jeff Shurtliff
-:Last Modified:     Jeff Shurtliff (via GPT-6)
-:Modified Date:     03 Oct 2026
+:Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
+:Modified Date:     05 Oct 2026
 """
 
 from __future__ import annotations
@@ -310,22 +310,23 @@ def _check_mirror_namespace(mirror: _PathState) -> tuple[_PathState, ...]:
     return tuple(sorted(inspected, key=lambda item: item.path.parts))
 
 
-def _preflight_vault_paths(origin: Path, mirror: Path, key: Path) -> _VaultPaths:
+def _preflight_vault_paths(origin: Path, mirror: Path, key: Path, *, restore: bool = False) -> _VaultPaths:
     """Validate separated vault locations and external key custody without writes.
 
-    Only the mirror's last component may be missing. Mirror namespace checks
+    Only the destination's last component may be missing. Mirror namespace checks
     do not authenticate its manifest, validate Git metadata contents, choose
-    staging locations, or authorize publication; those remain later threads.
+    staging locations, or authorize publication; orchestration handles those checks.
 
-    :param origin: Existing read-only source directory.
-    :param mirror: Existing mirror or absent final destination directory.
+    :param origin: Plaintext backup source or fresh restore destination.
+    :param mirror: Encrypted backup destination or existing restore source.
     :param key: Existing regular selected key outside both vaults.
+    :param restore: Require the mirror source and allow an absent origin destination.
     :returns: Protected identities to recheck during future operations.
     :raises _ConfigurationError: A location violates the approved safety contract.
     :raises _OperationalError: Filesystem inspection fails or changes.
     """
-    source = _inspect_path(origin)
-    target = _inspect_path(mirror, allow_missing=True)
+    source = _inspect_path(origin, allow_missing=restore)
+    target = _inspect_path(mirror, allow_missing=not restore)
     selected_key = _inspect_path(key, kind='file')
     if origin == Path(origin.anchor) or mirror == Path(mirror.anchor):
         raise _ConfigurationError('Filesystem roots cannot be vault operation targets.')

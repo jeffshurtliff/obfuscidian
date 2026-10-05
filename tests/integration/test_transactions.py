@@ -586,8 +586,8 @@ tx._execute_transaction(plan, build, lambda p: None, yes=True)
 
 
 def test_no_public_partial_write_commands() -> None:
-    """Expose complete backup/verification; restore and standalone recovery stay gated."""
-    assert set(cli.commands) == {'keygen', 'shroud', 'verify'}
+    """Expose complete backup, fresh restore and verification; standalone recovery stays gated."""
+    assert set(cli.commands) == {'keygen', 'shroud', 'unshroud', 'verify'}
     runner = CliRunner()
     for name in ('unshroud', 'recover'):
         result = runner.invoke(cli, [name])

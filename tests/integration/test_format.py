@@ -555,7 +555,7 @@ def test_no_new_cli_commands_or_output_leaks(mirror: tuple[Path, Fernet]) -> Non
     runner = CliRunner()
     help_result = runner.invoke(cli, ['--help'])
     assert help_result.exit_code == 0
-    assert set(cli.commands) == {'keygen', 'shroud', 'verify'}
+    assert set(cli.commands) == {'keygen', 'shroud', 'unshroud', 'verify'}
     before = _snapshot(root.parent)
     for command in ('shroud', 'unshroud'):
         result = runner.invoke(cli, [command, '--mirror', str(root)])

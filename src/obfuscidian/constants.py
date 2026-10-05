@@ -3,7 +3,7 @@
 :Module:            obfuscidian.constants
 :Synopsis:          Shared configuration, key, path, and resource constants
 :Created By:        Jeff Shurtliff
-:Last Modified:     Jeff Shurtliff
+:Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
 :Modified Date:     05 Oct 2026
 """
 
@@ -75,6 +75,8 @@ TRANSACTION_ROLLBACK = 'rollback'
 TRANSACTION_JOURNAL = 'journal.json'
 TRANSACTION_READ_BYTES = 1024 * 1024
 TRANSACTION_RESERVE_BYTES = 1024 * 1024
+# Approximate per-entry allocation overhead; preflight is not an allocation guarantee.
+RESTORE_ENTRY_RESERVE_BYTES = 4096
 TRANSACTION_JOURNAL_BYTES = 16 * 1024 * 1024
 TRANSACTION_LOCK_BYTES = 4096
 

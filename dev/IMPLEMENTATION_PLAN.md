@@ -17,8 +17,9 @@ Python 3.12–3.14. Thread 07 — Merge backup — is complete, reviewed, and
 merged/pushed into `origin/main`; issue #7 is closed and Linux CI passed on
 Python 3.12–3.14. Thread 08 — Read-only verification — is complete, reviewed,
 and merged/pushed into `origin/main`; issue #8 is closed as completed and Linux
-CI passed on Python 3.12–3.14. Thread 09 is next and **not started**; Threads
-09–14 remain planned. See the Thread 08 completion record for evidence and limits.
+CI passed on Python 3.12–3.14. Thread 09 is implemented locally and awaiting
+maintainer review; issue #9 remains open. Thread 10 is next and **not started**;
+Threads 10–14 remain planned. See the Thread 09 handoff for local evidence and limits.
 
 **Intended first stable release:** `1.0.0` (current metadata: `1.0.0.dev0`).
 
@@ -485,7 +486,7 @@ the original error and report recovery requirements without sensitive payloads.
 
 The key directory exists already; paths and aliases below are placeholders.
 Keygen, `shroud fresh|merge`, and read-only `verify` are implemented locally.
-The unshroud examples remain planned for their separately authorized threads.
+`unshroud fresh` is implemented locally; `unshroud merge` remains planned for Thread 10.
 
 ```sh
 obfuscidian keygen --alias primary --dir ./keys --non-interactive
@@ -544,7 +545,7 @@ commits, publication, or PRs are implied. Update status only after acceptance cr
 | 06 | Fresh backup | 05 | [#6](https://github.com/jeffshurtliff/obfuscidian/issues/6) | Complete |
 | 07 | Merge backup | 06 | [#7](https://github.com/jeffshurtliff/obfuscidian/issues/7) | Complete |
 | 08 | Read-only verification | 04; may precede 05–07 | [#8](https://github.com/jeffshurtliff/obfuscidian/issues/8) | Complete |
-| 09 | Fresh restore | 05, 07, 08 | [#9](https://github.com/jeffshurtliff/obfuscidian/issues/9) | Not started |
+| 09 | Fresh restore | 05, 07, 08 | [#9](https://github.com/jeffshurtliff/obfuscidian/issues/9) | Implemented locally; awaiting review |
 | 10 | Git merge restore | 09 | [#10](https://github.com/jeffshurtliff/obfuscidian/issues/10) | Not started |
 | 11 | CLI polish | 10 | [#11](https://github.com/jeffshurtliff/obfuscidian/issues/11) | Not started |
 | 12 | Cross-platform hardening | 11 | [#12](https://github.com/jeffshurtliff/obfuscidian/issues/12) | Not started |
@@ -784,8 +785,8 @@ and merged/pushed the implementation into `origin/main`; issue #6 is closed as
 completed. All four subtasks and acceptance criteria are met. Linux CI passed
 on Python 3.12–3.14. See the Thread 06 completion record and
 [fresh backup guide](../docs/BACKUP.md) for evidence, CLI behavior and platform
-limits. Threads 07–08 are complete; see their completion records. Thread 09
-remains **not started**.
+limits. Threads 07–08 are complete; see their completion records. Thread 09 is
+implemented locally and awaiting review; see its handoff below.
 
 1. Wire CLI options into read-only preflight, complete origin inventory,
    selected-key validation, existing-mirror authentication, and confirmation.
@@ -826,7 +827,8 @@ and merged/pushed the implementation into `origin/main`; issue #7 is closed as
 completed. All four subtasks and acceptance criteria are met. Linux CI passed
 on Python 3.12–3.14. See the [completion record](#thread-07--merge-backup-completion-record-5-october-2026)
 and [backup guide](../docs/BACKUP.md) for evidence, behavior and platform limits.
-Thread 08 is complete; see its completion record. Thread 09 remains **not started**.
+Thread 08 is complete; see its completion record. Thread 09 is implemented
+locally and awaiting review; see its handoff below.
 
 1. Validate the old mirror, union old/current logical paths, and classify new,
    changed, metadata-only, unchanged, and retained stale entries. Initialize
@@ -868,7 +870,7 @@ issue #8 is closed as completed. All four subtasks and acceptance criteria
 are met. Linux CI passed on Python 3.12–3.14. See
 [verification](../docs/VERIFY.md) and the
 [completion record](#thread-08--read-only-verification-completion-record-5-october-2026)
-for evidence and limits. Thread 09 remains **not started**.
+for evidence and limits. Thread 09 is implemented locally and awaiting review; see its handoff below.
 
 1. Add `verify` with mirror/key resolution, non-interactive behavior, counts,
    controlled verbose diagnostics, help, and integrity failure exit status.
@@ -902,7 +904,10 @@ content, file lists, mtimes, and transaction artifacts before/after invocation.
 
 **Goal/deliverable:** Working `unshroud fresh` with complete authentication before
 destination mutation and retained destination rollback.
-**Depends on:** 05, 07, 08. **Status:** Not started.
+**Depends on:** 05, 07, 08. **Status:** Implemented locally; awaiting maintainer review.
+
+See [fresh restore](../docs/RESTORE.md) and the Thread 09 handoff below.
+Issue #9 remains open; changes are uncommitted and hosted CI has not run.
 
 1. Resolve restore direction correctly: mirror is source; origin is destination.
    Validate every manifest/object and target name before staging plaintext.
@@ -1037,6 +1042,12 @@ unsafe path workaround is introduced to make platform tests pass.
 **Validation:** Common checks; security scan; targeted boundary tests; actual
 matrix results. Remote pushes/PRs still require separate authorization, so a
 local-only handoff reports unexecuted hosted validation explicitly.
+
+**Thread 09 discovery for future work:** Refine read-only target filesystem
+comparison/capability detection. Fresh restore currently rejects ambiguous
+case-folded/NFC names conservatively even when a case-sensitive filesystem
+could preserve them distinctly. Broaden native Windows destination observation
+and mutation validation without weakening the fail-closed write boundary.
 
 **Copy-ready prompt:**
 
@@ -1187,8 +1198,8 @@ successful Linux CI on Python 3.12–3.14; issue #7 is closed as completed.
 
 Thread 08 is complete following maintainer review, commit, merge/push and
 successful Linux CI on Python 3.12–3.14; issue #8 is closed as completed. See
-its completion record below. Thread 09 is next and **not started**; Threads
-09–14 remain planned.
+its completion record below. Thread 09 is implemented locally and awaiting
+review; Thread 10 is next and **not started**. Threads 10–14 remain planned.
 Earlier handoff records describe the state at that time; later completion
 records supersede their pending-review and Git-status statements.
 The linked GitHub issues hold public progress discussion and verified
@@ -2341,3 +2352,89 @@ uncommitted on `main`** for maintainer review. No branch creation, staging,
 commit, push, PR, merge, tag, release, publication or workflow trigger occurred
 during this follow-up. The implementation's commit/merge/push were performed
 by the maintainer before this request.
+
+### Thread 09 — Fresh restore implementation handoff (5 October 2026)
+
+**Status:** Implemented locally; all four requested subtasks and the synthetic
+acceptance/demo are met. Awaiting maintainer review. Issue #9 remains open;
+Thread 10 — Git merge restore — remains **not started**. No later command,
+worktree creation, Git history, release or publication action was implemented.
+
+**Dependency and scope evidence:** Read root `AGENTS.md`, `CONTRIBUTING.md`,
+this roadmap and live issues #9, #5, #7 and #8. Dependency issues are closed with
+implementation/validation evidence. Inspected complete mirror authentication,
+backup retention, no-follow path checks and transaction fault/recovery behavior.
+Baseline HEAD, main and origin/main all matched `1a49473` before work; the
+existing branch was clean. Used maintainer-requested `GPT-6.1 Sol` attribution
+and `05 Oct 2026` on changed Python headers.
+
+**Deliverables and acceptance:**
+
+- [Restore orchestration](../src/obfuscidian/restore.py): read-only direction and
+  key-custody preflight, complete manifest/object authentication (including
+  skipped settings), target/control alias checks, allocation/space estimates,
+  selected-key hard-link refusal and encrypted source ownership checks before
+  plaintext staging. Actual component/path length constraints include staging.
+- [CLI](../src/obfuscidian/cli.py): only `unshroud fresh`, existing CLI/environment
+  key/path precedence, terminal-only prompts, explicit replacement/recovery
+  consent, no-write dry run, escaped opt-in names and sensitive rollback paths.
+  Source authentication precedes recovery; recovery restores proven old state
+  before replanning/retrying. Failure/interrupt output never claims success.
+- [Path preflight](../src/obfuscidian/paths.py) supports restore direction without
+  relaxing backup safety. Private same-filesystem staging reconstructs exact
+  binary bytes, hidden/zero-byte files, relative structure and empty folders.
+  Supported times are checked after reconstruction; directory times are set
+  after children, and unsupported timestamps produce a redacted warning.
+- Existing [transactions](../src/obfuscidian/transactions.py) publish only the
+  fully compared staged namespace/hash/size/time proposal. Root `.git` and
+  `.gitignore` stay in place; `--preserve-config` preserves `.obsidian`, including
+  its absence. Other old files, including historically excluded files, move to
+  externally retained sensitive plaintext rollback. Nested repositories, control
+  aliases, links/junctions, special files and unsafe target shapes are refused.
+- [Synthetic integration tests](../tests/integration/test_fresh_restore.py):
+  fresh and merge-backup round trips (including retained stale/excluded data),
+  bytes/empty trees/times, root Git file/directory/absence, settings preservation,
+  rollback location/modes, corruption/substitution/wrong keys, hostile schema and
+  target names, overlap/key aliases, resource failures, consent/refusal/EOF,
+  dry-run observations, changed source/key/destination/staging, failed writes,
+  allocation/verification/rename failures, interrupts, process death, pending
+  ownership, conservative recovery and user-modified artifact preservation.
+- [Packaging tests](../tests/integration/test_packaging.py) include the new
+  module/guide and exercise console/module dry-run and real fresh restore from
+  merge backups outside the checkout. [Fresh restore guide](../docs/RESTORE.md),
+  README, related guides, contributor/agent status and changelog are synchronized.
+
+**Executed checks:**
+
+- `poetry check --lock --strict`: passed; no dependencies or lockfile changes.
+- `poetry run ruff check .` and `poetry run ruff format --check .`: passed.
+- `poetry run coverage run -m pytest -q`: **996 passed, 2 native Windows skips**
+  on local macOS/Python 3.12.7. This executes the full pytest suite with coverage.
+- `poetry run coverage report`: **91% total**, **95% restore orchestration**.
+- `poetry run pytest -q tests/integration/test_fresh_restore.py`: **94 passed**.
+- `poetry run bandit -r src/obfuscidian`: passed, no findings.
+- `poetry build --output <fresh-candidate>`: new wheel and sdist built; strict
+  Twine validation passed for exactly those artifacts.
+- Packaging tests against that candidate with an existing offline Python 3.12
+  wheelhouse: **3 passed**, including separately isolated wheel/sdist installs,
+  console/module restore, content boundaries and `pip check`. The full suite
+  separately exercised the development-dependency installation mode.
+- Local Markdown links/anchors/fences, LF/header attribution, status consistency,
+  privacy/scope, diff whitespace and final Git status checked.
+
+**Limits and next work:** No real vault/cloud operation, hosted CI, local
+Python 3.13/3.14 matrix, native Windows mutation, universal filesystem/power-loss
+validation, or Sphinx build was performed. Mutation remains POSIX-only and
+fails closed on native Windows. Timestamp fidelity varies by filesystem;
+ownership/ACLs/xattrs/executable modes are not imported. Target comparisons use
+conservative case-folded NFC checks, which can refuse distinct valid names on
+case-sensitive filesystems; precise capability detection is recorded for
+Thread 12. Source stability and crash recovery remain best-effort under the
+existing transaction threat model, not atomicity or power-loss guarantees.
+
+**Git and issue handoff:** All changes remain unstaged/uncommitted on
+`feature/9-thread-09-fresh-restore` at baseline `1a49473`; no stage, commit, push,
+PR, merge, tag, release or publication action was performed. Start and final
+handoff/checklist updates are posted to issue #9. Maintainer review/closure and
+separately authorized Git/hosted validation remain outstanding. The next eligible
+implementation is Thread 10 after review/acceptance of Thread 09; it is not started.
