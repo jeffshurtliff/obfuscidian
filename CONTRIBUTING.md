@@ -41,10 +41,14 @@ completion record for evidence and platform limits.
 Thread 06 — Fresh backup — is complete, reviewed, and merged/pushed into
 `origin/main`; issue #6 is closed and Linux CI passed on Python 3.12–3.14.
 See [fresh backup](docs/BACKUP.md) and the roadmap completion record for
-validation and platform limits. Only `shroud fresh` is available;
-merge backup, restore, verification and optional logging remain planned.
+validation and platform limits. `shroud fresh` and additive `shroud merge` are available locally;
+restore, verification and optional logging remain planned.
 
-Thread 07 remains **not started**. Native Windows mutation still fails closed
+Thread 07 is locally implemented and validated, unstaged/uncommitted and
+pending maintainer review; issue #7 remains open. See its roadmap handoff for
+evidence. 
+
+Thread 08 remains **not started**. Native Windows mutation still fails closed
 pending Thread 12; local checks do not establish hosted CI.
 
 The initial test workflow targets Linux/Python 3.12–3.14; configured jobs do not
@@ -138,8 +142,8 @@ poetry build
 
 Poetry manages the development environment; a separate activation step is not
 required. Choose an interpreter explicitly with `poetry env use python3.12`
-(or the appropriate executable path). Validate help/version, keygen and fresh
-backup with synthetic vaults; later modes remain planned.
+(or the appropriate executable path). Validate help/version, keygen and fresh/merge
+backup with synthetic vaults; restore and verification remain planned.
 
 ### Fresh artifact validation
 

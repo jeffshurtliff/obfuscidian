@@ -4,7 +4,7 @@
 :Synopsis:          Build, inspect, and install package artifacts offline
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     04 Oct 2026
+:Modified Date:     05 Oct 2026
 """
 
 from __future__ import annotations
@@ -270,6 +270,39 @@ def test_installation_entry_points(
             )
             assert validation.stdout == validation.stderr == ''
             assert str(origin) not in published.stdout + unchanged.stdout
+            # Installed merge retains an old renamed path with exact ciphertext.
+            old_tokens = {path.name: path.read_bytes() for path in (mirror / '.obfuscidian/objects').iterdir()}
+            (origin / 'note.md').rename(origin / 'renamed.md')
+            merge_arguments = list(arguments)
+            merge_arguments[1] = 'merge'
+            merged = _run([*entry_point, *merge_arguments], outside)
+            assert 'snapshot published' in merged.stdout and 'recovery data removed' in merged.stdout
+            assert 'deleted or renamed notes can return' in merged.stdout
+            for name, token in old_tokens.items():
+                assert (mirror / '.obfuscidian/objects' / name).read_bytes() == token
+            stable = {
+                path.name: (path.read_bytes(), path.stat().st_mtime_ns) for path in (mirror / '.obfuscidian').rglob('*.obf')
+            }
+            noop = _run([*entry_point, *merge_arguments], outside)
+            assert 'no-op' in noop.stdout
+            assert {
+                path.name: (path.read_bytes(), path.stat().st_mtime_ns) for path in (mirror / '.obfuscidian').rglob('*.obf')
+            } == stable
+            _run(
+                [
+                    str(python),
+                    '-c',
+                    'import sys; from pathlib import Path; from obfuscidian import manifest,keys; '
+                    'cipher,_=keys._load_key(Path(sys.argv[2])); checked=manifest._verify_mirror(Path(sys.argv[1]),cipher); '
+                    'payload={r.path:manifest._read_validated_file(checked,r,cipher) for r in checked.manifest.files}; '
+                    'assert set(payload)=={"note.md","renamed.md","attachment.bin"}; '
+                    'assert payload["note.md"]==payload["renamed.md"]==b"SYNTHETIC INSTALLED NOTE\\r\\n"',
+                    str(mirror),
+                    str(key),
+                ],
+                outside,
+            )
+            (origin / 'renamed.md').rename(origin / 'note.md')
         assert (origin / 'note.md').read_bytes() == b'SYNTHETIC INSTALLED NOTE\r\n'
     if wheelhouse is not None:
         _run([str(python), '-m', 'pip', 'check'], outside)

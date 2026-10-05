@@ -1,9 +1,9 @@
 # Inventory and path preflight
 
 Thread 03 adds internal read-only helpers now used by
-[Thread 06 fresh backup](BACKUP.md). The CLI exposes `keygen` and `shroud fresh`;
-merge backup, `unshroud` and `verify` remain planned. These helpers are implementation
-boundaries, not a supported Python library API.
+[fresh and additive merge backup](BACKUP.md). The CLI exposes `keygen` and
+`shroud fresh|merge`; `unshroud` and `verify` remain planned. These helpers are
+implementation boundaries, not a supported Python library API.
 
 ## Included contents and deterministic totals
 

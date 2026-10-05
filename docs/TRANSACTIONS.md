@@ -2,8 +2,8 @@
 
 Thread 05 implements internal transaction primitives in `transactions.py`.
 These are orchestration building blocks, not a supported Python API. The CLI
-exposes [Thread 06 `shroud fresh` and `--recover`](BACKUP.md). Merge backup,
-restore and verification command wiring remain planned for their respective threads.
+exposes [`shroud fresh|merge` and `--recover`](BACKUP.md). Restore and
+verification command wiring remain planned for their respective threads.
 The encrypted [v1 format](FORMAT.md) is unchanged.
 
 ## Preflight and ownership
@@ -48,7 +48,7 @@ also authenticate and validate every required encrypted source object before
 calling the transaction primitive. Mirror execution additionally invokes the
 complete v1 validator on the staged mirror and on the previous managed mirror.
 An optional trusted prepublication callback rechecks the caller's complete source
-inventory immediately before destination changes; Thread 06 uses it for fresh backup.
+inventory immediately before destination changes; backup uses it for both fresh and merge.
 Mirror stages may contain only the managed `.obfuscidian` tree. All staged names
 and preserved controls are checked together under actual target rules.
 
@@ -85,9 +85,16 @@ Restore rollback contains **plaintext and is sensitive**. Private results provid
 locations and a plaintext flag for deliberate caller reporting; diagnostics never
 emit paths, original names, key bytes, or content. There is no automatic retention
 pruning. These primitives conservatively retain recovery directories/journals
-and proposed data after failures too. Future merge orchestration may remove only
-its own proven temporary data after successful publication; no cleanup primitive
-is exposed in Thread 05.
+and proposed data after failures too. Thread 07 adds internal successful-merge
+cleanup: only the current operation's complete recorded workspace is eligible,
+after durable publication and ownership release. It verifies the published
+payload, terminal journal, container identities, complete namespaces and rollback
+hashes, then rechecks each entry through anchored no-follow handles before
+removal. Older workspaces and uncertain/modified data remain retained. Partial
+cleanup or I/O failure produces a redacted warning without undoing publication.
+If ownership-removal durability is unconfirmed, cleanup is skipped and rollback
+remains available. Cleanup is best effort against same-authority writers;
+there is no general retention-pruning command.
 
 A normal failure attempts conservative recovery from the durable journal, rather
 than trusting the last in-memory step. Interrupts attempt the same recovery and

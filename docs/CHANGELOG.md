@@ -7,11 +7,17 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Additive `shroud merge` with old/current union, stale/excluded file and directory retention, and new-path rename semantics.
+- Stable object IDs and exact ciphertext reuse, metadata-only updates, content-only consent and artifact-free merge no-ops.
+- Early type-conflict refusal with fresh-mode guidance; authenticated retained-byte reads prove historic content remains reconstructible.
+- Synthetic incremental, corruption, conflict, preservation, cleanup, source-change, failure and process-recovery tests.
+- Merge help/guide explaining that deleted notes can return during restore; later commands remain unavailable.
+
 - End-to-end `shroud fresh` with CLI/environment selection, complete read-only preflight and selected-key mirror authentication.
 - Current-inventory encrypted snapshots, validated ciphertext reuse, stale removal, and retained external encrypted rollback.
 - Replacement/recovery consent, artifact-free no-op/dry-run behavior, explicit recovery/retry, and escaped private handoff output.
 - Mixed-vault, source-change, wrong-key/corruption, safety/resource, failure, process-death and installed-entry fresh-backup tests.
-- Fresh backup guide and synchronized help/roadmap/status; merge backup, restore and verification commands remain planned.
+- Fresh backup guide and synchronized help/roadmap/status, initially without merge, restore or verification commands.
 
 - Internal private same-filesystem staging, exclusive POSIX ownership, durable bounded journal, and checked payload publication.
 - Retained fresh rollback outside Git worktrees, protected Git/settings controls, and conservative explicit recovery with shared consent.
@@ -40,6 +46,9 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Linux CI for Python 3.12, 3.13, and 3.14, including fresh wheel/sdist validation.
 
 ### Changed
+
+- Shared fresh/merge planning, staging and recovery reuse the existing v1 validators and transaction primitives.
+- Successful merge cleans only its own proven temporary recovery workspace; uncertain data stays retained with a warning.
 
 - Added a final source prepublication callback and selected-key authentication before mirror recovery inverse moves.
 - Clarified that docstring version history starts after 1.0.0, with one bare initial-release directive on public CLI callables.

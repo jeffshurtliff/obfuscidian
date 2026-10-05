@@ -13,8 +13,10 @@ merged into `origin/main`; issue #4 is closed and Linux CI passed on Python
 and merged/pushed into `origin/main`; issue #5 is closed and Linux CI passed on
 Python 3.12–3.14. Thread 06 — Fresh backup — is complete, reviewed, and
 merged/pushed into `origin/main`; issue #6 is closed and Linux CI passed on
-Python 3.12–3.14. Thread 07 is next sequentially and remains **not started**,
-as do Threads 07–14. See the Thread 06 completion record for evidence and limits.
+Python 3.12–3.14. Thread 07 — Merge backup — is locally implemented and validated,
+unstaged/uncommitted and pending maintainer review. Issue #7 remains open;
+hosted CI has not run for these edits. Thread 08 is next and **not started**,
+as are Threads 08–14. See the Thread 07 handoff for evidence and limits.
 
 **Intended first stable release:** `1.0.0` (current metadata: `1.0.0.dev0`).
 
@@ -480,7 +482,7 @@ the original error and report recovery requirements without sensitive payloads.
 ### Examples and remaining planned commands
 
 The key directory exists already; paths and aliases below are placeholders.
-Keygen and `shroud fresh` are implemented. The merge, verify and unshroud
+Keygen and `shroud fresh|merge` are implemented locally. The verify and unshroud
 examples remain planned for their separately authorized threads.
 
 ```sh
@@ -538,7 +540,7 @@ commits, publication, or PRs are implied. Update status only after acceptance cr
 | 04 | Encrypted backup format | 03 | [#4](https://github.com/jeffshurtliff/obfuscidian/issues/4) | Complete |
 | 05 | Safe publication and recovery | 04 | [#5](https://github.com/jeffshurtliff/obfuscidian/issues/5) | Complete |
 | 06 | Fresh backup | 05 | [#6](https://github.com/jeffshurtliff/obfuscidian/issues/6) | Complete |
-| 07 | Merge backup | 06 | [#7](https://github.com/jeffshurtliff/obfuscidian/issues/7) | Not started |
+| 07 | Merge backup | 06 | [#7](https://github.com/jeffshurtliff/obfuscidian/issues/7) | Implemented locally; pending review |
 | 08 | Read-only verification | 04; may precede 05–07 | [#8](https://github.com/jeffshurtliff/obfuscidian/issues/8) | Not started |
 | 09 | Fresh restore | 05, 07, 08 | [#9](https://github.com/jeffshurtliff/obfuscidian/issues/9) | Not started |
 | 10 | Git merge restore | 09 | [#10](https://github.com/jeffshurtliff/obfuscidian/issues/10) | Not started |
@@ -780,7 +782,8 @@ and merged/pushed the implementation into `origin/main`; issue #6 is closed as
 completed. All four subtasks and acceptance criteria are met. Linux CI passed
 on Python 3.12–3.14. See the Thread 06 completion record and
 [fresh backup guide](../docs/BACKUP.md) for evidence, CLI behavior and platform
-limits. Thread 07 remains **not started**.
+limits. Thread 07 is locally implemented and pending maintainer review;
+see its handoff. Thread 08 remains **not started**.
 
 1. Wire CLI options into read-only preflight, complete origin inventory,
    selected-key validation, existing-mirror authentication, and confirmation.
@@ -816,7 +819,10 @@ shared validator (or the `verify` command if Thread 08 is complete).
 
 **Goal/deliverable:** Working additive incremental `shroud merge` with predictable
 history retention and minimal ciphertext churn.
-**Depends on:** 06. **Status:** Not started.
+**Depends on:** 06. **Status:** Implemented locally; pending maintainer review.
+All four subtasks and acceptance/demo are locally verified. Changes remain
+unstaged/uncommitted; issue #7 remains open. Hosted CI has not run for these edits.
+See the [Thread 07 handoff](#thread-07--merge-backup-handoff-5-october-2026).
 
 1. Validate the old mirror, union old/current logical paths, and classify new,
    changed, metadata-only, unchanged, and retained stale entries. Initialize
@@ -1165,8 +1171,9 @@ successful Linux CI on Python 3.12–3.14; issue #5 is closed as completed.
 
 Thread 06 is complete following maintainer review, commit, merge/push, and
 successful Linux CI on Python 3.12–3.14; issue #6 is closed as completed.
-Thread 07 is next sequentially and **not started**; Threads 07–14 remain
-not started. See the Thread 06 completion record for evidence and limits.
+Thread 07 is locally implemented/validated, unstaged/uncommitted and pending
+maintainer review; issue #7 remains open. Thread 08 is next and **not started**,
+as are Threads 08–14. See the Thread 07 handoff for evidence and limits.
 Earlier handoff records describe the state at that time; later completion
 records supersede their pending-review and Git-status statements.
 The linked GitHub issues hold public progress discussion and verified
@@ -1970,6 +1977,80 @@ uncommitted on `main`** for maintainer review. No application, tests, dependency
 format or workflow files were changed. No branch creation, staging, commit,
 push, PR, merge, tag, release, publication or workflow trigger occurred during
 this closure follow-up.
+
+### Thread 07 — Merge backup handoff: 5 October 2026
+
+**Status:** Implemented locally and validated; pending maintainer review.
+All four subtasks and acceptance/demo are met with synthetic fixtures. Issue #7
+remains open; changes are unstaged/uncommitted on the existing
+`feature/7-thread-07-merge-backup` branch at baseline `387a121`. Thread 08 is next
+and **not started**; Threads 08–14 remain unimplemented. Hosted CI has not run
+for these edits.
+
+**Deliverables and behavior:**
+
+- [Backup orchestration](../src/obfuscidian/backup.py) shares fresh/merge preflight,
+  planning, staging and recovery. Merge authenticates the whole old snapshot,
+  unions current included paths with old files/directories, classifies new,
+  changed, metadata-only, unchanged and retained files, and accounts for retained
+  ciphertext in complete staging-space estimates. New mirrors initialize safely.
+- [CLI](../src/obfuscidian/cli.py) exposes `shroud fresh|merge`. Existing-path edits
+  preserve IDs, unchanged/metadata-only content preserves exact ciphertext, and
+  renames get new IDs while retaining the old path. Absent/excluded files and empty
+  directories keep their records. Type/ancestor conflicts fail before artifacts
+  with guidance to use fresh. Only content replacement prompts in merge.
+- [Transactions](../src/obfuscidian/transactions.py) reuse complete staging,
+  validation, publication and recovery. Successful merge removes only its own
+  proven temporary workspace after publication/ownership release. Older fresh
+  rollback and failed/recovered workspaces stay retained. Changed/unknown/link
+  artifacts and malformed journals refuse cleanup with redacted warnings;
+  cleanup failures never reverse a completed publication. A failed final flush
+  reports durability uncertainty and actual retention, not nonexistent rollback.
+- [Merge integration tests](../tests/integration/test_merge_backup.py) exercise
+  first/repeated/add/edit/delete/rename/exclusion/re-inclusion, empty current
+  inventories, metadata updates, stable IDs/tokens, consent, type conflicts,
+  retained-object corruption, explicit invalid keys, resource limits, source
+  changes, failures, process death and explicit recovery. Sorted complete tree
+  observations compare bytes, identities, permissions, mtimes/ctimes and namespaces
+  across no-ops; randomness/encryption/time/ownership/staging/consent calls are
+  prohibited. Read-induced access times are excluded.
+- [Installed-entry tests](../tests/integration/test_packaging.py) exercise console
+  and module merge, rename retention, exact old ciphertext, no-op mtimes and
+  authenticated retained-byte reconstruction outside the checkout. The
+  [backup guide](../docs/BACKUP.md), help, changelog, README and status/reference
+  guides explain that **deleted notes can return during restore**. Restore and
+  public verification remain unavailable; reconstructibility is proved through
+  existing authenticated readers, without starting a restore thread.
+
+**Executed validation:** Poetry 2.4.2, Python 3.12.7, local macOS ARM64.
+Dependency fresh/transaction tests passed **265** cases before implementation;
+expanded backup/transaction validation passed **340** cases. The final full
+`poetry run pytest -q` passed **797 tests, 2 native Windows skips**; this includes
+**79 merge cases**. Strict Poetry lock check, Ruff lint/format, Bandit (no issues),
+console/module help, fresh wheel/sdist builds and strict Twine passed. Final
+candidate package checks passed **3** cases, including separate wheel/sdist
+installs, archive boundaries and installed merge workflows. These installs use
+available developer dependencies; fully isolated wheelhouse mode was not rerun.
+Final local links/anchors/fences, Python AST/model/date headers, privacy/LF/scope,
+Git status and `git diff --check` passed.
+
+**Limits and remaining work:** Maintainer review and any separately authorized
+Git workflow remain. No implementation acceptance blocker remains. Native Windows
+mutation still fails closed pending Thread 12; native Windows, Python 3.13/3.14
+and hosted Linux CI were not run for these edits. Real vault/key/cloud access,
+network/cloud filesystems, actual power loss and Sphinx (Thread 13) were not
+validated. Rechecks/cleanup are best effort against same-authority writers,
+not an atomic source snapshot or a universal recovery guarantee. Format version,
+Fernet recipe, dependencies, lockfile, package version and workflows are unchanged.
+
+**Git/issue handoff:** Fifteen changed/new files remain unstaged/uncommitted.
+No branch change, staging, commit, push, PR, merge, tag, release, publication or
+workflow trigger occurred. Issue #7's status and verified checklist were updated,
+and its [final handoff](https://github.com/jeffshurtliff/obfuscidian/issues/7#issuecomment-5997774038)
+was posted through authenticated CLI access (the connector returned 404). The
+issue remains open; maintainer review/closure stays pending.
+Earlier completion records below/above describe their own historical scopes and
+are superseded by this record for current Thread 07 status.
 
 ### Deferred capabilities
 

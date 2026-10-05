@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 """
 :Module:            obfuscidian.cli
-:Synopsis:          Secure key generation and fresh encrypted backup CLI
+:Synopsis:          Secure key generation and fresh/additive encrypted backup CLI
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     04 Oct 2026
+:Modified Date:     05 Oct 2026
 """
 
 import sys
@@ -20,10 +20,10 @@ from obfuscidian.transactions import _TransactionResult
 @click.group(invoke_without_command=True, no_args_is_help=True)
 @click.version_option(package_name='obfuscidian', prog_name='obfuscidian')
 def cli() -> None:
-    """Generate keys and create fresh encrypted Obsidian vault backups.
+    """Generate keys and create encrypted Obsidian vault backups.
 
-    Keygen and shroud fresh are available. Merge backup, restore, and
-    verification commands are planned and unavailable.
+    Keygen and shroud fresh/merge are available. Restore and verification
+    commands are planned and unavailable.
 
     \f
 
@@ -129,6 +129,9 @@ def _show_retained(result: _TransactionResult, *, show_paths: bool) -> None:
     """Report retained encrypted recovery data and durability warnings deliberately."""
     for warning in result.warnings:
         click.echo(f'Warning: {warning}', err=True)
+    if not result.retained:
+        click.echo('Temporary merge recovery data removed after verified publication.')
+        return
     click.echo('Encrypted recovery data retained outside the mirror and Git worktrees; no automatic pruning.')
     if show_paths:
         click.echo(f'Recovery workspace: {str(result.workspace)!r}')
@@ -136,7 +139,7 @@ def _show_retained(result: _TransactionResult, *, show_paths: bool) -> None:
 
 
 @cli.command()
-@click.argument('mode', type=click.Choice(['fresh']))
+@click.argument('mode', type=click.Choice(['fresh', 'merge']))
 @click.option('--origin', type=str, help='Existing source vault; CLI overrides OBFUSCIDIAN_ORIGIN_VAULT.')
 @click.option('--mirror', type=str, help='Encrypted destination; CLI overrides OBFUSCIDIAN_MIRROR_VAULT.')
 @click.option('--key', type=str, help='Existing external key; overrides environment selectors; conflicts with --alias/--keydir.')
@@ -149,7 +152,9 @@ def _show_retained(result: _TransactionResult, *, show_paths: bool) -> None:
 @click.option('--yes', is_flag=True, help='Consent to replacement/recovery only; never bypass safety or key checks.')
 @click.option('--dry-run', is_flag=True, help='Read-only inventory, authentication and space estimate; create no artifacts.')
 @click.option(
-    '--recover', is_flag=True, help='Explicitly recover a pending transaction, then retry fresh; conflicts with --dry-run.'
+    '--recover',
+    is_flag=True,
+    help='Explicitly recover a pending transaction, then retry the selected mode; conflicts with --dry-run.',
 )
 @click.option(
     '--verbose', is_flag=True, help='Show escaped relative names and private rollback locations; never key bytes/content.'
@@ -168,16 +173,19 @@ def shroud(
     recover: bool,
     verbose: bool,
 ) -> None:
-    """Back up the current included inventory as a complete encrypted fresh snapshot.
+    """Back up current files with fresh replacement or additive merge retention.
 
     Fresh removes stale and excluded old entries from the new snapshot. Preserve
-    origin bytes and mirror root .git/.gitignore in place. Reuse unchanged
-    authenticated ciphertext and retain the previous snapshot outside the
-    mirror and Git worktrees. Pause editors/sync during backup and recovery.
+    origin bytes and mirror root .git/.gitignore in place. Merge retains absent
+    and excluded old paths: deleted notes can return during a later restore.
+    Renames add a new path and retain the old one. Type conflicts require fresh.
+    Reuse authenticated unchanged ciphertext; fresh retains external rollback,
+    while successful merge cleans only its own proven temporary recovery data.
+    Pause editors/sync during backup and recovery.
 
     Confirm replacement of existing contents or removal of old files/directories
-    after read-only preflight. Metadata-only updates and additions need no
-    replacement prompt. Unattended replacement/recovery requires --yes. A no-op
+    in fresh, or existing file content in merge, after preflight. Metadata-only
+    updates and additions need no replacement prompt. Unattended replacement/recovery requires --yes. A no-op
     changes no files, timestamps or snapshot IDs and creates no write artifacts.
     Dry run never prompts for replacement or repairs pending transactions.
 
@@ -187,15 +195,14 @@ def shroud(
     Selected keys must remain outside both vaults. A wrong key or corrupt mirror
     fails before replacement; no automatic rekeying or key generation exists.
 
-    Only fresh is available. Merge backup, restore, verification, and optional
-    logging are planned and unavailable. Native Windows mutation fails closed
-    pending platform hardening; read-only dry runs are available.
+    Restore, verification, and optional logging are planned and unavailable.
+    Native Windows mutation fails closed pending platform hardening; read-only dry runs are available.
 
     \f
 
     .. versionadded:: 1.0.0
 
-    :param mode: Required fresh mode; later modes are unavailable.
+    :param mode: Required fresh or additive merge mode.
     :param origin: Explicit source or environment fallback.
     :param mirror: Explicit destination or environment fallback.
     :param key: Explicit selected key path.
@@ -230,7 +237,7 @@ def shroud(
             alias_prompt=(lambda: _prompt_alias(generation=False)) if interactive else None,
         )
         if recover:
-            recovered = backup._recover_fresh(
+            recovered = backup._recover_backup(
                 source,
                 destination,
                 selected_key,
@@ -241,25 +248,36 @@ def shroud(
                 else None,
                 exclusions=exclude,
             )
-            click.echo('Previous state recovered; replanning fresh backup.')
+            click.echo(f'Previous state recovered; replanning {mode} backup.')
             _show_retained(recovered, show_paths=interactive or verbose)
-        plan = backup._plan_fresh(source, destination, selected_key, exclusions=exclude)
+        planner = backup._plan_merge if mode == 'merge' else backup._plan_fresh
+        plan = planner(source, destination, selected_key, exclusions=exclude)
         for warning in plan.warnings:
             click.echo(f'Warning: {warning}', err=True)
         click.echo(
-            f'Fresh inventory: {plan.source.file_count} files, {plan.source.directory_count} directories, '
+            f'{mode.capitalize()} inventory: {plan.source.file_count} files, {plan.source.directory_count} directories, '
             f'{plan.source.plaintext_bytes} plaintext bytes; {plan.source.excluded_entries} excluded entries.'
         )
+        if mode == 'merge':
+            counts = plan.changes
+            click.echo(
+                f'Merge files: {counts.new} new, {counts.changed} changed, {counts.metadata_only} metadata-only, '
+                f'{counts.unchanged} unchanged, {counts.retained} retained absent/excluded.'
+            )
+            click.echo('Merge retains historic paths; deleted or renamed notes can return during restore.')
         if verbose:
             for entry in plan.source.entries:
                 click.echo(f'Included {entry.kind}: {entry.path!r}')
-        result = backup._publish_fresh(
+        result = backup._publish_backup(
             plan,
             yes=yes,
             non_interactive=not interactive,
             prompt=(
                 lambda: _prompt_backup(
-                    'Replace existing contents or remove stale entries and retain rollback?', confirmation=True
+                    'Replace existing file contents?'
+                    if mode == 'merge'
+                    else 'Replace existing contents or remove stale entries and retain rollback?',
+                    confirmation=True,
                 )
             )
             if interactive
@@ -271,12 +289,13 @@ def shroud(
                 f'Dry run: {plan.transaction.required_bytes} staged bytes estimated; no files or transaction artifacts created.'
             )
         elif plan.no_op:
-            click.echo('Fresh backup unchanged (no-op); no files or transaction artifacts created.')
+            click.echo(f'{mode.capitalize()} backup unchanged (no-op); no files or transaction artifacts created.')
         else:
             click.echo(
-                'Fresh encrypted snapshot published; origin preserved. Git controls preserved; no Git operations performed.'
+                f'{mode.capitalize()} encrypted snapshot published; origin preserved. '
+                'Git controls preserved; no Git operations performed.'
             )
-            if plan.previous is not None:
+            if plan.previous is not None and mode == 'fresh':
                 click.echo('Previous complete encrypted snapshot retained for rollback.')
             _show_retained(result, show_paths=interactive or verbose)
     except _ConfigurationError as error:

@@ -2,9 +2,9 @@
 
 Thread 04 implements internal byte codecs and complete read-only validation.
 Thread 05 adds [internal publication and recovery](TRANSACTIONS.md).
-Thread 06 exposes [fresh backup and explicit recovery](BACKUP.md).
-Merge backup, restore and a verification command remain planned. These helpers
-are internal boundaries, not a supported Python library API.
+Threads 06–07 expose [fresh/additive merge backup and explicit recovery](BACKUP.md).
+Restore and a verification command remain planned. These helpers are internal
+boundaries, not a supported Python library API.
 
 ## Managed layout
 
