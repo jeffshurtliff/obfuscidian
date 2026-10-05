@@ -17,9 +17,12 @@ Python 3.12–3.14. Thread 07 — Merge backup — is complete, reviewed, and
 merged/pushed into `origin/main`; issue #7 is closed and Linux CI passed on
 Python 3.12–3.14. Thread 08 — Read-only verification — is complete, reviewed,
 and merged/pushed into `origin/main`; issue #8 is closed as completed and Linux
-CI passed on Python 3.12–3.14. Thread 09 is implemented locally and awaiting
-maintainer review; issue #9 remains open. Thread 10 is next and **not started**;
-Threads 10–14 remain planned. See the Thread 09 handoff for local evidence and limits.
+CI passed on Python 3.12–3.14. Thread 09 is complete, reviewed and merged/pushed
+into `origin/main`; issue #9 is closed as completed. Linux CI passed on Python
+3.12/3.13; Python 3.14 was canceled before execution due to runner availability,
+a validation gap explicitly accepted by the maintainer for closure. Thread 10
+is next and **not started**; Threads 10–14 remain planned. See the Thread 09
+completion record for exact evidence and limits.
 
 **Intended first stable release:** `1.0.0` (current metadata: `1.0.0.dev0`).
 
@@ -545,7 +548,7 @@ commits, publication, or PRs are implied. Update status only after acceptance cr
 | 06 | Fresh backup | 05 | [#6](https://github.com/jeffshurtliff/obfuscidian/issues/6) | Complete |
 | 07 | Merge backup | 06 | [#7](https://github.com/jeffshurtliff/obfuscidian/issues/7) | Complete |
 | 08 | Read-only verification | 04; may precede 05–07 | [#8](https://github.com/jeffshurtliff/obfuscidian/issues/8) | Complete |
-| 09 | Fresh restore | 05, 07, 08 | [#9](https://github.com/jeffshurtliff/obfuscidian/issues/9) | Implemented locally; awaiting review |
+| 09 | Fresh restore | 05, 07, 08 | [#9](https://github.com/jeffshurtliff/obfuscidian/issues/9) | Complete; 3.14 CI gap accepted |
 | 10 | Git merge restore | 09 | [#10](https://github.com/jeffshurtliff/obfuscidian/issues/10) | Not started |
 | 11 | CLI polish | 10 | [#11](https://github.com/jeffshurtliff/obfuscidian/issues/11) | Not started |
 | 12 | Cross-platform hardening | 11 | [#12](https://github.com/jeffshurtliff/obfuscidian/issues/12) | Not started |
@@ -786,7 +789,7 @@ completed. All four subtasks and acceptance criteria are met. Linux CI passed
 on Python 3.12–3.14. See the Thread 06 completion record and
 [fresh backup guide](../docs/BACKUP.md) for evidence, CLI behavior and platform
 limits. Threads 07–08 are complete; see their completion records. Thread 09 is
-implemented locally and awaiting review; see its handoff below.
+complete; see its completion record below for the accepted Python 3.14 CI gap.
 
 1. Wire CLI options into read-only preflight, complete origin inventory,
    selected-key validation, existing-mirror authentication, and confirmation.
@@ -827,8 +830,8 @@ and merged/pushed the implementation into `origin/main`; issue #7 is closed as
 completed. All four subtasks and acceptance criteria are met. Linux CI passed
 on Python 3.12–3.14. See the [completion record](#thread-07--merge-backup-completion-record-5-october-2026)
 and [backup guide](../docs/BACKUP.md) for evidence, behavior and platform limits.
-Thread 08 is complete; see its completion record. Thread 09 is implemented
-locally and awaiting review; see its handoff below.
+Thread 08 is complete; see its completion record. Thread 09 is complete;
+see its completion record below for the accepted Python 3.14 CI gap.
 
 1. Validate the old mirror, union old/current logical paths, and classify new,
    changed, metadata-only, unchanged, and retained stale entries. Initialize
@@ -870,7 +873,8 @@ issue #8 is closed as completed. All four subtasks and acceptance criteria
 are met. Linux CI passed on Python 3.12–3.14. See
 [verification](../docs/VERIFY.md) and the
 [completion record](#thread-08--read-only-verification-completion-record-5-october-2026)
-for evidence and limits. Thread 09 is implemented locally and awaiting review; see its handoff below.
+for evidence and limits. Thread 09 is complete; see its completion record for
+the accepted Python 3.14 CI gap.
 
 1. Add `verify` with mirror/key resolution, non-interactive behavior, counts,
    controlled verbose diagnostics, help, and integrity failure exit status.
@@ -904,10 +908,15 @@ content, file lists, mtimes, and transaction artifacts before/after invocation.
 
 **Goal/deliverable:** Working `unshroud fresh` with complete authentication before
 destination mutation and retained destination rollback.
-**Depends on:** 05, 07, 08. **Status:** Implemented locally; awaiting maintainer review.
+**Depends on:** 05, 07, 08. **Status:** Complete; reviewed and merged/pushed into `origin/main`.
 
-See [fresh restore](../docs/RESTORE.md) and the Thread 09 handoff below.
-Issue #9 remains open; changes are uncommitted and hosted CI has not run.
+All four subtasks and acceptance criteria are met; issue #9 is closed as completed
+under explicit maintainer authorization. Linux CI passed on Python 3.12/3.13.
+Python 3.14 was canceled before running any steps because no hosted runner acquired
+the job; the maintainer accepted that validation gap for closure. See
+[fresh restore](../docs/RESTORE.md) and the
+[completion record](#thread-09--fresh-restore-completion-record-5-october-2026)
+for commit alignment, job evidence and platform limits. Thread 10 remains **not started**.
 
 1. Resolve restore direction correctly: mirror is source; origin is destination.
    Validate every manifest/object and target name before staging plaintext.
@@ -1198,8 +1207,11 @@ successful Linux CI on Python 3.12–3.14; issue #7 is closed as completed.
 
 Thread 08 is complete following maintainer review, commit, merge/push and
 successful Linux CI on Python 3.12–3.14; issue #8 is closed as completed. See
-its completion record below. Thread 09 is implemented locally and awaiting
-review; Thread 10 is next and **not started**. Threads 10–14 remain planned.
+its completion record below. Thread 09 is complete following maintainer review,
+commit and merge/push, with issue #9 closed as completed. Linux Python 3.12/3.13
+CI passed; the maintainer accepted the runner-unavailable Python 3.14 cancellation
+for closure. See its completion record below. Thread 10 is next and **not started**;
+Threads 10–14 remain planned.
 Earlier handoff records describe the state at that time; later completion
 records supersede their pending-review and Git-status statements.
 The linked GitHub issues hold public progress discussion and verified
@@ -2438,3 +2450,55 @@ PR, merge, tag, release or publication action was performed. Start and final
 handoff/checklist updates are posted to issue #9. Maintainer review/closure and
 separately authorized Git/hosted validation remain outstanding. The next eligible
 implementation is Thread 10 after review/acceptance of Thread 09; it is not started.
+
+### Thread 09 — Fresh restore completion record (5 October 2026)
+
+**Maintainer decision and status:** The maintainer reviewed, committed, merged
+and pushed Thread 09, accepted the successful Python 3.12/3.13 CI results despite
+the runner-unavailable Python 3.14 cancellation, and explicitly requested closure
+of issue #9. All four subtasks and the acceptance/demo are met. Thread 09 is
+**complete**; issue #9 is closed as completed. This is a thread acceptance decision,
+not a claim that the full Python matrix passed or that 3.14 support was removed.
+
+**Commit and remote evidence:** Implementation commit
+[`a6c401d`](https://github.com/jeffshurtliff/obfuscidian/commit/a6c401d) is included
+in pushed main merge
+[`2caadac`](https://github.com/jeffshurtliff/obfuscidian/commit/2caadac390752a60f1bf19945ac62799f4f61f7f).
+Local HEAD/main, origin/main and the live remote main ref all matched that exact
+merge when checked. The checkout was clean before this documentation follow-up.
+Earlier handoff records retain their historical local/uncommitted status; this
+completion record supersedes their pending review, publication and CI statements.
+
+**Hosted validation:** The
+[merge Test run, attempt 2](https://github.com/jeffshurtliff/obfuscidian/actions/runs/37365231237/attempts/2)
+reports overall `failure` because the Python 3.14 job was canceled before any
+steps ran. Individual job results are:
+
+| Linux job | Verified result |
+| --- | --- |
+| [Python 3.12](https://github.com/jeffshurtliff/obfuscidian/actions/runs/37365231237/job/111956779377) | Success; 996 tests passed, 2 native Windows skips; 91% coverage; 3 isolated artifact checks passed |
+| [Python 3.13](https://github.com/jeffshurtliff/obfuscidian/actions/runs/37365231237/job/111956819401) | Success; 996 tests passed, 2 native Windows skips; 91% coverage; 3 isolated artifact checks passed |
+| [Python 3.14](https://github.com/jeffshurtliff/obfuscidian/actions/runs/37365231237/job/111956778032) | Canceled; zero steps executed; hosted runner never acquired the job |
+
+Both successful jobs also passed strict Poetry lock/metadata validation, Ruff
+lint/format, Bandit, fresh wheel/sdist builds and strict Twine validation.
+GitHub's cancellation annotation states that the job was not acquired by a
+hosted runner after multiple attempts. Python 3.14 validation remains unavailable
+for this merge; the maintainer explicitly accepted that gap for issue closure.
+No CI retry, workflow/support-matrix change or replacement runtime test was
+performed by this follow-up.
+
+**Documentation-only closure checks and Git status:** Updated the roadmap index,
+Thread 09 status/completion record, README, agent/contributor status and related
+backup/restore/verification/inventory guides. Checked local Markdown links,
+anchors/fences, status consistency, privacy, LF, diff whitespace and final Git
+status. Application files, tests, dependencies and workflows were not changed;
+application tests, builds and Sphinx were not rerun for these documentation edits.
+The follow-up documentation changes remain unstaged/uncommitted on `main`; no
+stage, commit, push, PR, merge, tag, release or publication action was performed
+by the agent. Broader platform, timestamp/filesystem and power-loss limits remain
+as documented in [fresh restore](../docs/RESTORE.md).
+
+**Next thread:** Thread 10 — Git merge restore — remains **not started**,
+explicitly excluded by the maintainer. No implementation or delegation of
+Thread 10 was initiated. All later threads remain planned.

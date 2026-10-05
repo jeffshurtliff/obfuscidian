@@ -2,8 +2,9 @@
 
 `shroud fresh` backs up the current included inventory; Thread 07 adds
 `shroud merge` for additive history retention. Thread 08 exposes
-[read-only verification](VERIFY.md). [Fresh restore](RESTORE.md) is available locally; optional file logging remains planned. The internal [v1 validator](FORMAT.md)
-authenticates produced snapshots; it is not a supported Python library API.
+[read-only verification](VERIFY.md). [Fresh restore](RESTORE.md) is available; optional file logging remains planned. 
+The internal [v1 validator](FORMAT.md) authenticates produced snapshots; 
+it is not a supported Python library API.
 No Git commands, commits, pushes, merges or worktrees are created by backup.
 Threads 06–07 are reviewed and merged/pushed into `origin/main`, with issues
 #6–#7 closed and green Linux CI on Python 3.12–3.14. See the
@@ -12,7 +13,8 @@ for validation and platform limits. Thread 08 is complete, reviewed and
 merged/pushed, with issue #8 closed and Linux Python 3.12–3.14 CI passing; see
 [verification](VERIFY.md) and its
 [completion record](../dev/IMPLEMENTATION_PLAN.md#thread-08--read-only-verification-completion-record-5-october-2026).
-Thread 09 is implemented locally and awaiting review; Thread 10 remains **not started**.
+Thread 09 is complete, reviewed and merged/pushed; see
+[fresh restore](RESTORE.md) for the accepted Python 3.14 CI gap. Thread 10 remains **not started**.
 
 ## Usage and selection
 

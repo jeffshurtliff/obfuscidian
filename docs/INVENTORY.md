@@ -2,8 +2,8 @@
 
 Thread 03 adds internal read-only helpers now used by
 [fresh and additive merge backup](BACKUP.md). The CLI exposes `keygen` and
-`shroud fresh|merge`, and [read-only `verify`](VERIFY.md); [`unshroud fresh`](RESTORE.md) is also available locally. These helpers are
-implementation boundaries, not a supported Python library API.
+`shroud fresh|merge`, and [read-only `verify`](VERIFY.md); [`unshroud fresh`](RESTORE.md) is also available. 
+These helpers are implementation boundaries, not a supported Python library API.
 
 ## Included contents and deterministic totals
 

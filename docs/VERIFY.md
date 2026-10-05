@@ -77,4 +77,9 @@ native Windows skips in each job, plus three fully isolated artifact checks.
 See the [completion record](../dev/IMPLEMENTATION_PLAN.md#thread-08--read-only-verification-completion-record-5-october-2026)
 for commit alignment and validation evidence. Broader platform hardening remains
 Thread 12; Linux CI does not establish native Windows or universal filesystem
-validation. Thread 09 is implemented locally and awaiting review; see [fresh restore](RESTORE.md). Thread 10 remains **not started**.
+validation. 
+
+Thread 09 is complete, reviewed and merged/pushed; see
+[fresh restore](RESTORE.md) for the accepted Python 3.14 CI gap. 
+
+Thread 10 remains **not started**.

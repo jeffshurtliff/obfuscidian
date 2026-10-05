@@ -2,8 +2,12 @@
 
 Thread 09 adds `unshroud fresh`. The encrypted mirror is the source; the origin
 is the plaintext destination. Git merge restore remains planned for Thread 10.
-These changes are locally implemented and awaiting maintainer review; hosted CI
-and broader supported-platform validation have not run for this increment.
+Thread 09 is reviewed and merged/pushed into `origin/main`; issue #9 is closed
+as completed. Linux CI passed on Python 3.12/3.13; Python 3.14 was canceled
+before executing any steps because no hosted runner acquired the job. The
+maintainer explicitly accepted that validation gap for closure. See the
+[completion record](../dev/IMPLEMENTATION_PLAN.md#thread-09--fresh-restore-completion-record-5-october-2026).
+Broader supported-platform validation remains deferred to Thread 12.
 
 ## Usage
 
