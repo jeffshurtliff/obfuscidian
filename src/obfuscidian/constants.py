@@ -83,3 +83,18 @@ TRANSACTION_LOCK_BYTES = 4096
 TRANSACTION_PHASES = frozenset(
     {'preparing', 'ready', 'creating-root', 'publishing', 'published', 'recovering', 'removing-root', 'recovered'}
 )
+
+# Isolated Git restore artifacts; unrelated to encrypted format versioning.
+RESTORE_BRANCH_PREFIX = 'obfuscidian/'
+GIT_STAGE_PREFIX = '.obfuscidian-git-stage-'
+GIT_PENDING_NAMES = (
+    'MERGE_HEAD',
+    'REBASE_HEAD',
+    'CHERRY_PICK_HEAD',
+    'REVERT_HEAD',
+    'BISECT_LOG',
+    'rebase-apply',
+    'rebase-merge',
+    'sequencer',
+    'index.lock',
+)

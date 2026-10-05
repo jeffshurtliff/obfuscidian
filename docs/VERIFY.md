@@ -82,4 +82,7 @@ validation.
 Thread 09 is complete, reviewed and merged/pushed; see
 [fresh restore](RESTORE.md) for the accepted Python 3.14 CI gap. 
 
-Thread 10 remains **not started**.
+Thread 10 is implemented locally for review; see
+[additive Git merge restore](RESTORE.md#additive-git-merge-restore). 
+
+Thread 11 remains **not started**.

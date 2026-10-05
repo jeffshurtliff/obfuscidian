@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 :Module:            obfuscidian.cli
-:Synopsis:          Secure keys, encrypted backups, fresh restore and read-only verification CLI
+:Synopsis:          Secure keys, encrypted backups, fresh/Git restore and read-only verification CLI
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
 :Modified Date:     05 Oct 2026
@@ -10,11 +10,13 @@
 from __future__ import annotations
 
 import os
+import shlex
 import sys
+from pathlib import Path
 
 import click
 
-from obfuscidian import backup, config, keys, restore, verification
+from obfuscidian import backup, config, git_restore, keys, restore, verification
 from obfuscidian import constants as const
 from obfuscidian.errors import _ConfigurationError, _OperationalError
 from obfuscidian.transactions import _TransactionError, _TransactionResult
@@ -25,8 +27,8 @@ from obfuscidian.transactions import _TransactionError, _TransactionResult
 def cli() -> None:
     """Generate keys, back up and restore vaults, and verify encrypted mirrors.
 
-    Keygen, shroud fresh/merge, unshroud fresh, and read-only verify are available.
-    Git merge restore and optional logging are planned and unavailable.
+    Keygen, shroud fresh/merge, unshroud fresh/merge, and read-only verify are available.
+    Optional logging is planned and unavailable.
 
     \f
 
@@ -415,13 +417,17 @@ def verify(
 
 
 @cli.command()
-@click.argument('mode', type=click.Choice(['fresh']))
-@click.option('--origin', type=str, help='Plaintext destination; CLI overrides OBFUSCIDIAN_ORIGIN_VAULT.')
+@click.argument('mode', type=click.Choice(['fresh', 'merge']))
+@click.option('--origin', type=str, help='Fresh destination or merge origin repository; overrides OBFUSCIDIAN_ORIGIN_VAULT.')
 @click.option('--mirror', type=str, help='Existing encrypted source; CLI overrides OBFUSCIDIAN_MIRROR_VAULT.')
 @click.option('--key', type=str, help='Existing external key; conflicts with --alias/--keydir.')
 @click.option('--alias', type=str, help='Key alias; CLI overrides environment key selectors.')
 @click.option('--keydir', type=str, help='Alias directory; CLI overrides OBFUSCIDIAN_KEY_DIR, then home.')
 @click.option('--preserve-config', is_flag=True, help='Leave root .obsidian in place, including its absence.')
+@click.option('--gitdir', type=str, help='Merge only: exact Git directory belonging to origin.')
+@click.option('--worktree', type=str, help='Merge only: new restore output with existing parent; default timestamped sibling.')
+@click.option('--branch', type=str, help='Merge only: new suffix under obfuscidian/; default timestamped restore suffix.')
+@click.option('--base-branch', type=str, help='Merge only: existing local base branch; default main.')
 @click.option('--non-interactive', is_flag=True, help='Never prompt; does not imply --yes.')
 @click.option('--yes', is_flag=True, help='Consent to plaintext replacement and explicit recovery; safety checks still apply.')
 @click.option('--dry-run', is_flag=True, help='Verify and plan read-only; create no plaintext, directories or locks.')
@@ -435,13 +441,17 @@ def unshroud(
     alias: str | None,
     keydir: str | None,
     preserve_config: bool,
+    gitdir: str | None,
+    worktree: str | None,
+    branch: str | None,
+    base_branch: str | None,
     non_interactive: bool,
     yes: bool,
     dry_run: bool,
     recover: bool,
     verbose: bool,
 ) -> None:
-    """Restore a complete verified snapshot with retained sensitive plaintext rollback.
+    """Restore a verified fresh snapshot or additive uncommitted Git worktree.
 
     MIRROR is the encrypted source and ORIGIN is the plaintext destination.
     Authenticate every object and validate target names before staging plaintext.
@@ -455,20 +465,30 @@ def unshroud(
     --recover conflicts with --dry-run. Non-interactive replacement/recovery
     requires --yes. Terminal output redacts paths unless interactive or verbose.
     Timestamp limitations produce warnings; exact bytes and structure are required.
-    Git merge restore and logging remain unavailable. Native Windows writes fail
+    Merge requires a clean committed origin and local base (default main). It
+    restores an additive overlay in a new obfuscidian/ branch and separate worktree,
+    retaining base-only files and leaving all restored differences uncommitted.
+    Ignored origin data is refused. --gitdir/--worktree/--branch/--base-branch are
+    merge-only. Merge --recover is unavailable: retain uncertain artifacts for
+    manual inspection. No commit, merge, fetch or push is automatic.
+    Logging remains unavailable. Native Windows writes fail
     closed pending platform hardening; read-only dry runs remain available.
 
     \f
 
     .. versionadded:: 1.0.0
 
-    :param mode: Required fresh mode; Git merge restore is deferred.
+    :param mode: Required fresh replacement or additive Git merge restore.
     :param origin: Explicit plaintext destination or environment fallback.
     :param mirror: Explicit encrypted source or environment fallback.
     :param key: Explicit external selected key path.
     :param alias: Explicit key alias.
     :param keydir: Alias lookup directory.
-    :param preserve_config: Preserve root Obsidian configuration in place.
+    :param preserve_config: Preserve destination or merge-base Obsidian configuration.
+    :param gitdir: Merge-only Git administration directory belonging to origin.
+    :param worktree: Merge-only new output directory.
+    :param branch: Merge-only new suffix under obfuscidian/.
+    :param base_branch: Merge-only existing local branch, default main.
     :param non_interactive: Disable prompts and implicit path disclosure.
     :param yes: Explicit replacement/recovery consent.
     :param dry_run: Verify and plan without application writes.
@@ -482,6 +502,10 @@ def unshroud(
     try:
         if recover and dry_run:
             raise _ConfigurationError('--recover cannot be combined with --dry-run.')
+        if mode == 'fresh' and any(value is not None for value in (gitdir, worktree, branch, base_branch)):
+            raise _ConfigurationError('--gitdir, --worktree, --branch and --base-branch require merge mode.')
+        if mode == 'merge' and recover:
+            raise _ConfigurationError('Merge --recover is unavailable; inspect retained worktree and private staging manually.')
         destination, source = config._resolve_vault_paths(origin=origin, mirror=mirror)
         if interactive:
             if destination is None:
@@ -496,6 +520,21 @@ def unshroud(
             keydir=keydir,
             alias_prompt=(lambda: _prompt_alias(generation=False)) if interactive else None,
         )
+        if mode == 'merge':
+            _unshroud_merge(
+                destination,
+                source,
+                selected_key,
+                gitdir=gitdir,
+                worktree=worktree,
+                branch=branch,
+                base_branch=base_branch,
+                preserve_config=preserve_config,
+                dry_run=dry_run,
+                show_paths=interactive or verbose,
+                verbose=verbose,
+            )
+            return
         if recover:
             recovered = restore._recover_restore(
                 destination,
@@ -546,11 +585,95 @@ def unshroud(
     except _ConfigurationError as error:
         raise click.UsageError(str(error)) from None
     except _OperationalError as error:
+        if isinstance(error, git_restore._MergeFailure):
+            click.echo('Retained artifacts may contain sensitive plaintext; review before retrying.', err=True)
+            if interactive or verbose:
+                click.echo(f'Restore branch: {error.branch!r}; worktree: {str(error.output)!r}', err=True)
+                for location in error.retained:
+                    click.echo(f'Retained sensitive location: {str(location)!r}', err=True)
         if isinstance(error, _TransactionError):
             raise click.ClickException(f'{error} Retained restore artifacts contain sensitive plaintext.') from None
         raise click.ClickException(str(error)) from None
     except (OSError, MemoryError):
         raise click.ClickException('Restore could not complete; inspect pending recovery before retrying.') from None
     except KeyboardInterrupt:
-        click.echo('Restore interrupted; retained sensitive plaintext artifacts may require --recover before retrying.', err=True)
+        click.echo(
+            'Merge restore interrupted; inspect retained worktree/private staging manually before retrying.'
+            if mode == 'merge'
+            else 'Restore interrupted; retained sensitive plaintext artifacts may require --recover before retrying.',
+            err=True,
+        )
         raise click.exceptions.Exit(130) from None
+
+
+def _unshroud_merge(
+    origin: Path,
+    mirror: Path,
+    key: Path,
+    *,
+    gitdir: str | None,
+    worktree: str | None,
+    branch: str | None,
+    base_branch: str | None,
+    preserve_config: bool,
+    dry_run: bool,
+    show_paths: bool,
+    verbose: bool,
+) -> None:
+    """Render a completely validated additive worktree and manual next steps."""
+    plan = git_restore._plan_merge(
+        origin,
+        mirror,
+        key,
+        gitdir=config._expand_path(gitdir, '--gitdir') if gitdir is not None else None,
+        worktree=config._expand_path(worktree, '--worktree') if worktree is not None else None,
+        branch=branch,
+        base_branch=base_branch if base_branch is not None else 'main',
+        preserve_config=preserve_config,
+    )
+    for warning in plan.reconstruction.warnings:
+        click.echo(f'Warning: {warning}', err=True)
+    click.echo(
+        f'Completely verified merge snapshot: {len(plan.reconstruction.files)} files, '
+        f'{len(plan.reconstruction.directories)} directories, '
+        f'{sum(r.size for r in plan.reconstruction.files)} plaintext bytes.'
+    )
+    result = git_restore._publish_merge(plan, dry_run=dry_run)
+    if dry_run:
+        click.echo('Dry run: no plaintext, branch, worktree, locks or recovery artifacts created.')
+        return
+    click.echo('Additive restore published in a separate worktree; base-only files remain. This is not an exact snapshot.')
+    click.echo('Original checkout preserved. Restored differences are unstaged and uncommitted; no restore commit created.')
+    click.echo('Review and commit the restored differences before they can be merged. No automatic commit, merge, fetch or push.')
+    if preserve_config:
+        click.echo('Base Obsidian settings preserved, including their absence; backup settings verified and skipped.')
+    click.echo(
+        f'Ignored restored/base files requiring manual review: {len(result.ignored)}. '
+        'Inspect git status --ignored; selected ignored files may require git add -f.'
+    )
+    if verbose:
+        for relative in result.ignored:
+            click.echo(f'Ignored review entry: {relative!r}')
+    if show_paths:
+        click.echo(f'Restore branch: {result.branch!r}; worktree: {str(result.output)!r}')
+        review = shlex.quote(str(result.output))
+        original = shlex.quote(str(origin))
+        # POSIX shell instructions are shown escaped to avoid terminal control characters.
+        for command in (
+            f'git -C {review} status --ignored',
+            f'git -C {review} diff --no-ext-diff --no-textconv',
+            f'git -C {review} add -- <reviewed-paths>',
+            f'git -C {review} commit',
+            f'git -C {original} merge -- {shlex.quote(result.branch)}',
+        ):
+            click.echo(f'Manual command (POSIX shell): {command!r}')
+        click.echo('The last merge command is only for later, after committing and reviewing the original checkout.')
+    else:
+        click.echo('Use --verbose to disclose branch/worktree locations and quoted manual commands.')
+    for warning in result.warnings:
+        click.echo(f'Warning: {warning}', err=True)
+    if result.retained:
+        click.echo('Sensitive private plaintext artifacts retained; inspect before manual removal.', err=True)
+        if show_paths:
+            for location in result.retained:
+                click.echo(f'Retained sensitive location: {str(location)!r}', err=True)

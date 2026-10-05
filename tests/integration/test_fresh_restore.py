@@ -520,7 +520,6 @@ def test_preserve_configuration_absence_and_environment_resolution(vaults, monke
     'arguments',
     [
         [],
-        ['merge'],
         ['fresh', '--recover', '--dry-run'],
         ['fresh', '--exclude', '*.tmp'],
         ['fresh', '--gitdir', 'x'],
@@ -530,7 +529,7 @@ def test_preserve_configuration_absence_and_environment_resolution(vaults, monke
     ],
 )
 def test_unavailable_modes_and_invalid_options_never_write(vaults, arguments) -> None:
-    """Do not expose Git merge restore, exclusions or logging as silent no-ops."""
+    """Reject unsupported restore modes, exclusions or logging."""
     before = _snapshot(vaults[0].parent)
     result = CliRunner().invoke(cli, ['unshroud', *arguments])
     assert result.exit_code == 2, result.output
