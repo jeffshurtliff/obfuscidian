@@ -1,28 +1,29 @@
 # -*- coding: utf-8 -*-
 """
 :Module:            obfuscidian.cli
-:Synopsis:          Configuration and secure key generation CLI for Obfuscidian
+:Synopsis:          Secure key generation and fresh encrypted backup CLI
 :Created By:        Jeff Shurtliff
-:Last Modified:     Jeff Shurtliff
-:Modified Date:     03 Oct 2026
+:Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
+:Modified Date:     04 Oct 2026
 """
 
 import sys
 
 import click
 
-from obfuscidian import config, keys
+from obfuscidian import backup, config, keys
 from obfuscidian import constants as const
 from obfuscidian.errors import _ConfigurationError, _OperationalError
+from obfuscidian.transactions import _TransactionResult
 
 
 @click.group(invoke_without_command=True, no_args_is_help=True)
 @click.version_option(package_name='obfuscidian', prog_name='obfuscidian')
 def cli() -> None:
-    """Generate keys for encrypted Obsidian vault backups.
+    """Generate keys and create fresh encrypted Obsidian vault backups.
 
-    Keygen is available. Backup, restore, and verification commands are planned
-    and unavailable.
+    Keygen and shroud fresh are available. Merge backup, restore, and
+    verification commands are planned and unavailable.
 
     \f
 
@@ -112,3 +113,183 @@ def keygen(alias: str | None, directory: str | None, non_interactive: bool, dry_
     if interactive or verbose:
         click.echo(f'Key target: {str(path)!r}')
     click.echo(const.CUSTODY_GUIDANCE)
+
+
+def _prompt_backup(label: str, *, confirmation: bool = False) -> str | bool:
+    """Handle EOF and keyboard interrupts in terminal-owned backup prompts."""
+    try:
+        return click.confirm(label, default=False) if confirmation else click.prompt(label, type=str)
+    except click.Abort as error:
+        if isinstance(error.__context__, KeyboardInterrupt):
+            raise KeyboardInterrupt from None
+        raise _OperationalError('Input ended; no backup transaction was started.') from None
+
+
+def _show_retained(result: _TransactionResult, *, show_paths: bool) -> None:
+    """Report retained encrypted recovery data and durability warnings deliberately."""
+    for warning in result.warnings:
+        click.echo(f'Warning: {warning}', err=True)
+    click.echo('Encrypted recovery data retained outside the mirror and Git worktrees; no automatic pruning.')
+    if show_paths:
+        click.echo(f'Recovery workspace: {str(result.workspace)!r}')
+        click.echo(f'Rollback location: {str(result.rollback)!r}')
+
+
+@cli.command()
+@click.argument('mode', type=click.Choice(['fresh']))
+@click.option('--origin', type=str, help='Existing source vault; CLI overrides OBFUSCIDIAN_ORIGIN_VAULT.')
+@click.option('--mirror', type=str, help='Encrypted destination; CLI overrides OBFUSCIDIAN_MIRROR_VAULT.')
+@click.option('--key', type=str, help='Existing external key; overrides environment selectors; conflicts with --alias/--keydir.')
+@click.option('--alias', type=str, help='Key alias; CLI overrides environment key selectors.')
+@click.option('--keydir', type=str, help='Alias directory; CLI overrides OBFUSCIDIAN_KEY_DIR, then home.')
+@click.option(
+    '--exclude', multiple=True, help='Case-sensitive relative component glob; ** spans components; trailing / prunes dirs.'
+)
+@click.option('--non-interactive', is_flag=True, help='Never prompt; does not imply --yes.')
+@click.option('--yes', is_flag=True, help='Consent to replacement/recovery only; never bypass safety or key checks.')
+@click.option('--dry-run', is_flag=True, help='Read-only inventory, authentication and space estimate; create no artifacts.')
+@click.option(
+    '--recover', is_flag=True, help='Explicitly recover a pending transaction, then retry fresh; conflicts with --dry-run.'
+)
+@click.option(
+    '--verbose', is_flag=True, help='Show escaped relative names and private rollback locations; never key bytes/content.'
+)
+def shroud(
+    mode: str,
+    origin: str | None,
+    mirror: str | None,
+    key: str | None,
+    alias: str | None,
+    keydir: str | None,
+    exclude: tuple[str, ...],
+    non_interactive: bool,
+    yes: bool,
+    dry_run: bool,
+    recover: bool,
+    verbose: bool,
+) -> None:
+    """Back up the current included inventory as a complete encrypted fresh snapshot.
+
+    Fresh removes stale and excluded old entries from the new snapshot. Preserve
+    origin bytes and mirror root .git/.gitignore in place. Reuse unchanged
+    authenticated ciphertext and retain the previous snapshot outside the
+    mirror and Git worktrees. Pause editors/sync during backup and recovery.
+
+    Confirm replacement of existing contents or removal of old files/directories
+    after read-only preflight. Metadata-only updates and additions need no
+    replacement prompt. Unattended replacement/recovery requires --yes. A no-op
+    changes no files, timestamps or snapshot IDs and creates no write artifacts.
+    Dry run never prompts for replacement or repairs pending transactions.
+
+    Mandatory exclusions: .git components, .gitignore and obfuscidian-*.key files
+    at every depth. Other secrets require explicit exclusions. Patterns cannot
+    contain absolute paths, .. or backslashes; no negation/re-inclusion exists.
+    Selected keys must remain outside both vaults. A wrong key or corrupt mirror
+    fails before replacement; no automatic rekeying or key generation exists.
+
+    Only fresh is available. Merge backup, restore, verification, and optional
+    logging are planned and unavailable. Native Windows mutation fails closed
+    pending platform hardening; read-only dry runs are available.
+
+    \f
+
+    .. versionadded:: 1.0.0
+
+    :param mode: Required fresh mode; later modes are unavailable.
+    :param origin: Explicit source or environment fallback.
+    :param mirror: Explicit destination or environment fallback.
+    :param key: Explicit selected key path.
+    :param alias: Explicit key alias.
+    :param keydir: Alias lookup directory.
+    :param exclude: Repeated portable relative exclusion patterns.
+    :param non_interactive: Disable all prompts and implicit path disclosure.
+    :param yes: Explicit replacement and recovery consent.
+    :param dry_run: Validate read-only without creating artifacts.
+    :param recover: Restore pending previous state before retrying the operation.
+    :param verbose: Permit escaped relative names and private handoff locations.
+    :returns: No value; prints counts and a truthful result.
+    :raises click.UsageError: Missing, unsafe or conflicting configuration.
+    :raises click.ClickException: Integrity, consent or operational failure.
+    """
+    interactive = _is_interactive(non_interactive)
+    try:
+        if recover and dry_run:
+            raise _ConfigurationError('--recover cannot be combined with --dry-run.')
+        source, destination = config._resolve_vault_paths(origin=origin, mirror=mirror)
+        if interactive:
+            if source is None:
+                source = config._expand_path(_prompt_backup('Origin vault'), '--origin')
+            if destination is None:
+                destination = config._expand_path(_prompt_backup('Mirror vault'), '--mirror')
+        if source is None or destination is None:
+            raise _ConfigurationError('Select --origin and --mirror or their OBFUSCIDIAN_ORIGIN_VAULT/MIRROR_VAULT variables.')
+        selected_key = config._resolve_key_path(
+            key=key,
+            alias=alias,
+            keydir=keydir,
+            alias_prompt=(lambda: _prompt_alias(generation=False)) if interactive else None,
+        )
+        if recover:
+            recovered = backup._recover_fresh(
+                source,
+                destination,
+                selected_key,
+                yes=yes,
+                non_interactive=not interactive,
+                prompt=(lambda: _prompt_backup('Recover the previous complete snapshot before retrying?', confirmation=True))
+                if interactive
+                else None,
+                exclusions=exclude,
+            )
+            click.echo('Previous state recovered; replanning fresh backup.')
+            _show_retained(recovered, show_paths=interactive or verbose)
+        plan = backup._plan_fresh(source, destination, selected_key, exclusions=exclude)
+        for warning in plan.warnings:
+            click.echo(f'Warning: {warning}', err=True)
+        click.echo(
+            f'Fresh inventory: {plan.source.file_count} files, {plan.source.directory_count} directories, '
+            f'{plan.source.plaintext_bytes} plaintext bytes; {plan.source.excluded_entries} excluded entries.'
+        )
+        if verbose:
+            for entry in plan.source.entries:
+                click.echo(f'Included {entry.kind}: {entry.path!r}')
+        result = backup._publish_fresh(
+            plan,
+            yes=yes,
+            non_interactive=not interactive,
+            prompt=(
+                lambda: _prompt_backup(
+                    'Replace existing contents or remove stale entries and retain rollback?', confirmation=True
+                )
+            )
+            if interactive
+            else None,
+            dry_run=dry_run,
+        )
+        if dry_run:
+            click.echo(
+                f'Dry run: {plan.transaction.required_bytes} staged bytes estimated; no files or transaction artifacts created.'
+            )
+        elif plan.no_op:
+            click.echo('Fresh backup unchanged (no-op); no files or transaction artifacts created.')
+        else:
+            click.echo(
+                'Fresh encrypted snapshot published; origin preserved. Git controls preserved; no Git operations performed.'
+            )
+            if plan.previous is not None:
+                click.echo('Previous complete encrypted snapshot retained for rollback.')
+            _show_retained(result, show_paths=interactive or verbose)
+    except _ConfigurationError as error:
+        raise click.UsageError(str(error)) from None
+    except _OperationalError as error:
+        raise click.ClickException(f'{error} Origin data was not modified by Obfuscidian.') from None
+    except (OSError, MemoryError):
+        raise click.ClickException(
+            'Backup could not complete; origin preserved. Inspect pending recovery before retrying.'
+        ) from None
+    except KeyboardInterrupt:
+        click.echo(
+            'Backup interrupted; origin preserved. Retained transaction artifacts may require --recover before retrying.',
+            err=True,
+        )
+        raise click.exceptions.Exit(130) from None

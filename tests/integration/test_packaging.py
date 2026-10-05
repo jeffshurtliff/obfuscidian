@@ -36,7 +36,7 @@ def artifacts(pytestconfig: pytest.Config, tmp_path_factory: pytest.TempPathFact
             shutil.copy2(root / name, source / name)
         shutil.copytree(root / 'src', source / 'src', ignore=shutil.ignore_patterns('__pycache__', '*.pyc'))
         (source / 'docs').mkdir()
-        for name in ('CHANGELOG.md', 'CONFIGURATION.md', 'INVENTORY.md', 'FORMAT.md', 'TRANSACTIONS.md'):
+        for name in ('CHANGELOG.md', 'CONFIGURATION.md', 'INVENTORY.md', 'FORMAT.md', 'TRANSACTIONS.md', 'BACKUP.md'):
             shutil.copy2(root / 'docs' / name, source / 'docs' / name)
         # Deliberately seed obvious synthetic private/scratch content, never real vault data.
         for name in (
@@ -106,6 +106,7 @@ def test_artifact_contents(artifacts: tuple[Path, Path]) -> None:
         'crypto.py',
         'manifest.py',
         'transactions.py',
+        'backup.py',
     }
     with zipfile.ZipFile(wheel) as archive:
         prefix = 'obfuscidian-1.0.0.dev0.dist-info/'
@@ -133,6 +134,7 @@ def test_artifact_contents(artifacts: tuple[Path, Path]) -> None:
                 'docs/INVENTORY.md',
                 'docs/FORMAT.md',
                 'docs/TRANSACTIONS.md',
+                'docs/BACKUP.md',
             )
         }
         metadata_file = archive.extractfile(prefix + 'PKG-INFO')
@@ -214,7 +216,9 @@ def test_installation_entry_points(
         else:
             assert 'Usage: obfuscidian [OPTIONS]' in console_result.stdout
             assert 'planned' in console_result.stdout and 'unavailable' in console_result.stdout
-            assert 'Commands:' in console_result.stdout and 'keygen' in console_result.stdout
+            assert (
+                'Commands:' in console_result.stdout and 'keygen' in console_result.stdout and 'shroud' in console_result.stdout
+            )
     key_directory = (tmp_path / 'synthetic-keys').resolve()
     key_directory.mkdir()
     for arguments in (
@@ -232,6 +236,41 @@ def test_installation_entry_points(
         assert key.exists()
         assert key.read_bytes().decode() not in result.stdout + result.stderr
         assert str(key_directory) not in result.stdout + result.stderr
+    origin = (tmp_path / 'synthetic-origin').resolve()
+    origin.mkdir()
+    (origin / 'note.md').write_bytes(b'SYNTHETIC INSTALLED NOTE\r\n')
+    (origin / 'attachment.bin').write_bytes(bytes(range(256)))
+    (origin / 'empty').mkdir()
+    key = key_directory / 'obfuscidian-console.key'
+    for entry_point, name in (([str(console)], 'console'), ([str(python), '-m', 'obfuscidian'], 'module')):
+        mirror = (tmp_path / f'synthetic-{name}-mirror').resolve()
+        arguments = ['shroud', 'fresh', '--origin', str(origin), '--mirror', str(mirror), '--key', str(key), '--non-interactive']
+        _run([*entry_point, 'shroud', '--help'], outside)
+        preview = _run([*entry_point, *arguments, '--dry-run'], outside)
+        assert 'Dry run:' in preview.stdout and not mirror.exists()
+        if os.name == 'posix':
+            published = _run([*entry_point, *arguments], outside)
+            assert 'snapshot published' in published.stdout
+            unchanged = _run([*entry_point, *arguments], outside)
+            assert 'no-op' in unchanged.stdout
+            validation = _run(
+                [
+                    str(python),
+                    '-c',
+                    'import sys; from pathlib import Path; from obfuscidian import manifest, keys; '
+                    'cipher,_=keys._load_key(Path(sys.argv[2])); '
+                    'checked=manifest._verify_mirror(Path(sys.argv[1]),cipher); '
+                    'assert checked.file_count==2 and checked.directory_count==1; '
+                    'assert {r.path:manifest._read_validated_file(checked,r,cipher) for r in checked.manifest.files}'
+                    '=={"note.md":b"SYNTHETIC INSTALLED NOTE\\r\\n","attachment.bin":bytes(range(256))}',
+                    str(mirror),
+                    str(key),
+                ],
+                outside,
+            )
+            assert validation.stdout == validation.stderr == ''
+            assert str(origin) not in published.stdout + unchanged.stdout
+        assert (origin / 'note.md').read_bytes() == b'SYNTHETIC INSTALLED NOTE\r\n'
     if wheelhouse is not None:
         _run([str(python), '-m', 'pip', 'check'], outside)
     assert list(outside.iterdir()) == []

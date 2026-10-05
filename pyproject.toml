@@ -58,6 +58,7 @@ include = [
     { path = "docs/INVENTORY.md", format = "sdist" },
     { path = "docs/FORMAT.md", format = "sdist" },
     { path = "docs/TRANSACTIONS.md", format = "sdist" },
+    { path = "docs/BACKUP.md", format = "sdist" },
 ]
 # Use a small package boundary, plus explicit exclusions for private/generated content.
 exclude = [

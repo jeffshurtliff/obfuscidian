@@ -11,8 +11,10 @@ merged into `origin/main`; issue #3 is closed and Linux CI passed on Python
 merged into `origin/main`; issue #4 is closed and Linux CI passed on Python
 3.12–3.14. Thread 05 — Safe publication and recovery — is complete, reviewed,
 and merged/pushed into `origin/main`; issue #5 is closed and Linux CI passed on
-Python 3.12–3.14. Thread 06 is next and remains **not started**; Threads 06–14
-remain not started. See the handoff/completion records for validation and limits.
+Python 3.12–3.14. Thread 06 is implemented locally, pending maintainer review;
+issue #6 remains open and changes are uncommitted. Thread 07 is next sequentially
+and remains **not started**, as do Threads 07–14. See the Thread 06 handoff for
+local validation and limitations; no hosted CI for this increment is claimed.
 
 **Intended first stable release:** `1.0.0` (current metadata: `1.0.0.dev0`).
 
@@ -475,9 +477,11 @@ synthetic commits and disabled external hooks/configuration.
 Interruption and partial failure never count as success. If rollback fails, keep
 the original error and report recovery requirements without sensitive payloads.
 
-### Planned examples (after the relevant threads are implemented)
+### Examples and remaining planned commands
 
 The key directory exists already; paths and aliases below are placeholders.
+Keygen and `shroud fresh` are implemented. The merge, verify and unshroud
+examples remain planned for their separately authorized threads.
 
 ```sh
 obfuscidian keygen --alias primary --dir ./keys --non-interactive
@@ -533,7 +537,7 @@ commits, publication, or PRs are implied. Update status only after acceptance cr
 | 03 | Vault inventory and path preflight | 02 | [#3](https://github.com/jeffshurtliff/obfuscidian/issues/3) | Complete |
 | 04 | Encrypted backup format | 03 | [#4](https://github.com/jeffshurtliff/obfuscidian/issues/4) | Complete |
 | 05 | Safe publication and recovery | 04 | [#5](https://github.com/jeffshurtliff/obfuscidian/issues/5) | Complete |
-| 06 | Fresh backup | 05 | [#6](https://github.com/jeffshurtliff/obfuscidian/issues/6) | Not started |
+| 06 | Fresh backup | 05 | [#6](https://github.com/jeffshurtliff/obfuscidian/issues/6) | Implemented; pending review |
 | 07 | Merge backup | 06 | [#7](https://github.com/jeffshurtliff/obfuscidian/issues/7) | Not started |
 | 08 | Read-only verification | 04; may precede 05–07 | [#8](https://github.com/jeffshurtliff/obfuscidian/issues/8) | Not started |
 | 09 | Fresh restore | 05, 07, 08 | [#9](https://github.com/jeffshurtliff/obfuscidian/issues/9) | Not started |
@@ -733,7 +737,7 @@ and merged/pushed the implementation into `origin/main`; issue #5 is closed as
 completed. All four subtasks and acceptance criteria are met. Linux CI passed
 on Python 3.12–3.14. See the handoff/completion records and
 [transaction guide](../docs/TRANSACTIONS.md) for evidence and platform limits.
-Thread 06 remains **not started**.
+Thread 06 is now implemented locally, pending maintainer review; see its later handoff.
 
 1. Implement safe same-filesystem staging/rollback location selection outside
    vaults and Git worktrees, permission/space preflight, exclusive ownership,
@@ -771,7 +775,11 @@ recovery tests. No real vault or cloud access.
 **GitHub issue:** [#6](https://github.com/jeffshurtliff/obfuscidian/issues/6)
 
 **Goal/deliverable:** Working `shroud fresh` using validated format and transactions.
-**Depends on:** 05. **Status:** Not started.
+**Depends on:** 05. **Status:** Implemented locally; pending maintainer review.
+All four subtasks and the synthetic acceptance/demo are implemented. Issue #6
+remains open; changes are unstaged/uncommitted on `codex/feature/6-shroud-fresh`.
+See the Thread 06 handoff and [fresh backup guide](../docs/BACKUP.md) for actual
+validation, CLI behavior and platform limits. Thread 07 remains **not started**.
 
 1. Wire CLI options into read-only preflight, complete origin inventory,
    selected-key validation, existing-mirror authentication, and confirmation.
@@ -1154,8 +1162,9 @@ Linux CI; issue #4 is closed.
 Thread 05 is complete following maintainer review, commit, merge/push, and
 successful Linux CI on Python 3.12–3.14; issue #5 is closed as completed.
 
-Thread 06 is next sequentially; Threads 06–14 remain
-not started. See the Thread 05 handoff for evidence and platform limits.
+Thread 06 is implemented locally, pending maintainer review; issue #6 remains
+open and changes are uncommitted. Thread 07 is next sequentially, not started;
+Threads 07–14 remain not started. See the Thread 06 handoff for evidence and limits.
 Earlier handoff records describe the state at that time; later completion
 records supersede their pending-review and Git-status statements.
 The linked GitHub issues hold public progress discussion and verified
@@ -1794,6 +1803,111 @@ work was performed. The four completion-document edits remain **unstaged and
 uncommitted on `main`** for the maintainer to handle. No branch creation, stage,
 commit, push, PR, merge, tag, release, publication, or workflow change/trigger
 was performed by this follow-up.
+
+#### Thread 06 — Fresh backup implementation handoff (4 October 2026)
+
+**Status:** Implemented locally; all four requested subtasks and the synthetic
+acceptance/demo are met. Pending maintainer review; issue #6 remains open.
+Thread 07 is next sequentially and **not started**; Threads 07–14 remain
+unimplemented. This record supersedes earlier statements that Thread 06 had
+not started, without altering those historical handoffs.
+
+**Dependency readiness and issue tracking:** Read the root agent/contributor
+guides, Thread 06 requirements and dependency contracts. Actual Thread 02–05
+code is present on clean `main` baseline `2e61010`; issues #2–#5 are closed.
+Issue #5 records reviewed/merged transaction implementation and Linux/Python
+3.12–3.14 CI. A targeted dependency run passed **373 tests**. The GitHub
+connector returned 404; authenticated `gh` reads/start/checklist/handoff updates
+work. No local result is attributed to hosted CI.
+
+**Deliverables:**
+
+- [Internal fresh orchestration](../src/obfuscidian/backup.py): external selected
+  key custody, CLI/environment path preflight, complete stable inventory,
+  complete old-mirror authentication, one-file-at-a-time hashing and re-reading,
+  exact bounded manifest/ciphertext estimates, consent requirements and no-op
+  comparison before write artifacts. Placeholder metadata has the final
+  serialized widths; no-op/dry run generate no IDs/tokens/timestamps.
+- [CLI](../src/obfuscidian/cli.py): `shroud fresh` only, repeated exclusions,
+  terminal-only missing-value/replacement prompts, explicit `--yes`,
+  `--non-interactive`, `--dry-run`, `--recover` and escaped `--verbose` output.
+  Counts/default output redact names and private locations. Public CLI docs
+  retain the required bare initial-release directive. Optional logging remains
+  Thread 11; unsupported options and later modes are rejected.
+- Complete authenticated staging reuses validated unchanged ciphertext, keeps
+  changed-path object IDs and lineage, assigns secure IDs to new paths, and
+  publishes only the managed tree. Fresh removes absent/newly excluded records
+  from the proposed snapshot. All previous encrypted data remains in external
+  private rollback; origin content and root Git controls remain preserved.
+- [Transactions](../src/obfuscidian/transactions.py): minimal orchestration
+  integration adds a final source re-inventory callback before destination
+  changes and selected-key authentication of complete mirror payloads before
+  recovery inverse moves. V1 schema, cryptographic recipe and journal version
+  are unchanged; no restore command or merge implementation was added.
+- [Synthetic fresh integration tests](../tests/integration/test_fresh_backup.py),
+  [installed artifact checks](../tests/integration/test_packaging.py), updated
+  prior CLI-boundary assertions, [fresh backup guide](../docs/BACKUP.md),
+  changelog and synchronized current status/help. The sdist includes the new
+  guide; runtime dependencies, lockfile, version and CI/workflows are unchanged.
+
+**Executed validation:** Poetry **2.4.2**, Python **3.12.7**, local macOS ARM64.
+
+- Fresh integration suite: **68 passed**. Mixed hidden/config/nested Unicode,
+  binary and zero-byte files, empty directories, mandatory/explicit exclusions,
+  first backup into empty/absent mirrors, stale purge, exact unchanged token/ID
+  reuse, metadata updates, lineage and independently authenticated rollback.
+- Preservation assertions cover source bytes/identities/permissions/non-access
+  timestamps and root Git file/directory/ignore controls. No Git execution is
+  permitted in the backup test. No-op/dry run compare entire temporary tree
+  observations and forbid randomness/staging/ownership/consent calls.
+- Tests cover wrong keys, corrupt/unsupported/incomplete/extra-object mirrors,
+  unsafe/unmanaged/link/overlap/key-alias/missing-parent locations, encrypted
+  size/manifest/space limits, declined/EOF/unattended consent, source edits/adds/
+  deletes/replaced parents and late source changes after the ready checkpoint.
+- Stage/write/allocation/validation/rename/interrupt failures preserve the old
+  complete snapshot. Blocked rollback gates writes/dry run; consented recovery
+  restores previous state before retrying, refusing wrong keys and edited
+  retained bytes. Real subprocess termination at ready, old-moved and new-moved
+  boundaries exercises end-to-end CLI recovery. Existing transaction tests
+  retain their broader deterministic fault-boundary and process coverage.
+- Full `poetry run coverage run -m pytest -q`: **718 passed, 2 skipped**;
+  `poetry run coverage report`: **90% overall**, **94% backup**, **92% CLI**.
+  Both skips require native Windows ACL/junction APIs. The earlier plain pytest
+  run exposed two obsolete command-boundary assertions; those were corrected
+  and the final coverage run passed in full.
+- `poetry check --lock --strict`, `poetry run ruff check .`,
+  `poetry run ruff format --check .`, `poetry run bandit -r src/obfuscidian`,
+  and `git diff --check` passed.
+- Fresh `poetry build --output` wheel/sdist and strict Twine checks passed.
+  Explicit final-candidate packaging checks passed **3 cases**: content allowlist
+  and separate wheel/sdist installs outside the checkout, console/module help,
+  synthetic fresh dry run/publication/no-op and shared-validator byte checks.
+  These use available developer dependencies; fully isolated wheelhouse mode
+  was not rerun. Direct console/module fresh help also passed.
+- Proposed-file headers/dates, Python AST, Markdown links/anchors/fences, LF,
+  privacy, scope and final diff checks passed. Model headers use the recorded
+  maintainer-confirmed `GPT-6.1 Sol` default, with `04 Oct 2026` dates.
+
+**Limits and remaining work:** No implementation acceptance blocker remains;
+maintainer review and any separately authorized Git workflow are pending.
+Native Windows mutation fails closed pending Thread 12; no native Windows run,
+Python 3.13/3.14 run or hosted Linux CI for these uncommitted changes is claimed.
+Network/cloud filesystems, power-loss behavior, hostile same-authority writers
+and real vault tests were not exercised. Rechecks are best effort and multi-step
+renames are not universally atomic. Private recovery data is retained without
+pruning; uncertain/user-modified artifacts remain blocked rather than deleted.
+Fresh managed names use fixed lowercase ASCII/hex; conservative case/Unicode
+ownership comparison serializes aliases without writable probes and reads POSIX
+limits from the destination filesystem. Actual restore naming policies remain
+for later restore/platform work. Sphinx is deferred to Thread 13. Merge backup,
+restore, public verification and optional logging remain unavailable.
+
+**Git handoff:** **19 files** are changed/new, unstaged and uncommitted on
+`codex/feature/6-shroud-fresh`, based on `main` at `2e61010`. No stage, commit,
+push, PR, merge, tag, release, publication or workflow trigger occurred. Only
+temporary synthetic vaults, generated test keys and Git metadata were used;
+no private local reference content or real vault/key/cloud data was inspected.
+The new branch is the only Git setup mutation. Issue #6 stays open for review.
 
 ### Deferred capabilities
 

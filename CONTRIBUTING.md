@@ -36,10 +36,13 @@ Internal codecs and complete read-only validation are documented in
 Thread 05 — Safe publication and recovery — is complete, reviewed, and
 merged/pushed into `origin/main`; issue #5 is closed and Linux CI passed on
 Python 3.12–3.14. See [the transaction guide](docs/TRANSACTIONS.md) and roadmap
-completion record for evidence and platform limits. Thread 06 — Fresh backup —
-is next and remains **not started**.
-Backup, restore, and verification commands remain planned. Handoff evidence and platform
-limitations live in the roadmap.
+completion record for evidence and platform limits.
+Thread 06 — Fresh backup — is implemented locally, pending maintainer review;
+issue #6 remains open and changes are uncommitted. See [fresh backup](docs/BACKUP.md)
+and the roadmap handoff for actual validation. Only `shroud fresh` is available;
+merge backup, restore, verification and optional logging remain planned.
+Thread 07 remains **not started**. Native Windows mutation still fails closed
+pending Thread 12; local checks do not establish hosted CI.
 
 The initial test workflow targets Linux/Python 3.12–3.14; configured jobs do not
 prove hosted results. Thread 12 adds broader Windows/macOS/Linux hardening.
@@ -132,8 +135,8 @@ poetry build
 
 Poetry manages the development environment; a separate activation step is not
 required. Choose an interpreter explicitly with `poetry env use python3.12`
-(or the appropriate executable path). Help/version and keygen checks establish
-the current CLI increment; vault operations remain planned.
+(or the appropriate executable path). Validate help/version, keygen and fresh
+backup with synthetic vaults; later modes remain planned.
 
 ### Fresh artifact validation
 

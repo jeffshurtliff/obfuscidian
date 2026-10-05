@@ -447,13 +447,14 @@ def _execute_transaction(
     non_interactive: bool = False,
     prompt: Callable[[], bool] | None = None,
     dry_run: bool = False,
+    prepublish: Callable[[], None] | None = None,
 ) -> _TransactionResult | None:
     """Stage, completely verify, then journal and publish an internal payload.
 
     Builder and verifier are trusted internal orchestration callbacks, never
     loaded from vault content. Restore callers must authenticate every required
     source object before calling this primitive. Mirror validation is mandatory
-    in addition to the caller verifier. No public write command is exposed.
+    in addition to the caller verifier.
 
     :param plan: Read-only preflight observations and caller resource estimate.
     :param build: Populate only the supplied private empty staging directory.
@@ -462,6 +463,7 @@ def _execute_transaction(
     :param non_interactive: Never invoke the optional prompt.
     :param prompt: Trusted terminal-aware caller confirmation.
     :param dry_run: Recheck observations only, without builder, prompt, or artifacts.
+    :param prepublish: Recheck caller-owned source content immediately before publication.
     :returns: Retained private rollback locations, or no result for dry run.
     :raises _TransactionError: Failed work was rolled back or remains blocked.
     :raises KeyboardInterrupt: Interrupt after attempted conservative rollback.
@@ -553,6 +555,8 @@ def _execute_transaction(
         if plan.mirror and const.MANAGED_DIRECTORY in plan.before:
             _verify_mirror(plan.destination, plan.fernet)
             _check_destination(plan, plan.before)
+        if prepublish is not None:
+            prepublish()
         if not plan.destination_state.exists:
             # Journal intent before root creation; uncertain identity is preserved on recovery.
             journal['phase'] = 'creating-root'
@@ -710,6 +714,8 @@ def _recover_owned(plan: _TransactionPlan, workspace: Path, descriptor: int) -> 
         # No publication was authorized. Preserve incomplete/uncertain staged data in place.
         if payload != before:
             raise _OperationalError('Destination changed before publication; artifacts are preserved.')
+        if plan.mirror and const.MANAGED_DIRECTORY in before:
+            _verify_mirror(plan.destination, plan.fernet)
     else:
         for label, path in (('stage', stage), ('rollback', rollback)):
             if journal.get('containers', {}).get(label) != _identity(path.lstat()):
@@ -749,6 +755,9 @@ def _recover_owned(plan: _TransactionPlan, workspace: Path, descriptor: int) -> 
             if observed != allowed:
                 raise _OperationalError('Unexpected or modified recovery payload; artifacts are preserved.')
         # All uncertainty checks precede the first inverse mutation.
+        if plan.mirror:
+            for root in set(old_locations.values()) | set(new_locations.values()):
+                _verify_mirror(root, plan.fernet)
         journal['phase'] = 'recovering'
         _checkpoint(workspace, journal)
         for name, root in new_locations.items():

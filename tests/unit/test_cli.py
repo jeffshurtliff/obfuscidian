@@ -3,8 +3,8 @@
 :Module:            tests.unit.test_cli
 :Synopsis:          Verify keygen help, prompts, privacy, and no-mutation behavior
 :Created By:        Jeff Shurtliff
-:Last Modified:     Jeff Shurtliff (via GPT-6)
-:Modified Date:     03 Oct 2026
+:Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
+:Modified Date:     04 Oct 2026
 """
 
 import importlib
@@ -38,13 +38,13 @@ def isolated_configuration(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> N
 
 @pytest.mark.parametrize('arguments', [[], ['--help']])
 def test_help_describes_current_commands(arguments: list[str], tmp_path: Path) -> None:
-    """Expose only the implemented keygen command and current CLI contract."""
+    """Expose implemented keygen/fresh backup and keep later commands gated."""
     result = CliRunner().invoke(cli, arguments, prog_name='obfuscidian')
     assert result.exit_code == (2 if not arguments else 0)
     assert 'Usage: obfuscidian [OPTIONS]' in result.output
     assert '--help' in result.output and '--version' in result.output
     assert 'planned' in result.output and 'unavailable' in result.output
-    assert 'keygen' in result.output
+    assert 'keygen' in result.output and 'shroud' in result.output
     assert ':returns:' not in result.output and 'versionchanged' not in result.output
     assert list(tmp_path.iterdir()) == []
 
@@ -57,7 +57,7 @@ def test_version_names_product(tmp_path: Path) -> None:
     assert list(tmp_path.iterdir()) == []
 
 
-@pytest.mark.parametrize('command', ['command', 'shroud', 'unshroud', 'verify'])
+@pytest.mark.parametrize('command', ['command', 'unshroud', 'verify'])
 def test_unavailable_commands_fail(command: str, tmp_path: Path) -> None:
     """Refuse template and later-thread commands without side effects."""
     result = CliRunner().invoke(cli, [command])

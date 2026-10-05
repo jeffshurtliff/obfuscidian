@@ -2,8 +2,8 @@
 
 Thread 05 implements internal transaction primitives in `transactions.py`.
 These are orchestration building blocks, not a supported Python API. The CLI
-still exposes only help, version, and keygen. Public backup, restore, verification,
-and `--recover` command wiring remain planned for their respective threads.
+exposes [Thread 06 `shroud fresh` and `--recover`](BACKUP.md). Merge backup,
+restore and verification command wiring remain planned for their respective threads.
 The encrypted [v1 format](FORMAT.md) is unchanged.
 
 ## Preflight and ownership
@@ -47,6 +47,8 @@ stage. The verifier must validate the complete proposal; a restore caller must
 also authenticate and validate every required encrypted source object before
 calling the transaction primitive. Mirror execution additionally invokes the
 complete v1 validator on the staged mirror and on the previous managed mirror.
+An optional trusted prepublication callback rechecks the caller's complete source
+inventory immediately before destination changes; Thread 06 uses it for fresh backup.
 Mirror stages may contain only the managed `.obfuscidian` tree. All staged names
 and preserved controls are checked together under actual target rules.
 
@@ -99,7 +101,8 @@ records, transaction ID, modes/owner, recorded ancestor/root/container identitie
 original-observation digest, protected controls, and complete old/new payload
 locations. Every old and proposed entry must occur exactly once in its allowed
 location with matching hashes and identities. All these checks precede inverse
-payload writes. Unexpected, missing, replaced or edited payloads prevent recovery;
+payload writes. Mirror recovery also authenticates complete old/proposed snapshots
+with the selected key before inverse moves. Unexpected, missing, replaced or edited payloads prevent recovery;
 no uncertain/user-modified data is deleted. Unfinished staging that never
 received publication authorization is retained, and ownership is released only
 if the original destination is unchanged.
