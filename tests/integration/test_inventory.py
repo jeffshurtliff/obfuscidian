@@ -4,7 +4,7 @@
 :Synopsis:          Synthetic preservation and changing-source preflight scenarios
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     04 Oct 2026
+:Modified Date:     05 Oct 2026
 """
 
 from __future__ import annotations
@@ -261,11 +261,11 @@ def test_external_key_hardlink(vault: Path, alias_name: str) -> None:
         inv._inventory_vault(paths)
 
 
-def test_only_fresh_backup_exposed() -> None:
-    """Keep future vault writes inaccessible while exposing complete fresh backup."""
+def test_only_implemented_commands_exposed() -> None:
+    """Keep restore gated while exposing complete backup and read-only verification."""
     runner = CliRunner()
-    assert set(cli.commands) == {'keygen', 'shroud'}
-    for command in ('unshroud', 'verify'):
+    assert set(cli.commands) == {'keygen', 'shroud', 'verify'}
+    for command in ('unshroud',):
         result = runner.invoke(cli, [command])
         assert result.exit_code == 2 and 'No such command' in result.output
     assert runner.invoke(cli, ['shroud', 'merge']).exit_code == 2

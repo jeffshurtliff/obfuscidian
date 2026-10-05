@@ -1,17 +1,19 @@
 # -*- coding: utf-8 -*-
 """
 :Module:            obfuscidian.cli
-:Synopsis:          Secure key generation and fresh/additive encrypted backup CLI
+:Synopsis:          Secure keys, encrypted backups, and read-only verification CLI
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
 :Modified Date:     05 Oct 2026
 """
+from __future__ import annotations
 
+import os
 import sys
 
 import click
 
-from obfuscidian import backup, config, keys
+from obfuscidian import backup, config, keys, verification
 from obfuscidian import constants as const
 from obfuscidian.errors import _ConfigurationError, _OperationalError
 from obfuscidian.transactions import _TransactionResult
@@ -20,10 +22,10 @@ from obfuscidian.transactions import _TransactionResult
 @click.group(invoke_without_command=True, no_args_is_help=True)
 @click.version_option(package_name='obfuscidian', prog_name='obfuscidian')
 def cli() -> None:
-    """Generate keys and create encrypted Obsidian vault backups.
+    """Generate keys, back up Obsidian vaults, and verify encrypted mirrors.
 
-    Keygen and shroud fresh/merge are available. Restore and verification
-    commands are planned and unavailable.
+    Keygen, shroud fresh/merge, and read-only verify are available. Restore
+    commands and optional logging are planned and unavailable.
 
     \f
 
@@ -195,7 +197,7 @@ def shroud(
     Selected keys must remain outside both vaults. A wrong key or corrupt mirror
     fails before replacement; no automatic rekeying or key generation exists.
 
-    Restore, verification, and optional logging are planned and unavailable.
+    Restore and optional logging are planned and unavailable; use verify for read-only integrity checks.
     Native Windows mutation fails closed pending platform hardening; read-only dry runs are available.
 
     \f
@@ -311,4 +313,95 @@ def shroud(
             'Backup interrupted; origin preserved. Retained transaction artifacts may require --recover before retrying.',
             err=True,
         )
+        raise click.exceptions.Exit(130) from None
+
+
+@cli.command()
+@click.option('--mirror', type=str, help='Existing encrypted mirror; CLI overrides OBFUSCIDIAN_MIRROR_VAULT.')
+@click.option('--key', type=str, help='Existing external key; overrides environment selectors; conflicts with --alias/--keydir.')
+@click.option('--alias', type=str, help='Key alias; CLI overrides environment key selectors.')
+@click.option('--keydir', type=str, help='Alias directory; CLI overrides OBFUSCIDIAN_KEY_DIR, then home.')
+@click.option('--non-interactive', is_flag=True, help='Never prompt; require mirror and key selectors from CLI/environment.')
+@click.option('--verbose', is_flag=True, help='Show escaped authenticated relative names after complete validation.')
+def verify(
+    mirror: str | None,
+    key: str | None,
+    alias: str | None,
+    keydir: str | None,
+    non_interactive: bool,
+    verbose: bool,
+) -> None:
+    """Validate the manifest and every encrypted object without application writes.
+
+    Report counts only by default; --verbose permits escaped relative names
+    after the entire snapshot passes. Never print key bytes, hashes or content.
+    No origin vault is required, and no exclusions apply. Expand ~ and resolve
+    relative paths from the current directory. Prompt for absent mirror/alias
+    selectors only with terminal input; invalid selectors never fall back.
+
+    Missing, corrupt, unsupported or pending snapshots fail without repair.
+    Inspect pending recovery separately using the backup recovery procedure.
+    No --yes, --recover, --dry-run, write, restore or logging options exist.
+    Create no paths, locks, worktrees, rollback copies, logs or metadata.
+
+    Validation is a best-effort observation, not an atomic snapshot or security
+    certification. OS reads may change access times. A valid historic snapshot
+    can pass; this does not prove freshness or target-platform restorability.
+
+    \f
+
+    .. versionadded:: 1.0.0
+
+    :param mirror: Explicit mirror or environment fallback.
+    :param key: Explicit selected key path.
+    :param alias: Explicit key alias.
+    :param keydir: Alias lookup directory.
+    :param non_interactive: Disable all prompts.
+    :param verbose: Permit escaped authenticated relative names.
+    :returns: No value; prints complete validated counts on success.
+    :raises click.UsageError: Missing, invalid, unsafe or conflicting configuration.
+    :raises click.ClickException: Incomplete, corrupt, pending or unreadable backup.
+    """
+    interactive = _is_interactive(non_interactive)
+    try:
+        value = mirror if mirror is not None else os.environ.get(const.ENV_MIRROR)
+        if value is None and interactive:
+            try:
+                value = click.prompt('Mirror vault', type=str)
+            except click.Abort as error:
+                if isinstance(error.__context__, KeyboardInterrupt):
+                    raise KeyboardInterrupt from None
+                raise _OperationalError('Mirror input ended; verification did not complete.') from None
+        if value is None:
+            raise _ConfigurationError('Select --mirror or OBFUSCIDIAN_MIRROR_VAULT.')
+        destination = config._expand_path(value, '--mirror')
+        selected_key = config._resolve_key_path(
+            key=key,
+            alias=alias,
+            keydir=keydir,
+            alias_prompt=(lambda: _prompt_alias(generation=False)) if interactive else None,
+        )
+        result, warnings = verification._verify_backup(destination, selected_key)
+        for warning in warnings:
+            click.echo(f'Warning: {warning}', err=True)
+        click.echo(
+            f'Verified complete v1 mirror: {result.file_count} files, {result.directory_count} directories, '
+            f'{result.plaintext_bytes} plaintext bytes, {result.encrypted_bytes} encrypted bytes.'
+        )
+        if verbose:
+            for record in result.manifest.directories:
+                click.echo(f'Verified directory: {record.path!r}')
+            for record in result.manifest.files:
+                click.echo(f'Verified file: {record.path!r}')
+        click.echo('Best-effort read-only observation; no application writes performed. OS reads may update access times.')
+    except _ConfigurationError as error:
+        raise click.UsageError(str(error)) from None
+    except _OperationalError as error:
+        raise click.ClickException(f'{error} Backup was not modified.') from None
+    except (OSError, MemoryError):
+        raise click.ClickException(
+            'Verification could not complete; check access, memory and other writers. Backup was not modified.'
+        ) from None
+    except KeyboardInterrupt:
+        click.echo('Verification interrupted; no application writes performed.', err=True)
         raise click.exceptions.Exit(130) from None

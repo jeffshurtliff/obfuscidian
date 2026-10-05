@@ -4,7 +4,7 @@
 :Synopsis:          Synthetic publication fault boundaries and process recovery
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     04 Oct 2026
+:Modified Date:     05 Oct 2026
 """
 
 from __future__ import annotations
@@ -586,10 +586,10 @@ tx._execute_transaction(plan, build, lambda p: None, yes=True)
 
 
 def test_no_public_partial_write_commands() -> None:
-    """Only complete fresh backup is exposed; later modes and standalone recovery stay gated."""
-    assert set(cli.commands) == {'keygen', 'shroud'}
+    """Expose complete backup/verification; restore and standalone recovery stay gated."""
+    assert set(cli.commands) == {'keygen', 'shroud', 'verify'}
     runner = CliRunner()
-    for name in ('unshroud', 'recover', 'verify'):
+    for name in ('unshroud', 'recover'):
         result = runner.invoke(cli, [name])
         assert result.exit_code == 2
     assert runner.invoke(cli, ['shroud', 'merge']).exit_code == 2

@@ -482,8 +482,8 @@ the original error and report recovery requirements without sensitive payloads.
 ### Examples and remaining planned commands
 
 The key directory exists already; paths and aliases below are placeholders.
-Keygen and `shroud fresh|merge` are implemented locally. The verify and unshroud
-examples remain planned for their separately authorized threads.
+Keygen, `shroud fresh|merge`, and read-only `verify` are implemented locally.
+The unshroud examples remain planned for their separately authorized threads.
 
 ```sh
 obfuscidian keygen --alias primary --dir ./keys --non-interactive
@@ -541,7 +541,7 @@ commits, publication, or PRs are implied. Update status only after acceptance cr
 | 05 | Safe publication and recovery | 04 | [#5](https://github.com/jeffshurtliff/obfuscidian/issues/5) | Complete |
 | 06 | Fresh backup | 05 | [#6](https://github.com/jeffshurtliff/obfuscidian/issues/6) | Complete |
 | 07 | Merge backup | 06 | [#7](https://github.com/jeffshurtliff/obfuscidian/issues/7) | Complete |
-| 08 | Read-only verification | 04; may precede 05–07 | [#8](https://github.com/jeffshurtliff/obfuscidian/issues/8) | Not started |
+| 08 | Read-only verification | 04; may precede 05–07 | [#8](https://github.com/jeffshurtliff/obfuscidian/issues/8) | Implemented locally; pending review |
 | 09 | Fresh restore | 05, 07, 08 | [#9](https://github.com/jeffshurtliff/obfuscidian/issues/9) | Not started |
 | 10 | Git merge restore | 09 | [#10](https://github.com/jeffshurtliff/obfuscidian/issues/10) | Not started |
 | 11 | CLI polish | 10 | [#11](https://github.com/jeffshurtliff/obfuscidian/issues/11) | Not started |
@@ -782,8 +782,8 @@ and merged/pushed the implementation into `origin/main`; issue #6 is closed as
 completed. All four subtasks and acceptance criteria are met. Linux CI passed
 on Python 3.12–3.14. See the Thread 06 completion record and
 [fresh backup guide](../docs/BACKUP.md) for evidence, CLI behavior and platform
-limits. Thread 07 is complete; see its completion record. Thread 08 remains
-**not started**.
+limits. Thread 07 is complete; see its completion record. Thread 08 is
+implemented locally, pending review; see its handoff record.
 
 1. Wire CLI options into read-only preflight, complete origin inventory,
    selected-key validation, existing-mirror authentication, and confirmation.
@@ -824,7 +824,7 @@ and merged/pushed the implementation into `origin/main`; issue #7 is closed as
 completed. All four subtasks and acceptance criteria are met. Linux CI passed
 on Python 3.12–3.14. See the [completion record](#thread-07--merge-backup-completion-record-5-october-2026)
 and [backup guide](../docs/BACKUP.md) for evidence, behavior and platform limits.
-Thread 08 remains **not started**.
+Thread 08 is implemented locally, pending maintainer review; see its handoff record.
 
 1. Validate the old mirror, union old/current logical paths, and classify new,
    changed, metadata-only, unchanged, and retained stale entries. Initialize
@@ -860,7 +860,11 @@ mirror hashes and mtimes across no-op runs; verify old/new snapshot integrity.
 **GitHub issue:** [#8](https://github.com/jeffshurtliff/obfuscidian/issues/8)
 
 **Goal/deliverable:** Public `verify` command using complete backup validation.
-**Depends on:** 04; may run before 05–07. **Status:** Not started.
+**Depends on:** 04; may run before 05–07. **Status:** Implemented and locally
+validated; pending maintainer review. All four subtasks and local acceptance
+criteria are met. Issue #8 remains open; changes are unstaged/uncommitted.
+Hosted CI has not run for this change. See [verification](../docs/VERIFY.md)
+and the Thread 08 handoff record. Thread 09 remains **not started**.
 
 1. Add `verify` with mirror/key resolution, non-interactive behavior, counts,
    controlled verbose diagnostics, help, and integrity failure exit status.
@@ -1177,8 +1181,9 @@ successful Linux CI on Python 3.12–3.14; issue #6 is closed as completed.
 Thread 07 is complete following maintainer review, commit, merge/push, and
 successful Linux CI on Python 3.12–3.14; issue #7 is closed as completed.
 
-Thread 08 is next and **not started**, as are Threads 08–14. See the Thread 07
-completion record for evidence and limits.
+Thread 08 is implemented and locally validated, pending maintainer review;
+issue #8 remains open and changes are unstaged/uncommitted. See its handoff
+record below. Thread 09 is next and **not started**; Threads 09–14 remain planned.
 Earlier handoff records describe the state at that time; later completion
 records supersede their pending-review and Git-status statements.
 The linked GitHub issues hold public progress discussion and verified
@@ -2153,3 +2158,106 @@ relevant implementation thread instead of pinning assumptions indefinitely.
 - [SalesPyForce agent guide](https://github.com/jeffshurtliff/salespyforce/blob/master/AGENTS.md)
   and [PyDPlus agent guide](https://github.com/jeffshurtliff/pydplus/blob/main/AGENTS.md):
   their local working copies were inspected for agent conventions and docs style.
+
+### Thread 08 — Read-only verification handoff (5 October 2026)
+
+**Status:** Implemented and locally validated; pending maintainer review.
+All four Thread 08 subtasks and local acceptance criteria are met. Issue #8
+remains open. Changes are unstaged/uncommitted on the pre-existing
+`feature/8-thread-08-read-only-verification` branch at baseline `ef7ce2b`.
+Thread 09 is the next sequential thread and **not started**; Threads 09–14
+remain planned. No Git history, publication or workflow action occurred.
+
+**Dependency readiness:** Actual Thread 04 codec/validator/fixture code is
+present. Its closed issue #4 records maintainer approval, merge/push and green
+Linux Python 3.12–3.14 CI. The initial crypto/manifest/format suite passed
+**196 tests** before implementation. The GitHub connector returned 404;
+authenticated CLI access read issues #8/#4 and posted the issue #8 start update.
+
+**Local proposed deliverables:**
+
+- [Click verify/help](../src/obfuscidian/cli.py) and the internal
+  [verification adapter](../src/obfuscidian/verification.py), using the existing
+  complete v1 validator without format or cryptography changes.
+- [Synthetic verify integration tests](../tests/integration/test_verify.py),
+  updated command-availability tests and
+  [wheel/sdist entry-point checks](../tests/integration/test_packaging.py).
+- [Verification guide](../docs/VERIFY.md), synchronized README/agent/contributor
+  status and related guides, [changelog](../docs/CHANGELOG.md), and an explicit
+  sdist documentation inclusion. Runtime dependencies, lockfile, package
+  version, mutation helpers and backup behavior remain unchanged.
+
+**Behavior and acceptance evidence:** CLI/environment mirror and key selection
+reuse existing key precedence/conflict rules, with prompts only for absent
+selectors on terminal input. Origin configuration is ignored; keys inside the
+mirror are rejected. Complete validation authenticates the manifest before
+parsing and checks schema/path safety, exact object namespace, every token's
+ciphertext binding, authentication, plaintext size/hash and final state.
+Counts appear only on complete success. Opt-in verbose relative names are
+escaped and appear only after every object passes; no keys, hashes, content or
+absolute mirror/key paths appear in normal/verbose results or errors.
+
+Canonical ownership markers are inspected in all mirror ancestors before and
+after validation, without opening private journals or acquiring ownership.
+Malformed/directory/broken-link markers and missing pending payloads fail
+without recovery; retained completed workspaces without ownership remain
+untouched. Write, repair, recovery, dry-run, consent, logging, exclusion and
+restore options are rejected. Exit categories are `0` success, `1` incomplete/
+integrity/pending/I/O failure, `2` usage/configuration, and `130` interruption.
+Missing data and unknown versions include redacted remediation guidance.
+
+The new verify suite covers valid mixed-content and empty mirrors, the last
+object as well as earlier objects, wrong keys, manifest/object tampering and
+truncation, malformed/duplicate JSON, unsafe names/links, missing/unexpected
+data, equal-length swaps, binding/authentication failures and sparse oversize
+tokens rejected before open. It also covers selector precedence/conflicts,
+missing selected keys without fallback/regeneration, terminal/EOF behavior,
+permissions/allocation/interruption failures, escaped terminal controls and
+pending ownership at multiple ancestor levels. Read-only permission tests prove
+no writable location or staging-space estimate is required.
+
+Every guarded CLI case compares the entire temporary tree's namespace,
+bytes/digests, identities, permissions, sizes, mtimes and ctimes before/after.
+Instrumentation additionally rejects write-mode opens, descriptor writes,
+filesystem mutation and subprocess execution across all paths, recording even
+caught or transient attempts. Success, failure, help, options and interruption
+make no application writes. OS read-induced access times are intentionally
+excluded. Installed console/module verification has matching help/results and
+preserves mirror bytes/file lists/mtimes for both wheel and sdist.
+
+**Executed validation:** Poetry 2.4.2 / Python 3.12.7 / macOS ARM64.
+
+- `poetry check --lock --strict`, `poetry run ruff check .`, and
+  `poetry run ruff format --check .` passed.
+- Final `poetry run coverage run -m pytest -q` passed **903 tests, 2 skipped**;
+  the skips require native Windows ACL APIs and junction creation. Full-suite
+  wheel/sdist content and separate installed console/module checks passed using
+  available developer dependencies outside the checkout. An earlier full run
+  identified two stale command-availability expectations; those were updated
+  and the final full run passed. The final focused run passed **109 tests**,
+  including **107 verify cases** and those two expectations.
+- `poetry run coverage report`: **91% overall, 100% verification adapter**.
+  Installed subprocess execution is outside these coverage totals.
+- `poetry run bandit -r src/obfuscidian`: no issues. Fresh `poetry build`
+  wheel/sdist candidates and `poetry run twine check --strict` passed.
+- Proposed-file local Markdown links/anchors/fences, Python AST/model/date
+  headers, identifying-path checks, source/no-write/scope/diff review and
+  `git diff --check` passed. No private fixtures or real vault/key data were used.
+
+**Limitations/unexecuted checks:** Hosted Linux CI, Python 3.13/3.14, native
+Windows and broader OS tests, real vault/cloud tests, and Sphinx (Thread 13)
+were not run. Fully isolated wheelhouse installs were not repeated; default
+offline installed-artifact checks used available developer dependencies.
+Verification is a best-effort observation, not an atomic snapshot, certification,
+freshness proof or target-platform restorability check. It detects existing
+and observed pending ownership but does not lock against later writers. OS reads
+may change access times; valid historic snapshots and key-holder-forged data
+can pass. Root Git controls are checked for allowed names/types only.
+
+**Tracking/Git handoff:** Issue #8's implementation and executed-progress
+checklists are updated, and a public-safe handoff is posted; maintainer
+review/closure remains unchecked. All **20 proposed files** remain local,
+unstaged/uncommitted. New/updated code and docs will become remotely available
+only through a separately authorized Git workflow. No local acceptance blocker
+remains; maintainer review and hosted validation are outstanding. Thread 09
+was not started.
