@@ -3,9 +3,12 @@
 :Module:            obfuscidian.constants
 :Synopsis:          Shared configuration, key, path, and resource constants
 :Created By:        Jeff Shurtliff
-:Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     04 Oct 2026
+:Last Modified:     Jeff Shurtliff
+:Modified Date:     05 Oct 2026
 """
+
+from __future__ import annotations
+
 
 ENV_KEY_PATH = 'OBFUSCIDIAN_KEY_PATH'
 ENV_KEY_ALIAS = 'OBFUSCIDIAN_KEY_ALIAS'

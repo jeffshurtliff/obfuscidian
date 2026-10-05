@@ -7,6 +7,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Read-only `verify` with mirror/key resolution, complete v1 manifest/object validation, counts and escaped opt-in relative names.
+- Pending-ownership inspection without recovery and rejection of write, exclusion, recovery, restore and logging options.
+- Synthetic corrupt/valid/privacy/no-write verification tests, installed console/module parity, and verification documentation.
+
 - Additive `shroud merge` with old/current union, stale/excluded file and directory retention, and new-path rename semantics.
 - Stable object IDs and exact ciphertext reuse, metadata-only updates, content-only consent and artifact-free merge no-ops.
 - Early type-conflict refusal with fresh-mode guidance; authenticated retained-byte reads prove historic content remains reconstructible.

@@ -4,7 +4,7 @@
 :Synopsis:          Immutable v1 compatibility and complete read-only hostile mirror tests
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     04 Oct 2026
+:Modified Date:     05 Oct 2026
 """
 
 from __future__ import annotations
@@ -550,14 +550,14 @@ def test_unrelated_sibling_changes_do_not_invalidate(mirror: tuple[Path, Fernet]
 
 
 def test_no_new_cli_commands_or_output_leaks(mirror: tuple[Path, Fernet]) -> None:
-    """Only fresh backup is exposed; incomplete selections and later commands leak no format paths."""
+    """Only implemented commands are exposed; incomplete selections leak no format paths."""
     root, _ = mirror
     runner = CliRunner()
     help_result = runner.invoke(cli, ['--help'])
     assert help_result.exit_code == 0
-    assert set(cli.commands) == {'keygen', 'shroud'}
+    assert set(cli.commands) == {'keygen', 'shroud', 'verify'}
     before = _snapshot(root.parent)
-    for command in ('shroud', 'unshroud', 'verify'):
+    for command in ('shroud', 'unshroud'):
         result = runner.invoke(cli, [command, '--mirror', str(root)])
         assert result.exit_code == 2
         assert str(root) not in result.output

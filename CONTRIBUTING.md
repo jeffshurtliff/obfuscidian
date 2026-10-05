@@ -42,14 +42,18 @@ Thread 06 — Fresh backup — is complete, reviewed, and merged/pushed into
 `origin/main`; issue #6 is closed and Linux CI passed on Python 3.12–3.14.
 See [fresh backup](docs/BACKUP.md) and the roadmap completion record for
 validation and platform limits. `shroud fresh` and additive `shroud merge` are
-available; restore, verification and optional logging remain planned.
+available; `verify` performs complete read-only validation. Restore and optional
+logging remain planned.
 
 Thread 07 — Merge backup — is complete, reviewed, and merged/pushed into
 `origin/main`; issue #7 is closed and Linux CI passed on Python 3.12–3.14.
 See the backup guide and roadmap completion record for evidence and limits.
 
-Thread 08 remains **not started**. Native Windows mutation still fails closed
-pending Thread 12; local checks do not establish hosted CI.
+Thread 08 — Read-only verification — is implemented and locally validated,
+pending maintainer review; issue #8 remains open and changes are uncommitted.
+See [verification](docs/VERIFY.md) and the roadmap handoff. Thread 09 remains
+**not started**; hosted CI has not run for Thread 08. Native Windows mutation
+still fails closed pending Thread 12; local checks do not establish hosted CI.
 
 The initial test workflow targets Linux/Python 3.12–3.14; configured jobs do not
 prove hosted results. Thread 12 adds broader Windows/macOS/Linux hardening.
@@ -143,7 +147,7 @@ poetry build
 Poetry manages the development environment; a separate activation step is not
 required. Choose an interpreter explicitly with `poetry env use python3.12`
 (or the appropriate executable path). Validate help/version, keygen and fresh/merge
-backup with synthetic vaults; restore and verification remain planned.
+backup and read-only verification with synthetic vaults; restore remains planned.
 
 ### Fresh artifact validation
 

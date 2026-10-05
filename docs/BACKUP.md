@@ -1,14 +1,15 @@
 # Fresh and additive encrypted backup
 
 `shroud fresh` backs up the current included inventory; Thread 07 adds
-`shroud merge` for additive history retention. Restore, public verification,
-and optional file logging remain planned. The internal [v1 validator](FORMAT.md)
+`shroud merge` for additive history retention. Thread 08 exposes
+[read-only verification](VERIFY.md). Restore and optional file logging remain planned. The internal [v1 validator](FORMAT.md)
 authenticates produced snapshots; it is not a supported Python library API.
 No Git commands, commits, pushes, merges or worktrees are created by backup.
 Threads 06–07 are reviewed and merged/pushed into `origin/main`, with issues
 #6–#7 closed and green Linux CI on Python 3.12–3.14. See the
 [Thread 07 completion record](../dev/IMPLEMENTATION_PLAN.md#thread-07--merge-backup-completion-record-5-october-2026)
-for validation and platform limits. Thread 08 remains **not started**.
+for validation and platform limits. Thread 08 is implemented locally, pending
+maintainer review; issue #8 remains open. Thread 09 remains **not started**.
 
 ## Usage and selection
 
@@ -174,5 +175,5 @@ Identity/hash rechecks are best effort, not an atomic source snapshot or a
 guarantee against hostile same-authority writers. Local synthetic process-death
 tests do not establish power-loss, network/cloud-filesystem or supported-platform
 guarantees. Hosted CI must be reported separately. Public verification is
-Thread 08, restore Threads 09–10, and optional logging/CLI polish Thread 11;
-none is implemented here. Sphinx remains Thread 13.
+available through Thread 08. Restore Threads 09–10 and optional logging/CLI
+polish Thread 11 remain planned. Sphinx remains Thread 13.

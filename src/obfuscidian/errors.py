@@ -3,9 +3,11 @@
 :Module:            obfuscidian.errors
 :Synopsis:          Internal redacted configuration and operational errors
 :Created By:        Jeff Shurtliff
-:Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     04 Oct 2026
+:Last Modified:     Jeff Shurtliff
+:Modified Date:     05 Oct 2026
 """
+
+from __future__ import annotations
 
 
 class _ConfigurationError(Exception):

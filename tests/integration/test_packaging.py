@@ -36,7 +36,15 @@ def artifacts(pytestconfig: pytest.Config, tmp_path_factory: pytest.TempPathFact
             shutil.copy2(root / name, source / name)
         shutil.copytree(root / 'src', source / 'src', ignore=shutil.ignore_patterns('__pycache__', '*.pyc'))
         (source / 'docs').mkdir()
-        for name in ('CHANGELOG.md', 'CONFIGURATION.md', 'INVENTORY.md', 'FORMAT.md', 'TRANSACTIONS.md', 'BACKUP.md'):
+        for name in (
+            'CHANGELOG.md',
+            'CONFIGURATION.md',
+            'INVENTORY.md',
+            'FORMAT.md',
+            'TRANSACTIONS.md',
+            'BACKUP.md',
+            'VERIFY.md',
+        ):
             shutil.copy2(root / 'docs' / name, source / 'docs' / name)
         # Deliberately seed obvious synthetic private/scratch content, never real vault data.
         for name in (
@@ -107,6 +115,7 @@ def test_artifact_contents(artifacts: tuple[Path, Path]) -> None:
         'manifest.py',
         'transactions.py',
         'backup.py',
+        'verification.py',
     }
     with zipfile.ZipFile(wheel) as archive:
         prefix = 'obfuscidian-1.0.0.dev0.dist-info/'
@@ -135,6 +144,7 @@ def test_artifact_contents(artifacts: tuple[Path, Path]) -> None:
                 'docs/FORMAT.md',
                 'docs/TRANSACTIONS.md',
                 'docs/BACKUP.md',
+                'docs/VERIFY.md',
             )
         }
         metadata_file = archive.extractfile(prefix + 'PKG-INFO')
@@ -206,6 +216,32 @@ def test_installation_entry_points(
     )
     assert format_check.stdout == '5 4\n'
     assert format_check.stderr == ''
+    # Public verify parity is available even where native backup mutation is gated.
+    verify_mirror = (tmp_path / 'synthetic-verification-mirror').resolve()
+    shutil.copytree(fixture / 'mirror', verify_mirror)
+    verify_key = tmp_path.resolve() / 'synthetic-verification.key'
+    verify_key.write_bytes((fixture / 'synthetic-fernet-key.txt').read_bytes().strip())
+    verify_key.chmod(0o600)
+    before_verify = {
+        path.relative_to(verify_mirror): (path.read_bytes() if path.is_file() else None, path.stat().st_mtime_ns)
+        for path in (verify_mirror, *verify_mirror.rglob('*'))
+    }
+    for arguments in (
+        ['verify', '--help'],
+        ['verify', '--mirror', str(verify_mirror), '--key', str(verify_key), '--non-interactive'],
+    ):
+        console_result = _run([str(console), *arguments], outside)
+        module_result = _run([str(python), '-m', 'obfuscidian', *arguments], outside)
+        assert console_result.stdout == module_result.stdout
+        assert console_result.stderr == module_result.stderr == ''
+        if '--help' not in arguments:
+            assert '5 files, 4 directories' in console_result.stdout
+            assert str(verify_mirror) not in console_result.stdout
+            assert verify_key.read_text() not in console_result.stdout
+    assert {
+        path.relative_to(verify_mirror): (path.read_bytes() if path.is_file() else None, path.stat().st_mtime_ns)
+        for path in (verify_mirror, *verify_mirror.rglob('*'))
+    } == before_verify
     for option in ('--help', '--version'):
         console_result = _run([str(console), option], outside)
         module_result = _run([str(python), '-m', 'obfuscidian', option], outside)

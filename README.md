@@ -5,8 +5,8 @@
 
 Obfuscidian is a Python CLI being developed to create encrypted Obsidian vault
 backups. The current CLI provides help, version information, secure key
-generation, and `shroud fresh|merge`. Restore and verification commands
-are planned and unavailable.
+generation, `shroud fresh|merge`, and read-only `verify`. Restore commands
+and optional logging are planned and unavailable.
 This repository does not yet claim a published package or completed platform validation.
 
 ## Project status
@@ -54,8 +54,11 @@ Thread 07 — Merge backup — is complete, reviewed, and merged/pushed into
 is closed. Linux CI passed on Python 3.12–3.14; see the
 [completion record](dev/IMPLEMENTATION_PLAN.md#thread-07--merge-backup-completion-record-5-october-2026).
 
-Thread 08 remains **not started**; broader OS validation is deferred to
-Thread 12. Native Windows mutation fails closed.
+Thread 08 — Read-only verification — is implemented and locally validated,
+pending maintainer review; [issue #8](https://github.com/jeffshurtliff/obfuscidian/issues/8)
+remains open and changes are uncommitted. See [verification](docs/VERIFY.md).
+Thread 09 remains **not started**. Hosted CI has not run for Thread 08; broader
+OS validation is deferred to Thread 12. Native Windows mutation fails closed.
 
 ## Installation from source
 
@@ -114,6 +117,17 @@ keep exact ciphertext. Only existing content replacements need consent; supply
 with guidance to use fresh. A successful merge cleans only its own proven
 temporary recovery data, preserving earlier fresh rollback copies.
 
+Verify every manifest/object without creating logs, locks or recovery artifacts:
+
+```sh
+obfuscidian verify --mirror ./vault-encrypted --key ./keys/obfuscidian-primary.key --non-interactive
+```
+
+Verification never repairs or mutates a backup. Counts are shown only after
+complete validation; `--verbose` permits escaped authenticated relative names.
+Pending ownership requires separate recovery inspection. See [verification
+selection, exit codes and limits](docs/VERIFY.md).
+
 ## Development
 
 Use Poetry 2.2 or newer, below 3.0. Runtime dependencies are declared in
@@ -121,7 +135,8 @@ Use Poetry 2.2 or newer, below 3.0. Runtime dependencies are declared in
 resolved dependencies. cryptography is included for the approved Fernet design;
 key creation/loading and internal v1 byte codecs use its standard Fernet recipe.
 Fresh and merge backup use those codecs and existing private transaction
-primitives; restore and verification orchestration remains planned.
+primitives; read-only verification uses the complete v1 validator. Restore
+orchestration remains planned.
 
 ```sh
 poetry install --with dev

@@ -2,8 +2,9 @@
 
 Thread 05 implements internal transaction primitives in `transactions.py`.
 These are orchestration building blocks, not a supported Python API. The CLI
-exposes [`shroud fresh|merge` and `--recover`](BACKUP.md). Restore and
-verification command wiring remain planned for their respective threads.
+exposes [`shroud fresh|merge` and `--recover`](BACKUP.md), plus
+[read-only verification](VERIFY.md) that inspects ownership without recovery.
+Restore command wiring remains planned.
 The encrypted [v1 format](FORMAT.md) is unchanged.
 
 ## Preflight and ownership

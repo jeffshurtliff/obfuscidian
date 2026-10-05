@@ -1,7 +1,8 @@
 # Configuration and keys
 
 Thread 02 provides `keygen` and internal configuration/key-loading helpers.
-Backup, restore, and verification commands remain planned. The helpers are
+[Backup](BACKUP.md) and [read-only verification](VERIFY.md) use these helpers;
+restore commands remain planned. The helpers are
 internal implementation boundaries; the CLI is the supported public interface.
 No vault data is read or written by keygen.
 
