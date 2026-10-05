@@ -3,7 +3,7 @@
 :Module:            tests.unit.test_cli
 :Synopsis:          Verify keygen help, prompts, privacy, and no-mutation behavior
 :Created By:        Jeff Shurtliff
-:Last Modified:     Jeff Shurtliff
+:Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
 :Modified Date:     05 Oct 2026
 """
 
@@ -59,7 +59,7 @@ def test_version_names_product(tmp_path: Path) -> None:
     assert list(tmp_path.iterdir()) == []
 
 
-@pytest.mark.parametrize('command', ['command', 'unshroud'])
+@pytest.mark.parametrize('command', ['command'])
 def test_unavailable_commands_fail(command: str, tmp_path: Path) -> None:
     """Refuse template and later-thread commands without side effects."""
     result = CliRunner().invoke(cli, [command])

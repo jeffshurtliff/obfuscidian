@@ -5,8 +5,8 @@
 
 Obfuscidian is a Python CLI being developed to create encrypted Obsidian vault
 backups. The current CLI provides help, version information, secure key
-generation, `shroud fresh|merge`, and read-only `verify`. Restore commands
-and optional logging are planned and unavailable.
+generation, `shroud fresh|merge`, read-only `verify`, and `unshroud fresh`.
+Git merge restore and optional logging remain planned and unavailable.
 This repository does not yet claim a published package or completed platform validation.
 
 ## Project status
@@ -58,9 +58,10 @@ Thread 08 — Read-only verification — is complete, reviewed, and merged/pushe
 into `origin/main`; [issue #8](https://github.com/jeffshurtliff/obfuscidian/issues/8)
 is closed as completed. Linux CI passed on Python 3.12–3.14; see the
 [completion record](dev/IMPLEMENTATION_PLAN.md#thread-08--read-only-verification-completion-record-5-october-2026).
-See [verification](docs/VERIFY.md) for behavior and limits. Thread 09 remains
-**not started**. Broader OS validation is deferred to Thread 12; native Windows
-mutation fails closed.
+See [verification](docs/VERIFY.md) for behavior and limits. Thread 09 is
+implemented locally and awaiting maintainer review; see [fresh restore](docs/RESTORE.md).
+Thread 10 remains **not started**. Broader OS validation is deferred to Thread 12;
+native Windows mutation fails closed.
 
 ## Installation from source
 
@@ -129,6 +130,20 @@ Verification never repairs or mutates a backup. Counts are shown only after
 complete validation; `--verbose` permits escaped authenticated relative names.
 Pending ownership requires separate recovery inspection. See [verification
 selection, exit codes and limits](docs/VERIFY.md).
+
+Fresh restore reads the encrypted mirror and replaces the plaintext origin after
+complete verification. Keep the key outside both locations:
+
+```sh
+obfuscidian unshroud fresh --mirror ./encrypted-mirror --origin ./restored-vault \
+  --key ./keys/obfuscidian-primary.key --non-interactive --dry-run
+```
+
+Use `--yes` for unattended replacement and `--preserve-config` to leave root
+`.obsidian` in place. Root Git controls remain in place; old payload is retained
+externally as **sensitive plaintext rollback**. See [fresh restore](docs/RESTORE.md)
+for confirmation, recovery, metadata and filesystem limits. Git merge restore
+remains unavailable.
 
 ## Development
 

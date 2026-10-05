@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """
 :Module:            obfuscidian.cli
-:Synopsis:          Secure keys, encrypted backups, and read-only verification CLI
+:Synopsis:          Secure keys, encrypted backups, fresh restore and read-only verification CLI
 :Created By:        Jeff Shurtliff
-:Last Modified:     Jeff Shurtliff
+:Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
 :Modified Date:     05 Oct 2026
 """
 
@@ -14,19 +14,19 @@ import sys
 
 import click
 
-from obfuscidian import backup, config, keys, verification
+from obfuscidian import backup, config, keys, restore, verification
 from obfuscidian import constants as const
 from obfuscidian.errors import _ConfigurationError, _OperationalError
-from obfuscidian.transactions import _TransactionResult
+from obfuscidian.transactions import _TransactionError, _TransactionResult
 
 
 @click.group(invoke_without_command=True, no_args_is_help=True)
 @click.version_option(package_name='obfuscidian', prog_name='obfuscidian')
 def cli() -> None:
-    """Generate keys, back up Obsidian vaults, and verify encrypted mirrors.
+    """Generate keys, back up and restore vaults, and verify encrypted mirrors.
 
-    Keygen, shroud fresh/merge, and read-only verify are available. Restore
-    commands and optional logging are planned and unavailable.
+    Keygen, shroud fresh/merge, unshroud fresh, and read-only verify are available.
+    Git merge restore and optional logging are planned and unavailable.
 
     \f
 
@@ -129,13 +129,16 @@ def _prompt_backup(label: str, *, confirmation: bool = False) -> str | bool:
 
 
 def _show_retained(result: _TransactionResult, *, show_paths: bool) -> None:
-    """Report retained encrypted recovery data and durability warnings deliberately."""
+    """Report retained recovery data and its sensitivity with deliberate path disclosure."""
     for warning in result.warnings:
         click.echo(f'Warning: {warning}', err=True)
     if not result.retained:
         click.echo('Temporary merge recovery data removed after verified publication.')
         return
-    click.echo('Encrypted recovery data retained outside the mirror and Git worktrees; no automatic pruning.')
+    if result.plaintext:
+        click.echo('Plaintext recovery data is sensitive; retained outside vaults and Git worktrees. No automatic pruning.')
+    else:
+        click.echo('Encrypted recovery data retained outside the mirror and Git worktrees; no automatic pruning.')
     if show_paths:
         click.echo(f'Recovery workspace: {str(result.workspace)!r}')
         click.echo(f'Rollback location: {str(result.rollback)!r}')
@@ -188,9 +191,10 @@ def shroud(
 
     Confirm replacement of existing contents or removal of old files/directories
     in fresh, or existing file content in merge, after preflight. Metadata-only
-    updates and additions need no replacement prompt. Unattended replacement/recovery requires --yes. A no-op
-    changes no files, timestamps or snapshot IDs and creates no write artifacts.
-    Dry run never prompts for replacement or repairs pending transactions.
+    updates and additions need no replacement prompt. Unattended replacement/recovery
+    requires --yes. A no-op changes no files, timestamps or snapshot IDs and creates
+    no write artifacts. Dry run never prompts for replacement or repairs pending
+    transactions.
 
     Mandatory exclusions: .git components, .gitignore and obfuscidian-*.key files
     at every depth. Other secrets require explicit exclusions. Patterns cannot
@@ -198,8 +202,10 @@ def shroud(
     Selected keys must remain outside both vaults. A wrong key or corrupt mirror
     fails before replacement; no automatic rekeying or key generation exists.
 
-    Restore and optional logging are planned and unavailable; use verify for read-only integrity checks.
-    Native Windows mutation fails closed pending platform hardening; read-only dry runs are available.
+    Use unshroud fresh to restore, or verify for read-only integrity checks.
+    Optional logging remains planned.
+    Native Windows mutation fails closed pending platform hardening; read-only
+    dry runs are available.
 
     \f
 
@@ -405,4 +411,146 @@ def verify(
         ) from None
     except KeyboardInterrupt:
         click.echo('Verification interrupted; no application writes performed.', err=True)
+        raise click.exceptions.Exit(130) from None
+
+
+@cli.command()
+@click.argument('mode', type=click.Choice(['fresh']))
+@click.option('--origin', type=str, help='Plaintext destination; CLI overrides OBFUSCIDIAN_ORIGIN_VAULT.')
+@click.option('--mirror', type=str, help='Existing encrypted source; CLI overrides OBFUSCIDIAN_MIRROR_VAULT.')
+@click.option('--key', type=str, help='Existing external key; conflicts with --alias/--keydir.')
+@click.option('--alias', type=str, help='Key alias; CLI overrides environment key selectors.')
+@click.option('--keydir', type=str, help='Alias directory; CLI overrides OBFUSCIDIAN_KEY_DIR, then home.')
+@click.option('--preserve-config', is_flag=True, help='Leave root .obsidian in place, including its absence.')
+@click.option('--non-interactive', is_flag=True, help='Never prompt; does not imply --yes.')
+@click.option('--yes', is_flag=True, help='Consent to plaintext replacement and explicit recovery; safety checks still apply.')
+@click.option('--dry-run', is_flag=True, help='Verify and plan read-only; create no plaintext, directories or locks.')
+@click.option('--recover', is_flag=True, help='Explicitly recover old plaintext before replanning and retrying fresh restore.')
+@click.option('--verbose', is_flag=True, help='Show escaped authenticated relative names and sensitive recovery locations.')
+def unshroud(
+    mode: str,
+    origin: str | None,
+    mirror: str | None,
+    key: str | None,
+    alias: str | None,
+    keydir: str | None,
+    preserve_config: bool,
+    non_interactive: bool,
+    yes: bool,
+    dry_run: bool,
+    recover: bool,
+    verbose: bool,
+) -> None:
+    """Restore a complete verified snapshot with retained sensitive plaintext rollback.
+
+    MIRROR is the encrypted source and ORIGIN is the plaintext destination.
+    Authenticate every object and validate target names before staging plaintext.
+    Replace old payload after consent; preserve root .git/.gitignore in place.
+    --preserve-config leaves root .obsidian unchanged, including its absence.
+    Other old files, including excluded files, move to external plaintext rollback.
+    Nested repositories and unsafe destinations are refused. A merge backup can
+    restore stale/deleted notes. Only the destination's final component may be absent.
+
+    Dry run never creates plaintext, destinations, locks or recovery artifacts.
+    --recover conflicts with --dry-run. Non-interactive replacement/recovery
+    requires --yes. Terminal output redacts paths unless interactive or verbose.
+    Timestamp limitations produce warnings; exact bytes and structure are required.
+    Git merge restore and logging remain unavailable. Native Windows writes fail
+    closed pending platform hardening; read-only dry runs remain available.
+
+    \f
+
+    .. versionadded:: 1.0.0
+
+    :param mode: Required fresh mode; Git merge restore is deferred.
+    :param origin: Explicit plaintext destination or environment fallback.
+    :param mirror: Explicit encrypted source or environment fallback.
+    :param key: Explicit external selected key path.
+    :param alias: Explicit key alias.
+    :param keydir: Alias lookup directory.
+    :param preserve_config: Preserve root Obsidian configuration in place.
+    :param non_interactive: Disable prompts and implicit path disclosure.
+    :param yes: Explicit replacement/recovery consent.
+    :param dry_run: Verify and plan without application writes.
+    :param recover: Recover the proven previous state before retrying.
+    :param verbose: Permit escaped names and private recovery locations.
+    :returns: No value; reports verified counts, publication and retention.
+    :raises click.UsageError: Invalid, missing, conflicting or unsafe configuration.
+    :raises click.ClickException: Integrity, consent, I/O, publication or recovery failure.
+    """
+    interactive = _is_interactive(non_interactive)
+    try:
+        if recover and dry_run:
+            raise _ConfigurationError('--recover cannot be combined with --dry-run.')
+        destination, source = config._resolve_vault_paths(origin=origin, mirror=mirror)
+        if interactive:
+            if destination is None:
+                destination = config._expand_path(_prompt_backup('Origin destination'), '--origin')
+            if source is None:
+                source = config._expand_path(_prompt_backup('Mirror source'), '--mirror')
+        if source is None or destination is None:
+            raise _ConfigurationError('Select --origin and --mirror or their OBFUSCIDIAN_ORIGIN_VAULT/MIRROR_VAULT variables.')
+        selected_key = config._resolve_key_path(
+            key=key,
+            alias=alias,
+            keydir=keydir,
+            alias_prompt=(lambda: _prompt_alias(generation=False)) if interactive else None,
+        )
+        if recover:
+            recovered = restore._recover_restore(
+                destination,
+                source,
+                selected_key,
+                preserve_config=preserve_config,
+                yes=yes,
+                non_interactive=not interactive,
+                prompt=(lambda: _prompt_backup('Recover the previous plaintext state before retrying?', confirmation=True))
+                if interactive
+                else None,
+            )
+            click.echo('Previous state recovered; replanning fresh restore.')
+            _show_retained(recovered, show_paths=interactive or verbose)
+        plan = restore._plan_restore(destination, source, selected_key, preserve_config=preserve_config)
+        for warning in plan.warnings:
+            click.echo(f'Warning: {warning}', err=True)
+        click.echo(
+            f'Completely verified snapshot; restoring {len(plan.files)} files, {len(plan.directories)} directories, '
+            f'{sum(r.size for r in plan.files)} plaintext bytes.'
+        )
+        if preserve_config:
+            click.echo('Root Obsidian configuration preserved; backup configuration is verified and skipped.')
+        if verbose:
+            for record in (*plan.directories, *plan.files):
+                click.echo(f'Restore entry: {record.path!r}')
+        result = restore._publish_restore(
+            plan,
+            yes=yes,
+            non_interactive=not interactive,
+            dry_run=dry_run,
+            prompt=(
+                lambda: _prompt_backup('Replace existing plaintext contents and retain sensitive rollback?', confirmation=True)
+            )
+            if interactive
+            else None,
+        )
+        if dry_run:
+            click.echo(
+                f'Dry run: {plan.transaction.required_bytes} staged bytes estimated; no files or transaction artifacts created.'
+            )
+        else:
+            click.echo(
+                'Fresh plaintext snapshot published; encrypted mirror and root Git controls preserved. '
+                'No Git operations performed.'
+            )
+            _show_retained(result, show_paths=interactive or verbose)
+    except _ConfigurationError as error:
+        raise click.UsageError(str(error)) from None
+    except _OperationalError as error:
+        if isinstance(error, _TransactionError):
+            raise click.ClickException(f'{error} Retained restore artifacts contain sensitive plaintext.') from None
+        raise click.ClickException(str(error)) from None
+    except (OSError, MemoryError):
+        raise click.ClickException('Restore could not complete; inspect pending recovery before retrying.') from None
+    except KeyboardInterrupt:
+        click.echo('Restore interrupted; retained sensitive plaintext artifacts may require --recover before retrying.', err=True)
         raise click.exceptions.Exit(130) from None

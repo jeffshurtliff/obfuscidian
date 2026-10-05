@@ -44,6 +44,7 @@ def artifacts(pytestconfig: pytest.Config, tmp_path_factory: pytest.TempPathFact
             'TRANSACTIONS.md',
             'BACKUP.md',
             'VERIFY.md',
+            'RESTORE.md',
         ):
             shutil.copy2(root / 'docs' / name, source / 'docs' / name)
         # Deliberately seed obvious synthetic private/scratch content, never real vault data.
@@ -116,6 +117,7 @@ def test_artifact_contents(artifacts: tuple[Path, Path]) -> None:
         'transactions.py',
         'backup.py',
         'verification.py',
+        'restore.py',
     }
     with zipfile.ZipFile(wheel) as archive:
         prefix = 'obfuscidian-1.0.0.dev0.dist-info/'
@@ -145,6 +147,7 @@ def test_artifact_contents(artifacts: tuple[Path, Path]) -> None:
                 'docs/TRANSACTIONS.md',
                 'docs/BACKUP.md',
                 'docs/VERIFY.md',
+                'docs/RESTORE.md',
             )
         }
         metadata_file = archive.extractfile(prefix + 'PKG-INFO')
@@ -338,6 +341,29 @@ def test_installation_entry_points(
                 ],
                 outside,
             )
+            # Both installed entry points reconstruct merge-retained history and binary bytes.
+            restored = (tmp_path / f'{mirror.name}-restored').resolve()
+            restore_arguments = [
+                'unshroud',
+                'fresh',
+                '--origin',
+                str(restored),
+                '--mirror',
+                str(mirror),
+                '--key',
+                str(key),
+                '--non-interactive',
+            ]
+            _run([*entry_point, 'unshroud', '--help'], outside)
+            preview = _run([*entry_point, *restore_arguments, '--dry-run'], outside)
+            assert 'Dry run:' in preview.stdout and not restored.exists()
+            restored_result = _run([*entry_point, *restore_arguments], outside)
+            assert 'Plaintext recovery data is sensitive' in restored_result.stdout
+            assert str(restored) not in restored_result.stdout
+            assert (restored / 'note.md').read_bytes() == (restored / 'renamed.md').read_bytes()
+            assert (restored / 'note.md').read_bytes() == b'SYNTHETIC INSTALLED NOTE\r\n'
+            assert (restored / 'attachment.bin').read_bytes() == bytes(range(256))
+            assert (restored / 'empty').is_dir()
             (origin / 'renamed.md').rename(origin / 'note.md')
         assert (origin / 'note.md').read_bytes() == b'SYNTHETIC INSTALLED NOTE\r\n'
     if wheelhouse is not None:

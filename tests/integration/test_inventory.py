@@ -262,12 +262,12 @@ def test_external_key_hardlink(vault: Path, alias_name: str) -> None:
 
 
 def test_only_implemented_commands_exposed() -> None:
-    """Keep restore gated while exposing complete backup and read-only verification."""
+    """Expose complete fresh restore while keeping Git merge restore gated."""
     runner = CliRunner()
-    assert set(cli.commands) == {'keygen', 'shroud', 'verify'}
+    assert set(cli.commands) == {'keygen', 'shroud', 'unshroud', 'verify'}
     for command in ('unshroud',):
-        result = runner.invoke(cli, [command])
-        assert result.exit_code == 2 and 'No such command' in result.output
+        result = runner.invoke(cli, [command, 'merge'])
+        assert result.exit_code == 2 and 'Invalid value' in result.output
     assert runner.invoke(cli, ['shroud', 'merge']).exit_code == 2
 
 
