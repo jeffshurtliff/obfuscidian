@@ -63,6 +63,11 @@ include = [
     { path = "docs/RESTORE.md", format = "sdist" },
     { path = "docs/CLI.md", format = "sdist" },
     { path = "docs/PLATFORMS.md", format = "sdist" },
+    { path = "docs/SECURITY.md", format = "sdist" },
+    { path = "docs/TROUBLESHOOTING.md", format = "sdist" },
+    { path = "docs/getting-started/installation.md", format = "sdist" },
+    { path = "docs/getting-started/tutorial.md", format = "sdist" },
+    { path = "SECURITY.md", format = "sdist" },
 ]
 # Use a small package boundary, plus explicit exclusions for private/generated content.
 exclude = [
@@ -70,6 +75,9 @@ exclude = [
     "tempCodeRunnerFile.py", "**/tempCodeRunnerFile.py", "**/__pycache__", "**/*.pyc",
     "**/.DS_Store", "**/._*", ".venv", "dist", "build", "docs/_build",
 ]
+
+[tool.poetry.group.docs]
+optional = true
 
 [tool.ruff]
 line-length = 130
@@ -103,4 +111,9 @@ dev = [
     "bandit (>=1.8,<2)",
     "twine (>=6.2,<7)",
     "poetry-core (>=2.2,<3) ; python_version >= \"3.12\" and python_version < \"4.0\""
+]
+docs = [
+    "sphinx (>=8,<10)",
+    "myst-parser (>=4,<6)",
+    "pydata-sphinx-theme (>=0.16,<0.23)"
 ]

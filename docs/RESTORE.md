@@ -1,23 +1,14 @@
 # Plaintext restore
 
-Thread 09 adds `unshroud fresh`. The encrypted mirror is the source; the origin
-is the plaintext destination. Thread 10 adds additive Git merge restore and is
-reviewed and merged/pushed into `origin/main`; issue #10 is closed as completed.
-Linux CI passed on Python 3.12–3.14; see the
-[Git merge restore completion record](../dev/IMPLEMENTATION_PLAN.md#thread-10--git-merge-restore-completion-record-5-october-2026).
-Thread 11 is complete, reviewed and merged/pushed, with issue #11 closed and
-Linux CI passing on Python 3.12–3.14; see the [CLI contract](CLI.md).
-Thread 12 is complete, reviewed and merged/pushed; issue #12 is closed as
-completed. Linux/macOS/Windows CI passed on Python 3.12–3.14 with the documented
-write/append limitations. See [platform validation](PLATFORMS.md).
+`unshroud fresh` reconstructs a complete authenticated snapshot into the plaintext
+origin. `unshroud merge` reconstructs an additive union with a local Git base in
+a separate uncommitted review worktree. The encrypted mirror stays read-only.
 
-Thread 09 is reviewed and merged/pushed into `origin/main`; issue #9 is closed
-as completed. Linux CI passed on Python 3.12/3.13; Python 3.14 was canceled
-before executing any steps because no hosted runner acquired the job. The
-maintainer explicitly accepted that validation gap for closure. See the
-[completion record](../dev/IMPLEMENTATION_PLAN.md#thread-09--fresh-restore-completion-record-5-october-2026).
-The Thread 12 matrix passed with native Windows mutation still refused;
-see [platform validation](PLATFORMS.md) for the tested behavior and retained limits.
+Rehearse into an absent destination with the
+[synthetic tutorial](getting-started/tutorial.md) before replacing real data.
+Existing plaintext moves to sensitive private rollback during fresh replacement.
+[Platform validation](PLATFORMS.md) records the passing OS/Python matrix and
+intentional Windows mutation/recovery refusal.
 
 ## Usage
 
@@ -260,6 +251,7 @@ decision before retrying with new names. Journaled publication attempts
 rollback to the new worktree's prior state under tested ordinary failures;
 it does not guarantee atomic Git/filesystem publication or power-loss recovery.
 Native Windows writes remain fail-closed pending native publication/ACL
-implementation. Thread 10 tests use synthetic temporary repositories; local macOS checks and hosted Linux CI on
-Python 3.12–3.14 passed. Broader supported-platform and universal filesystem
-validation remain deferred.
+implementation. Synthetic temporary-repository tests and the Thread 12
+Linux/macOS/Windows Python 3.12–3.14 matrix passed with these retained limits;
+see [platform validation](PLATFORMS.md). Universal filesystem, cloud-sync and
+power-loss guarantees are not established by that matrix.

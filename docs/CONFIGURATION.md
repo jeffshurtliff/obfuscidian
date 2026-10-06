@@ -51,9 +51,8 @@ spaces using your shell's quoting syntax. Key directories must already exist;
 key paths and every parent component must be free of symlinks/junctions.
 Key loading rejects special files and missing files without fallback.
 
-The following matrix is implemented in the reusable loader resolver for future
-vault commands. Those commands and their `--key`/`--alias`/`--keydir` options
-are not exposed yet:
+The following precedence applies to `shroud`, `verify` and `unshroud` with
+`--key`, `--alias` and `--keydir`:
 
 | Selection | Result |
 | --- | --- |
@@ -76,8 +75,8 @@ existing key bytes or permissions.
 
 CLI origin/mirror paths also override `OBFUSCIDIAN_ORIGIN_VAULT` and
 `OBFUSCIDIAN_MIRROR_VAULT`, even when invalid. The resolver expands these paths
-without creating or inspecting vaults. Vault overlap, key placement inside
-vaults, and inventory preflight enforcement belong to Thread 03.
+without creating or inspecting vaults. Vault commands then reject overlap, key placement inside either vault and
+unsafe inventory paths before any write.
 
 ## Permissions and custody
 
@@ -124,3 +123,31 @@ redacted by default; key target locations never enter them. `--log-file` is
 rejected with dry run, and `--log-paths` requires an explicit log file. See the
 [shared CLI contract](CLI.md). `--recover` and
 `--yes` do not apply to keygen.
+
+## Environment examples
+
+Set paths to separate existing synthetic locations. POSIX shell:
+
+```sh
+export OBFUSCIDIAN_MIRROR_VAULT='./mirror'
+export OBFUSCIDIAN_KEY_PATH='./keys/obfuscidian-demo.key'
+obfuscidian verify --non-interactive
+unset OBFUSCIDIAN_MIRROR_VAULT OBFUSCIDIAN_KEY_PATH
+```
+
+Windows PowerShell:
+
+```powershell
+$env:OBFUSCIDIAN_MIRROR_VAULT = 'C:\Demo\mirror'
+$env:OBFUSCIDIAN_KEY_PATH = 'C:\Demo\keys\obfuscidian-demo.key'
+obfuscidian verify --non-interactive
+Remove-Item Env:OBFUSCIDIAN_MIRROR_VAULT
+Remove-Item Env:OBFUSCIDIAN_KEY_PATH
+```
+
+These examples verify a pre-existing complete mirror. Alias selection can use
+`OBFUSCIDIAN_KEY_ALIAS` and `OBFUSCIDIAN_KEY_DIR` instead; do not set
+`KEY_PATH` when you intend alias selection. `OBFUSCIDIAN_ORIGIN_VAULT` selects
+the source for backup and plaintext destination for restore. No environment
+variable contains the key bytes. Windows mutation remains refused. Start with
+the [complete synthetic rehearsal](getting-started/tutorial.md).

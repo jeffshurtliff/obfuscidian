@@ -69,7 +69,7 @@ not compared because read access may update it; no helper sets timestamps,
 permissions, or source content.
 
 These checks provide best-effort change detection, not an atomic filesystem
-snapshot. Pause editing, Obsidian sync, and other writers during future operations.
+snapshot. Pause editing, Obsidian sync, and other writers during backup, restore and recovery.
 No implementation can promise to detect changes that leave all observed state
 identical. Native Windows reads currently rely on pre/post-I/O path/identity
 checks. Thread 12 passed the OS/Python matrix while retaining this observation
@@ -100,16 +100,16 @@ token_bytes = 4 * ceil((57 + padded) / 3)
 
 Oversized included files are refused from metadata without reading/allocating
 file contents. The resource helper requires the **actual serialized manifest
-plaintext size**, which Thread 04 will provide; it does not guess a complete
+plaintext size**, provided by the v1 manifest serializer; it does not guess a complete
 manifest from inventory counts. It also accepts explicit retained ciphertext
-and additional rollback-copy bytes for later transaction planning.
+and additional rollback-copy bytes for transaction planning.
 
 Staging totals include all included object tokens, the manifest token, and any
 explicit retained ciphertext. Required free bytes add explicitly planned rollback
 copies; already allocated destination data is not charged again. Read-only
 free-space/access checks operate on an existing chosen parent without reserving
 space. These are payload estimates: filesystem allocation, journals, metadata,
-and later changes to available space must be accounted for by Thread 05.
+and later changes to available space are accounted for by transaction planning.
 Thread 05 implements [safe staging and publication primitives](TRANSACTIONS.md).
 Callers must still supply complete staging estimates, authenticate format data,
 and recheck source inventory. Thread 06 supplies those checks for `shroud fresh`.

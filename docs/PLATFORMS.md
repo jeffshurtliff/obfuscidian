@@ -9,15 +9,15 @@ artifact validation. Linux/macOS passed **1265 tests with 7 native Windows skips
 per job; Windows passed **709 tests with 563 platform skips** per job.
 Reported coverage was 91% on Linux/macOS and 66% on Windows; skipped mutation
 behavior is not validated by those figures.
-See the [completion record](../dev/IMPLEMENTATION_PLAN.md#thread-12--cross-platform-hardening-completion-record-6-october-2026)
+See the [completion record](https://github.com/jeffshurtliff/obfuscidian/blob/main/dev/IMPLEMENTATION_PLAN.md#thread-12--cross-platform-hardening-completion-record-6-october-2026)
 for commit alignment, individual jobs, closure and retained limitations.
 
 Earlier records preserve the sequence of investigations and local validation:
-[initial handoff](../dev/IMPLEMENTATION_PLAN.md#thread-12--cross-platform-hardening-handoff-5-october-2026),
-[LF checkout](../dev/IMPLEMENTATION_PLAN.md#thread-12--windows-ci-follow-up-6-october-2026),
-[scan identities](../dev/IMPLEMENTATION_PLAN.md#thread-12--windows-identity-follow-up-6-october-2026),
-[descriptor timestamps](../dev/IMPLEMENTATION_PLAN.md#thread-12--windows-descriptor-follow-up-6-october-2026),
-and [test fixtures](../dev/IMPLEMENTATION_PLAN.md#thread-12--windows-test-follow-up-6-october-2026).
+[initial handoff](https://github.com/jeffshurtliff/obfuscidian/blob/main/dev/IMPLEMENTATION_PLAN.md#thread-12--cross-platform-hardening-handoff-5-october-2026),
+[LF checkout](https://github.com/jeffshurtliff/obfuscidian/blob/main/dev/IMPLEMENTATION_PLAN.md#thread-12--windows-ci-follow-up-6-october-2026),
+[scan identities](https://github.com/jeffshurtliff/obfuscidian/blob/main/dev/IMPLEMENTATION_PLAN.md#thread-12--windows-identity-follow-up-6-october-2026),
+[descriptor timestamps](https://github.com/jeffshurtliff/obfuscidian/blob/main/dev/IMPLEMENTATION_PLAN.md#thread-12--windows-descriptor-follow-up-6-october-2026),
+and [test fixtures](https://github.com/jeffshurtliff/obfuscidian/blob/main/dev/IMPLEMENTATION_PLAN.md#thread-12--windows-test-follow-up-6-october-2026).
 Their pending-CI statements are historical; the completion record supersedes them.
 
 Repository `.gitattributes` keeps detected text at LF, matching Ruff, even with
@@ -26,7 +26,7 @@ Compatibility inputs under `tests/fixtures/` bypass line-ending conversion so
 their exact bytes remain intact. These checkout rules apply to this repository;
 backup/restore still preserves vault bytes independently of Git text conversion.
 
-Thread 13 documentation tooling and Thread 14 release preparation are not started.
+Thread 13 adds local documentation tooling; Thread 14 release preparation is not started.
 
 ## Existing platform boundaries
 

@@ -1,17 +1,11 @@
 # CLI output, privacy and automation
 
-Thread 11 completes the shared CLI contract and is reviewed and merged/pushed
-into `origin/main`; issue #11 is closed as completed. Linux CI passed on Python
-3.12–3.14; see the
-[completion record](../dev/IMPLEMENTATION_PLAN.md#thread-11--cli-polish-completion-record-5-october-2026).
-Thread 12 is complete, reviewed and merged/pushed; issue #12 is closed as
-completed. Linux/macOS/Windows CI passed on Python 3.12–3.14 with the documented
-write/append limitations. See [platform validation](PLATFORMS.md).
-
-Backup and restore semantics remain those in the [backup](BACKUP.md),
-[restore](RESTORE.md), [verification](VERIFY.md) and
-[configuration](CONFIGURATION.md) guides. Native Windows vault mutation remains
-fail-closed after Thread 12; passing CI does not enable Windows writes.
+The shared CLI contract covers output, private logs, prompts and exit codes.
+For command syntax see the [command reference](reference/cli.md); operation
+semantics are in the [backup](BACKUP.md), [restore](RESTORE.md),
+[verification](VERIFY.md) and [configuration](CONFIGURATION.md) guides.
+[Platform validation](PLATFORMS.md) distinguishes passing CI from native Windows
+vault mutation and existing-log append, which remain refused.
 
 ## Discovery and option placement
 

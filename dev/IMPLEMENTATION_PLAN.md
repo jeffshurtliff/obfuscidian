@@ -28,7 +28,8 @@ is closed as completed and Linux CI passed on Python 3.12–3.14. Thread 12 is
 complete, reviewed and merged/pushed into `origin/main`; issue #12 is closed
 as completed. All nine Linux/macOS/Windows jobs passed on Python 3.12–3.14.
 See the Thread 12 completion record below for evidence and retained limitations.
-Threads 13–14 remain not started. See the Thread 11 completion record below. See the Thread 10
+Thread 13 is implemented locally, pending maintainer review; Thread 14 remains
+not started. See the Thread 13 handoff record below. See the Thread 11 completion record below. See the Thread 10
 completion record below and Thread 09 completion record for evidence and limits.
 
 **Intended first stable release:** `1.0.0` (current metadata: `1.0.0.dev0`).
@@ -561,7 +562,7 @@ commits, publication, or PRs are implied. Update status only after acceptance cr
 | 10 | Git merge restore | 09 | [#10](https://github.com/jeffshurtliff/obfuscidian/issues/10) | Complete; reviewed/merged; Linux CI passed |
 | 11 | CLI polish | 10 | [#11](https://github.com/jeffshurtliff/obfuscidian/issues/11) | Complete; reviewed/merged; Linux CI passed |
 | 12 | Cross-platform hardening | 11 | [#12](https://github.com/jeffshurtliff/obfuscidian/issues/12) | Complete; reviewed/merged; nine-job OS/Python matrix passed |
-| 13 | Documentation and contribution guidance | 12; incremental docs accompany earlier threads | [#13](https://github.com/jeffshurtliff/obfuscidian/issues/13) | Not started |
+| 13 | Documentation and contribution guidance | 12; incremental docs accompany earlier threads | [#13](https://github.com/jeffshurtliff/obfuscidian/issues/13) | Implemented locally; review pending |
 | 14 | Release preparation | 13 | [#14](https://github.com/jeffshurtliff/obfuscidian/issues/14) | Not started |
 
 All fourteen issues are assigned to `jeffshurtliff` and belong to the
@@ -1109,7 +1110,10 @@ append refusal pending native file ownership/DACL validation.
 **Goal/deliverable:** Coherent, buildable user/contributor/security documentation
 that describes completed behavior rather than the template.
 **Depends on:** 12 for completion; earlier threads add incremental help/docs.
-**Status:** Not started.
+**Status:** Implemented locally; maintainer review pending. Issue #13 remains
+open. Strict Sphinx and local links pass; optional external linkcheck is limited
+by GitHub rate limiting/anchor rendering. See the Thread 13 handoff below.
+Thread 14 remains not started.
 
 1. Add Poetry `docs` dependencies and Sphinx/reST/MyST with `pydata_sphinx_theme`.
    Adapt the structure of SalesPyForce/PyDPlus: overview/getting started, CLI
@@ -3301,7 +3305,50 @@ consistency, scope/privacy, LF and diff-whitespace checks were performed.
 No application/test/workflow/dependency/version changes were made, and no new
 local test, build, coverage, real-vault or privileged filesystem run was needed
 for this documentation-only update. Sphinx remains unconfigured Thread 13 work.
+
 The status documents and this completion record are local, unstaged/uncommitted
 on `main` at `dc56009`; they are not yet published. No stage, commit, merge,
 push, PR, tag, release or publication action was performed. The already-merged
 implementation and hosted results are separate from these uncommitted docs.
+
+### Thread 13 local implementation handoff — 6 October 2026
+
+All four implementation tasks are completed locally; maintainer review is pending and this issue remains open. Thread 14 remains not started.
+
+Deliverables:
+- Optional locked Sphinx 9.1.0 / MyST 5.1.0 / PyData 0.22.0 tooling, reST navigation and Markdown guides in `docs/`.
+- Dark first-visit mode, working light/system selector with preference persistence, an optimized proportional transparent horizontal logo and restrained violet/cyan styling. The original logo artwork is unchanged.
+- Installation from checkout through pip/pipx, POSIX and Windows examples, command reference, revised current-behavior guides, synthetic restore tutorial, security policy/threat limits, troubleshooting/recovery/plaintext cleanup and contributor/docs maintenance guidance.
+- `tests/integration/test_docs_tutorial.py` executes the exact tutorial block with fake data and independently checks six file byte streams, Unicode names, hidden/settings/empty data and complete directories.
+- `.github/scripts/check_docs.py` checks local HTML links, assets and fragments offline. README, CONTRIBUTING, AGENTS, changelog and roadmap are synchronized.
+
+Existing file links identify source locations, not published new changes:
+[README](https://github.com/jeffshurtliff/obfuscidian/blob/main/README.md),
+[configuration](https://github.com/jeffshurtliff/obfuscidian/blob/main/docs/CONFIGURATION.md),
+[restore](https://github.com/jeffshurtliff/obfuscidian/blob/main/docs/RESTORE.md),
+[contributing](https://github.com/jeffshurtliff/obfuscidian/blob/main/CONTRIBUTING.md),
+[changelog](https://github.com/jeffshurtliff/obfuscidian/blob/main/docs/CHANGELOG.md),
+[roadmap](https://github.com/jeffshurtliff/obfuscidian/blob/main/dev/IMPLEMENTATION_PLAN.md).
+
+Validation actually executed on local macOS / Python 3.12.7:
+- `poetry install --with dev,docs` and `poetry check --lock --strict`: passed. Docs are optional; runtime dependencies are unchanged. Shared dev dependency docutils resolves to 0.22.4 for Sphinx compatibility.
+- Ruff lint/format: passed, 86 files formatted. Bandit: no issues, two unchanged documented suppressions.
+- Full offline pytest: **1266 passed, 7 native Windows skips**. The tutorial round trip passed; empty terminal recovery containers are expected fresh behavior, not pending ownership.
+- `sphinx-build -W --keep-going -E -a -b html`: passed without warnings. **24 rendered HTML pages** passed local link/asset/fragment checks. Synthetic missing-asset/fragment checks correctly fail.
+- Changed/new Markdown source links, roadmap anchors, fences, privacy, Python model/date headers and diff whitespace: passed.
+- Isolated Chrome rendered landing/configuration/security/restore/tutorial in dark and light, plus a 390px mobile tutorial. Logo, code, tables, focus/skip link, search dialog, theme selector and saved preference checked; no page overflow.
+- axe-core 4.11.0 WCAG 2 A/AA and 2.1 A/AA audit: **zero violations across ten final desktop renders** after theme transitions settled. The command-key shortcut glyph requires manual contrast review; automated audit and visual review do not establish full assistive-technology compliance.
+- Fresh temporary wheel/sdist build and strict Twine checks: passed. Normal-suite offline artifact installs also passed.
+
+Limits/skipped checks:
+- Optional external Sphinx linkcheck did not complete successfully: initial sandbox DNS failure, then GitHub rate limiting and a GitHub-rendered roadmap-anchor lookup failure. It was stopped and not reported as passing. Source roadmap anchor targets were checked locally; accessible external project/CI/Fernet/Keep a Changelog/PyData pages were confirmed during the partial run.
+- No new hosted CI, native Windows/macOS alternative-Python run, pipx installation, live vault/cloud test, screen-reader audit or docs publication was performed. Existing Thread 12 matrix evidence remains distinct.
+- Native Windows vault mutation/recovery and existing-log append remain fail-closed. No application, cryptographic or backup-format behavior changed.
+
+Git status: **15 modified tracked files and 18 new files**, all unstaged/uncommitted on the pre-existing `docs/13-thread-13-introduce-sphinx-rest-myst-docs` branch at `e1e5cc2`. No branch creation, staging, commit, push, PR, merge, tag, release, publication or tool companion creation. Temporary synthetic Git histories are created only by the existing test suite.
+
+Next: maintainer review of Thread 13. Thread 14 release preparation requires a separate request; this task does not begin it.
+
+Start and final progress comments plus issue #13 checklist/handoff were synchronized
+through the authenticated GitHub CLI after connector write access returned 403.
+The issue remains open; labels, assignee and milestone are unchanged.

@@ -108,7 +108,7 @@ updates can use that token with a changed `mtime_ns`. Changed content at the
 same path keeps its ID and needs a new token. Renames receive new IDs; no rename
 inference or content deduplication is performed. Secure random ID generation
 retries collisions against the caller's complete reserved set before any write.
-Logical no-op planning and snapshot lifecycle orchestration remain later work.
+The [backup commands](BACKUP.md) implement logical no-op planning and snapshot lifecycle orchestration.
 
 Target path validation can use explicit case/Unicode/Windows/length rules and a
 destination prefix without creating or inspecting a destination. Portable
@@ -123,8 +123,9 @@ or rollback copies. Safe reads use inspected identities, POSIX anchored
 no-follow handles, bounded binary reads, and pre/post-read change checks. The
 managed namespace is checked again after all objects. Detected replacement,
 addition, deletion, or metadata/content changes abort; unrelated sibling changes
-do not. Reads may update filesystem access times. Windows uses inspection and
-identity rechecks; native Windows race/ACL/junction testing remains deferred.
+do not. Reads may update filesystem access times. Windows uses inspection and identity rechecks; Thread 12 tested native
+read-only, key ACL and junction refusal behavior while retaining mutation limits.
+See [platform validation](PLATFORMS.md).
 
 Fernet authenticates before exposing plaintext, uses AES-128-CBC and
 HMAC-SHA256, and exposes token timestamps. Whole-file encryption can use

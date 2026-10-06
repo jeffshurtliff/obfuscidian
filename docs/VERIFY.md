@@ -1,8 +1,11 @@
 # Read-only verification
 
-Thread 08 exposes `obfuscidian verify` through the same console and module
-entry points. It uses the complete [v1 validator](FORMAT.md), without changing
-the backup format or requiring an origin vault. [Fresh restore](RESTORE.md) also uses complete validation.
+`verify` authenticates the complete manifest and all required objects without
+application writes or repairs. The mirror stays unchanged. Keep its original
+key outside the mirror. Start with the
+[synthetic tutorial](getting-started/tutorial.md).
+
+## Usage and selection
 
 ```sh
 obfuscidian verify --help
@@ -18,6 +21,8 @@ the current directory; explicit invalid selectors never fall back or prompt for
 replacements. With terminal input, absent mirror and key-alias selectors prompt.
 `--non-interactive` or redirected input disables prompts. Origin configuration
 is ignored. A selected key inside the mirror is rejected.
+
+## Complete authentication and privacy
 
 Verification authenticates the manifest before parsing, checks the complete
 schema and safe relative paths, requires the exact object set, and checks
@@ -35,6 +40,8 @@ complete validation. Directory counts include empty directories and exclude
 the implicit root. Encrypted totals include the manifest and all objects.
 Neither mode prints absolute mirror/key paths, key bytes, hashes or content.
 Warnings and errors go to stderr, with redacted remediation guidance.
+
+## No-write behavior and failure
 
 Verification makes **no application writes** on success, failure or interrupt.
 It creates no missing paths, logs, locks, worktrees, staging/rollback copies or
@@ -74,19 +81,7 @@ is closed as completed. The
 [verified Linux CI run](https://github.com/jeffshurtliff/obfuscidian/actions/runs/37349183494)
 passed on Python 3.12–3.14 at commit `3d3425b`, with 903 tests passed and two
 native Windows skips in each job, plus three fully isolated artifact checks.
-See the [completion record](../dev/IMPLEMENTATION_PLAN.md#thread-08--read-only-verification-completion-record-5-october-2026)
+See the [completion record](https://github.com/jeffshurtliff/obfuscidian/blob/main/dev/IMPLEMENTATION_PLAN.md#thread-08--read-only-verification-completion-record-5-october-2026)
 for commit alignment and validation evidence. Thread 12 subsequently passed
 the Linux/macOS/Windows Python 3.12–3.14 matrix; see
 [platform validation](PLATFORMS.md) for the retained filesystem limits.
-
-Thread 09 is complete, reviewed and merged/pushed; see
-[fresh restore](RESTORE.md) for the accepted Python 3.14 CI gap. 
-
-Thread 10 is complete, reviewed and merged/pushed, with issue #10 closed and
-Linux CI passing on Python 3.12–3.14; see
-[additive Git merge restore](RESTORE.md#additive-git-merge-restore). 
-
-Thread 11 is complete, reviewed and merged/pushed, with issue #11 closed and
-Linux CI passing on Python 3.12–3.14; see the [CLI contract](CLI.md).
-Thread 12 is complete with issue #12 closed and all nine OS/Python jobs passing.
-Threads 13–14 remain **not started**.

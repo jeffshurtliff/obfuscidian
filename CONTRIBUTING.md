@@ -74,13 +74,15 @@ Thread 11 — CLI polish — is complete, reviewed and merged/pushed into
 Thread 12 is complete, reviewed and merged/pushed into `origin/main`; issue #12
 is closed as completed. Linux/macOS/Windows CI passed on Python 3.12–3.14.
 Native Windows mutation/recovery and existing-log append still fail closed.
-See [platform validation](docs/PLATFORMS.md). Threads 13–14 remain not started.
+See [platform validation](docs/PLATFORMS.md). Thread 13 documentation tooling
+is implemented locally, pending maintainer review;
+Thread 14 remains not started.
 
 The test workflow targets Linux/macOS/Windows on Python 3.12–3.14;
 all nine jobs passed in the [Thread 12 completion run](https://github.com/jeffshurtliff/obfuscidian/actions/runs/37519004246).
 
-Thread 13 introduces Sphinx/reST/MyST and `pydata_sphinx_theme`. Recheck actual
-metadata, workflows, and roadmap evidence as implementation advances.
+Thread 13 adds optional locked Sphinx/reST/MyST and `pydata_sphinx_theme` tooling.
+Build and inspect locally; no documentation publication or hosting is configured.
 
 ## Development workflow
 
@@ -216,18 +218,20 @@ through an explicit dependency path instead; report these two validation modes
 distinctly.
 Do not validate old artifacts accumulated in `dist/`. The sdist includes the
 lockfile and changelog; wheel content is limited to application and distribution
-metadata. Docs build tooling remains deferred to Thread 13.
+metadata. Docs build tooling uses the optional `docs` group.
 
 Use Poetry to add dependencies and regenerate `poetry.lock`; never edit the
 lockfile by hand. Justify new runtime dependencies and maintain one authoritative
 runtime dependency declaration. Generated package metadata, builds, caches,
 coverage reports, and rendered docs are not hand-edited source files.
 
-After Thread 13 adds docs tooling:
+Documentation setup and strict local checks:
 
 ```sh
 poetry install --with dev,docs
 poetry run sphinx-build -W --keep-going -E -a -b html docs docs/_build/html
+poetry run python .github/scripts/check_docs.py docs/_build/html
+poetry run pytest -q tests/integration/test_docs_tutorial.py
 ```
 
 Run `git diff --check` and inspect new, untracked files as well. Documentation-only
@@ -235,8 +239,7 @@ work needs link, consistency, privacy, and whitespace checks; it does not requir
 installing dependencies or changing application code. Report missing tools and
 unexecuted checks accurately. The CI runs Poetry checks, Ruff,
 pytest/coverage, Bandit, and fresh artifact validation on Linux/macOS/Windows
-and Python 3.12–3.14. It ignores several documentation paths. Strict Sphinx
-builds remain Thread 13; configured CI is not evidence of hosted success.
+and Python 3.12–3.14. It ignores several documentation paths. Sphinx builds are local Thread 13 checks; configured CI is not evidence of hosted success.
 
 ## Code standards
 
@@ -363,6 +366,8 @@ security certification, remote privacy validation, or publication without eviden
 
 ### Security reporting
 
+See [SECURITY.md](SECURITY.md) and [the threat-model guide](docs/SECURITY.md).
+
 For suspected vulnerabilities, use GitHub's Security tab **Report a vulnerability**
 if private reporting is enabled. Availability is not assumed. If unavailable,
 contact the maintainer privately at the public maintainer email in
@@ -390,10 +395,10 @@ and backup-format version are separate contracts. Version promotion requires
 an explicit request; do not bump versions incidentally.
 
 Use single backticks for Markdown/MyST inline code. Double backticks belong in
-`.rst` files and reST docstrings. Thread 13 will establish the Sphinx/reST/MyST
-docs organization and PyData theme. Do not copy private content or unrelated
+`.rst` files and reST docstrings. Thread 13 establishes Sphinx/reST/MyST
+docs organization and the PyData theme with a dark default and reader-selectable light mode. Do not copy private content or unrelated
 extensions from reference projects. Check local links and examples without
-claiming a strict Sphinx build before its tooling exists.
+claiming unexecuted validation. See [docs maintenance](docs/maintainers/documentation.md).
 
 ## Commits, pull requests, and releases
 
