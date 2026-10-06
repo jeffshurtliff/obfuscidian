@@ -6,7 +6,7 @@
 Obfuscidian is a Python CLI being developed to create encrypted Obsidian vault
 backups. The current CLI provides help, version information, secure key
 generation, `shroud fresh|merge`, read-only `verify`, and `unshroud fresh|merge`.
-Git merge restore and optional private operational logging are available locally.
+Git merge restore and optional private operational logging are available.
 This repository does not yet claim a published package or completed platform validation.
 
 ## Project status
@@ -73,8 +73,13 @@ is closed as completed. Linux CI passed on Python 3.12–3.14. See
 [merge restore](docs/RESTORE.md#additive-git-merge-restore) and the
 [completion record](dev/IMPLEMENTATION_PLAN.md#thread-10--git-merge-restore-completion-record-5-october-2026).
 
-Thread 11 is **implemented locally, pending maintainer review**; see the
-[CLI contract](docs/CLI.md). Broader OS validation is deferred to Thread 12;
+Thread 11 — CLI polish — is complete, reviewed and merged/pushed into
+`origin/main`; [issue #11](https://github.com/jeffshurtliff/obfuscidian/issues/11)
+is closed as completed. Linux CI passed on Python 3.12–3.14. See the
+[CLI contract](docs/CLI.md) and the
+[completion record](dev/IMPLEMENTATION_PLAN.md#thread-11--cli-polish-completion-record-5-october-2026).
+
+Thread 12 remains **not started**; broader OS validation is deferred and
 native Windows mutation fails closed.
 
 ## Installation from source

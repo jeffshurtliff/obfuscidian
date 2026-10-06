@@ -5,7 +5,9 @@ is the plaintext destination. Thread 10 adds additive Git merge restore and is
 reviewed and merged/pushed into `origin/main`; issue #10 is closed as completed.
 Linux CI passed on Python 3.12–3.14; see the
 [Git merge restore completion record](../dev/IMPLEMENTATION_PLAN.md#thread-10--git-merge-restore-completion-record-5-october-2026).
-Thread 11 is **implemented locally, pending maintainer review**; see the [CLI contract](CLI.md).
+Thread 11 is complete, reviewed and merged/pushed, with issue #11 closed and
+Linux CI passing on Python 3.12–3.14; see the [CLI contract](CLI.md).
+Thread 12 remains **not started**.
 
 Thread 09 is reviewed and merged/pushed into `origin/main`; issue #9 is closed
 as completed. Linux CI passed on Python 3.12/3.13; Python 3.14 was canceled

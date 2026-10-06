@@ -10,7 +10,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Thread 11 shared CLI contract: static phase progress, private JSON lines logs, and independent terminal/log path disclosure.
 - Optional `--log-file`/`--log-paths` on write commands with custody, permissions, link and identity validation before mutation.
 - Privacy/UX tests for streams, logs, malformed arguments, control-character names, no-ops, recovery and exit categories.
-- Installed console/module command/help/error/logging parity and shared CLI guidance; locally implemented pending review.
+- Installed console/module command/help/error/logging parity and shared CLI guidance; Thread 11 reviewed/merged,
+  with green Linux CI and issue #11 completed.
 
 - `unshroud merge` with clean-origin (including ignored data), local base/ref, Git-directory and new-output validation.
 - Private authenticated additive reconstruction before isolated branch/worktree creation; restored differences remain uncommitted.

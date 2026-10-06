@@ -1,6 +1,11 @@
 # CLI output, privacy and automation
 
-Thread 11 completes the shared CLI contract locally, pending maintainer review.
+Thread 11 completes the shared CLI contract and is reviewed and merged/pushed
+into `origin/main`; issue #11 is closed as completed. Linux CI passed on Python
+3.12–3.14; see the
+[completion record](../dev/IMPLEMENTATION_PLAN.md#thread-11--cli-polish-completion-record-5-october-2026).
+Thread 12 remains **not started**.
+
 Backup and restore semantics remain those in the [backup](BACKUP.md),
 [restore](RESTORE.md), [verification](VERIFY.md) and
 [configuration](CONFIGURATION.md) guides. Native Windows vault mutation remains

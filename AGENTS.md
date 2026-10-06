@@ -92,7 +92,7 @@ See [fresh backup](docs/BACKUP.md) and the roadmap completion record for
 validation and platform limits. `shroud fresh` and additive `shroud merge` are
 available; `verify` performs complete read-only validation. Fresh and additive
 Git merge restore are available; Thread 11 adds optional private operational
-logging locally.
+logging.
 
 Thread 07 — Merge backup — is complete, reviewed, and merged/pushed into
 `origin/main`; issue #7 is closed and Linux CI passed on Python 3.12–3.14.
@@ -114,9 +114,12 @@ Thread 10 — Git merge restore — is complete, reviewed and merged/pushed into
 3.12–3.14. See [merge restore](docs/RESTORE.md#additive-git-merge-restore) and the
 [completion record](dev/IMPLEMENTATION_PLAN.md#thread-10--git-merge-restore-completion-record-5-october-2026).
 
-Thread 11 is **implemented locally, pending maintainer review**. See
-[the CLI contract](docs/CLI.md). Native Windows mutation still fails closed
-pending Thread 12; Linux CI does not establish broader supported-platform validation.
+Thread 11 — CLI polish — is complete, reviewed and merged/pushed into
+`origin/main`; issue #11 is closed as completed. Linux CI passed on Python
+3.12–3.14. See [the CLI contract](docs/CLI.md) and the
+[completion record](dev/IMPLEMENTATION_PLAN.md#thread-11--cli-polish-completion-record-5-october-2026).
+Thread 12 remains **not started**. Native Windows mutation still fails closed;
+Linux CI does not establish broader supported-platform validation.
 
 Use Poetry 2.2 or newer, below 3.0, for development, dependencies, and packaging.
 Initial CI targets Linux/Python 3.12, 3.13, and 3.14; broader OS hardening belongs
