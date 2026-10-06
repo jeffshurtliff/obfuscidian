@@ -1,32 +1,26 @@
-# Platform hardening and validation
+# Supported environments and platform validation
 
-Thread 12 is complete, reviewed and merged/pushed into `origin/main`; issue #12
-is closed as completed under maintainer authorization. All nine Linux/macOS/
-Windows jobs passed on Python 3.12–3.14 in
+Backup and restore writes are implemented on Linux and macOS. Native Windows
+supports key creation, authenticated verification and read-only planning;
+vault mutation/recovery and existing-log append are refused. The table below
+distinguishes tested behavior from unavailable writes.
+
+## Validation evidence
+
+All nine Linux/macOS/Windows CI jobs passed on Python 3.12–3.14 in
 [Test run `37519004246`](https://github.com/jeffshurtliff/obfuscidian/actions/runs/37519004246)
 at `dc56009`. Each job passed style/security, offline tests/coverage and fresh
 artifact validation. Linux/macOS passed **1265 tests with 7 native Windows skips**
 per job; Windows passed **709 tests with 563 platform skips** per job.
 Reported coverage was 91% on Linux/macOS and 66% on Windows; skipped mutation
-behavior is not validated by those figures.
-See the [completion record](../dev/IMPLEMENTATION_PLAN.md#thread-12--cross-platform-hardening-completion-record-6-october-2026)
-for commit alignment, individual jobs, closure and retained limitations.
-
-Earlier records preserve the sequence of investigations and local validation:
-[initial handoff](../dev/IMPLEMENTATION_PLAN.md#thread-12--cross-platform-hardening-handoff-5-october-2026),
-[LF checkout](../dev/IMPLEMENTATION_PLAN.md#thread-12--windows-ci-follow-up-6-october-2026),
-[scan identities](../dev/IMPLEMENTATION_PLAN.md#thread-12--windows-identity-follow-up-6-october-2026),
-[descriptor timestamps](../dev/IMPLEMENTATION_PLAN.md#thread-12--windows-descriptor-follow-up-6-october-2026),
-and [test fixtures](../dev/IMPLEMENTATION_PLAN.md#thread-12--windows-test-follow-up-6-october-2026).
-Their pending-CI statements are historical; the completion record supersedes them.
+behavior is not validated by those figures. These are the recorded results for
+that commit, rather than a claim about every later change.
 
 Repository `.gitattributes` keeps detected text at LF, matching Ruff, even with
 Windows `core.autocrlf=true`. This includes Python code blocks in Markdown.
 Compatibility inputs under `tests/fixtures/` bypass line-ending conversion so
 their exact bytes remain intact. These checkout rules apply to this repository;
 backup/restore still preserves vault bytes independently of Git text conversion.
-
-Thread 13 documentation tooling and Thread 14 release preparation are not started.
 
 ## Existing platform boundaries
 

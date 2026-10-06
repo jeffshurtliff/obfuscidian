@@ -1,6 +1,6 @@
 # Internal publication and recovery
 
-Thread 05 implements internal transaction primitives in `transactions.py`.
+Internal transaction primitives in `transactions.py` protect publication and recovery.
 These are orchestration building blocks, not a supported Python API. The CLI
 exposes [`shroud fresh|merge` and `--recover`](BACKUP.md), plus
 [read-only verification](VERIFY.md) that inspects ownership without recovery.
@@ -36,7 +36,7 @@ nonblocking OS lifetime lock; a live competing writer keeps ownership.
 Mutation currently requires POSIX `flock`, anchored no-follow directory handles,
 mode-0600 ownership/journals, and mode-0700 workspaces. Native Windows mutation
 fails closed before creating artifacts; Windows locking, owner-only directory
-ACLs and native publication/recovery remain unimplemented after Thread 12.
+ACLs and native publication/recovery remain unimplemented on Windows.
 The passing matrix validates this refusal; see [platform validation](PLATFORMS.md).
 Read-only observation and consent helpers do not create artifacts. Linux hosted validation and native
 Windows execution must be reported separately from local macOS tests.
@@ -87,8 +87,8 @@ Restore rollback contains **plaintext and is sensitive**. Private results provid
 locations and a plaintext flag for deliberate caller reporting; diagnostics never
 emit paths, original names, key bytes, or content. There is no automatic retention
 pruning. These primitives conservatively retain recovery directories/journals
-and proposed data after failures too. Thread 07 adds internal successful-merge
-cleanup: only the current operation's complete recorded workspace is eligible,
+and proposed data after failures too. Successful-merge cleanup is internal:
+only the current operation's complete recorded workspace is eligible,
 after durable publication and ownership release. It verifies the published
 payload, terminal journal, container identities, complete namespaces and rollback
 hashes, then rechecks each entry through anchored no-follow handles before

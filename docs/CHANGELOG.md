@@ -5,7 +5,23 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Changed
+
+- Reorganized Getting Started into nine beginner topics with short examples and
+  task cards; moved detailed installation and restore rehearsal into User Guides.
+- Removed development-thread references from Sphinx pages except this changelog,
+  and updated documentation links, source-package includes and artifact validation.
+
 ### Added
+
+- Read the Docs v2 configuration using Ubuntu 24.04, Python 3.12 and the locked Poetry docs group,
+  with HTML builds that fail on Sphinx warnings; no duplicate requirements list or publication.
+
+- Thread 13 optional locked Sphinx/reST/MyST documentation with the PyData theme, dark default,
+  proportional web logo, violet/cyan accents and reader-selectable light mode.
+- Installation/CLI navigation, an executable synthetic backup/verify/restore tutorial, security policy,
+  threat-model/troubleshooting/cleanup guides and contributor/documentation maintenance guidance.
+- Exact tutorial integration rehearsal and offline rendered HTML link/asset/fragment checks.
 
 - Thread 12 nine-job Linux/macOS/Windows CI for Python 3.12–3.14, portable fresh-artifact validation and retained test/coverage evidence.
 - Focused native/platform path, Git preflight, no-op, resource, descriptor failure, termination and recovery coverage.
@@ -74,6 +90,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Linux CI for Python 3.12, 3.13, and 3.14, including fresh wheel/sdist validation.
 
 ### Fixed
+
+- Stale planned-command wording and README installation/platform claims; synchronized current user and contributor guidance.
 
 - Open-file replacement tests accept safe directory-guard sharing refusal, verify descriptor cleanup and preserve source bytes.
 - Same-size changed-source fixtures set a distinct modification time explicitly, avoiding timing-dependent Windows failures.

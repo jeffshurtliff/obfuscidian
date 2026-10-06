@@ -122,7 +122,9 @@ Thread 11 — CLI polish — is complete, reviewed and merged/pushed into
 Thread 12 is complete, reviewed and merged/pushed into `origin/main`; issue #12
 is closed as completed. Linux/macOS/Windows CI passed on Python 3.12–3.14.
 Native Windows mutation/recovery and existing-log append still fail closed.
-See [platform validation](docs/PLATFORMS.md). Threads 13–14 remain not started.
+See [platform validation](docs/PLATFORMS.md). Thread 13 documentation tooling
+is implemented locally, pending maintainer review;
+Thread 14 remains not started.
 
 Use Poetry 2.2 or newer, below 3.0, for development, dependencies, and packaging.
 CI targets Linux/macOS/Windows on Python 3.12, 3.13, and 3.14; Thread 12 records
@@ -140,11 +142,12 @@ poetry run bandit -r src/obfuscidian
 poetry build
 ```
 
-After Thread 13 adds the docs tooling:
+Documentation checks (optional `docs` group):
 
 ```sh
 poetry install --with dev,docs
 poetry run sphinx-build -W --keep-going -E -a -b html docs docs/_build/html
+poetry run python .github/scripts/check_docs.py docs/_build/html
 ```
 
 Use Poetry commands to add dependencies and regenerate `poetry.lock`; never edit

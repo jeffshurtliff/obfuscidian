@@ -1,28 +1,14 @@
 # Fresh and additive encrypted backup
 
-`shroud fresh` backs up the current included inventory; Thread 07 adds
-`shroud merge` for additive history retention. Thread 08 exposes
-[read-only verification](VERIFY.md). [Fresh restore](RESTORE.md) is available;
-optional private logging is available; see the [CLI contract](CLI.md).
-The internal [v1 validator](FORMAT.md) authenticates produced snapshots; 
-it is not a supported Python library API.
-No Git commands, commits, pushes, merges or worktrees are created by backup.
-Threads 06–07 are reviewed and merged/pushed into `origin/main`, with issues
-#6–#7 closed and green Linux CI on Python 3.12–3.14. See the
-[Thread 07 completion record](../dev/IMPLEMENTATION_PLAN.md#thread-07--merge-backup-completion-record-5-october-2026)
-for validation and platform limits. Thread 08 is complete, reviewed and
-merged/pushed, with issue #8 closed and Linux Python 3.12–3.14 CI passing; see
-[verification](VERIFY.md) and its
-[completion record](../dev/IMPLEMENTATION_PLAN.md#thread-08--read-only-verification-completion-record-5-october-2026).
-Thread 09 is complete, reviewed and merged/pushed; see
-[fresh restore](RESTORE.md) for the accepted Python 3.14 CI gap. Thread 10 is
-complete, reviewed and merged/pushed, with issue #10 closed and Linux CI passing
-on Python 3.12–3.14; see
-[additive Git merge restore](RESTORE.md#additive-git-merge-restore). Thread 11 is
-complete, reviewed and merged/pushed, with issue #11 closed and Linux CI passing on Python 3.12–3.14; see the [CLI contract](CLI.md).
-Thread 12 is complete, reviewed and merged/pushed; issue #12 is closed as
-completed. Linux/macOS/Windows CI passed on Python 3.12–3.14 with the documented
-write/append limitations. See [platform validation](PLATFORMS.md).
+`shroud fresh` snapshots the current included inventory. `shroud merge` adds
+and updates paths while retaining historical entries. Both authenticate the
+existing mirror before publication and preserve source bytes and root mirror Git
+controls. Backup runs no Git operations. The CLI is the supported interface.
+
+Start with the [synthetic backup/verify/restore rehearsal](guides/restore-rehearsal.md).
+Read [platform boundaries](PLATFORMS.md) before writing; native Windows vault
+mutation remains refused. [Verification](VERIFY.md), [restore](RESTORE.md) and
+[optional private logging](CLI.md) are available.
 
 ## Usage and selection
 
@@ -183,12 +169,10 @@ limits are read without writing a probe. Backup creates only fixed lowercase
 ASCII managed names and hexadecimal IDs, whose comparisons agree across case
 policies. Conservative case/Unicode lock comparison also serializes destination
 aliases; original names remain unchanged inside the encrypted manifest.
-Restore must establish the actual target's full naming rules in its own thread.
+Restore checks target naming and path limits before plaintext staging.
 
 Identity/hash rechecks are best effort, not an atomic source snapshot or a
 guarantee against hostile same-authority writers. Local synthetic process-death
 tests do not establish power-loss, network/cloud-filesystem or supported-platform
-guarantees. Hosted CI must be reported separately. Public verification is
-available through Thread 08. Restore Threads 09–10 are complete; Thread 11
-logging/CLI polish is complete, reviewed and merged/pushed, with green Linux CI.
-See the [CLI contract](CLI.md) for optional no-op logs. Sphinx remains Thread 13.
+guarantees. Hosted CI must be reported separately. See [platform validation](PLATFORMS.md) for hosted results and the
+[CLI contract](CLI.md) for optional no-op logs.

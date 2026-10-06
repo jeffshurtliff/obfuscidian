@@ -28,7 +28,8 @@ is closed as completed and Linux CI passed on Python 3.12–3.14. Thread 12 is
 complete, reviewed and merged/pushed into `origin/main`; issue #12 is closed
 as completed. All nine Linux/macOS/Windows jobs passed on Python 3.12–3.14.
 See the Thread 12 completion record below for evidence and retained limitations.
-Threads 13–14 remain not started. See the Thread 11 completion record below. See the Thread 10
+Thread 13 is implemented locally, pending maintainer review; Thread 14 remains
+not started. See the Thread 13 handoff record below. See the Thread 11 completion record below. See the Thread 10
 completion record below and Thread 09 completion record for evidence and limits.
 
 **Intended first stable release:** `1.0.0` (current metadata: `1.0.0.dev0`).
@@ -561,7 +562,7 @@ commits, publication, or PRs are implied. Update status only after acceptance cr
 | 10 | Git merge restore | 09 | [#10](https://github.com/jeffshurtliff/obfuscidian/issues/10) | Complete; reviewed/merged; Linux CI passed |
 | 11 | CLI polish | 10 | [#11](https://github.com/jeffshurtliff/obfuscidian/issues/11) | Complete; reviewed/merged; Linux CI passed |
 | 12 | Cross-platform hardening | 11 | [#12](https://github.com/jeffshurtliff/obfuscidian/issues/12) | Complete; reviewed/merged; nine-job OS/Python matrix passed |
-| 13 | Documentation and contribution guidance | 12; incremental docs accompany earlier threads | [#13](https://github.com/jeffshurtliff/obfuscidian/issues/13) | Not started |
+| 13 | Documentation and contribution guidance | 12; incremental docs accompany earlier threads | [#13](https://github.com/jeffshurtliff/obfuscidian/issues/13) | Implemented locally; review pending |
 | 14 | Release preparation | 13 | [#14](https://github.com/jeffshurtliff/obfuscidian/issues/14) | Not started |
 
 All fourteen issues are assigned to `jeffshurtliff` and belong to the
@@ -1109,7 +1110,12 @@ append refusal pending native file ownership/DACL validation.
 **Goal/deliverable:** Coherent, buildable user/contributor/security documentation
 that describes completed behavior rather than the template.
 **Depends on:** 12 for completion; earlier threads add incremental help/docs.
-**Status:** Not started.
+**Status:** Initial docs and Read the Docs configuration committed by the maintainer
+at `adbcd9e` and `0b4728a`; requested beginner documentation revision implemented
+locally and uncommitted, pending review. Issue #13 remains open. Strict Sphinx,
+local links and synthetic examples pass. No hosted publication/build is claimed;
+optional external linkcheck remains limited by earlier GitHub rate limiting.
+See the latest Thread 13 handoff below. Thread 14 remains not started.
 
 1. Add Poetry `docs` dependencies and Sphinx/reST/MyST with `pydata_sphinx_theme`.
    Adapt the structure of SalesPyForce/PyDPlus: overview/getting started, CLI
@@ -3301,7 +3307,149 @@ consistency, scope/privacy, LF and diff-whitespace checks were performed.
 No application/test/workflow/dependency/version changes were made, and no new
 local test, build, coverage, real-vault or privileged filesystem run was needed
 for this documentation-only update. Sphinx remains unconfigured Thread 13 work.
+
 The status documents and this completion record are local, unstaged/uncommitted
 on `main` at `dc56009`; they are not yet published. No stage, commit, merge,
 push, PR, tag, release or publication action was performed. The already-merged
 implementation and hosted results are separate from these uncommitted docs.
+
+### Thread 13 local implementation handoff — 6 October 2026
+
+All four implementation tasks are completed locally; maintainer review is pending and this issue remains open. Thread 14 remains not started.
+
+Deliverables:
+- Optional locked Sphinx 9.1.0 / MyST 5.1.0 / PyData 0.22.0 tooling, reST navigation and Markdown guides in `docs/`.
+- Dark first-visit mode, working light/system selector with preference persistence, an optimized proportional transparent horizontal logo and restrained violet/cyan styling. The original logo artwork is unchanged.
+- Installation from checkout through pip/pipx, POSIX and Windows examples, command reference, revised current-behavior guides, synthetic restore tutorial, security policy/threat limits, troubleshooting/recovery/plaintext cleanup and contributor/docs maintenance guidance.
+- `tests/integration/test_docs_tutorial.py` executes the exact tutorial block with fake data and independently checks six file byte streams, Unicode names, hidden/settings/empty data and complete directories.
+- `.github/scripts/check_docs.py` checks local HTML links, assets and fragments offline. README, CONTRIBUTING, AGENTS, changelog and roadmap are synchronized.
+
+Existing file links identify source locations, not published new changes:
+[README](https://github.com/jeffshurtliff/obfuscidian/blob/main/README.md),
+[configuration](https://github.com/jeffshurtliff/obfuscidian/blob/main/docs/CONFIGURATION.md),
+[restore](https://github.com/jeffshurtliff/obfuscidian/blob/main/docs/RESTORE.md),
+[contributing](https://github.com/jeffshurtliff/obfuscidian/blob/main/CONTRIBUTING.md),
+[changelog](https://github.com/jeffshurtliff/obfuscidian/blob/main/docs/CHANGELOG.md),
+[roadmap](https://github.com/jeffshurtliff/obfuscidian/blob/main/dev/IMPLEMENTATION_PLAN.md).
+
+Validation actually executed on local macOS / Python 3.12.7:
+- `poetry install --with dev,docs` and `poetry check --lock --strict`: passed. Docs are optional; runtime dependencies are unchanged. Shared dev dependency docutils resolves to 0.22.4 for Sphinx compatibility.
+- Ruff lint/format: passed, 86 files formatted. Bandit: no issues, two unchanged documented suppressions.
+- Full offline pytest: **1266 passed, 7 native Windows skips**. The tutorial round trip passed; empty terminal recovery containers are expected fresh behavior, not pending ownership.
+- `sphinx-build -W --keep-going -E -a -b html`: passed without warnings. **24 rendered HTML pages** passed local link/asset/fragment checks. Synthetic missing-asset/fragment checks correctly fail.
+- Changed/new Markdown source links, roadmap anchors, fences, privacy, Python model/date headers and diff whitespace: passed.
+- Isolated Chrome rendered landing/configuration/security/restore/tutorial in dark and light, plus a 390px mobile tutorial. Logo, code, tables, focus/skip link, search dialog, theme selector and saved preference checked; no page overflow.
+- axe-core 4.11.0 WCAG 2 A/AA and 2.1 A/AA audit: **zero violations across ten final desktop renders** after theme transitions settled. The command-key shortcut glyph requires manual contrast review; automated audit and visual review do not establish full assistive-technology compliance.
+- Fresh temporary wheel/sdist build and strict Twine checks: passed. Normal-suite offline artifact installs also passed.
+
+Limits/skipped checks:
+- Optional external Sphinx linkcheck did not complete successfully: initial sandbox DNS failure, then GitHub rate limiting and a GitHub-rendered roadmap-anchor lookup failure. It was stopped and not reported as passing. Source roadmap anchor targets were checked locally; accessible external project/CI/Fernet/Keep a Changelog/PyData pages were confirmed during the partial run.
+- No new hosted CI, native Windows/macOS alternative-Python run, pipx installation, live vault/cloud test, screen-reader audit or docs publication was performed. Existing Thread 12 matrix evidence remains distinct.
+- Native Windows vault mutation/recovery and existing-log append remain fail-closed. No application, cryptographic or backup-format behavior changed.
+
+Git status: **15 modified tracked files and 18 new files**, all unstaged/uncommitted on the pre-existing `docs/13-thread-13-introduce-sphinx-rest-myst-docs` branch at `e1e5cc2`. No branch creation, staging, commit, push, PR, merge, tag, release, publication or tool companion creation. Temporary synthetic Git histories are created only by the existing test suite.
+
+Next: maintainer review of Thread 13. Thread 14 release preparation requires a separate request; this task does not begin it.
+
+Start and final progress comments plus issue #13 checklist/handoff were synchronized
+through the authenticated GitHub CLI after connector write access returned 403.
+The issue remains open; labels, assignee and milestone are unchanged.
+
+### Thread 13 — Read the Docs configuration revision (6 October 2026)
+
+The maintainer committed the initial documentation at `adbcd9e` after local edits
+and reports that the branch is not merged or pushed. This requested revision adds
+[the root Read the Docs v2 configuration](../.readthedocs.yaml), selecting Ubuntu
+24.04, Python 3.12, Poetry 2.4.2 and the existing locked `docs` group. It reuses
+the Read the Docs virtual environment, skips application installation and builds
+HTML from `docs/conf.py` with warnings treated as errors. A separate
+`docs/requirements.txt` is unnecessary; package metadata and lock are unchanged.
+
+[Documentation maintenance](../docs/maintainers/documentation.md), contributor
+guidance and the changelog explain the configuration and distinguish preparation
+from account/project connection and actual hosted publication. The maintainer's
+Python header/title/wording edits are preserved; no Python application or docs
+configuration file was changed.
+
+Validation actually executed on local macOS/Python 3.12.7:
+
+- YAML parsing, configured paths and shell syntax passed; the configuration
+  satisfies the official Read the Docs v2 schema constraints using fastjsonschema.
+- Strict Poetry metadata/lock checks and the docs-only install dry run passed.
+- A new disposable environment accepted the same Poetry 2.4.2 docs-only install
+  against the lock, then passed a strict fresh Sphinx HTML build, local link/asset/
+  fragment checks across 24 pages and `pip check`. Installed Sphinx/MyST/PyData
+  versions match the lock; application, cryptography and pytest were absent.
+- The existing environment also passed a warning-free strict fresh Sphinx build,
+  all 24 rendered pages' local references, Ruff lint/format and diff whitespace.
+- No full application suite, native Ubuntu/Read the Docs job, remote CI or
+  external linkcheck was rerun for this configuration-only revision. No hosted
+  success or publication is claimed.
+
+Four modified tracked Markdown files and the new `.readthedocs.yaml` remain
+unstaged/uncommitted on the existing Thread 13 branch. No commit, push, merge,
+account/project connection, hosted build or publication was performed.
+Issue #13 remains open for review. Thread 14 remains not started.
+
+
+### Thread 13 — Beginner documentation revision (6 October 2026)
+
+The maintainer committed the previous Read the Docs revision at `0b4728a` and
+requested a more approachable Getting Started section inspired by the pandas
+introductory navigation. This revision remains within documentation work:
+
+- Nine short topics in the requested order: introduction, Quickstart,
+  installation, CLI, private key, workflow choices, backup, fresh restore and
+  additive/Git merge restore. Responsive task cards use the existing theme
+  colors; plain-language definitions, shared synthetic paths, prerequisites and
+  detailed-guide links keep implementation detail out of the introductory path.
+- Detailed installation and the six-file complete restore rehearsal moved to
+  `docs/guides/installation.md` and `docs/guides/restore-rehearsal.md`. README,
+  toctrees, source links, tutorial tests and sdist includes follow the relocation.
+- Development-thread references removed from every Sphinx source/rendered page
+  except the changelog. Technical behavior, safety details and recorded platform
+  evidence are retained. No application, crypto, format or dependency change.
+- Executable beginner integration examples prove fresh byte preservation and
+  additive Git restore: backup bytes replace matching base files, base-only
+  files remain, original checkout is unchanged, and changes remain uncommitted.
+  The existing six-file rehearsal still checks all names, bytes and directories.
+- Artifact test fixtures now include all explicitly packaged user documentation
+  instead of omitting newer files from their synthetic source copies.
+
+Validation actually executed on local macOS/Python 3.12.7:
+
+- `poetry check --lock --strict`, Ruff lint/format and diff whitespace passed.
+- Full offline suite: **1268 passed, 7 platform skips**. After final command
+  wrapping and artifact-fixture updates, targeted documentation examples passed
+  **3/3**, and packaging checks passed **3/3** both from a synthetic source copy
+  and against a newly built actual wheel/sdist. Installation checks stay offline.
+- Strict fresh Sphinx HTML build passed without warnings. All **33 rendered HTML
+  pages** passed local link/asset/fragment checks. Markdown source links passed,
+  and all rendered pages except changelog were checked for development references.
+- Isolated Chrome inspected all nine beginner pages, both section indexes, the
+  site landing page and both relocated guides in dark/light: **28 desktop
+  renders**, with **zero axe-core WCAG 2 A/AA and 2.1 A/AA violations**. Four
+  390px mobile renders had no page overflow. Cards/sidebar topic agreement,
+  skip link, theme selection/persistence and screenshots were reviewed.
+  Automated/visual checks do not establish complete screen-reader compliance.
+- Fresh Poetry wheel/sdist build and strict Twine checks passed; the sdist
+  contains every beginner and relocated guide and omits the old tutorial path.
+- Synthetic workspaces use an explicit temporary-directory template, making
+  their location deterministic across shell implementations without real data.
+
+Limits: no new hosted CI/Read the Docs run, docs publication, native Windows
+mutation, real vault/cloud test, broad external linkcheck or screen-reader test.
+Native Windows write/recovery and existing-log append limits remain unchanged.
+All application and dependency files are unchanged except documentation include
+metadata; lockfile and maintainer's docs configuration edits are preserved.
+
+Git status: work remains unstaged/uncommitted on the existing
+`docs/13-thread-13-introduce-sphinx-rest-myst-docs` branch at `0b4728a`.
+Four newly appearing icon PNG assets are separate work and were left untouched.
+No commit, push, merge, PR, release, publication or tool companion was created.
+
+Next: maintainer review. Suggested separate documentation follow-ups are a
+small glossary/FAQ, copy buttons and short expected-output examples, and a
+novice usability pass through installation and first backup. Source-distribution
+link completeness beyond its selected user guides can be reviewed during release
+preparation. Thread 14 remains not started and requires a separate request.

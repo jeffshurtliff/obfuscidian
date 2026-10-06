@@ -1,0 +1,97 @@
+/* Violet and cyan from the supplied logo, subdued around readable content.
+   Keep PyData's semantic warning/error colors and accessible syntax palette. */
+html[data-theme="dark"] {
+  --pst-color-primary: #c4a7ff;
+  --pst-color-secondary: #67e8f9;
+  --pst-color-link: #c4a7ff;
+  --pst-color-link-hover: #67e8f9;
+  --pst-color-background: #14121d;
+  --pst-color-on-background: #1e1b2a;
+  --pst-color-surface: #282434;
+  --pst-color-text-base: #eeecf5;
+  --pst-color-text-muted: #bdb8cc;
+  --pst-color-inline-code: #67e8f9;
+}
+
+html[data-theme="light"] {
+  --pst-color-primary: #6040a8;
+  --pst-color-secondary: #096b7c;
+  --pst-color-link: #6040a8;
+  --pst-color-link-hover: #096b7c;
+  --pst-color-background: #ffffff;
+  --pst-color-on-background: #f7f5fb;
+  --pst-color-surface: #efedf5;
+  --pst-color-text-base: #242032;
+  --pst-color-text-muted: #5d566c;
+  --pst-color-inline-code: #096b7c;
+}
+
+.navbar-brand {
+  padding: 0.25rem 0;
+}
+
+.navbar-brand img {
+  width: 13rem;
+  max-width: 55vw;
+  height: auto;
+  max-height: 4.5rem;
+  object-fit: contain;
+  /* background: #14121d; */
+  border-radius: 0.35rem;
+  padding: 0.25rem 0.5rem;
+}
+
+.bd-article-container {
+  max-width: 52rem;
+}
+
+.bd-article a {
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+a:focus-visible, button:focus-visible, input:focus-visible {
+  outline: 3px solid var(--pst-color-secondary);
+  outline-offset: 3px;
+}
+
+.bd-article h1 {
+  border-bottom: 1px solid var(--pst-color-primary);
+  padding-bottom: 0.5rem;
+}
+
+/* Introductory task cards use the same readable surfaces in both themes. */
+.beginner-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.beginner-grid .beginner-card {
+  background: var(--pst-color-on-background);
+  border: 1px solid var(--pst-color-border);
+  border-radius: 0.4rem;
+  padding: 1.1rem;
+}
+
+.beginner-grid .beginner-card:last-child {
+  grid-column: 1 / -1;
+}
+
+.beginner-card p:first-child {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.beginner-card p:last-child {
+  margin-bottom: 0;
+}
+
+@media (max-width: 600px) {
+  .beginner-grid { grid-template-columns: 1fr; }
+}
+
+@media print {
+  .bd-article a { color: #242032; }
+}
