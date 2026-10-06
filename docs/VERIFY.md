@@ -75,9 +75,9 @@ is closed as completed. The
 passed on Python 3.12–3.14 at commit `3d3425b`, with 903 tests passed and two
 native Windows skips in each job, plus three fully isolated artifact checks.
 See the [completion record](../dev/IMPLEMENTATION_PLAN.md#thread-08--read-only-verification-completion-record-5-october-2026)
-for commit alignment and validation evidence. Broader platform hardening remains
-Thread 12; Linux CI does not establish native Windows or universal filesystem
-validation. 
+for commit alignment and validation evidence. Thread 12 subsequently passed
+the Linux/macOS/Windows Python 3.12–3.14 matrix; see
+[platform validation](PLATFORMS.md) for the retained filesystem limits.
 
 Thread 09 is complete, reviewed and merged/pushed; see
 [fresh restore](RESTORE.md) for the accepted Python 3.14 CI gap. 
@@ -88,4 +88,5 @@ Linux CI passing on Python 3.12–3.14; see
 
 Thread 11 is complete, reviewed and merged/pushed, with issue #11 closed and
 Linux CI passing on Python 3.12–3.14; see the [CLI contract](CLI.md).
-Thread 12 remains **not started**.
+Thread 12 is complete with issue #12 closed and all nine OS/Python jobs passing.
+Threads 13–14 remain **not started**.

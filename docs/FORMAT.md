@@ -113,8 +113,8 @@ Logical no-op planning and snapshot lifecycle orchestration remain later work.
 Target path validation can use explicit case/Unicode/Windows/length rules and a
 destination prefix without creating or inspecting a destination. Portable
 syntax validation alone cannot establish that all names fit a particular
-filesystem. Actual target rules are the caller's responsibility. Native platform
-hardening remains Thread 12.
+filesystem. Actual target rules are the caller's responsibility. Thread 12
+passed the native OS/Python matrix with the limitations documented in [platform validation](PLATFORMS.md).
 
 ## Read-only behavior and threat limits
 

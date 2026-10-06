@@ -1,24 +1,24 @@
 # Platform hardening and validation
 
-Thread 12 configures Linux, macOS and Windows CI on Python 3.12, 3.13 and 3.14.
-A configured job is not a passing result. Initial local validation is recorded in the
-[Thread 12 handoff](../dev/IMPLEMENTATION_PLAN.md#thread-12--cross-platform-hardening-handoff-5-october-2026).
-The [Windows CI follow-up](../dev/IMPLEMENTATION_PLAN.md#thread-12--windows-ci-follow-up-6-october-2026)
-records the first hosted run: all Linux/macOS jobs passed; all Windows jobs
-stopped at Ruff formatting before tests/builds. Hosted acceptance remains pending.
-The [identity follow-up](../dev/IMPLEMENTATION_PLAN.md#thread-12--windows-identity-follow-up-6-october-2026)
-records the next run: all six Linux/macOS jobs passed and Windows style/security
-passed, but Windows offline tests failed. The
-[descriptor follow-up](../dev/IMPLEMENTATION_PLAN.md#thread-12--windows-descriptor-follow-up-6-october-2026)
-records the run after the scan correction: Windows tests still failed at
-opened-file metadata comparisons. The descriptor correction is merged at
-`187cffc`; the [test follow-up](../dev/IMPLEMENTATION_PLAN.md#thread-12--windows-test-follow-up-6-october-2026)
-records run `37517678167`: all Windows style/security jobs passed, while offline
-tests failed on the replacement-refusal message expectation; Python 3.14 also
-failed a timing-sensitive same-size edit fixture. Local test corrections accept
-the existing safe directory-guard refusal, check descriptor cleanup and source
-preservation, and explicitly set a distinct edit timestamp. Production safety
-checks are unchanged. Full native Windows acceptance requires a new CI run.
+Thread 12 is complete, reviewed and merged/pushed into `origin/main`; issue #12
+is closed as completed under maintainer authorization. All nine Linux/macOS/
+Windows jobs passed on Python 3.12–3.14 in
+[Test run `37519004246`](https://github.com/jeffshurtliff/obfuscidian/actions/runs/37519004246)
+at `dc56009`. Each job passed style/security, offline tests/coverage and fresh
+artifact validation. Linux/macOS passed **1265 tests with 7 native Windows skips**
+per job; Windows passed **709 tests with 563 platform skips** per job.
+Reported coverage was 91% on Linux/macOS and 66% on Windows; skipped mutation
+behavior is not validated by those figures.
+See the [completion record](../dev/IMPLEMENTATION_PLAN.md#thread-12--cross-platform-hardening-completion-record-6-october-2026)
+for commit alignment, individual jobs, closure and retained limitations.
+
+Earlier records preserve the sequence of investigations and local validation:
+[initial handoff](../dev/IMPLEMENTATION_PLAN.md#thread-12--cross-platform-hardening-handoff-5-october-2026),
+[LF checkout](../dev/IMPLEMENTATION_PLAN.md#thread-12--windows-ci-follow-up-6-october-2026),
+[scan identities](../dev/IMPLEMENTATION_PLAN.md#thread-12--windows-identity-follow-up-6-october-2026),
+[descriptor timestamps](../dev/IMPLEMENTATION_PLAN.md#thread-12--windows-descriptor-follow-up-6-october-2026),
+and [test fixtures](../dev/IMPLEMENTATION_PLAN.md#thread-12--windows-test-follow-up-6-october-2026).
+Their pending-CI statements are historical; the completion record supersedes them.
 
 Repository `.gitattributes` keeps detected text at LF, matching Ruff, even with
 Windows `core.autocrlf=true`. This includes Python code blocks in Markdown.
@@ -32,10 +32,10 @@ Thread 13 documentation tooling and Thread 14 release preparation are not starte
 
 | Behavior | Linux/macOS | Windows |
 | --- | --- | --- |
-| Help, configuration, authenticated verification | Implemented | Implemented; native matrix pending |
+| Help, configuration, authenticated verification | Implemented | Implemented; native matrix passed |
 | Key creation | Exclusive private POSIX file | Exclusive protected owner-only DACL; persistent ACL storage required |
 | Inventory and read-only backup/restore/Git planning | Anchored no-follow directory reads | Absolute binary reads with component and pre/post identity checks |
-| Matching fresh/merge backup no-op | No locks, staging or token replacement | Same read-only contract; native matrix pending |
+| Matching fresh/merge backup no-op | No locks, staging or token replacement | Same read-only contract; native matrix passed |
 | Fresh/merge backup and fresh/Git merge restore mutation | POSIX ownership/private staging/recovery | Fails closed; private directory ACL and publication/recovery primitives remain unimplemented |
 | New operational log | Private POSIX file | Protected owner-only DACL; ACL capability checked before creation |
 | Existing operational log append | Requires private mode and stable identity | Refused pending file ownership/DACL validation |

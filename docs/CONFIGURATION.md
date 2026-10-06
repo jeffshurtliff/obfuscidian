@@ -96,8 +96,9 @@ operators can still have access, and ACL enforcement depends on the filesystem
 and host policy. POSIX `0600` is not a Windows ACL guarantee. Loading warns that
 an existing Windows key's ACL has not been assessed; use a private directory
 and review access permissions. Parent identity checks on Windows are best effort;
-POSIX descriptor-relative protections are unavailable there. Windows runtime
-validation remains pending platform hardening in Thread 12.
+POSIX descriptor-relative protections are unavailable there. Thread 12 validated native
+Windows key creation/loading and refusal behavior across Python 3.12–3.14;
+see [platform validation](PLATFORMS.md). Existing-key ACL assessment remains absent.
 
 A Fernet key is a symmetric secret: anyone with it can read and forge backups.
 Keep a separate offline key backup. Losing the key prevents decryption; there

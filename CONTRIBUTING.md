@@ -71,12 +71,14 @@ Thread 11 — CLI polish — is complete, reviewed and merged/pushed into
 3.12–3.14. See [the CLI contract](docs/CLI.md) and the
 [completion record](dev/IMPLEMENTATION_PLAN.md#thread-11--cli-polish-completion-record-5-october-2026).
 
-Thread 12 has local CI/hardening changes under review; hosted matrix validation
-is pending. Native Windows mutation and existing-log append still fail closed.
+Thread 12 is complete, reviewed and merged/pushed into `origin/main`; issue #12
+is closed as completed. Linux/macOS/Windows CI passed on Python 3.12–3.14.
+Native Windows mutation/recovery and existing-log append still fail closed.
 See [platform validation](docs/PLATFORMS.md). Threads 13–14 remain not started.
 
-The proposed test workflow targets Linux/macOS/Windows on Python 3.12–3.14;
-configured jobs do not prove hosted results. Thread 12 hosted acceptance is pending.
+The test workflow targets Linux/macOS/Windows on Python 3.12–3.14;
+all nine jobs passed in the [Thread 12 completion run](https://github.com/jeffshurtliff/obfuscidian/actions/runs/37519004246).
+
 Thread 13 introduces Sphinx/reST/MyST and `pydata_sphinx_theme`. Recheck actual
 metadata, workflows, and roadmap evidence as implementation advances.
 
@@ -231,7 +233,7 @@ poetry run sphinx-build -W --keep-going -E -a -b html docs docs/_build/html
 Run `git diff --check` and inspect new, untracked files as well. Documentation-only
 work needs link, consistency, privacy, and whitespace checks; it does not require
 installing dependencies or changing application code. Report missing tools and
-unexecuted checks accurately. The proposed CI runs Poetry checks, Ruff,
+unexecuted checks accurately. The CI runs Poetry checks, Ruff,
 pytest/coverage, Bandit, and fresh artifact validation on Linux/macOS/Windows
 and Python 3.12–3.14. It ignores several documentation paths. Strict Sphinx
 builds remain Thread 13; configured CI is not evidence of hosted success.

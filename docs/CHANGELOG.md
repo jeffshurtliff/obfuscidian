@@ -9,7 +9,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - Thread 12 nine-job Linux/macOS/Windows CI for Python 3.12–3.14, portable fresh-artifact validation and retained test/coverage evidence.
 - Focused native/platform path, Git preflight, no-op, resource, descriptor failure, termination and recovery coverage.
-- Platform validation guide distinguishing local results, pending hosted CI and intentional Windows write/append refusal.
+- Platform validation guide distinguishing local results, hosted CI and intentional Windows write/append refusal.
+- Thread 12 completed after maintainer review/merge and a passing nine-job Linux/macOS/Windows Python 3.12–3.14 matrix.
 
 - Thread 11 shared CLI contract: static phase progress, private JSON lines logs, and independent terminal/log path disclosure.
 - Optional `--log-file`/`--log-paths` on write commands with custody, permissions, link and identity validation before mutation.

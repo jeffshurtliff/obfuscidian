@@ -24,8 +24,10 @@ a validation gap explicitly accepted by the maintainer for closure. Thread 10
 is complete, reviewed and merged/pushed into `origin/main`; issue #10 is closed
 as completed and Linux CI passed on Python 3.12–3.14.
 Thread 11 is complete, reviewed and merged/pushed into `origin/main`; issue #11
-is closed as completed and Linux CI passed on Python 3.12–3.14. Thread 12 has
-local implementation under review; hosted matrix acceptance remains pending.
+is closed as completed and Linux CI passed on Python 3.12–3.14. Thread 12 is
+complete, reviewed and merged/pushed into `origin/main`; issue #12 is closed
+as completed. All nine Linux/macOS/Windows jobs passed on Python 3.12–3.14.
+See the Thread 12 completion record below for evidence and retained limitations.
 Threads 13–14 remain not started. See the Thread 11 completion record below. See the Thread 10
 completion record below and Thread 09 completion record for evidence and limits.
 
@@ -558,7 +560,7 @@ commits, publication, or PRs are implied. Update status only after acceptance cr
 | 09 | Fresh restore | 05, 07, 08 | [#9](https://github.com/jeffshurtliff/obfuscidian/issues/9) | Complete; 3.14 CI gap accepted |
 | 10 | Git merge restore | 09 | [#10](https://github.com/jeffshurtliff/obfuscidian/issues/10) | Complete; reviewed/merged; Linux CI passed |
 | 11 | CLI polish | 10 | [#11](https://github.com/jeffshurtliff/obfuscidian/issues/11) | Complete; reviewed/merged; Linux CI passed |
-| 12 | Cross-platform hardening | 11 | [#12](https://github.com/jeffshurtliff/obfuscidian/issues/12) | Initial implementation merged; Linux/macOS CI passed; Windows fix/matrix acceptance pending |
+| 12 | Cross-platform hardening | 11 | [#12](https://github.com/jeffshurtliff/obfuscidian/issues/12) | Complete; reviewed/merged; nine-job OS/Python matrix passed |
 | 13 | Documentation and contribution guidance | 12; incremental docs accompany earlier threads | [#13](https://github.com/jeffshurtliff/obfuscidian/issues/13) | Not started |
 | 14 | Release preparation | 13 | [#14](https://github.com/jeffshurtliff/obfuscidian/issues/14) | Not started |
 
@@ -925,7 +927,8 @@ the job; the maintainer accepted that validation gap for closure. See
 [completion record](#thread-09--fresh-restore-completion-record-5-october-2026)
 for commit alignment, job evidence and platform limits. Thread 10 is now
 complete, reviewed and merged/pushed with Linux CI passing on Python 3.12–3.14;
-Thread 11 is also complete with green Linux CI; Thread 12 has local implementation under review; hosted matrix acceptance is pending.
+Thread 11 is also complete with green Linux CI; Thread 12 is complete with the
+nine-job Linux/macOS/Windows matrix passing on Python 3.12–3.14. Threads 13–14 remain not started.
 
 1. Resolve restore direction correctly: mirror is source; origin is destination.
    Validate every manifest/object and target name before staging plaintext.
@@ -1009,7 +1012,8 @@ automation behavior across the completed commands.
 3.12–3.14. See the
 [completion record](#thread-11--cli-polish-completion-record-5-october-2026)
 for commit alignment, acceptance evidence and platform limits.
-Thread 12 has local implementation under review; hosted matrix acceptance is pending.
+Thread 12 is complete with the nine-job Linux/macOS/Windows matrix passing on
+Python 3.12–3.14. Threads 13–14 remain not started.
 
 1. Audit options/help at group and subcommand levels, required modes, precedence,
    incompatible options, defaults, and exit-code mapping; ensure console/module
@@ -1047,12 +1051,14 @@ output and help formatting at narrow and normal terminal widths.
 
 **Goal/deliverable:** Evidence for the supported OS/Python matrix and robust
 boundary/failure handling, without new product features.
-**Depends on:** 11. **Status:** Initial implementation, LF checkout and scan
-identity corrections reviewed and merged; Linux/macOS hosted jobs passed.
-The descriptor-read correction is merged at `187cffc`; Windows style/security
-passes, with replacement-refusal and edit-timing test corrections under review.
-Full matrix acceptance remains pending. Issue #12 remains open. See the handoff
-and 6 October Windows CI/identity/descriptor/test follow-ups below.
+**Depends on:** 11. **Status:** Complete; reviewed and merged/pushed into
+`origin/main`. All four subtasks and acceptance criteria are met, with the
+documented native Windows mutation/recovery and existing-log append refusals
+retained. Issue #12 is closed as completed under explicit maintainer
+authorization. All nine Linux/macOS/Windows jobs passed on Python 3.12–3.14
+at `dc56009`; see the
+[completion record](#thread-12--cross-platform-hardening-completion-record-6-october-2026).
+Threads 13–14 remain **not started**; the maintainer explicitly excluded Thread 13.
 
 1. Expand CI to Windows, macOS, and Linux across Python 3.12, 3.13, and 3.14.
    Use Poetry/lock-aware installs; run unit and offline local-Git integration
@@ -1245,8 +1251,10 @@ maintainer review, commit and merge/push, with issue #10 closed as completed and
 Linux CI passing on Python 3.12–3.14. See its completion record below.
 Thread 11 is complete following maintainer review, merge/push and successful
 Linux CI on Python 3.12–3.14; issue #11 is closed as completed. See its
-completion record below. Thread 12 has local implementation under review;
-hosted matrix acceptance is pending. Threads 13–14 remain not started.
+completion record below. Thread 12 is complete following maintainer review,
+merge/push and the passing nine-job Linux/macOS/Windows Python 3.12–3.14 matrix;
+issue #12 is closed as completed. See its completion record below.
+Threads 13–14 remain not started.
 Earlier handoff records describe the state at that time; later completion
 records supersede their pending-review and Git-status statements.
 The linked GitHub issues hold public progress discussion and verified
@@ -2874,6 +2882,9 @@ release or publication action occurred during this closure task.
 
 ### Thread 12 — Cross-platform hardening handoff (5 October 2026)
 
+**Historical record:** The [completion record](#thread-12--cross-platform-hardening-completion-record-6-october-2026)
+supersedes pending review, Git status and hosted acceptance below.
+
 **Status:** Local implementation complete for the requested bounded CI/hardening
 scope; issue #12 remains open for maintainer review and hosted matrix acceptance.
 The nine new jobs have not been executed. Windows publication/recovery and
@@ -2975,6 +2986,9 @@ thread is Thread 13 only after Thread 12 acceptance; it has not started.
 
 ### Thread 12 — Windows CI follow-up (6 October 2026)
 
+**Historical record:** The [completion record](#thread-12--cross-platform-hardening-completion-record-6-october-2026)
+supersedes pending review, Git status and hosted acceptance below.
+
 **Status:** The maintainer reviewed, committed and merged the initial Thread 12
 implementation at `7e5cfd9`. The correction below remains uncommitted for review;
 issue #12 remains open and full matrix acceptance is pending. This follow-up
@@ -3022,6 +3036,9 @@ push or PR was performed. Issue #12 records the investigation and follow-up.
 Thread 13 is eligible only after Thread 12 acceptance and has not started.
 
 ### Thread 12 — Windows identity follow-up (6 October 2026)
+
+**Historical record:** The [completion record](#thread-12--cross-platform-hardening-completion-record-6-october-2026)
+supersedes pending review, Git status and hosted acceptance below.
 
 **Status:** The maintainer reviewed and merged the LF checkout correction at
 `65af1dd`. [Test run `37473104440`](https://github.com/jeffshurtliff/obfuscidian/actions/runs/37473104440)
@@ -3088,6 +3105,9 @@ dependencies and the nine-job matrix are unchanged. Threads 13–14 remain
 **not started**; Thread 13 becomes eligible only after Thread 12 acceptance.
 
 ### Thread 12 — Windows descriptor follow-up (6 October 2026)
+
+**Historical record:** The [completion record](#thread-12--cross-platform-hardening-completion-record-6-october-2026)
+supersedes pending review, Git status and hosted acceptance below.
 
 **Status/evidence:** The maintainer merged the scan-identity correction at
 `fd6472f`. [Run `37493585740`](https://github.com/jeffshurtliff/obfuscidian/actions/runs/37493585740)
@@ -3157,6 +3177,9 @@ Threads 13–14 remain **not started**; Thread 13 requires Thread 12 acceptance.
 
 ### Thread 12 — Windows test follow-up (6 October 2026)
 
+**Historical record:** The [completion record](#thread-12--cross-platform-hardening-completion-record-6-october-2026)
+supersedes pending review, Git status and hosted acceptance below.
+
 **Status/evidence:** The maintainer merged the descriptor correction at
 `187cffc`. [Run `37517678167`](https://github.com/jeffshurtliff/obfuscidian/actions/runs/37517678167)
 passed all six Linux/macOS jobs. All three Windows jobs passed style/security,
@@ -3213,3 +3236,72 @@ The changelog and platform guide record the correction; issue #12 remains open
 for review and full matrix acceptance. Windows mutation/recovery and existing-log
 append still fail closed. Threads 13–14 remain **not started**; Thread 13
 becomes eligible only after Thread 12 acceptance.
+
+### Thread 12 — Cross-platform hardening completion record (6 October 2026)
+
+**Maintainer decision and alignment:** The maintainer confirmed successful CI
+and explicitly authorized closing issue #12, with Thread 13 excluded.
+The final test correction commit `1b69441` is merged in
+[`dc56009a580c55f5544c271457d3305064277dbd`](https://github.com/jeffshurtliff/obfuscidian/commit/dc56009a580c55f5544c271457d3305064277dbd).
+Local `HEAD`, `main`, cached `origin/main`, live remote `refs/heads/main`
+and the successful push-triggered Test run all match that full SHA.
+The checkout was clean before this documentation-only closure update.
+All four Thread 12 subtasks and acceptance criteria are met with the documented
+platform limitations retained. Issue #12 is closed as completed under that
+authorization; its labels, assignee, milestone and existing discussion are preserved.
+
+**Hosted validation inspected:** [Test run `37519004246`](https://github.com/jeffshurtliff/obfuscidian/actions/runs/37519004246)
+completed successfully. All nine job records and logs were read. Each job
+passed locked Poetry installation/checks, Ruff lint/format, Bandit, offline
+tests, coverage reporting, fresh wheel/sdist and installed-artifact validation,
+and test/coverage evidence retention.
+
+| Hosted job | Offline tests passed / skipped | Reported coverage | Fresh artifact validation |
+| --- | --- | --- | --- |
+| [macos-latest / Python 3.12](https://github.com/jeffshurtliff/obfuscidian/actions/runs/37519004246/job/112459199910) | 1265 / 7 | 91% | Passed |
+| [macos-latest / Python 3.13](https://github.com/jeffshurtliff/obfuscidian/actions/runs/37519004246/job/112459199731) | 1265 / 7 | 91% | Passed |
+| [macos-latest / Python 3.14](https://github.com/jeffshurtliff/obfuscidian/actions/runs/37519004246/job/112459199974) | 1265 / 7 | 91% | Passed |
+| [ubuntu-latest / Python 3.12](https://github.com/jeffshurtliff/obfuscidian/actions/runs/37519004246/job/112459200017) | 1265 / 7 | 91% | Passed |
+| [ubuntu-latest / Python 3.13](https://github.com/jeffshurtliff/obfuscidian/actions/runs/37519004246/job/112459199988) | 1265 / 7 | 91% | Passed |
+| [ubuntu-latest / Python 3.14](https://github.com/jeffshurtliff/obfuscidian/actions/runs/37519004246/job/112459200032) | 1265 / 7 | 91% | Passed |
+| [windows-latest / Python 3.12](https://github.com/jeffshurtliff/obfuscidian/actions/runs/37519004246/job/112459199938) | 709 / 563 | 66% | Passed |
+| [windows-latest / Python 3.13](https://github.com/jeffshurtliff/obfuscidian/actions/runs/37519004246/job/112459199899) | 709 / 563 | 66% | Passed |
+| [windows-latest / Python 3.14](https://github.com/jeffshurtliff/obfuscidian/actions/runs/37519004246/job/112459200037) | 709 / 563 | 66% | Passed |
+
+Windows skips are the documented POSIX mutation/private-mode/anchoring/FIFO
+cases and Windows filename restrictions; Windows instead exercises native
+key ACLs, links/junctions, read-only/no-op behavior and write/append refusal.
+The POSIX skips cover native Windows APIs. Passing jobs do not prove skipped
+behavior or universal filesystem support. The platform guide records the exact
+boundaries; no broad skip or unsafe write workaround was introduced.
+
+**Delivered behavior:** The [nine-job workflow](../.github/workflows/test.yml)
+and [portable artifact validator](../.github/scripts/check_artifacts.py)
+exercise the locked package on each of the nine OS/Python combinations. Focused
+platform/resource/concurrency/interruption/recovery tests use synthetic data.
+The merged follow-ups enforce LF checkout while preserving fixture bytes,
+obtain full no-follow scan identities, reconcile Windows path/descriptor
+creation-time semantics while retaining raw before/after checks, and make
+sharing-denial and edit fixtures deterministic. The initial handoff and four
+Windows follow-ups above retain their historical evidence; this completion
+record supersedes their pending-review, Git-status and hosted-acceptance claims.
+
+**Retained limitations and future work:** Native Windows vault mutation,
+publication/recovery, private directory ACL/locking support and existing-log
+ownership/DACL validation remain unimplemented and fail closed. The maintainer
+accepted completion of the bounded Thread 12 hardening/validation scope with
+these documented refusals. Best-effort filesystem observation is not an atomic
+snapshot or universal crash/power-loss guarantee; target comparison remains
+conservative. Any further runtime capability needs a separate maintainer request.
+Thread 13 is the next roadmap dependency, but **has not started** and was
+explicitly prohibited in this request. Thread 14 is also not started.
+
+**Closure-only checks and Git status:** Documentation link/anchor, status
+consistency, scope/privacy, LF and diff-whitespace checks were performed.
+No application/test/workflow/dependency/version changes were made, and no new
+local test, build, coverage, real-vault or privileged filesystem run was needed
+for this documentation-only update. Sphinx remains unconfigured Thread 13 work.
+The status documents and this completion record are local, unstaged/uncommitted
+on `main` at `dc56009`; they are not yet published. No stage, commit, merge,
+push, PR, tag, release or publication action was performed. The already-merged
+implementation and hosted results are separate from these uncommitted docs.

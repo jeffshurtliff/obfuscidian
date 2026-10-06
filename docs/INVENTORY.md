@@ -72,9 +72,10 @@ These checks provide best-effort change detection, not an atomic filesystem
 snapshot. Pause editing, Obsidian sync, and other writers during future operations.
 No implementation can promise to detect changes that leave all observed state
 identical. Native Windows reads currently rely on pre/post-I/O path/identity
-checks; stronger Windows race hardening and supported-platform validation remain
-Thread 12. Errors contain actionable generic diagnostics without private paths
-or source bytes, and helpers print nothing.
+checks. Thread 12 passed the OS/Python matrix while retaining this observation
+limit; stronger Windows race guarantees remain unimplemented. Errors contain
+actionable generic diagnostics without private paths or source bytes, and
+helpers print nothing.
 
 Target name validation takes explicit filesystem rules for case sensitivity,
 Unicode comparison, Windows restrictions, and component/full-path limits. It
@@ -82,8 +83,9 @@ rejects duplicate names, case/Unicode collisions (including ancestor prefixes),
 unsafe serialized paths, Windows reserved names, and unrepresentable lengths;
 it never renames or normalizes source data. POSIX control-character names and
 lossless UTF-8 names are retained. Consumers must supply the actual target rules;
-no writable filesystem probe or universal OS default is assumed. Thread 12 must
-validate filesystem-specific comparison and length policies before restore use.
+no writable filesystem probe or universal OS default is assumed. Thread 12
+validated conservative comparison/length refusal across the matrix; precise
+filesystem capability detection remains future work. See [platform validation](PLATFORMS.md).
 
 ## Resource accounting
 

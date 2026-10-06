@@ -79,8 +79,9 @@ is closed as completed. Linux CI passed on Python 3.12–3.14. See the
 [CLI contract](docs/CLI.md) and the
 [completion record](dev/IMPLEMENTATION_PLAN.md#thread-11--cli-polish-completion-record-5-october-2026).
 
-Thread 12 CI/hardening changes are local and under review; hosted validation
-is pending. Native Windows mutation and existing-log append still fail closed.
+Thread 12 is complete, reviewed and merged/pushed; issue #12 is closed as
+completed. Linux/macOS/Windows CI passed on Python 3.12–3.14.
+Native Windows mutation/recovery and existing-log append still fail closed.
 See [platform validation](docs/PLATFORMS.md). 
 
 Threads 13–14 remain not started.
@@ -213,8 +214,9 @@ source copy, checks their contents, and installs each outside the checkout with
 already available dependencies. Fully isolated installation validation uses
 fresh artifacts and a dependency wheelhouse; see the
 [contributor guide](https://github.com/jeffshurtliff/obfuscidian/blob/main/CONTRIBUTING.md#fresh-artifact-validation).
-The proposed CI runs these checks on Linux/macOS/Windows and Python 3.12–3.14;
-hosted results are pending. Sphinx documentation tooling belongs to Thread 13.
+CI runs these checks on Linux/macOS/Windows and Python 3.12–3.14;
+all nine jobs passed in the [Thread 12 completion run](https://github.com/jeffshurtliff/obfuscidian/actions/runs/37519004246).
+Sphinx documentation tooling belongs to Thread 13, which remains not started.
 
 See the [changelog](docs/CHANGELOG.md),
 [contributor guide](https://github.com/jeffshurtliff/obfuscidian/blob/main/CONTRIBUTING.md), and

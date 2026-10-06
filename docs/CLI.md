@@ -4,13 +4,14 @@ Thread 11 completes the shared CLI contract and is reviewed and merged/pushed
 into `origin/main`; issue #11 is closed as completed. Linux CI passed on Python
 3.12–3.14; see the
 [completion record](../dev/IMPLEMENTATION_PLAN.md#thread-11--cli-polish-completion-record-5-october-2026).
-Thread 12 CI/hardening changes are local and under review; hosted matrix
-validation is pending. See [platform validation](PLATFORMS.md).
+Thread 12 is complete, reviewed and merged/pushed; issue #12 is closed as
+completed. Linux/macOS/Windows CI passed on Python 3.12–3.14 with the documented
+write/append limitations. See [platform validation](PLATFORMS.md).
 
 Backup and restore semantics remain those in the [backup](BACKUP.md),
 [restore](RESTORE.md), [verification](VERIFY.md) and
 [configuration](CONFIGURATION.md) guides. Native Windows vault mutation remains
-fail-closed; broader platform hardening is Thread 12.
+fail-closed after Thread 12; passing CI does not enable Windows writes.
 
 ## Discovery and option placement
 

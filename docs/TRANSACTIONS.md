@@ -36,8 +36,9 @@ nonblocking OS lifetime lock; a live competing writer keeps ownership.
 Mutation currently requires POSIX `flock`, anchored no-follow directory handles,
 mode-0600 ownership/journals, and mode-0700 workspaces. Native Windows mutation
 fails closed before creating artifacts; Windows locking, owner-only directory
-ACLs, and broader filesystem hardening remain Thread 12. Read-only observation
-and consent helpers do not create artifacts. Linux hosted validation and native
+ACLs and native publication/recovery remain unimplemented after Thread 12.
+The passing matrix validates this refusal; see [platform validation](PLATFORMS.md).
+Read-only observation and consent helpers do not create artifacts. Linux hosted validation and native
 Windows execution must be reported separately from local macOS tests.
 
 ## Stage, validate, publish

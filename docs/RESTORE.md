@@ -7,15 +7,17 @@ Linux CI passed on Python 3.12–3.14; see the
 [Git merge restore completion record](../dev/IMPLEMENTATION_PLAN.md#thread-10--git-merge-restore-completion-record-5-october-2026).
 Thread 11 is complete, reviewed and merged/pushed, with issue #11 closed and
 Linux CI passing on Python 3.12–3.14; see the [CLI contract](CLI.md).
-Thread 12 CI/hardening changes are local and under review; hosted matrix
-validation is pending. See [platform validation](PLATFORMS.md).
+Thread 12 is complete, reviewed and merged/pushed; issue #12 is closed as
+completed. Linux/macOS/Windows CI passed on Python 3.12–3.14 with the documented
+write/append limitations. See [platform validation](PLATFORMS.md).
 
 Thread 09 is reviewed and merged/pushed into `origin/main`; issue #9 is closed
 as completed. Linux CI passed on Python 3.12/3.13; Python 3.14 was canceled
 before executing any steps because no hosted runner acquired the job. The
 maintainer explicitly accepted that validation gap for closure. See the
 [completion record](../dev/IMPLEMENTATION_PLAN.md#thread-09--fresh-restore-completion-record-5-october-2026).
-Broader supported-platform validation remains deferred to Thread 12.
+The Thread 12 matrix passed with native Windows mutation still refused;
+see [platform validation](PLATFORMS.md) for the tested behavior and retained limits.
 
 ## Usage
 
@@ -69,8 +71,10 @@ Target names are checked with a conservative case-folded NFC comparison,
 including on case-sensitive filesystems, and actual filesystem component/path
 length limits. Protected-control aliases are refused. Ambiguous names fail
 without renaming or normalization; valid distinct case/Unicode names on some
-filesystems can therefore be refused. More precise filesystem rules belong to
-Thread 12. Staging-prefix length checks also precede plaintext creation.
+filesystems can therefore be refused. More precise filesystem capability
+detection remains future work under an explicit maintainer request; Thread 12
+retained the conservative comparison policy. Staging-prefix length checks also
+precede plaintext creation.
 
 ## Consent, dry run and rollback
 
@@ -117,9 +121,9 @@ If the mirror or key is damaged, make them verifiable before retrying recovery.
 Checks are best-effort observations, not an atomic snapshot. Exclusive ownership
 coordinates Obfuscidian processes, not unrelated writers. Multi-entry publication
 is journaled and recoverable under tested failures; it is not universally atomic
-or a guarantee against power loss. Native Windows mutation fails closed pending
-Thread 12; read-only preflight/dry runs remain available. Fresh mode performs no
-Git operations. Optional private logging follows the [CLI contract](CLI.md).
+or a guarantee against power loss. Native Windows mutation still fails closed pending
+native publication/ACL support; read-only preflight/dry runs remain available.
+Fresh mode performs no Git operations. Optional private logging follows the [CLI contract](CLI.md).
 
 
 ## Additive Git merge restore
