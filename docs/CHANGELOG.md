@@ -74,6 +74,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Repository text checks out with LF on Windows as required by Ruff; compatibility fixtures retain exact bytes.
 - Read-only destination capture uses absolute binary reads when directory handles are unavailable.
 - Source/key/staging/Git copy stream allocation failures release opened descriptors; key-load memory failures remain redacted.
 - All Windows private-file creators require persistent ACL capability, including new operational logs before mutation.
