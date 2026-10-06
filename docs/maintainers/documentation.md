@@ -31,6 +31,27 @@ to claim a passing check. Open `docs/_build/html/index.html` locally or serve on
 on loopback with `python -m http.server 8765 --bind 127.0.0.1 --directory docs/_build/html`.
 No publishing or hosting configuration is introduced by this build.
 
+## Read the Docs configuration
+
+The root `.readthedocs.yaml` prepares HTML builds on Read the Docs using its
+[configuration v2](https://docs.readthedocs.com/platform/stable/config-file/v2.html).
+It selects Ubuntu 24.04 and Python 3.12, pins Poetry to the repository CI version
+(`2.4.2`), checks the metadata/lock and installs only the locked `docs` group.
+The install job explicitly selects `READTHEDOCS_VIRTUALENV_PATH`, the environment
+Read the Docs creates for its Sphinx build. `--no-root` skips application installation;
+the docs configuration reads package metadata directly and does not import the CLI.
+
+This follows the supported
+[Poetry build customization](https://docs.readthedocs.com/platform/stable/build-customization.html#install-dependencies-with-poetry).
+No `docs/requirements.txt` is needed: `pyproject.toml` and `poetry.lock` remain
+the dependency source, including exact Sphinx, MyST and PyData versions.
+`sphinx.configuration` points to `docs/conf.py`, uses the HTML builder and treats
+warnings as errors. Additional PDF/ePub formats are not requested.
+
+The configuration file prepares the repository for Read the Docs; account/project
+creation, repository connection and hosted builds remain separate steps. Adding
+the file does not establish a passing hosted build or published documentation.
+
 ## Rehearsal and rendered review
 
 The integration test extracts and executes the tutorial's complete bash block in

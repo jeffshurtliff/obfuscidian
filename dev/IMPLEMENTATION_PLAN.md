@@ -3352,3 +3352,39 @@ Next: maintainer review of Thread 13. Thread 14 release preparation requires a s
 Start and final progress comments plus issue #13 checklist/handoff were synchronized
 through the authenticated GitHub CLI after connector write access returned 403.
 The issue remains open; labels, assignee and milestone are unchanged.
+
+### Thread 13 — Read the Docs configuration revision (6 October 2026)
+
+The maintainer committed the initial documentation at `adbcd9e` after local edits
+and reports that the branch is not merged or pushed. This requested revision adds
+[the root Read the Docs v2 configuration](../.readthedocs.yaml), selecting Ubuntu
+24.04, Python 3.12, Poetry 2.4.2 and the existing locked `docs` group. It reuses
+the Read the Docs virtual environment, skips application installation and builds
+HTML from `docs/conf.py` with warnings treated as errors. A separate
+`docs/requirements.txt` is unnecessary; package metadata and lock are unchanged.
+
+[Documentation maintenance](../docs/maintainers/documentation.md), contributor
+guidance and the changelog explain the configuration and distinguish preparation
+from account/project connection and actual hosted publication. The maintainer's
+Python header/title/wording edits are preserved; no Python application or docs
+configuration file was changed.
+
+Validation actually executed on local macOS/Python 3.12.7:
+
+- YAML parsing, configured paths and shell syntax passed; the configuration
+  satisfies the official Read the Docs v2 schema constraints using fastjsonschema.
+- Strict Poetry metadata/lock checks and the docs-only install dry run passed.
+- A new disposable environment accepted the same Poetry 2.4.2 docs-only install
+  against the lock, then passed a strict fresh Sphinx HTML build, local link/asset/
+  fragment checks across 24 pages and `pip check`. Installed Sphinx/MyST/PyData
+  versions match the lock; application, cryptography and pytest were absent.
+- The existing environment also passed a warning-free strict fresh Sphinx build,
+  all 24 rendered pages' local references, Ruff lint/format and diff whitespace.
+- No full application suite, native Ubuntu/Read the Docs job, remote CI or
+  external linkcheck was rerun for this configuration-only revision. No hosted
+  success or publication is claimed.
+
+Four modified tracked Markdown files and the new `.readthedocs.yaml` remain
+unstaged/uncommitted on the existing Thread 13 branch. No commit, push, merge,
+account/project connection, hosted build or publication was performed.
+Issue #13 remains open for review. Thread 14 remains not started.

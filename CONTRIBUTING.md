@@ -82,7 +82,9 @@ The test workflow targets Linux/macOS/Windows on Python 3.12–3.14;
 all nine jobs passed in the [Thread 12 completion run](https://github.com/jeffshurtliff/obfuscidian/actions/runs/37519004246).
 
 Thread 13 adds optional locked Sphinx/reST/MyST and `pydata_sphinx_theme` tooling.
-Build and inspect locally; no documentation publication or hosting is configured.
+Build and inspect locally. `.readthedocs.yaml` prepares locked Poetry-based hosted
+builds; no account/project connection, hosted build or documentation publication
+is established by that file. See [docs maintenance](docs/maintainers/documentation.md).
 
 ## Development workflow
 

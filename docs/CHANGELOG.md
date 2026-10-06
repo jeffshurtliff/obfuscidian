@@ -7,6 +7,9 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Read the Docs v2 configuration using Ubuntu 24.04, Python 3.12 and the locked Poetry docs group,
+  with HTML builds that fail on Sphinx warnings; no duplicate requirements list or publication.
+
 - Thread 13 optional locked Sphinx/reST/MyST documentation with the PyData theme, dark default,
   proportional web logo, violet/cyan accents and reader-selectable light mode.
 - Installation/CLI navigation, an executable synthetic backup/verify/restore tutorial, security policy,
