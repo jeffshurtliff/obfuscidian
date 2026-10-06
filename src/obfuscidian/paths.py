@@ -15,7 +15,7 @@ import stat
 import unicodedata
 from collections.abc import Iterable, Iterator
 from contextlib import contextmanager
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from pathlib import Path, PureWindowsPath
 
 from obfuscidian import constants as const
@@ -41,6 +41,26 @@ class _Fingerprint:
     def _same_object(self, info: os.stat_result) -> bool:
         """Compare identity and type without treating directory time as identity."""
         return (self.device, self.inode, stat.S_IFMT(self.mode)) == (info.st_dev, info.st_ino, stat.S_IFMT(info.st_mode))
+
+    def _matches_open_stat(self, info: os.stat_result) -> bool:
+        """Bind descriptor metadata to path metadata despite Windows ctime semantics.
+
+        Supported Windows Python can expose creation time through path ctime
+        but change time through descriptor ctime. Only an exact descriptor
+        birthtime can bridge that difference; all other fingerprint fields
+        must match. Callers must additionally compare raw descriptor metadata
+        before/after reading to retain its independent change-time guard.
+
+        :param info: Full stat metadata from an opened file descriptor.
+        :returns: Whether all comparable path/descriptor metadata matches.
+        """
+        current = self._from_stat(info)
+        if current == self:
+            return True
+        if os.name != 'nt':
+            return False
+        birthtime = getattr(info, 'st_birthtime_ns', None)
+        return type(birthtime) is int and replace(current, ctime_ns=birthtime) == self
 
 
 @dataclass(frozen=True)

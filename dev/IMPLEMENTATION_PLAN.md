@@ -1047,11 +1047,11 @@ output and help formatting at narrow and normal terminal widths.
 
 **Goal/deliverable:** Evidence for the supported OS/Python matrix and robust
 boundary/failure handling, without new product features.
-**Depends on:** 11. **Status:** Initial implementation and LF checkout correction
-reviewed and merged; Linux/macOS hosted jobs passed. Windows style/security now
-passes, but runtime identity correction is under review and full matrix acceptance
-remains pending. Issue #12 remains open. See the handoff and 6 October Windows
-CI/identity follow-ups below.
+**Depends on:** 11. **Status:** Initial implementation, LF checkout and scan
+identity corrections reviewed and merged; Linux/macOS hosted jobs passed.
+Windows style/security passes, but descriptor-read correction is under review
+and full matrix acceptance remains pending. Issue #12 remains open. See the
+handoff and 6 October Windows CI/identity/descriptor follow-ups below.
 
 1. Expand CI to Windows, macOS, and Linux across Python 3.12, 3.13, and 3.14.
    Use Poetry/lock-aware installs; run unit and offline local-Git integration
@@ -3085,3 +3085,71 @@ records the investigation, actual hosted/local evidence and pending acceptance.
 Windows mutation/recovery and existing-log append still fail closed; format,
 dependencies and the nine-job matrix are unchanged. Threads 13–14 remain
 **not started**; Thread 13 becomes eligible only after Thread 12 acceptance.
+
+### Thread 12 — Windows descriptor follow-up (6 October 2026)
+
+**Status/evidence:** The maintainer merged the scan-identity correction at
+`fd6472f`. [Run `37493585740`](https://github.com/jeffshurtliff/obfuscidian/actions/runs/37493585740)
+passed all six Linux/macOS jobs and Windows style/security. Windows offline
+results were **32 failed / 634 passed** on Python 3.12, **34 failed / 632 passed**
+on Python 3.13, and **32 failed / 634 passed** on Python 3.14, with **563 skipped
+and 7 setup errors** on each. Logs for all three failed jobs were reviewed;
+the [3.12 traceback](https://github.com/jeffshurtliff/obfuscidian/actions/runs/37493585740/job/112372301308)
+shows fixture setup reaching `_read_token()` and refusing descriptor metadata.
+Test/coverage evidence was retained; fresh artifact validation was skipped.
+This correction remains local/uncommitted and issue #12 remains open.
+
+**Cause and correction:** Supported Windows Python can return creation time in
+path `st_ctime_ns` but change time in descriptor `st_ctime_ns`, as documented in
+[CPython issue #157671](https://github.com/python/cpython/issues/157671).
+A new private [fingerprint matcher](../src/obfuscidian/paths.py) permits only an
+exact descriptor `st_birthtime_ns` bridge when full metadata equality fails on
+Windows. Device/inode, full mode, size and modification time must all match;
+missing/malformed creation metadata cannot justify a mismatch. Exact metadata
+matches remain accepted on all hosts, with no POSIX creation-time fallback.
+[Source reads](../src/obfuscidian/inventory.py),
+[token reads](../src/obfuscidian/manifest.py) and
+[transaction hashing](../src/obfuscidian/transactions.py) use the same matcher.
+Each also compares raw descriptor metadata before/after reading, retaining the
+independent change-time check, and rechecks the path. No timestamp is dropped
+from same-API comparisons and no identity, type, link, parent, length or content
+validation is bypassed. Windows mutation/recovery/append refusals are unchanged.
+
+The case-alias overlap test now accepts the earlier lexical overlap diagnostic
+on Windows while continuing to require refusal. The existing cached-enumeration
+fixture models absent directory handles without changing timestamp semantics,
+so it remains a focused test of scan identities rather than a fake OS globally.
+
+**Regression and validation actually executed:**
+
+- New [descriptor metadata regression](../tests/integration/test_opened_metadata.py):
+  **35 cases** covering stable source/token/hash reads, change-time-only drift,
+  creation-time/device/inode/mode/size/mtime drift, missing/malformed creation
+  metadata, and exact/POSIX comparison behavior. The three stable-reader cases
+  reproduced the original failures before the fix and passed after it.
+- New/existing scan regression plus path unit suite: **94 passed, 1 native Windows
+  junction skip** on local macOS/Python 3.12.7.
+- Full local macOS/Python 3.12.7 suite: **1264 passed, 7 native Windows skips**,
+  including offline wheel/sdist installation tests and existing interruption,
+  recovery, changing-path, no-op and refusal coverage.
+- Focused descriptor/scan/format/inventory/verify/platform/path suites on each
+  Python **3.13.15 and 3.14.7**: **374 passed, 6 native Windows skips** each;
+  existing isolated locked environments imported the current corrected source.
+- Strict Poetry metadata/lock, Ruff lint/format, Bandit (no issues), fresh wheel/
+  sdist builds and strict Twine passed. Header/model/date/LF, documentation
+  links/anchors, privacy/scope and `git diff --check` passed.
+
+**Pending/handoff:** Native Windows runtime/artifact reruns remain pending the
+maintainer's review, commit/merge/push and CI execution. Synthetic Windows
+metadata on macOS does not establish hosted Windows success. Full alternative
+Python suites, new coverage measurement, separate wheelhouse-isolated installs
+and Sphinx were not rerun. No real vault/key/cloud or privileged filesystem test
+was performed. Format, dependencies and the nine-job matrix are unchanged; no
+new broad skip, expected failure or deferred product feature was added.
+Exactly **9 modified tracked files and 1 new regression module** remain
+unstaged/uncommitted on the existing maintainer branch
+`ci/12-thread-12-fix-windows-offline-test-failures`, at `fd6472f`. No development
+index, commit, push, PR, merge or release action was taken; only temporary
+synthetic Git fixture history was used by tests. Issue #12 records this follow-up.
+Changed Python headers use `Jeff Shurtliff (via GPT-6.1 Sol)` and `06 Oct 2026`.
+Threads 13–14 remain **not started**; Thread 13 requires Thread 12 acceptance.

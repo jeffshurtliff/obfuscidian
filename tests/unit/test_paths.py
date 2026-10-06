@@ -3,8 +3,8 @@
 :Module:            tests.unit.test_paths
 :Synopsis:          Read-only vault and target-path safety tests
 :Created By:        Jeff Shurtliff
-:Last Modified:     Jeff Shurtliff (via GPT-6)
-:Modified Date:     03 Oct 2026
+:Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
+:Modified Date:     06 Oct 2026
 """
 
 from __future__ import annotations
@@ -217,7 +217,9 @@ def test_case_alias_overlap(locations: tuple[Path, Path, Path]) -> None:
         with pytest.raises(_ConfigurationError, match='overlap'):
             paths._preflight_vault_paths(origin, origin.parent, key)
         return
-    with pytest.raises(_ConfigurationError, match='identity'):
+    # Windows path comparison can reject this alias lexically before the
+    # filesystem identity check; both diagnostics enforce the same refusal.
+    with pytest.raises(_ConfigurationError, match='overlap'):
         paths._preflight_vault_paths(origin, alias / 'new-mirror', key)
 
 
