@@ -44,3 +44,8 @@ pygments_style = 'a11y-high-contrast-light'
 pygments_dark_style = 'a11y-high-contrast-dark'
 linkcheck_retries = 2
 linkcheck_timeout = 15
+favicons = [
+    {'rel': 'icon', 'sizes': '16x16', 'href': 'obfuscidian-favicon-16x16.png'},
+    {'rel': 'icon', 'sizes': '32x32', 'href': 'obfuscidian-favicon-32x32.png'},
+    {'rel': 'apple-touch-icon', 'sizes': '180x180', 'href': 'obfuscidian-apple-touch-icon-180x180.png'},
+]
