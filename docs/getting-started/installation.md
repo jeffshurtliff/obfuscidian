@@ -1,18 +1,30 @@
-# Installation and supported environments
+# Installation steps
 
-Obfuscidian requires Python 3.12 or newer. The tested matrix is Linux, macOS
-and Windows on Python 3.12–3.14. This initial development version has no claimed
-PyPI publication; install from a source checkout or a locally built artifact.
+Obfuscidian currently installs from its source code. You need **Python 3.12
+or newer**. Backup and restore writes work on Linux and macOS; native Windows
+supports key creation, verification and previews only.
 
-Linux/macOS implement backup and restore writes. Native Windows implements
-help/configuration, private key creation, verification and read-only planning;
-vault mutation/recovery and existing-log append still fail closed. A passing
-Windows CI job does not enable those writes. See [platform validation](../PLATFORMS.md).
-Obsidian does not have to be running; no plugins are executed.
+If Python is missing or older, get a supported version from
+[Python downloads](https://www.python.org/downloads/), then reopen your terminal.
+The tested Python versions are 3.12–3.14.
 
-## pip from a checkout
+## 1. Get the source code
 
-From the repository root, use an isolated environment. POSIX shell:
+Download the source ZIP from the
+[Obfuscidian repository](https://github.com/jeffshurtliff/obfuscidian) using
+**Code → Download ZIP**, then extract it. Alternatively, use an existing clone.
+Open a terminal in the extracted folder containing `pyproject.toml`.
+
+## 2. Install in a separate Python environment
+
+A virtual environment keeps Obfuscidian's Python packages separate from your
+other applications. On Linux/macOS, run:
+
+```sh
+python3 --version
+```
+
+Check that this reports Python 3.12 or newer before continuing:
 
 ```sh
 python3 -m venv .venv
@@ -21,40 +33,17 @@ python -m pip install .
 obfuscidian --version
 ```
 
-Windows PowerShell, using a Python 3.12+ interpreter:
+The final command should print Obfuscidian's version.
 
-```powershell
-py -3.12 -m venv .venv
-.\.venv\Scripts\python.exe -m pip install .
-.\.venv\Scripts\obfuscidian.exe --help
-```
+In a **new terminal**, return to this source folder and run
+`. .venv/bin/activate` before using `obfuscidian`. Leave that terminal open while
+you follow the tutorials; your vault can be in a different folder.
 
-The explicit executable paths avoid requiring PowerShell activation-policy changes.
-pip resolves runtime dependencies from `pyproject.toml`; docs tooling is optional.
-For a local wheel, substitute its actual path for `.` in the install command.
+## Windows and other installation choices
 
-## pipx from a checkout
+For Windows PowerShell, pipx, local packages or contributor setup, follow
+[Installation and supported environments](../guides/installation.md).
+The current source install does not require a published package on PyPI.
 
-With pipx already installed and configured on your PATH, run from the repository
-root with Python 3.12+:
-
-```sh
-pipx install --python python3.12 .
-obfuscidian --help
-```
-
-PowerShell equivalent, when `python` resolves to a supported interpreter:
-
-```powershell
-pipx install --python python .
-obfuscidian --help
-```
-
-pipx provides an isolated CLI environment. These examples install the checkout;
-they do not depend on a package-index release.
-
-## Developers
-
-Use Poetry 2.2 or newer, below 3.0. See [contributing](../maintainers/contributing.md)
-for the locked development/docs setup. The [synthetic tutorial](tutorial.md)
-expects `python` and `obfuscidian` to be available from the selected environment.
+**Next:** run the [Quickstart](quickstart.md), or learn
+[Using the Obfuscidian CLI](using-the-cli.md) first.

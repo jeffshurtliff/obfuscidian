@@ -1,6 +1,6 @@
 # Inventory and path preflight
 
-Thread 03 adds internal read-only helpers now used by
+Read-only inventory and path checks are used by
 [fresh and additive merge backup](BACKUP.md). The CLI exposes `keygen` and
 `shroud fresh|merge`, and [read-only `verify`](VERIFY.md); [`unshroud fresh|merge`](RESTORE.md) is also available.
 These helpers are implementation boundaries, not a supported Python library API.
@@ -56,7 +56,8 @@ Existing mirror namespace checks allow only root `.git`, `.gitignore`, and
 files must use 32 lowercase hexadecimal characters plus `.obf`. Types and links
 are checked, and unmanaged entries cause refusal. Git metadata contents and
 manifest/object authentication/completeness are **not** validated here; format
-validation belongs to Thread 04 and publication/transaction checks to Thread 05.
+validation is described in [the format guide](FORMAT.md), and publication checks
+in [the transaction guide](TRANSACTIONS.md).
 A legal namespace alone never authorizes modifying a mirror.
 
 Stable reads accept only included regular file records and read one bounded
@@ -72,8 +73,8 @@ These checks provide best-effort change detection, not an atomic filesystem
 snapshot. Pause editing, Obsidian sync, and other writers during backup, restore and recovery.
 No implementation can promise to detect changes that leave all observed state
 identical. Native Windows reads currently rely on pre/post-I/O path/identity
-checks. Thread 12 passed the OS/Python matrix while retaining this observation
-limit; stronger Windows race guarantees remain unimplemented. Errors contain
+checks. The OS/Python CI matrix passed while retaining this observation limit;
+stronger Windows race guarantees remain unimplemented. Errors contain
 actionable generic diagnostics without private paths or source bytes, and
 helpers print nothing.
 
@@ -83,8 +84,8 @@ rejects duplicate names, case/Unicode collisions (including ancestor prefixes),
 unsafe serialized paths, Windows reserved names, and unrepresentable lengths;
 it never renames or normalizes source data. POSIX control-character names and
 lossless UTF-8 names are retained. Consumers must supply the actual target rules;
-no writable filesystem probe or universal OS default is assumed. Thread 12
-validated conservative comparison/length refusal across the matrix; precise
+no writable filesystem probe or universal OS default is assumed. CI validated
+conservative comparison/length refusal across the matrix; precise
 filesystem capability detection remains future work. See [platform validation](PLATFORMS.md).
 
 ## Resource accounting
@@ -110,6 +111,6 @@ copies; already allocated destination data is not charged again. Read-only
 free-space/access checks operate on an existing chosen parent without reserving
 space. These are payload estimates: filesystem allocation, journals, metadata,
 and later changes to available space are accounted for by transaction planning.
-Thread 05 implements [safe staging and publication primitives](TRANSACTIONS.md).
+See [safe staging and publication](TRANSACTIONS.md).
 Callers must still supply complete staging estimates, authenticate format data,
-and recheck source inventory. Thread 06 supplies those checks for `shroud fresh`.
+and recheck source inventory. `shroud fresh` supplies those checks.

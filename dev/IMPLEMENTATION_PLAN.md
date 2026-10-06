@@ -1110,10 +1110,12 @@ append refusal pending native file ownership/DACL validation.
 **Goal/deliverable:** Coherent, buildable user/contributor/security documentation
 that describes completed behavior rather than the template.
 **Depends on:** 12 for completion; earlier threads add incremental help/docs.
-**Status:** Implemented locally; maintainer review pending. Issue #13 remains
-open. Strict Sphinx and local links pass; optional external linkcheck is limited
-by GitHub rate limiting/anchor rendering. See the Thread 13 handoff below.
-Thread 14 remains not started.
+**Status:** Initial docs and Read the Docs configuration committed by the maintainer
+at `adbcd9e` and `0b4728a`; requested beginner documentation revision implemented
+locally and uncommitted, pending review. Issue #13 remains open. Strict Sphinx,
+local links and synthetic examples pass. No hosted publication/build is claimed;
+optional external linkcheck remains limited by earlier GitHub rate limiting.
+See the latest Thread 13 handoff below. Thread 14 remains not started.
 
 1. Add Poetry `docs` dependencies and Sphinx/reST/MyST with `pydata_sphinx_theme`.
    Adapt the structure of SalesPyForce/PyDPlus: overview/getting started, CLI
@@ -3388,3 +3390,66 @@ Four modified tracked Markdown files and the new `.readthedocs.yaml` remain
 unstaged/uncommitted on the existing Thread 13 branch. No commit, push, merge,
 account/project connection, hosted build or publication was performed.
 Issue #13 remains open for review. Thread 14 remains not started.
+
+
+### Thread 13 — Beginner documentation revision (6 October 2026)
+
+The maintainer committed the previous Read the Docs revision at `0b4728a` and
+requested a more approachable Getting Started section inspired by the pandas
+introductory navigation. This revision remains within documentation work:
+
+- Nine short topics in the requested order: introduction, Quickstart,
+  installation, CLI, private key, workflow choices, backup, fresh restore and
+  additive/Git merge restore. Responsive task cards use the existing theme
+  colors; plain-language definitions, shared synthetic paths, prerequisites and
+  detailed-guide links keep implementation detail out of the introductory path.
+- Detailed installation and the six-file complete restore rehearsal moved to
+  `docs/guides/installation.md` and `docs/guides/restore-rehearsal.md`. README,
+  toctrees, source links, tutorial tests and sdist includes follow the relocation.
+- Development-thread references removed from every Sphinx source/rendered page
+  except the changelog. Technical behavior, safety details and recorded platform
+  evidence are retained. No application, crypto, format or dependency change.
+- Executable beginner integration examples prove fresh byte preservation and
+  additive Git restore: backup bytes replace matching base files, base-only
+  files remain, original checkout is unchanged, and changes remain uncommitted.
+  The existing six-file rehearsal still checks all names, bytes and directories.
+- Artifact test fixtures now include all explicitly packaged user documentation
+  instead of omitting newer files from their synthetic source copies.
+
+Validation actually executed on local macOS/Python 3.12.7:
+
+- `poetry check --lock --strict`, Ruff lint/format and diff whitespace passed.
+- Full offline suite: **1268 passed, 7 platform skips**. After final command
+  wrapping and artifact-fixture updates, targeted documentation examples passed
+  **3/3**, and packaging checks passed **3/3** both from a synthetic source copy
+  and against a newly built actual wheel/sdist. Installation checks stay offline.
+- Strict fresh Sphinx HTML build passed without warnings. All **33 rendered HTML
+  pages** passed local link/asset/fragment checks. Markdown source links passed,
+  and all rendered pages except changelog were checked for development references.
+- Isolated Chrome inspected all nine beginner pages, both section indexes, the
+  site landing page and both relocated guides in dark/light: **28 desktop
+  renders**, with **zero axe-core WCAG 2 A/AA and 2.1 A/AA violations**. Four
+  390px mobile renders had no page overflow. Cards/sidebar topic agreement,
+  skip link, theme selection/persistence and screenshots were reviewed.
+  Automated/visual checks do not establish complete screen-reader compliance.
+- Fresh Poetry wheel/sdist build and strict Twine checks passed; the sdist
+  contains every beginner and relocated guide and omits the old tutorial path.
+- Synthetic workspaces use an explicit temporary-directory template, making
+  their location deterministic across shell implementations without real data.
+
+Limits: no new hosted CI/Read the Docs run, docs publication, native Windows
+mutation, real vault/cloud test, broad external linkcheck or screen-reader test.
+Native Windows write/recovery and existing-log append limits remain unchanged.
+All application and dependency files are unchanged except documentation include
+metadata; lockfile and maintainer's docs configuration edits are preserved.
+
+Git status: work remains unstaged/uncommitted on the existing
+`docs/13-thread-13-introduce-sphinx-rest-myst-docs` branch at `0b4728a`.
+Four newly appearing icon PNG assets are separate work and were left untouched.
+No commit, push, merge, PR, release, publication or tool companion was created.
+
+Next: maintainer review. Suggested separate documentation follow-ups are a
+small glossary/FAQ, copy buttons and short expected-output examples, and a
+novice usability pass through installation and first backup. Source-distribution
+link completeness beyond its selected user guides can be reviewed during release
+preparation. Thread 14 remains not started and requires a separate request.

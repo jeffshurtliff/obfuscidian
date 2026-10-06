@@ -5,6 +5,13 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Changed
+
+- Reorganized Getting Started into nine beginner topics with short examples and
+  task cards; moved detailed installation and restore rehearsal into User Guides.
+- Removed development-thread references from Sphinx pages except this changelog,
+  and updated documentation links, source-package includes and artifact validation.
+
 ### Added
 
 - Read the Docs v2 configuration using Ubuntu 24.04, Python 3.12 and the locked Poetry docs group,

@@ -1,27 +1,27 @@
 Obfuscidian documentation
 =========================
 
-Back up an Obsidian vault as individually encrypted files and an encrypted path
-manifest, then verify and restore it with the same private key. Original notes
-and attachments remain byte-for-byte intact. The CLI is the supported interface;
-internal Python helpers are not a public library API.
+Obfuscidian makes an encrypted backup of your Obsidian vault in a separate
+folder. Your notes and attachments stay readable in the original vault.
+Use your private key to check the backup and restore it when you need it.
 
-Start with :doc:`getting-started/installation`, then run the
-:doc:`getting-started/tutorial` with fake data before using a real vault.
+New here? Visit :doc:`getting-started/index` for a plain-language introduction,
+or try the :doc:`getting-started/quickstart` with one fake note.
+The :doc:`guides/index` have the detailed instructions and safety guidance.
 
 .. important::
 
-   This is initial ``1.0.0.dev0`` development documentation. No PyPI release or
-   hosted documentation is claimed. Linux/macOS write operations are implemented;
-   native Windows vault mutation/recovery still fails closed. See
+   This version, ``1.0.0.dev0``, installs from source. Backup and restore writes
+   work on Linux/macOS. Native Windows supports key creation, verification and
+   previews; writing or recovering vaults is not yet available. See
    :doc:`PLATFORMS` for tested capabilities and limitations.
 
 Choose a task
 -------------
 
-* :doc:`BACKUP`: current-inventory fresh snapshots or additive retention.
+* :doc:`BACKUP`: back up current files or keep older entries too.
 * :doc:`VERIFY`: authenticate the complete mirror without application writes.
-* :doc:`RESTORE`: fresh restore or an additive, uncommitted Git review worktree.
+* :doc:`RESTORE`: restore a saved snapshot or review restored files using Git.
 * :doc:`CONFIGURATION`: key selection, permissions, environment variables and custody.
 * :doc:`SECURITY`: threat model, limits and private reporting.
 * :doc:`TROUBLESHOOTING`: failures, recovery and retained plaintext cleanup.

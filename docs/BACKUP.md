@@ -5,7 +5,7 @@ and updates paths while retaining historical entries. Both authenticate the
 existing mirror before publication and preserve source bytes and root mirror Git
 controls. Backup runs no Git operations. The CLI is the supported interface.
 
-Start with the [synthetic backup/verify/restore rehearsal](getting-started/tutorial.md).
+Start with the [synthetic backup/verify/restore rehearsal](guides/restore-rehearsal.md).
 Read [platform boundaries](PLATFORMS.md) before writing; native Windows vault
 mutation remains refused. [Verification](VERIFY.md), [restore](RESTORE.md) and
 [optional private logging](CLI.md) are available.

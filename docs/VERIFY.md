@@ -3,7 +3,7 @@
 `verify` authenticates the complete manifest and all required objects without
 application writes or repairs. The mirror stays unchanged. Keep its original
 key outside the mirror. Start with the
-[synthetic tutorial](getting-started/tutorial.md).
+[synthetic tutorial](guides/restore-rehearsal.md).
 
 ## Usage and selection
 
@@ -75,13 +75,5 @@ key holders can forge valid data. Root Git controls are checked for allowed
 names/types, not authenticated as vault data. See the
 [format threat limits](FORMAT.md#read-only-behavior-and-threat-limits).
 
-Thread 08 is complete following maintainer review and merge/push into
-`origin/main`; [issue #8](https://github.com/jeffshurtliff/obfuscidian/issues/8)
-is closed as completed. The
-[verified Linux CI run](https://github.com/jeffshurtliff/obfuscidian/actions/runs/37349183494)
-passed on Python 3.12–3.14 at commit `3d3425b`, with 903 tests passed and two
-native Windows skips in each job, plus three fully isolated artifact checks.
-See the [completion record](https://github.com/jeffshurtliff/obfuscidian/blob/main/dev/IMPLEMENTATION_PLAN.md#thread-08--read-only-verification-completion-record-5-october-2026)
-for commit alignment and validation evidence. Thread 12 subsequently passed
-the Linux/macOS/Windows Python 3.12–3.14 matrix; see
-[platform validation](PLATFORMS.md) for the retained filesystem limits.
+See [platform validation](PLATFORMS.md) for the Linux/macOS/Windows
+Python 3.12–3.14 CI evidence and retained filesystem limits.

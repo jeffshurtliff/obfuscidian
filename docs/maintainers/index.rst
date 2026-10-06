@@ -1,7 +1,7 @@
 Contributors and maintainers
 ============================
 
-Keep work bounded to the requested thread, reviewable and public-safe. Git history
+Keep work bounded to the requested task, reviewable and public-safe. Git history
 and release/publication actions each require explicit maintainer authorization.
 
 .. toctree::

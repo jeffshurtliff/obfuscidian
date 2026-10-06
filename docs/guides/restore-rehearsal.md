@@ -14,7 +14,7 @@ attachment, hidden/settings files, a zero-byte file and an empty directory.
 ```bash
 set -eu
 umask 077
-DEMO_DIR=$(mktemp -d)
+DEMO_DIR=$(mktemp -d "${TMPDIR:-/tmp}/obfuscidian-demo.XXXXXX")
 export DEMO_DIR
 cd "$DEMO_DIR"
 python - <<'PYTHON'

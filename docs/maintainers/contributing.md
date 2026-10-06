@@ -37,8 +37,7 @@ returns, exceptions and material limitations.
 New Python modules/tests use the repository header convention. Preserve
 `Created By`; on changed files update `Last Modified` to
 `Jeff Shurtliff (via <actual-model-identifier>)` and `Modified Date` to the local
-date as `DD Mon YYYY`. Use the actual generating model, not a pinned sample;
-Thread 13 uses the maintainer-requested `GPT-6.1 Sol` reference.
+date as `DD Mon YYYY`. Use the actual generating model, not a pinned sample.
 
 During initial `1.0.0` development, public version directives are not required
 except for the existing CLI exception: each public CLI callable includes one
@@ -63,7 +62,7 @@ Use the existing roadmap issue and actual repository issue templates. Base
 branches on `main`; Codex uses `codex/<type>/<issue-number>-<description>` when a
 real issue exists. Do not invent an issue just for naming. Preserve user edits
 and keep work focused. Post public-safe start/progress/handoff evidence for the
-requested thread. Leave its issue open pending maintainer review/closure.
+requested task. Leave its issue open pending maintainer review/closure.
 
 Stage, commit, push, PR, merge, tag, release and publication each need explicit
 maintainer authorization. Authorized commits use past tense, a filename for a
@@ -71,8 +70,8 @@ single-file change, and the applicable issue number. PRs explain the resulting
 behavior, checks and limits, following any actual template and configured labels
 (including `codex` for Codex work). No PR template is currently configured.
 
-Do not trigger the template release workflow. Thread 14 release preparation is
-not started and remains a separate task. A handoff states actual Git status,
+Do not trigger the template release workflow. Release preparation remains
+a separate task. A handoff states actual Git status,
 executed/skipped checks, blockers and next eligible work. Never equate local
 results with hosted CI, publication or guaranteed recovery. Handle suspected
 vulnerabilities through [private reporting](../SECURITY.md#report-a-concern-privately).

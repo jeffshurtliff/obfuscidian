@@ -35,13 +35,17 @@ obfuscidian --help
 ```
 
 For pipx, run `pipx install --python python3.12 .` from the checkout.
-See [installation](docs/getting-started/installation.md) for Windows PowerShell,
+See [installation](docs/guides/installation.md) for Windows PowerShell,
 local wheel and developer setup. Both `obfuscidian` and `python -m obfuscidian`
 offer the same behavior.
 
 ## First backup and restore
 
-Follow the [complete synthetic rehearsal](docs/getting-started/tutorial.md)
+New to command-line backups? Start with [What is Obfuscidian?](docs/getting-started/what-is-obfuscidian.md)
+and the [Quickstart](docs/getting-started/quickstart.md). The beginner pages introduce keys,
+backup choices and restore steps one topic at a time.
+
+Follow the [complete synthetic rehearsal](docs/guides/restore-rehearsal.md)
 before using a real vault. It creates a private key outside both vaults,
 previews and writes a fresh backup, verifies every object, restores to a new
 location and compares all bytes and directories.

@@ -1,6 +1,6 @@
 # Configuration and keys
 
-Thread 02 provides `keygen` and internal configuration/key-loading helpers.
+`keygen` creates private key files; configuration selects the key and vault locations.
 [Backup](BACKUP.md) and [read-only verification](VERIFY.md) use these helpers;
 [fresh restore](RESTORE.md) also uses them. The helpers are
 internal implementation boundaries; the CLI is the supported public interface.
@@ -95,8 +95,8 @@ operators can still have access, and ACL enforcement depends on the filesystem
 and host policy. POSIX `0600` is not a Windows ACL guarantee. Loading warns that
 an existing Windows key's ACL has not been assessed; use a private directory
 and review access permissions. Parent identity checks on Windows are best effort;
-POSIX descriptor-relative protections are unavailable there. Thread 12 validated native
-Windows key creation/loading and refusal behavior across Python 3.12–3.14;
+POSIX descriptor-relative protections are unavailable there. The native CI matrix
+validated Windows key creation/loading and refusal behavior across Python 3.12–3.14;
 see [platform validation](PLATFORMS.md). Existing-key ACL assessment remains absent.
 
 A Fernet key is a symmetric secret: anyone with it can read and forge backups.
@@ -150,4 +150,4 @@ These examples verify a pre-existing complete mirror. Alias selection can use
 `KEY_PATH` when you intend alias selection. `OBFUSCIDIAN_ORIGIN_VAULT` selects
 the source for backup and plaintext destination for restore. No environment
 variable contains the key bytes. Windows mutation remains refused. Start with
-the [complete synthetic rehearsal](getting-started/tutorial.md).
+the [complete synthetic rehearsal](guides/restore-rehearsal.md).

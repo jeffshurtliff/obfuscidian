@@ -65,8 +65,10 @@ include = [
     { path = "docs/PLATFORMS.md", format = "sdist" },
     { path = "docs/SECURITY.md", format = "sdist" },
     { path = "docs/TROUBLESHOOTING.md", format = "sdist" },
-    { path = "docs/getting-started/installation.md", format = "sdist" },
-    { path = "docs/getting-started/tutorial.md", format = "sdist" },
+    { path = "docs/getting-started/*.md", format = "sdist" },
+    { path = "docs/getting-started/index.rst", format = "sdist" },
+    { path = "docs/guides/*.md", format = "sdist" },
+    { path = "docs/guides/index.rst", format = "sdist" },
     { path = "SECURITY.md", format = "sdist" },
 ]
 # Use a small package boundary, plus explicit exclusions for private/generated content.

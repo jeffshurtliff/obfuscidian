@@ -66,12 +66,25 @@ tables, warnings, sidebar/search, keyboard focus, skip link and theme switcher.
 Run an accessibility audit where available and report its limits; automated
 results do not establish complete assistive-technology compliance.
 
+## Beginner pages and detailed guides
+
+Keep `docs/getting-started/` focused on one task per page: define unfamiliar
+terms, use short synthetic examples, state prerequisites and link to the detailed
+guide. The nine topics are ordered in its `index.rst`; the task cards and sidebar
+should agree. Detailed installation and the complete restore rehearsal live in
+`docs/guides/`. Update links and source-package includes when moving a page.
+
+`tests/integration/test_docs_tutorial.py` executes the complete rehearsal and the
+beginner Quickstart/restore commands against temporary fake data. Run it when
+changing those examples, then check the rendered navigation in both color modes
+and on a narrow screen.
+
 ## Branding and accessibility
 
 Dark is the first-visit default, while PyData remembers a reader's selected mode.
 The supplied horizontal PNG remains the source asset. A proportional 848 × 297
 PNG provides a smaller web logo without changing the artwork/transparency.
-Its dark backing keeps the luminous wordmark legible in both themes.
+The logo preserves its transparency in both color modes.
 `docs/_static/custom.css` applies restrained violet/cyan accents to readable
 surfaces while retaining semantic warning/error colors and accessible syntax
 highlighting. Content links stay underlined; keyboard focus has a visible outline.
@@ -80,5 +93,5 @@ See the [PyData theme documentation](https://pydata-sphinx-theme.readthedocs.io/
 for mode configuration and [branding guidance](https://pydata-sphinx-theme.readthedocs.io/en/stable/user_guide/branding.html).
 
 Keep examples and evidence public-safe. Use supported commands and fake data;
-mark future behavior as planned. Thread 14, external publishing, release automation
+mark future behavior as planned. Release preparation, external publishing, release automation
 and tool-specific companion files require separate maintainer requests.

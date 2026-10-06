@@ -4,7 +4,7 @@
 :Synopsis:          Build, inspect, and install package artifacts offline
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     05 Oct 2026
+:Modified Date:     06 Oct 2026
 """
 
 from __future__ import annotations
@@ -26,6 +26,35 @@ import pytest
 
 from obfuscidian import constants as const
 
+_PUBLIC_SDIST_DOCS = (
+    'docs/CHANGELOG.md',
+    'docs/CONFIGURATION.md',
+    'docs/INVENTORY.md',
+    'docs/FORMAT.md',
+    'docs/TRANSACTIONS.md',
+    'docs/BACKUP.md',
+    'docs/VERIFY.md',
+    'docs/RESTORE.md',
+    'docs/CLI.md',
+    'docs/PLATFORMS.md',
+    'docs/SECURITY.md',
+    'docs/TROUBLESHOOTING.md',
+    'docs/getting-started/index.rst',
+    'docs/getting-started/what-is-obfuscidian.md',
+    'docs/getting-started/quickstart.md',
+    'docs/getting-started/installation.md',
+    'docs/getting-started/using-the-cli.md',
+    'docs/getting-started/private-key.md',
+    'docs/getting-started/choosing-a-workflow.md',
+    'docs/getting-started/creating-a-backup.md',
+    'docs/getting-started/fresh-restore.md',
+    'docs/getting-started/merge-restore.md',
+    'docs/guides/index.rst',
+    'docs/guides/installation.md',
+    'docs/guides/restore-rehearsal.md',
+    'SECURITY.md',
+)
+
 
 @pytest.fixture(scope='session')
 def artifacts(pytestconfig: pytest.Config, tmp_path_factory: pytest.TempPathFactory) -> tuple[Path, Path]:
@@ -37,20 +66,10 @@ def artifacts(pytestconfig: pytest.Config, tmp_path_factory: pytest.TempPathFact
         for name in ('pyproject.toml', 'poetry.lock', 'README.md', 'LICENSE'):
             shutil.copy2(root / name, source / name)
         shutil.copytree(root / 'src', source / 'src', ignore=shutil.ignore_patterns('__pycache__', '*.pyc'))
-        (source / 'docs').mkdir()
-        for name in (
-            'CHANGELOG.md',
-            'CONFIGURATION.md',
-            'INVENTORY.md',
-            'FORMAT.md',
-            'TRANSACTIONS.md',
-            'BACKUP.md',
-            'VERIFY.md',
-            'RESTORE.md',
-            'CLI.md',
-            'PLATFORMS.md',
-        ):
-            shutil.copy2(root / 'docs' / name, source / 'docs' / name)
+        for name in _PUBLIC_SDIST_DOCS:
+            destination = source / name
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(root / name, destination)
         # Deliberately seed obvious synthetic private/scratch content, never real vault data.
         for name in (
             'local/private.txt',
@@ -139,24 +158,7 @@ def test_artifact_contents(artifacts: tuple[Path, Path]) -> None:
         prefix = 'obfuscidian-1.0.0.dev0/'
         names = {member.name for member in archive.getmembers() if member.isfile()}
         assert names == {prefix + f'src/obfuscidian/{name}' for name in modules} | {
-            prefix + name
-            for name in (
-                'pyproject.toml',
-                'poetry.lock',
-                'README.md',
-                'LICENSE',
-                'PKG-INFO',
-                'docs/CHANGELOG.md',
-                'docs/CONFIGURATION.md',
-                'docs/INVENTORY.md',
-                'docs/FORMAT.md',
-                'docs/TRANSACTIONS.md',
-                'docs/BACKUP.md',
-                'docs/VERIFY.md',
-                'docs/RESTORE.md',
-                'docs/CLI.md',
-                'docs/PLATFORMS.md',
-            )
+            prefix + name for name in ('pyproject.toml', 'poetry.lock', 'README.md', 'LICENSE', 'PKG-INFO', *_PUBLIC_SDIST_DOCS)
         }
         metadata_file = archive.extractfile(prefix + 'PKG-INFO')
         assert metadata_file is not None
