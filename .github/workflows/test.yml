@@ -37,10 +37,16 @@ permissions:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    name: ${{ matrix.os }} / Python ${{ matrix.python-version }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    defaults:
+      run:
+        shell: bash
     strategy:
       fail-fast: false
       matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
         python-version: ["3.12", "3.13", "3.14"]
     env:
       POETRY_VIRTUALENVS_IN_PROJECT: "true"
@@ -62,31 +68,23 @@ jobs:
           poetry run ruff check .
           poetry run ruff format --check .
           poetry run bandit -r src/obfuscidian
-      - name: Run offline tests and report coverage
+      - name: Run offline tests
+        id: offline_tests
+        run: poetry run coverage run -m pytest -q -ra --junitxml=test-results.xml
+      - name: Report coverage even after test failures
+        if: always() && steps.offline_tests.outcome != 'skipped'
         run: |
-          poetry run coverage run -m pytest -q
           poetry run coverage report
+          poetry run coverage xml
       - name: Build and validate fresh artifacts
-        shell: bash
-        run: |
-          CANDIDATE=$(mktemp -d)
-          WHEELHOUSE=$(mktemp -d)
-          poetry build --output "$CANDIDATE"
-          poetry run twine check --strict "$CANDIDATE"/*
-          poetry run python - "$WHEELHOUSE" <<'PYTHON'
-          import subprocess
-          import sys
-          import tomllib
-          from importlib.metadata import version
-          from packaging.requirements import Requirement
-
-          with open('pyproject.toml', 'rb') as source:
-              project = tomllib.load(source)
-          requirements = project['project']['dependencies'] + project['build-system']['requires']
-          pinned = [f'{Requirement(item).name}=={version(Requirement(item).name)}' for item in requirements]
-          subprocess.run([
-              sys.executable, '-m', 'pip', 'download', '--only-binary=:all:',
-              '--dest', sys.argv[1], *pinned,
-          ], check=True)
-          PYTHON
-          poetry run pytest -q tests/integration/test_packaging.py --artifact-dir "$CANDIDATE" --wheelhouse "$WHEELHOUSE"
+        run: poetry run python .github/scripts/check_artifacts.py
+      - name: Retain test and coverage evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: evidence-${{ matrix.os }}-python-${{ matrix.python-version }}
+          path: |
+            test-results.xml
+            coverage.xml
+          if-no-files-found: warn
+          retention-days: 14

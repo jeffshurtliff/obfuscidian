@@ -4,7 +4,8 @@ Thread 11 completes the shared CLI contract and is reviewed and merged/pushed
 into `origin/main`; issue #11 is closed as completed. Linux CI passed on Python
 3.12–3.14; see the
 [completion record](../dev/IMPLEMENTATION_PLAN.md#thread-11--cli-polish-completion-record-5-october-2026).
-Thread 12 remains **not started**.
+Thread 12 CI/hardening changes are local and under review; hosted matrix
+validation is pending. See [platform validation](PLATFORMS.md).
 
 Backup and restore semantics remain those in the [backup](BACKUP.md),
 [restore](RESTORE.md), [verification](VERIFY.md) and
@@ -47,7 +48,7 @@ New POSIX logs use `0600`. Existing private regular logs may be appended;
 logs with group/other permissions are refused without automatically changing
 their permissions. Windows new logs use the keygen protected owner-only DACL
 on ACL-capable volumes; appending existing Windows logs is refused pending
-file ACL validation in Thread 12. This does not claim broader Windows support.
+file ownership/DACL validation. This does not claim broader Windows support.
 
 Logs contain UTF-8 JSON lines: fixed command/mode, phase events, inventory
 counts/bytes, completion/failure exit category and no-op events. They do not

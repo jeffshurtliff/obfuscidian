@@ -79,8 +79,11 @@ is closed as completed. Linux CI passed on Python 3.12–3.14. See the
 [CLI contract](docs/CLI.md) and the
 [completion record](dev/IMPLEMENTATION_PLAN.md#thread-11--cli-polish-completion-record-5-october-2026).
 
-Thread 12 remains **not started**; broader OS validation is deferred and
-native Windows mutation fails closed.
+Thread 12 CI/hardening changes are local and under review; hosted validation
+is pending. Native Windows mutation and existing-log append still fail closed.
+See [platform validation](docs/PLATFORMS.md). 
+
+Threads 13–14 remain not started.
 
 ## Installation from source
 
@@ -210,8 +213,8 @@ source copy, checks their contents, and installs each outside the checkout with
 already available dependencies. Fully isolated installation validation uses
 fresh artifacts and a dependency wheelhouse; see the
 [contributor guide](https://github.com/jeffshurtliff/obfuscidian/blob/main/CONTRIBUTING.md#fresh-artifact-validation).
-Linux CI runs the foundation checks on Python 3.12–3.14. Broader OS hardening
-belongs to Thread 12; Sphinx documentation tooling belongs to Thread 13.
+The proposed CI runs these checks on Linux/macOS/Windows and Python 3.12–3.14;
+hosted results are pending. Sphinx documentation tooling belongs to Thread 13.
 
 See the [changelog](docs/CHANGELOG.md),
 [contributor guide](https://github.com/jeffshurtliff/obfuscidian/blob/main/CONTRIBUTING.md), and

@@ -24,8 +24,9 @@ a validation gap explicitly accepted by the maintainer for closure. Thread 10
 is complete, reviewed and merged/pushed into `origin/main`; issue #10 is closed
 as completed and Linux CI passed on Python 3.12–3.14.
 Thread 11 is complete, reviewed and merged/pushed into `origin/main`; issue #11
-is closed as completed and Linux CI passed on Python 3.12–3.14. Threads 12–14
-remain not started. See the Thread 11 completion record below. See the Thread 10
+is closed as completed and Linux CI passed on Python 3.12–3.14. Thread 12 has
+local implementation under review; hosted matrix acceptance remains pending.
+Threads 13–14 remain not started. See the Thread 11 completion record below. See the Thread 10
 completion record below and Thread 09 completion record for evidence and limits.
 
 **Intended first stable release:** `1.0.0` (current metadata: `1.0.0.dev0`).
@@ -557,7 +558,7 @@ commits, publication, or PRs are implied. Update status only after acceptance cr
 | 09 | Fresh restore | 05, 07, 08 | [#9](https://github.com/jeffshurtliff/obfuscidian/issues/9) | Complete; 3.14 CI gap accepted |
 | 10 | Git merge restore | 09 | [#10](https://github.com/jeffshurtliff/obfuscidian/issues/10) | Complete; reviewed/merged; Linux CI passed |
 | 11 | CLI polish | 10 | [#11](https://github.com/jeffshurtliff/obfuscidian/issues/11) | Complete; reviewed/merged; Linux CI passed |
-| 12 | Cross-platform hardening | 11 | [#12](https://github.com/jeffshurtliff/obfuscidian/issues/12) | Not started |
+| 12 | Cross-platform hardening | 11 | [#12](https://github.com/jeffshurtliff/obfuscidian/issues/12) | Local implementation; hosted matrix/review pending |
 | 13 | Documentation and contribution guidance | 12; incremental docs accompany earlier threads | [#13](https://github.com/jeffshurtliff/obfuscidian/issues/13) | Not started |
 | 14 | Release preparation | 13 | [#14](https://github.com/jeffshurtliff/obfuscidian/issues/14) | Not started |
 
@@ -924,7 +925,7 @@ the job; the maintainer accepted that validation gap for closure. See
 [completion record](#thread-09--fresh-restore-completion-record-5-october-2026)
 for commit alignment, job evidence and platform limits. Thread 10 is now
 complete, reviewed and merged/pushed with Linux CI passing on Python 3.12–3.14;
-Thread 11 is also complete with green Linux CI; Thread 12 remains **not started**.
+Thread 11 is also complete with green Linux CI; Thread 12 has local implementation under review; hosted matrix acceptance is pending.
 
 1. Resolve restore direction correctly: mirror is source; origin is destination.
    Validate every manifest/object and target name before staging plaintext.
@@ -1008,7 +1009,7 @@ automation behavior across the completed commands.
 3.12–3.14. See the
 [completion record](#thread-11--cli-polish-completion-record-5-october-2026)
 for commit alignment, acceptance evidence and platform limits.
-Thread 12 remains **not started**.
+Thread 12 has local implementation under review; hosted matrix acceptance is pending.
 
 1. Audit options/help at group and subcommand levels, required modes, precedence,
    incompatible options, defaults, and exit-code mapping; ensure console/module
@@ -1046,7 +1047,8 @@ output and help formatting at narrow and normal terminal widths.
 
 **Goal/deliverable:** Evidence for the supported OS/Python matrix and robust
 boundary/failure handling, without new product features.
-**Depends on:** 11. **Status:** Not started.
+**Depends on:** 11. **Status:** Local implementation; hosted matrix acceptance
+and maintainer review pending. Issue #12 remains open. See the handoff below.
 
 1. Expand CI to Windows, macOS, and Linux across Python 3.12, 3.13, and 3.14.
    Use Poetry/lock-aware installs; run unit and offline local-Git integration
@@ -1079,7 +1081,8 @@ and mutation validation without weakening the fail-closed write boundary.
 ownership for existing Windows operational logs. Thread 11 creates new logs
 using the established keygen protected DACL helper but refuses existing Windows
 log appends until their file ACL can be checked. Exercise this boundary in the
-broader matrix without relaxing private log custody. Thread 12 remains not started.
+broader matrix without relaxing private log custody. Thread 12 retains existing-log
+append refusal pending native file ownership/DACL validation.
 
 **Copy-ready prompt:**
 
@@ -1238,7 +1241,8 @@ maintainer review, commit and merge/push, with issue #10 closed as completed and
 Linux CI passing on Python 3.12–3.14. See its completion record below.
 Thread 11 is complete following maintainer review, merge/push and successful
 Linux CI on Python 3.12–3.14; issue #11 is closed as completed. See its
-completion record below. Threads 12–14 remain not started.
+completion record below. Thread 12 has local implementation under review;
+hosted matrix acceptance is pending. Threads 13–14 remain not started.
 Earlier handoff records describe the state at that time; later completion
 records supersede their pending-review and Git-status statements.
 The linked GitHub issues hold public progress discussion and verified
@@ -2862,3 +2866,105 @@ labels, assignee and milestone are unchanged. **Thread 12 remains not started**
 and was explicitly excluded: no Thread 12 implementation or delegation was
 initiated. Threads 12–14 remain planned. No staging, commit, push, PR, merge, tag,
 release or publication action occurred during this closure task.
+
+
+### Thread 12 — Cross-platform hardening handoff (5 October 2026)
+
+**Status:** Local implementation complete for the requested bounded CI/hardening
+scope; issue #12 remains open for maintainer review and hosted matrix acceptance.
+The nine new jobs have not been executed. Windows publication/recovery and
+existing-log append remain deliberately fail-closed. This record supersedes
+historical statements that Thread 12 was not started. Threads 13–14 remain
+**not started**; no later feature or release/publication work was initiated.
+
+**Dependency readiness:** Thread 11 implementation/CLI/private logging and its
+completion record were read against the checkout. Issue #11 is closed as
+completed. The live accepted Test run `37390743274` was inspected: successful
+Linux/Python 3.12–3.14 jobs at implementation commit
+`c6e7a1577da95663cd2902773d77719d41a00089`. These dependency results do not
+validate this uncommitted Thread 12 change. Baseline local macOS/Python 3.12.7
+suite: **1165 passed, 2 native Windows skips**.
+
+**Deliverables:**
+
+- [Test workflow](../.github/workflows/test.yml): Linux/macOS/Windows × Python
+  3.12/3.13/3.14, unchanged locked Poetry installs, offline suites, read-only
+  style/security checks, coverage, fresh artifacts, per-job XML evidence and
+  bounded job duration. No matrix exclusion or whole-suite skip was added.
+- [Portable artifact helper](../.github/scripts/check_artifacts.py): native
+  temporary paths, argument-list subprocesses, wheel/sdist/Twine and separate
+  offline installs after downloading a temporary dependency wheelhouse.
+- [Unit hardening tests](../tests/unit/test_platform_hardening.py),
+  [native platform tests](../tests/integration/test_platform_hardening.py) and
+  [transaction resource/termination tests](../tests/integration/test_platform_transactions.py).
+  Coverage includes Windows names/drives/streams, case/Unicode ancestor collisions,
+  multibyte path boundaries, bounded encryption, 1001-file inventory, binary
+  preservation, exact space estimates, allocation failures and descriptor cleanup,
+  no-op preservation, real local Git preflight/absent refs, metadata limitations,
+  staged disk-full/quota/I/O faults and native POSIX termination after rename.
+- Read-only transaction capture now uses absolute binary file paths when no
+  directory handle is available; inspected identity/content rechecks remain.
+  Key/source/staged-write/Git-copy stream allocation failures close descriptors.
+  Windows private-file creation and log preflight require persistent ACL capability.
+  Native Windows tests cover key DACLs, junction refusal, all existing write-mode
+  refusals, recovery refusal, new logs and existing-log append refusal.
+- Installed command tests account for Windows launcher scripts, permission
+  warnings and deliberate append refusal. Symlink privilege skips are narrow;
+  existing Windows log-change tests stop at the earlier explicit ACL boundary.
+  Open-file sharing denial is treated as safe read failure, never successful data.
+- [Platform guide](../docs/PLATFORMS.md), current status/docs, changelog and sdist
+  guide inclusion describe the limits and separate validation from configuration.
+
+**Validation actually executed:**
+
+| Environment | Full offline suite | Scope |
+| --- | --- | --- |
+| Local macOS arm64 / Python 3.12.7 | 1213 passed, 7 skipped | Coverage run; 91% overall |
+| Local macOS arm64 / Python 3.13.15 | 1213 passed, 7 skipped | Temporary source copy; unchanged locked Poetry environment |
+| Local macOS arm64 / Python 3.14.7 | 1213 passed, 7 skipped | Temporary source copy; unchanged locked Poetry environment |
+| Hosted Linux/macOS/Windows × Python 3.12–3.14 | Not run | Uncommitted/unpushed change; acceptance pending |
+
+Seven local skips are native Windows-only cases: existing junction/key DACL,
+three new mutation/recovery cases, new-log/append refusal and inventory junction
+refusal. No native Windows success is inferred from portable mocks. Python
+3.13/3.14 copies were isolated from the development environment. Initial sandboxed
+dependency installs could not access PyPI; unchanged locked installs succeeded
+with approved network access. Earlier test expectation/fixture errors were fixed;
+passing reruns supersede those failures. Synthetic Git fixtures disable automatic
+maintenance to prevent asynchronous fixture changes.
+
+Strict Poetry metadata/lock, Ruff lint/format and Bandit passed (no Bandit issues;
+two unchanged documented Git-subprocess suppressions). Fresh wheel/sdist build,
+strict Twine and **3 fully isolated artifact tests** passed using the portable
+helper; final guide/include changes also passed this isolated check.
+Final targeted reruns: **71 passed, 5 native Windows skips** on Python 3.12;
+updated platform/inventory/packaging tests: **34 passed, 5 native Windows skips**
+on each Python 3.13/3.14 environment after portability refinements.
+Local Git **2.55.0** exercised the required plumbing/worktree-preflight capability;
+older Git versions are unverified. Documentation/link/anchor, privacy/header/LF,
+workflow structure, scope and whitespace checks passed across all **26 proposed
+files**. An actionlint executable was unavailable; YAML/matrix/evidence structure
+was checked locally, while GitHub workflow/runtime acceptance remains pending.
+No Sphinx build was run: its tooling remains Thread 13. No real vault/cloud/key
+or privileged filesystem test was performed.
+
+**Safety assessment and remaining acceptance:** Existing process-death/checkpoint,
+competing-writer, changed-source/destination, interrupted-recovery, protected-Git,
+no-write verification/dry-run and no-op coverage still runs on POSIX hosts.
+Windows read-only observation lacks anchored directory handles; identity checks
+are best effort. Native Windows private directory ACLs, locks, publication and
+recovery primitives, and existing-log ownership/DACL validation remain unimplemented;
+these writes stay blocked. Conservative filesystem comparison remains unchanged;
+no probe, lossy name/content workaround, weakened validation, format/dependency
+change or deferred capability was added. Native Windows/Linux runs, the new hosted
+matrix and maintainer acceptance remain pending; CI configuration alone is not
+platform certification. See the platform guide for narrowly scoped skip reasons.
+
+**Git/issue handoff:** All **21 modified tracked files and 5 new files** are unstaged/uncommitted on the existing maintainer
+branch `ci/12-thread-12-cross-platform-hardening`, based on `main`. No branch,
+commit, staging, push, PR, merge, tag, release or publication action was taken.
+Only temporary synthetic Git fixture history was created by tests. Issue #12
+received start/progress updates through authenticated GitHub CLI after the
+connector refused comment access; its final body/checklists/handoff are synchronized
+without changing labels, assignee, milestone or open state. The next roadmap
+thread is Thread 13 only after Thread 12 acceptance; it has not started.

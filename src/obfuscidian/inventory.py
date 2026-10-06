@@ -3,8 +3,8 @@
 :Module:            obfuscidian.inventory
 :Synopsis:          Internal deterministic read-only inventory and resource estimates
 :Created By:        Jeff Shurtliff
-:Last Modified:     Jeff Shurtliff (via GPT-6)
-:Modified Date:     03 Oct 2026
+:Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
+:Modified Date:     05 Oct 2026
 """
 
 from __future__ import annotations
@@ -294,7 +294,12 @@ def _read_file(inventory: _Inventory, entry: _InventoryEntry) -> bytes:
                 os.O_RDONLY | getattr(os, 'O_NOFOLLOW', 0) | getattr(os, 'O_NONBLOCK', 0) | getattr(os, 'O_BINARY', 0),
                 dir_fd=handle,
             )
-            with os.fdopen(descriptor, 'rb') as source:
+            try:
+                source = os.fdopen(descriptor, 'rb')
+            except (OSError, MemoryError):
+                os.close(descriptor)
+                raise
+            with source:
                 before = os.fstat(source.fileno())
                 if _is_link(before) or not stat.S_ISREG(before.st_mode) or entry.fingerprint != _Fingerprint._from_stat(before):
                     raise _OperationalError('Source file changed before reading; stop other writers and retry.')

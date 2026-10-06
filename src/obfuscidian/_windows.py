@@ -3,8 +3,8 @@
 :Module:            obfuscidian._windows
 :Synopsis:          Internal Windows exclusive key creation with a private DACL
 :Created By:        Jeff Shurtliff
-:Last Modified:     Jeff Shurtliff (via GPT-6)
-:Modified Date:     03 Oct 2026
+:Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
+:Modified Date:     05 Oct 2026
 """
 
 from __future__ import annotations
@@ -54,6 +54,9 @@ def _create_private_key(path: Path) -> int:
     ACL enforcement remain outside this access restriction. Tested on Windows
     only when platform validation is available; no POSIX ACL claim is made.
     """
+    # All callers, including logs, require enforcement before CREATE_NEW.
+    _check_private_directory(path.parent)
+
     import msvcrt
     from ctypes import wintypes
 

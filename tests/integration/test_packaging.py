@@ -24,6 +24,8 @@ from pathlib import Path
 
 import pytest
 
+from obfuscidian import constants as const
+
 
 @pytest.fixture(scope='session')
 def artifacts(pytestconfig: pytest.Config, tmp_path_factory: pytest.TempPathFactory) -> tuple[Path, Path]:
@@ -46,6 +48,7 @@ def artifacts(pytestconfig: pytest.Config, tmp_path_factory: pytest.TempPathFact
             'VERIFY.md',
             'RESTORE.md',
             'CLI.md',
+            'PLATFORMS.md',
         ):
             shutil.copy2(root / 'docs' / name, source / 'docs' / name)
         # Deliberately seed obvious synthetic private/scratch content, never real vault data.
@@ -152,6 +155,7 @@ def test_artifact_contents(artifacts: tuple[Path, Path]) -> None:
                 'docs/VERIFY.md',
                 'docs/RESTORE.md',
                 'docs/CLI.md',
+                'docs/PLATFORMS.md',
             )
         }
         metadata_file = archive.extractfile(prefix + 'PKG-INFO')
@@ -240,7 +244,10 @@ def test_installation_entry_points(
         console_result = _run([str(console), *arguments], outside)
         module_result = _run([str(python), '-m', 'obfuscidian', *arguments], outside)
         assert console_result.stdout == module_result.stdout
-        assert console_result.stderr == module_result.stderr == ''
+        expected_warning = (
+            f'Warning: {const.WINDOWS_PERMISSION_WARNING}\n' if os.name == 'nt' and '--help' not in arguments else ''
+        )
+        assert console_result.stderr == module_result.stderr == expected_warning
         if '--help' not in arguments:
             assert '5 files, 4 directories' in console_result.stdout
             assert str(verify_mirror) not in console_result.stdout
@@ -277,7 +284,8 @@ def test_installation_entry_points(
         'target=sys.argv[1]\nsys.argv=["obfuscidian","keygen","--alias","synthetic",'
         '"--dir",sys.argv[2],"--non-interactive"]\n'
         'runpy.run_module("obfuscidian",run_name="__main__") if target=="module" '
-        'else runpy.run_path(target,run_name="__main__")'
+        'else exec(compile(__import__("zipfile").ZipFile(target).read("__main__.py"),target,"exec"),'
+        '{"__name__":"__main__"}) if target.endswith(".exe") else runpy.run_path(target,run_name="__main__")'
     )
     for target in (str(console), 'module'):
         interrupts.append(
@@ -358,6 +366,9 @@ def test_installation_entry_points(
         assert str(key_directory) not in result.stdout + result.stderr
     operational_log = tmp_path.resolve() / 'events.jsonl'
     for entry_point, alias in (([str(console)], 'logged-console'), ([str(python), '-m', 'obfuscidian'], 'logged-module')):
+        # Windows existing-log append remains deliberately refused; use two new logs.
+        if os.name == 'nt':
+            operational_log = tmp_path.resolve() / f'{alias}.jsonl'
         logged = _run(
             [
                 *entry_point,
