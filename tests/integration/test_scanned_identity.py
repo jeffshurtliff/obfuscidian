@@ -115,6 +115,12 @@ def test_changed_source_is_rejected_with_incomplete_cache(tmp_path: Path, incomp
     if change == 'replace':
         file.rename(root / 'retained.bin')
     file.write_bytes(b'NEW')
+    if change == 'edit':
+        # Same-size rewrites can retain the observed timestamp on a fast host.
+        # Make the metadata change explicit instead of depending on elapsed time.
+        recorded = observed.entries[0].fingerprint
+        os.utime(file, ns=(file.stat().st_atime_ns, recorded.mtime_ns + 1_000_000_000))
+        assert file.stat().st_mtime_ns != recorded.mtime_ns
     with pytest.raises(_OperationalError):
         inventory._read_file(observed, observed.entries[0])
     assert file.read_bytes() == b'NEW'

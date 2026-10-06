@@ -4,7 +4,7 @@
 :Synopsis:          Synthetic preservation and changing-source preflight scenarios
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     05 Oct 2026
+:Modified Date:     06 Oct 2026
 """
 
 from __future__ import annotations
@@ -175,22 +175,34 @@ def test_post_read_source_changes(vault: Path, change: str) -> None:
         inv._verify_inventory(inventory)
 
 
-@pytest.mark.parametrize('change', ['edit', 'replace', 'truncate'])
+@pytest.mark.parametrize('change', ['edit', 'replace', 'replace-denied', 'truncate'])
 def test_changes_during_file_read(vault: Path, monkeypatch: pytest.MonkeyPatch, change: str) -> None:
-    """Inject real changes between reading bytes and the post-read stat check."""
+    """Reject real changes or a sharing denial during the post-read stat check."""
     inventory = inv._scan_inventory(vault)
     path = vault / 'note.md'
     entry = next(item for item in inventory.entries if item.path == 'note.md')
     real_stat = os.fstat
     calls = 0
+    opened_descriptor = None
+    original = path.read_bytes()
+
+    if change == 'replace-denied':
+
+        def denied_replace(source: Path, target: Path) -> None:
+            assert source == vault / 'replacement'
+            assert target == path
+            raise PermissionError('SYNTHETIC OPEN-FILE SHARING DENIAL')
+
+        monkeypatch.setattr(Path, 'replace', denied_replace)
 
     def changing_stat(descriptor: int):
-        nonlocal calls
+        nonlocal calls, opened_descriptor
         info = real_stat(descriptor)
         if stat.S_ISREG(info.st_mode):
             calls += 1
+            opened_descriptor = descriptor
             if calls == 2:
-                if change == 'replace':
+                if change in {'replace', 'replace-denied'}:
                     replacement = vault / 'replacement'
                     replacement.write_bytes(path.read_bytes())
                     replacement.replace(path)
@@ -202,11 +214,22 @@ def test_changes_during_file_read(vault: Path, monkeypatch: pytest.MonkeyPatch, 
         return info
 
     monkeypatch.setattr(inv.os, 'fstat', changing_stat)
-    # Windows may deny replacement of an open file; either detected change or
-    # that sharing denial must refuse the read, never return a partial payload.
-    with pytest.raises(_OperationalError, match='changed|Cannot read the source safely'):
+    # The directory context translates a Windows sharing denial before the
+    # source reader's outer handler sees it. Both paths must refuse the read.
+    message = (
+        'Cannot access the selected directory safely'
+        if change == 'replace-denied'
+        else 'changed|Cannot read the source safely|Cannot access the selected directory safely'
+    )
+    with pytest.raises(_OperationalError, match=message):
         inv._read_file(inventory, entry)
-    assert calls >= 2
+    assert calls == 2
+    assert opened_descriptor is not None
+    with pytest.raises(OSError):
+        real_stat(opened_descriptor)
+    if change == 'replace-denied':
+        assert path.read_bytes() == original
+        assert (vault / 'replacement').read_bytes() == original
 
 
 def test_addition_during_scan(vault: Path, monkeypatch: pytest.MonkeyPatch) -> None:
