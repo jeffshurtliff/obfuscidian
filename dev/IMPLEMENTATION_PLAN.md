@@ -1047,10 +1047,11 @@ output and help formatting at narrow and normal terminal widths.
 
 **Goal/deliverable:** Evidence for the supported OS/Python matrix and robust
 boundary/failure handling, without new product features.
-**Depends on:** 11. **Status:** Initial implementation reviewed and merged;
-Linux/macOS hosted jobs passed. Windows CI correction is under review and full
-matrix acceptance remains pending. Issue #12 remains open. See the handoff and
-6 October Windows CI follow-up below.
+**Depends on:** 11. **Status:** Initial implementation and LF checkout correction
+reviewed and merged; Linux/macOS hosted jobs passed. Windows style/security now
+passes, but runtime identity correction is under review and full matrix acceptance
+remains pending. Issue #12 remains open. See the handoff and 6 October Windows
+CI/identity follow-ups below.
 
 1. Expand CI to Windows, macOS, and Linux across Python 3.12, 3.13, and 3.14.
    Use Poetry/lock-aware installs; run unit and offline local-Git integration
@@ -3018,3 +3019,69 @@ Changes are limited to `.gitattributes`, changelog, platform guide and roadmap,
 unstaged/uncommitted on `ci/12-thread-12-fix-windows-ci-failures`; no commit,
 push or PR was performed. Issue #12 records the investigation and follow-up.
 Thread 13 is eligible only after Thread 12 acceptance and has not started.
+
+### Thread 12 — Windows identity follow-up (6 October 2026)
+
+**Status:** The maintainer reviewed and merged the LF checkout correction at
+`65af1dd`. [Test run `37473104440`](https://github.com/jeffshurtliff/obfuscidian/actions/runs/37473104440)
+passed all six Linux/macOS × Python 3.12–3.14 jobs. All three Windows jobs passed
+style/security, then failed offline tests with **69 failed, 581 passed, 563 skipped,
+7 errors** each. Failed test coverage/evidence was retained; fresh artifact
+validation was skipped. Logs for all three Windows jobs were reviewed; the
+[Python 3.12 job](https://github.com/jeffshurtliff/obfuscidian/actions/runs/37473104440/job/112301445798)
+provides representative traceback evidence. This new correction remains
+uncommitted for review; issue #12 remains open and full matrix acceptance is pending.
+
+**Cause and correction:** Windows `DirEntry.stat()` supplies zero device/inode
+values, unlike full `os.stat()`/`lstat()`. Cached scan metadata was recorded as
+identity in inventory and mirror namespace traversal, producing false failures
+when later full metadata was checked. [Inventory](../src/obfuscidian/inventory.py)
+and [mirror path traversal](../src/obfuscidian/paths.py) now use fresh full
+`os.stat(..., follow_symlinks=False)` entry metadata. POSIX calls remain anchored
+to inspected directory handles; fallback calls use absolute child paths. Every
+existing identity, type, link/reparse, content, parent and pre/post-read comparison
+remains in place. No zero-identity wildcard or comparison relaxation was added.
+Two CLI failures were test expectations for raw Windows separators; the
+[interactive keygen tests](../tests/unit/test_cli.py) now assert the existing
+escaped `repr` output. Production output/privacy behavior is unchanged.
+
+**Regression coverage:** [Synthetic scan identity tests](../tests/integration/test_scanned_identity.py)
+model incomplete cached enumeration metadata with both native and unanchored
+traversal. They exercise stable nested inventory/binary reads, full mirror
+authentication, selected-key hard-link refusal before exclusion pruning,
+source edit/replacement rejection, same-byte token replacement rejection and
+no-follow symlink refusal with external-target preservation. The regression
+reproduced false identity/inventory-change errors before the fix; all **16 cases**
+passed afterward. Symlink/hard-link capability skips remain narrow; no broad
+Windows skip or expected-failure marker was introduced.
+
+**Validation actually executed:**
+
+| Environment/check | Result |
+| --- | --- |
+| Local macOS arm64 / Python 3.12.7 full offline suite | 1229 passed, 7 native Windows skips |
+| New scan regression and CLI unit tests, Python 3.12.7 | 52 passed |
+| Focused inventory/path/format/verify/CLI/regression suite, Python 3.13.15 | 367 passed, 1 native Windows junction skip |
+| Same focused suite, Python 3.14.7 | 367 passed, 1 native Windows junction skip |
+| Strict Poetry metadata/lock, Ruff lint/format, Bandit | Passed; no Bandit issues |
+| Fresh wheel/sdist build and strict Twine | Passed |
+| Changed-file header/date/LF, documentation links/anchors, privacy/scope, diff whitespace | Passed |
+| Native Windows runtime/artifact checks with this correction | Pending maintainer commit/merge/push and hosted rerun |
+
+The alternative Python checks imported the current checkout's corrected source,
+using the existing isolated locked environments. Full Python 3.13/3.14 suites,
+new coverage measurement, separate wheelhouse-isolated artifact installs and
+Sphinx were not rerun; the full Python 3.12 suite includes offline wheel/sdist
+installation tests. No real vault/key/cloud or privileged filesystem test was used.
+Python headers use `Jeff Shurtliff (via GPT-6.1 Sol)` and `06 Oct 2026` only on
+changed/new Python files.
+
+**Git/issue handoff:** Exactly **6 modified tracked files and 1 new regression
+module** remain unstaged/uncommitted on the existing maintainer branch
+`ci/12-thread-12-fix-windows-filesysem-id-change-ci-failures`, at `65af1dd`.
+No development-checkout staging, commit, push, PR, merge or release action was
+performed; the full suite uses temporary synthetic Git fixture history only. Issue #12
+records the investigation, actual hosted/local evidence and pending acceptance.
+Windows mutation/recovery and existing-log append still fail closed; format,
+dependencies and the nine-job matrix are unchanged. Threads 13–14 remain
+**not started**; Thread 13 becomes eligible only after Thread 12 acceptance.

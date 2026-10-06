@@ -4,7 +4,7 @@
 :Synopsis:          Verify keygen help, prompts, privacy, and no-mutation behavior
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     05 Oct 2026
+:Modified Date:     06 Oct 2026
 """
 
 from __future__ import annotations
@@ -115,7 +115,7 @@ def test_interactive_alias_and_timestamp(tmp_path: Path, monkeypatch: pytest.Mon
     assert result.exit_code == 0, result.output
     path = tmp_path.resolve() / f'obfuscidian-{alias}.key'
     assert path.exists()
-    assert str(path) in result.output
+    assert repr(str(path)) in result.output
     material = path.read_bytes()
     assert material.decode() not in result.output
     second = CliRunner().invoke(cli, ['keygen'], input=response)
