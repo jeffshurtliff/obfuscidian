@@ -1,4 +1,4 @@
-Obfuscidian documentation
+Obfuscidian Documentation
 =========================
 
 Obfuscidian makes an encrypted backup of your Obsidian vault in a separate

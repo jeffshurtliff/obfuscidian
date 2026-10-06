@@ -1,4 +1,4 @@
-Getting started
+Getting Started
 ===============
 
 New to encrypted backups or the command line? Start here. Each page introduces
@@ -65,7 +65,7 @@ key creation, verification and previews. See :doc:`../PLATFORMS`.
       Review restored files in a separate Git workspace.
 
 Go deeper when you are ready
---------------------------------
+----------------------------
 
 The :doc:`../guides/index` cover detailed installation, a complete synthetic
 restore rehearsal, configuration, backup, restore and troubleshooting.

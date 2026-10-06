@@ -1,4 +1,4 @@
-Contributors and maintainers
+Contributors and Maintainers
 ============================
 
 Keep work bounded to the requested task, reviewable and public-safe. Git history

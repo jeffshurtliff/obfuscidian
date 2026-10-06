@@ -1,4 +1,4 @@
-User guides
+User Guides
 ===========
 
 These guides explain the choices, options and safety details behind each task.
