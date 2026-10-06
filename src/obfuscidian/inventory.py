@@ -4,7 +4,7 @@
 :Synopsis:          Internal deterministic read-only inventory and resource estimates
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     05 Oct 2026
+:Modified Date:     06 Oct 2026
 """
 
 from __future__ import annotations
@@ -188,7 +188,11 @@ def _scan_inventory(root: Path, *, exclusions: tuple[str, ...] = (), selected_ke
                     if child.name == const.GIT_METADATA:
                         excluded += 1
                         continue
-                    info = child.stat(follow_symlinks=False)
+                    # Cached Windows enumeration stats have zero device/inode
+                    # fields, so they cannot bind files, directories or key aliases.
+                    info = os.stat(
+                        child.name if handle is not None else parent.path / child.name, dir_fd=handle, follow_symlinks=False
+                    )
                     if selected_key is not None and selected_key._same_object(info):
                         raise _ConfigurationError('Selected key has a file alias inside the source vault.')
                     directory = stat.S_ISDIR(info.st_mode) and not _is_link(info)

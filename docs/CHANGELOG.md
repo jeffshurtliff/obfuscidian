@@ -74,6 +74,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Inventory and mirror traversal use full no-follow entry metadata, preventing false Windows identity-change errors.
+- Interactive keygen tests match escaped Windows paths without relaxing output privacy.
 - Repository text checks out with LF on Windows as required by Ruff; compatibility fixtures retain exact bytes.
 - Read-only destination capture uses absolute binary reads when directory handles are unavailable.
 - Source/key/staging/Git copy stream allocation failures release opened descriptors; key-load memory failures remain redacted.

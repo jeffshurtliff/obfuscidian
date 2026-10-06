@@ -6,6 +6,10 @@ A configured job is not a passing result. Initial local validation is recorded i
 The [Windows CI follow-up](../dev/IMPLEMENTATION_PLAN.md#thread-12--windows-ci-follow-up-6-october-2026)
 records the first hosted run: all Linux/macOS jobs passed; all Windows jobs
 stopped at Ruff formatting before tests/builds. Hosted acceptance remains pending.
+The [identity follow-up](../dev/IMPLEMENTATION_PLAN.md#thread-12--windows-identity-follow-up-6-october-2026)
+records the next run: all six Linux/macOS jobs passed and Windows style/security
+passed, but Windows offline tests failed. Full native Windows acceptance remains
+pending a rerun with the local identity correction.
 
 Repository `.gitattributes` keeps detected text at LF, matching Ruff, even with
 Windows `core.autocrlf=true`. This includes Python code blocks in Markdown.
@@ -32,8 +36,12 @@ write validation. No chmod, unsafe rename, lossy restore, privilege elevation or
 format change bypasses these boundaries. Existing-log appends remain blocked
 even when a prior Obfuscidian invocation created the log.
 
-Windows read-only observation rejects inspected junctions/reparse points and
-checks opened file identity and metadata. It has no POSIX directory anchoring;
+Scanned entries use fresh `os.stat(..., follow_symlinks=False)` metadata because
+Windows `DirEntry.stat()` omits device/inode identities. POSIX scans retain
+directory-handle anchoring; Windows uses absolute paths with component and
+pre/post identity/content rechecks. Windows read-only observation rejects
+inspected junctions/reparse points and checks opened file identity and metadata.
+It has no POSIX directory anchoring;
 identity observation is best effort, not an atomic snapshot against hostile
 concurrent writers. POSIX checks also do not provide a universal power-loss or
 concurrent-writer guarantee. Use separate, trusted vault/key/log locations.

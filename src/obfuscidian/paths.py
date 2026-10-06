@@ -4,7 +4,7 @@
 :Synopsis:          Internal read-only filesystem and target path preflight
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     05 Oct 2026
+:Modified Date:     06 Oct 2026
 """
 
 from __future__ import annotations
@@ -291,7 +291,9 @@ def _check_mirror_namespace(mirror: _PathState) -> tuple[_PathState, ...]:
                         raise _ConfigurationError(
                             'Mirror contains unmanaged entries; move them outside the mirror before retrying.'
                         )
-                    info = entry.stat(follow_symlinks=False)
+                    # Windows DirEntry.stat() omits device/inode identities. Use
+                    # fresh no-follow metadata, anchored to the POSIX handle when available.
+                    info = os.stat(name if handle is not None else parent.path / name, dir_fd=handle, follow_symlinks=False)
                     directory = (level == 'root' and name == const.MANAGED_DIRECTORY) or (
                         level == 'managed' and name == const.OBJECTS_DIRECTORY
                     )
