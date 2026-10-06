@@ -4,7 +4,7 @@
 :Synopsis:          Internal staged publication and conservative explicit recovery
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     05 Oct 2026
+:Modified Date:     06 Oct 2026
 """
 
 from __future__ import annotations
@@ -27,6 +27,7 @@ from obfuscidian.errors import _ConfigurationError, _OperationalError
 from obfuscidian.manifest import _verify_mirror
 from obfuscidian.paths import (
     _directory_handle,
+    _Fingerprint,
     _inspect_path,
     _is_link,
     _PathState,
@@ -118,13 +119,14 @@ def _capture(path: Path, *, git_control: bool = False) -> dict:
             try:
                 with os.fdopen(descriptor, 'rb', closefd=False) as stream:
                     before = os.fstat(descriptor)
-                    if _file_mark(before) != _file_mark(info):
+                    expected = _Fingerprint._from_stat(info)
+                    if _is_link(before) or not expected._matches_open_stat(before):
                         raise _OperationalError('Transaction content changed before reading.')
                     for block in iter(lambda: stream.read(const.TRANSACTION_READ_BYTES), b''):
                         digest.update(block)
                     after = os.fstat(descriptor)
                     # Access time may change merely by reading.
-                    if _file_mark(before) != _file_mark(after):
+                    if not expected._matches_open_stat(after) or _file_mark(before) != _file_mark(after):
                         raise _OperationalError('Transaction content changed while reading.')
             finally:
                 os.close(descriptor)

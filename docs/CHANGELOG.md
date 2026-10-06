@@ -74,6 +74,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Windows source/token reads and transaction hashing compare creation time across APIs while retaining raw descriptor change checks.
+- Case-alias overlap tests accept the earlier Windows lexical overlap refusal without changing production path validation.
 - Inventory and mirror traversal use full no-follow entry metadata, preventing false Windows identity-change errors.
 - Interactive keygen tests match escaped Windows paths without relaxing output privacy.
 - Repository text checks out with LF on Windows as required by Ruff; compatibility fixtures retain exact bytes.

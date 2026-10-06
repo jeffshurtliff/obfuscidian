@@ -50,8 +50,16 @@ def incomplete_cached_stats(monkeypatch: pytest.MonkeyPatch, request: pytest.Fix
 
     monkeypatch.setattr(os, 'scandir', scan)
     if request.param == 'fallback':
-        # Substitute only the paths module's OS view, leaving pathlib/pytest intact.
-        monkeypatch.setattr(paths, 'os', SimpleNamespace(name='nt', scandir=scan, stat=os.stat))
+
+        @contextmanager
+        def unanchored(state):
+            paths._recheck_path(state)
+            yield None
+            paths._recheck_path(state)
+
+        # Exercise absent directory handles without changing timestamp semantics.
+        for module in (paths, inventory, manifest):
+            monkeypatch.setattr(module, '_directory_handle', unanchored)
 
 
 def _mirror(tmp_path: Path) -> tuple[Path, Fernet]:

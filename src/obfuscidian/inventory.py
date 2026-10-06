@@ -305,10 +305,15 @@ def _read_file(inventory: _Inventory, entry: _InventoryEntry) -> bytes:
                 raise
             with source:
                 before = os.fstat(source.fileno())
-                if _is_link(before) or not stat.S_ISREG(before.st_mode) or entry.fingerprint != _Fingerprint._from_stat(before):
+                if _is_link(before) or not stat.S_ISREG(before.st_mode) or not entry.fingerprint._matches_open_stat(before):
                     raise _OperationalError('Source file changed before reading; stop other writers and retry.')
                 data = source.read(entry.size + 1)
-                if len(data) != entry.size or entry.fingerprint != _Fingerprint._from_stat(os.fstat(source.fileno())):
+                after = os.fstat(source.fileno())
+                if (
+                    len(data) != entry.size
+                    or not entry.fingerprint._matches_open_stat(after)
+                    or _Fingerprint._from_stat(before) != _Fingerprint._from_stat(after)
+                ):
                     raise _OperationalError('Source file changed while reading; no content is accepted.')
                 current = os.stat(path.name if handle is not None else path, dir_fd=handle, follow_symlinks=False)
                 if _is_link(current) or entry.fingerprint != _Fingerprint._from_stat(current):

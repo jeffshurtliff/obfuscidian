@@ -4,7 +4,7 @@
 :Synopsis:          Internal frozen v1 manifest codec and complete read-only validation
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     04 Oct 2026
+:Modified Date:     06 Oct 2026
 """
 
 from __future__ import annotations
@@ -370,10 +370,15 @@ def _read_token(state: _PathState) -> bytes:
                 raise
             with source:
                 before = os.fstat(source.fileno())
-                if _is_link(before) or not stat.S_ISREG(before.st_mode) or _Fingerprint._from_stat(before) != expected:
+                if _is_link(before) or not stat.S_ISREG(before.st_mode) or not expected._matches_open_stat(before):
                     raise _OperationalError('Backup file identity changed before reading.')
                 token = source.read(expected.size + 1)
-                if len(token) != expected.size or _Fingerprint._from_stat(os.fstat(source.fileno())) != expected:
+                after = os.fstat(source.fileno())
+                if (
+                    len(token) != expected.size
+                    or not expected._matches_open_stat(after)
+                    or _Fingerprint._from_stat(before) != _Fingerprint._from_stat(after)
+                ):
                     raise _OperationalError('Backup file changed while reading; no partial result is accepted.')
                 current = os.stat(state.path.name if handle is not None else state.path, dir_fd=handle, follow_symlinks=False)
                 if _is_link(current) or _Fingerprint._from_stat(current) != expected:
