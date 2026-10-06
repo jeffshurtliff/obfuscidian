@@ -118,8 +118,10 @@ Thread 11 — CLI polish — is complete, reviewed and merged/pushed into
 `origin/main`; issue #11 is closed as completed. Linux CI passed on Python
 3.12–3.14. See [the CLI contract](docs/CLI.md) and the
 [completion record](dev/IMPLEMENTATION_PLAN.md#thread-11--cli-polish-completion-record-5-october-2026).
-Thread 12 remains **not started**. Native Windows mutation still fails closed;
-Linux CI does not establish broader supported-platform validation.
+
+Thread 12 has local CI/hardening changes under review; hosted matrix validation
+is pending. Native Windows mutation and existing-log append still fail closed.
+See [platform validation](docs/PLATFORMS.md). Threads 13–14 remain not started.
 
 Use Poetry 2.2 or newer, below 3.0, for development, dependencies, and packaging.
 Initial CI targets Linux/Python 3.12, 3.13, and 3.14; broader OS hardening belongs

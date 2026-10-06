@@ -425,7 +425,12 @@ def _copy_tree(source: Path, target: Path, captured: dict, unsupported: set[str]
         else:
             with paths._directory_handle(paths._inspect_path(source)) as handle:
                 descriptor = os.open(name, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=handle)
-                with os.fdopen(descriptor, 'rb') as stream:
+                try:
+                    stream = os.fdopen(descriptor, 'rb')
+                except (OSError, MemoryError):
+                    os.close(descriptor)
+                    raise
+                with stream:
                     data = stream.read(entry['size'] + 1)
             if len(data) != entry['size'] or hashlib.sha256(data).hexdigest() != entry['digest']:
                 raise _OperationalError('Private staged bytes changed; artifacts are retained.')

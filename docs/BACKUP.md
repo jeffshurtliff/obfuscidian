@@ -20,7 +20,8 @@ complete, reviewed and merged/pushed, with issue #10 closed and Linux CI passing
 on Python 3.12–3.14; see
 [additive Git merge restore](RESTORE.md#additive-git-merge-restore). Thread 11 is
 complete, reviewed and merged/pushed, with issue #11 closed and Linux CI passing on Python 3.12–3.14; see the [CLI contract](CLI.md).
-Thread 12 remains **not started**.
+Thread 12 CI/hardening changes are local and under review; hosted matrix
+validation is pending. See [platform validation](PLATFORMS.md).
 
 ## Usage and selection
 
@@ -176,7 +177,7 @@ recovery. Failures cannot report successful publication.
 ## Limits and deferred work
 
 Mutation currently requires POSIX transaction facilities. Native Windows writes
-fail closed pending Thread 12; read-only dry runs remain available. Filesystem
+fail closed pending native publication/ACL implementation; read-only dry runs remain available. Filesystem
 limits are read without writing a probe. Backup creates only fixed lowercase
 ASCII managed names and hexadecimal IDs, whose comparisons agree across case
 policies. Conservative case/Unicode lock comparison also serializes destination

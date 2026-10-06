@@ -3,8 +3,8 @@
 :Module:            obfuscidian.keys
 :Synopsis:          Internal secure Fernet key creation and bounded loading
 :Created By:        Jeff Shurtliff
-:Last Modified:     Jeff Shurtliff (via GPT-6)
-:Modified Date:     03 Oct 2026
+:Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
+:Modified Date:     05 Oct 2026
 """
 
 from __future__ import annotations
@@ -229,7 +229,12 @@ def _load_key(path: Path) -> tuple[Fernet, tuple[str, ...]]:
                 os.O_RDONLY | getattr(os, 'O_NOFOLLOW', 0) | getattr(os, 'O_NONBLOCK', 0) | getattr(os, 'O_BINARY', 0),
                 dir_fd=parent,
             )
-            with os.fdopen(descriptor, 'rb') as source:
+            try:
+                source = os.fdopen(descriptor, 'rb')
+            except (OSError, MemoryError):
+                os.close(descriptor)
+                raise
+            with source:
                 before = os.fstat(source.fileno())
                 if not stat.S_ISREG(before.st_mode) or not _same_identity(before, identities[-1]):
                     raise _ConfigurationError('Selected key changed during loading; no key is accepted.')
@@ -242,7 +247,7 @@ def _load_key(path: Path) -> tuple[Fernet, tuple[str, ...]]:
                 ):
                     raise _OperationalError('Selected key changed during loading; retry after stopping other writers.')
                 _recheck(identities)
-    except OSError:
+    except (OSError, MemoryError):
         raise _OperationalError(
             'Cannot read the selected key; check file access permissions. No replacement was generated.'
         ) from None

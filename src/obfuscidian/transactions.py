@@ -110,7 +110,11 @@ def _capture(path: Path, *, git_control: bool = False) -> dict:
     if stat.S_ISREG(info.st_mode):
         digest = hashlib.sha256()
         with _directory_handle(_inspect_path(path.parent)) as handle:
-            descriptor = os.open(path.name, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=handle)
+            descriptor = os.open(
+                path.name if handle is not None else path,
+                os.O_RDONLY | getattr(os, 'O_NOFOLLOW', 0) | getattr(os, 'O_NONBLOCK', 0) | getattr(os, 'O_BINARY', 0),
+                dir_fd=handle,
+            )
             try:
                 with os.fdopen(descriptor, 'rb', closefd=False) as stream:
                     before = os.fstat(descriptor)

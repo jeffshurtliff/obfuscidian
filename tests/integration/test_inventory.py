@@ -202,7 +202,9 @@ def test_changes_during_file_read(vault: Path, monkeypatch: pytest.MonkeyPatch, 
         return info
 
     monkeypatch.setattr(inv.os, 'fstat', changing_stat)
-    with pytest.raises(_OperationalError, match='changed'):
+    # Windows may deny replacement of an open file; either detected change or
+    # that sharing denial must refuse the read, never return a partial payload.
+    with pytest.raises(_OperationalError, match='changed|Cannot read the source safely'):
         inv._read_file(inventory, entry)
     assert calls >= 2
 

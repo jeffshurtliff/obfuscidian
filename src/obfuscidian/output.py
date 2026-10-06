@@ -49,6 +49,13 @@ class _Output:
             raise _ConfigurationError('Log cannot be stored in staging or rollback trees.')
         self.parent = paths._inspect_path(log.parent)
         self._check_git_custody()
+        if os.name == 'nt':
+            from obfuscidian._windows import _check_private_directory
+
+            try:
+                _check_private_directory(log.parent)
+            except OSError:
+                raise _OperationalError('Private Windows logs require accessible persistent ACL storage.') from None
         try:
             info = log.lstat()
         except FileNotFoundError:

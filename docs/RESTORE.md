@@ -7,7 +7,8 @@ Linux CI passed on Python 3.12–3.14; see the
 [Git merge restore completion record](../dev/IMPLEMENTATION_PLAN.md#thread-10--git-merge-restore-completion-record-5-october-2026).
 Thread 11 is complete, reviewed and merged/pushed, with issue #11 closed and
 Linux CI passing on Python 3.12–3.14; see the [CLI contract](CLI.md).
-Thread 12 remains **not started**.
+Thread 12 CI/hardening changes are local and under review; hosted matrix
+validation is pending. See [platform validation](PLATFORMS.md).
 
 Thread 09 is reviewed and merged/pushed into `origin/main`; issue #9 is closed
 as completed. Linux CI passed on Python 3.12/3.13; Python 3.14 was canceled
@@ -254,7 +255,7 @@ recovery. Retain uncertain artifacts and make an explicit manual recovery
 decision before retrying with new names. Journaled publication attempts
 rollback to the new worktree's prior state under tested ordinary failures;
 it does not guarantee atomic Git/filesystem publication or power-loss recovery.
-Native Windows writes remain fail-closed pending Thread 12. Thread 10 tests use
-synthetic temporary repositories; local macOS checks and hosted Linux CI on
+Native Windows writes remain fail-closed pending native publication/ACL
+implementation. Thread 10 tests use synthetic temporary repositories; local macOS checks and hosted Linux CI on
 Python 3.12–3.14 passed. Broader supported-platform and universal filesystem
 validation remain deferred.

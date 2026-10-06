@@ -200,7 +200,12 @@ def _write_token(parent: Path, name: str, token: bytes) -> None:
     """Create one private staged file exclusively under an anchored directory."""
     with paths._directory_handle(paths._inspect_path(parent)) as handle:
         descriptor = os.open(name, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600, dir_fd=handle)
-        with os.fdopen(descriptor, 'wb') as stream:
+        try:
+            stream = os.fdopen(descriptor, 'wb')
+        except (OSError, MemoryError):
+            os.close(descriptor)
+            raise
+        with stream:
             if stream.write(token) != len(token):
                 raise _OperationalError('Incomplete staged token write; no partial snapshot is accepted.')
 
