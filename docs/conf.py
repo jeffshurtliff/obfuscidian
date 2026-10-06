@@ -21,9 +21,17 @@ version = release
 extensions = ['myst_parser']
 source_suffix = {'.rst': 'restructuredtext', '.md': 'markdown'}
 root_doc = 'index'
-exclude_patterns = ['_build', '.DS_Store', 'Thumbs.db']
+exclude_patterns = ['_build', '.DS_Store', 'Thumbs.db', 'desktop.ini']
 nitpicky = True
+myst_enable_extensions = [
+    'colon_fence',
+    'deflist',
+    'fieldlist',
+    'replacements',
+    'strikethrough',
+]
 myst_heading_anchors = 6
+myst_links_external_new_tab = True
 html_theme = 'pydata_sphinx_theme'
 html_title = f'{project} {release} Documentation'
 html_static_path = ['_static']
@@ -49,3 +57,4 @@ favicons = [
     {'rel': 'icon', 'sizes': '32x32', 'href': 'obfuscidian-favicon-32x32.png'},
     {'rel': 'apple-touch-icon', 'sizes': '180x180', 'href': 'obfuscidian-apple-touch-icon-180x180.png'},
 ]
+htmlhelp_basename = 'obfuscidian'
