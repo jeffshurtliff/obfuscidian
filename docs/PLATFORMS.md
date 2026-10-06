@@ -1,9 +1,17 @@
 # Platform hardening and validation
 
 Thread 12 configures Linux, macOS and Windows CI on Python 3.12, 3.13 and 3.14.
-A configured job is not a passing result. The current local validation and
-pending hosted acceptance are recorded in the
+A configured job is not a passing result. Initial local validation is recorded in the
 [Thread 12 handoff](../dev/IMPLEMENTATION_PLAN.md#thread-12--cross-platform-hardening-handoff-5-october-2026).
+The [Windows CI follow-up](../dev/IMPLEMENTATION_PLAN.md#thread-12--windows-ci-follow-up-6-october-2026)
+records the first hosted run: all Linux/macOS jobs passed; all Windows jobs
+stopped at Ruff formatting before tests/builds. Hosted acceptance remains pending.
+
+Repository `.gitattributes` keeps detected text at LF, matching Ruff, even with
+Windows `core.autocrlf=true`. This includes Python code blocks in Markdown.
+Compatibility inputs under `tests/fixtures/` bypass line-ending conversion so
+their exact bytes remain intact. These checkout rules apply to this repository;
+backup/restore still preserves vault bytes independently of Git text conversion.
 
 Thread 13 documentation tooling and Thread 14 release preparation are not started.
 

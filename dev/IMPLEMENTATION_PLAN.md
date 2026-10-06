@@ -558,7 +558,7 @@ commits, publication, or PRs are implied. Update status only after acceptance cr
 | 09 | Fresh restore | 05, 07, 08 | [#9](https://github.com/jeffshurtliff/obfuscidian/issues/9) | Complete; 3.14 CI gap accepted |
 | 10 | Git merge restore | 09 | [#10](https://github.com/jeffshurtliff/obfuscidian/issues/10) | Complete; reviewed/merged; Linux CI passed |
 | 11 | CLI polish | 10 | [#11](https://github.com/jeffshurtliff/obfuscidian/issues/11) | Complete; reviewed/merged; Linux CI passed |
-| 12 | Cross-platform hardening | 11 | [#12](https://github.com/jeffshurtliff/obfuscidian/issues/12) | Local implementation; hosted matrix/review pending |
+| 12 | Cross-platform hardening | 11 | [#12](https://github.com/jeffshurtliff/obfuscidian/issues/12) | Initial implementation merged; Linux/macOS CI passed; Windows fix/matrix acceptance pending |
 | 13 | Documentation and contribution guidance | 12; incremental docs accompany earlier threads | [#13](https://github.com/jeffshurtliff/obfuscidian/issues/13) | Not started |
 | 14 | Release preparation | 13 | [#14](https://github.com/jeffshurtliff/obfuscidian/issues/14) | Not started |
 
@@ -1047,8 +1047,10 @@ output and help formatting at narrow and normal terminal widths.
 
 **Goal/deliverable:** Evidence for the supported OS/Python matrix and robust
 boundary/failure handling, without new product features.
-**Depends on:** 11. **Status:** Local implementation; hosted matrix acceptance
-and maintainer review pending. Issue #12 remains open. See the handoff below.
+**Depends on:** 11. **Status:** Initial implementation reviewed and merged;
+Linux/macOS hosted jobs passed. Windows CI correction is under review and full
+matrix acceptance remains pending. Issue #12 remains open. See the handoff and
+6 October Windows CI follow-up below.
 
 1. Expand CI to Windows, macOS, and Linux across Python 3.12, 3.13, and 3.14.
    Use Poetry/lock-aware installs; run unit and offline local-Git integration
@@ -2968,3 +2970,51 @@ received start/progress updates through authenticated GitHub CLI after the
 connector refused comment access; its final body/checklists/handoff are synchronized
 without changing labels, assignee, milestone or open state. The next roadmap
 thread is Thread 13 only after Thread 12 acceptance; it has not started.
+
+### Thread 12 — Windows CI follow-up (6 October 2026)
+
+**Status:** The maintainer reviewed, committed and merged the initial Thread 12
+implementation at `7e5cfd9`. The correction below remains uncommitted for review;
+issue #12 remains open and full matrix acceptance is pending. This follow-up
+supersedes the earlier pre-merge/pending-CI status, preserving its historical
+local validation record. Threads 13–14 remain **not started**.
+
+**Hosted evidence:** [Test run `37470636499`](https://github.com/jeffshurtliff/obfuscidian/actions/runs/37470636499)
+at that merge passed all six Linux/macOS × Python 3.12–3.14 jobs, including
+style/security, offline tests, coverage and fresh artifacts. All three Windows
+jobs failed at Ruff formatting. Lint passed in the inspected Python 3.12 job;
+Bandit, tests, coverage and builds were not reached there. The artifact warning
+reflects missing test/coverage reports after the earlier failure.
+
+**Cause and correction:** A temporary clone with `core.autocrlf=true` reproduced
+the exact **49 files would be reformatted, 24 already formatted** failure.
+Ruff requires LF, but Git checked text out with CRLF, including Python code blocks
+in Markdown issue templates. New [`.gitattributes`](../.gitattributes) uses
+`text=auto eol=lf` for detected text and `-text` for `tests/fixtures/**` to retain
+byte-exact compatibility inputs. Application code, format, dependencies, CI
+checks and fail-closed Windows boundaries are unchanged.
+
+**Validation:** Fresh checkouts in the disposable clone with `core.autocrlf=true`,
+`false` and `input` each passed Ruff formatting: **73 files already formatted**,
+with no CRLF Python files. All **9 existing fixture files** matched their original
+bytes in every checkout; synthetic mixed-ending ASCII ciphertext and binary
+probes also survived unchanged. An initial attempt to refresh existing clone
+files left Git's normalized worktree cache intact; the successful regression
+removed disposable tracked files first to exercise a genuinely fresh checkout.
+Only the disposable clone's index was changed; this development checkout was
+never staged. Strict Poetry metadata/lock, Ruff lint/format, Bandit (no issues)
+and **71 format integration tests** passed on local macOS/Python 3.12.7. The full
+offline suite also passed: **1213 passed, 7 native Windows skips**. All unchanged
+tracked files matched the original bytes in the corrected disposable checkout;
+its Ruff lint passed too. Changed-file LF, local documentation links/anchor,
+privacy/scope and `git diff --check` passed.
+
+**Pending/handoff:** Native Windows reruns on Python 3.12–3.14 are pending the
+maintainer's review, commit, merge and push. Local Git conversion regression
+does not establish native Windows runtime or packaging success. No Windows
+safety check was weakened. No fresh artifact build, alternative local Python
+suite or Sphinx build was needed for this checkout-policy-only correction.
+Changes are limited to `.gitattributes`, changelog, platform guide and roadmap,
+unstaged/uncommitted on `ci/12-thread-12-fix-windows-ci-failures`; no commit,
+push or PR was performed. Issue #12 records the investigation and follow-up.
+Thread 13 is eligible only after Thread 12 acceptance and has not started.
