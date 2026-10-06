@@ -1049,9 +1049,10 @@ output and help formatting at narrow and normal terminal widths.
 boundary/failure handling, without new product features.
 **Depends on:** 11. **Status:** Initial implementation, LF checkout and scan
 identity corrections reviewed and merged; Linux/macOS hosted jobs passed.
-Windows style/security passes, but descriptor-read correction is under review
-and full matrix acceptance remains pending. Issue #12 remains open. See the
-handoff and 6 October Windows CI/identity/descriptor follow-ups below.
+The descriptor-read correction is merged at `187cffc`; Windows style/security
+passes, with replacement-refusal and edit-timing test corrections under review.
+Full matrix acceptance remains pending. Issue #12 remains open. See the handoff
+and 6 October Windows CI/identity/descriptor/test follow-ups below.
 
 1. Expand CI to Windows, macOS, and Linux across Python 3.12, 3.13, and 3.14.
    Use Poetry/lock-aware installs; run unit and offline local-Git integration
@@ -3153,3 +3154,62 @@ index, commit, push, PR, merge or release action was taken; only temporary
 synthetic Git fixture history was used by tests. Issue #12 records this follow-up.
 Changed Python headers use `Jeff Shurtliff (via GPT-6.1 Sol)` and `06 Oct 2026`.
 Threads 13–14 remain **not started**; Thread 13 requires Thread 12 acceptance.
+
+### Thread 12 — Windows test follow-up (6 October 2026)
+
+**Status/evidence:** The maintainer merged the descriptor correction at
+`187cffc`. [Run `37517678167`](https://github.com/jeffshurtliff/obfuscidian/actions/runs/37517678167)
+passed all six Linux/macOS jobs. All three Windows jobs passed style/security,
+then failed offline tests. Python 3.12 and 3.13 each reported **1 failed,
+707 passed, 563 skipped**; Python 3.14 reported **2 failed, 706 passed, 563 skipped**.
+Logs for all three Windows jobs were inspected. Coverage and test evidence
+were retained; Windows fresh artifact validation was skipped.
+
+**Cause and corrections:** In
+[the inventory race test](../tests/integration/test_inventory.py), Windows
+refuses replacement of an open file. The directory context translates the
+sharing denial into the existing safe directory-access error, which the
+test's message pattern excluded. The assertion now accepts that refusal,
+still requires the second file-stat injection to be reached, and verifies
+that the descriptor is closed. A new deterministic sharing-denial case runs
+on every host, checks the exact directory-guard diagnostic, and proves both
+original and attempted replacement retain their synthetic bytes. Replaying
+the old message pattern against this case reproduced the assertion mismatch.
+No read payload is accepted after the error.
+
+The additional Python 3.14 failure is in
+[the incomplete-cache edit fixture](../tests/integration/test_scanned_identity.py):
+a same-size immediate rewrite cannot assume an observable timestamp change.
+The fixture now explicitly sets modification time one second beyond its
+recorded value, asserts that difference, and still requires read refusal.
+This tests a deterministic metadata change under the existing best-effort
+observation contract; it does not claim an atomic filesystem snapshot.
+Production code, safety checks, format, dependencies and matrix are unchanged.
+No skip or expected-failure marker was added.
+
+**Validation actually executed on local macOS:**
+
+- Full offline suite on Python **3.12.7**: **1265 passed, 7 native Windows skips**,
+  including offline package installations and existing interruption/recovery tests.
+- The two changed integration modules on each Python **3.12.7, 3.13.15 and
+  3.14.7**: **40 passed** each. Alternative interpreters used existing locked
+  environments and imported the current workspace source.
+- Strict Poetry metadata/lock, Ruff lint/format (**75 files already formatted**)
+  and Bandit (**no issues**) passed.
+- Changed headers use `Jeff Shurtliff (via GPT-6.1 Sol)`, `06 Oct 2026`.
+  Header/LF, documentation links/anchor, public-safe scope, diff whitespace
+  and unchanged development index were checked.
+
+**Handoff/pending:** Exactly **5 modified tracked files** remain
+unstaged/uncommitted on the existing maintainer branch
+`ci/12-thread-12-fix-windows-failed-assertion`, at `187cffc`.
+No commit, merge, push, PR or release action was taken. Native Windows reruns
+remain pending maintainer review and the next hosted run; local injected
+sharing denial is not native Windows validation. Full alternative-Python
+suites, a separate fresh-build/Twine run, new coverage measurement,
+wheelhouse-isolated installs and Sphinx were not rerun for these test-only
+corrections. No real vault/key/cloud or privileged filesystem test was used.
+The changelog and platform guide record the correction; issue #12 remains open
+for review and full matrix acceptance. Windows mutation/recovery and existing-log
+append still fail closed. Threads 13–14 remain **not started**; Thread 13
+becomes eligible only after Thread 12 acceptance.

@@ -10,9 +10,15 @@ The [identity follow-up](../dev/IMPLEMENTATION_PLAN.md#thread-12--windows-identi
 records the next run: all six Linux/macOS jobs passed and Windows style/security
 passed, but Windows offline tests failed. The
 [descriptor follow-up](../dev/IMPLEMENTATION_PLAN.md#thread-12--windows-descriptor-follow-up-6-october-2026)
-records the latest run after the scan correction: Windows tests still failed at
-opened-file metadata comparisons. Full native Windows acceptance remains pending
-a rerun with the local descriptor correction.
+records the run after the scan correction: Windows tests still failed at
+opened-file metadata comparisons. The descriptor correction is merged at
+`187cffc`; the [test follow-up](../dev/IMPLEMENTATION_PLAN.md#thread-12--windows-test-follow-up-6-october-2026)
+records run `37517678167`: all Windows style/security jobs passed, while offline
+tests failed on the replacement-refusal message expectation; Python 3.14 also
+failed a timing-sensitive same-size edit fixture. Local test corrections accept
+the existing safe directory-guard refusal, check descriptor cleanup and source
+preservation, and explicitly set a distinct edit timestamp. Production safety
+checks are unchanged. Full native Windows acceptance requires a new CI run.
 
 Repository `.gitattributes` keeps detected text at LF, matching Ruff, even with
 Windows `core.autocrlf=true`. This includes Python code blocks in Markdown.

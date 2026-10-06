@@ -74,6 +74,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Open-file replacement tests accept safe directory-guard sharing refusal, verify descriptor cleanup and preserve source bytes.
+- Same-size changed-source fixtures set a distinct modification time explicitly, avoiding timing-dependent Windows failures.
 - Windows source/token reads and transaction hashing compare creation time across APIs while retaining raw descriptor change checks.
 - Case-alias overlap tests accept the earlier Windows lexical overlap refusal without changing production path validation.
 - Inventory and mirror traversal use full no-follow entry metadata, preventing false Windows identity-change errors.
