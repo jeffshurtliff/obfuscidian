@@ -14,6 +14,9 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Locked `sphinx-favicon` documentation dependency and extension activation for
+  the configured browser and Apple touch icons, including Read the Docs builds.
+
 - Read the Docs v2 configuration using Ubuntu 24.04, Python 3.12 and the locked Poetry docs group,
   with HTML builds that fail on Sphinx warnings; no duplicate requirements list or publication.
 

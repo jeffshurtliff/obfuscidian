@@ -44,7 +44,7 @@ the docs configuration reads package metadata directly and does not import the C
 This follows the supported
 [Poetry build customization](https://docs.readthedocs.com/platform/stable/build-customization.html#install-dependencies-with-poetry).
 No `docs/requirements.txt` is needed: `pyproject.toml` and `poetry.lock` remain
-the dependency source, including exact Sphinx, MyST and PyData versions.
+the dependency source, including exact Sphinx, MyST, PyData and sphinx-favicon versions.
 `sphinx.configuration` points to `docs/conf.py`, uses the HTML builder and treats
 warnings as errors. Additional PDF/ePub formats are not requested.
 
@@ -85,6 +85,9 @@ Dark is the first-visit default, while PyData remembers a reader's selected mode
 The supplied horizontal PNG remains the source asset. A proportional 848 × 297
 PNG provides a smaller web logo without changing the artwork/transparency.
 The logo preserves its transparency in both color modes.
+The docs group also installs `sphinx-favicon`; `sphinx_favicon` in `docs/conf.py`
+activates the existing `favicons` list. Its PNG files live in `_static`, so local
+and Read the Docs builds use the same assets without an additional requirements file.
 `docs/_static/custom.css` applies restrained violet/cyan accents to readable
 surfaces while retaining semantic warning/error colors and accessible syntax
 highlighting. Content links stay underlined; keyboard focus has a visible outline.

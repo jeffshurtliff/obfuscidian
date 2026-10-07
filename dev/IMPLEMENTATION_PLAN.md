@@ -1110,12 +1110,12 @@ append refusal pending native file ownership/DACL validation.
 **Goal/deliverable:** Coherent, buildable user/contributor/security documentation
 that describes completed behavior rather than the template.
 **Depends on:** 12 for completion; earlier threads add incremental help/docs.
-**Status:** Initial docs and Read the Docs configuration committed by the maintainer
-at `adbcd9e` and `0b4728a`; requested beginner documentation revision implemented
-locally and uncommitted, pending review. Issue #13 remains open. Strict Sphinx,
-local links and synthetic examples pass. No hosted publication/build is claimed;
-optional external linkcheck remains limited by earlier GitHub rate limiting.
-See the latest Thread 13 handoff below. Thread 14 remains not started.
+**Status:** Documentation and previous revisions committed locally through
+`73960ba`; requested favicon dependency/configuration revision implemented locally
+and uncommitted, pending review. Issue #13 remains open. Strict Sphinx, local links
+and an isolated Read the Docs-style docs-only build pass. No hosted publication/
+build is claimed; optional external linkcheck remains limited by earlier GitHub
+rate limiting. See the latest Thread 13 handoff below. Thread 14 remains not started.
 
 1. Add Poetry `docs` dependencies and Sphinx/reST/MyST with `pydata_sphinx_theme`.
    Adapt the structure of SalesPyForce/PyDPlus: overview/getting started, CLI
@@ -3453,3 +3453,43 @@ small glossary/FAQ, copy buttons and short expected-output examples, and a
 novice usability pass through installation and first backup. Source-distribution
 link completeness beyond its selected user guides can be reviewed during release
 preparation. Thread 14 remains not started and requires a separate request.
+
+
+### Thread 13 — Favicon dependency revision (6 October 2026)
+
+Prior documentation revisions and maintainer edits are committed locally through
+`73960ba`. The requested change adds `sphinx-favicon (>=1.1,<2)` with Poetry to
+the optional `docs` dependency group and locks version `1.1.0`. No other package
+versions changed. `docs/conf.py` enables `sphinx_favicon`, activating the
+maintainer's existing three-entry favicon configuration. Existing image assets,
+MyST settings and layout template remain unchanged; the Python header uses
+`Jeff Shurtliff (via GPT-6.1 Sol)` and `06 Oct 2026`.
+
+Read the Docs already installs `--only docs --no-root` from `poetry.lock`; its
+configuration needs no change and no separate `docs/requirements.txt` is created.
+Changelog and documentation-maintenance guidance record the docs-only dependency.
+
+Validation executed locally on macOS/Python 3.12.7:
+
+- Poetry metadata/lock checks, Ruff lint/format and diff whitespace passed.
+- `poetry install --with dev,docs` installed only the added package.
+- Strict fresh Sphinx HTML build passed without warnings. Local links/assets/
+  fragments passed across 33 rendered pages; all three favicon tags, relative
+  paths and image sizes were verified on all 31 source-document pages.
+- A disposable environment accepted the exact Read the Docs docs-only install
+  from the lock and passed a strict fresh HTML build, the same 33-page local
+  reference checker and `pip check`. It contained `sphinx-favicon 1.1.0` without
+  the application, cryptography or pytest installed.
+- Upstream sphinx-favicon skips generated search/index pages without document
+  trees. This existing extension behavior is recorded rather than patched.
+
+No application tests, full accessibility audit, broad external linkcheck,
+hosted CI/Read the Docs job or publication was performed for this dependency/
+configuration-only change. No runtime, crypto, backup-format, support-policy or
+publication configuration changes. Optional generated-page favicon coverage can
+be considered separately if requested.
+
+Six modified tracked files remain unstaged/uncommitted on the existing
+Thread 13 branch at `73960ba`; no Git history, PR, release, publication or tool
+companion was created. Issue #13 remains open for review. Thread 14 remains
+not started and requires a separate request.
