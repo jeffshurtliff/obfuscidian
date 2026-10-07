@@ -31,7 +31,11 @@ See the Thread 12 completion record below for evidence and retained limitations.
 Thread 13 is complete, reviewed and merged/pushed into `origin/main`; issue #13
 is closed as completed under explicit maintainer authorization. All nine
 Linux/macOS/Windows CI jobs passed on Python 3.12–3.14 at `c4bda3c`.
-Thread 14 remains not started. See the Thread 13 completion record below. See the Thread 11 completion record below. See the Thread 10
+Thread 13a — Primary-shell installation and automation documentation — is
+implemented locally under [issue #15](https://github.com/jeffshurtliff/obfuscidian/issues/15);
+validation passed locally; changes remain uncommitted for maintainer review.
+Thread 14 remains not started.
+See the Thread 13 completion record below. See the Thread 11 completion record below. See the Thread 10
 completion record below and Thread 09 completion record for evidence and limits.
 
 **Intended first stable release:** `1.0.0` (current metadata: `1.0.0.dev0`).
@@ -565,9 +569,10 @@ commits, publication, or PRs are implied. Update status only after acceptance cr
 | 11 | CLI polish | 10 | [#11](https://github.com/jeffshurtliff/obfuscidian/issues/11) | Complete; reviewed/merged; Linux CI passed |
 | 12 | Cross-platform hardening | 11 | [#12](https://github.com/jeffshurtliff/obfuscidian/issues/12) | Complete; reviewed/merged; nine-job OS/Python matrix passed |
 | 13 | Documentation and contribution guidance | 12; incremental docs accompany earlier threads | [#13](https://github.com/jeffshurtliff/obfuscidian/issues/13) | Complete; reviewed/merged; nine-job OS/Python matrix passed |
+| 13a | Primary-shell installation and automation documentation | 13 | [#15](https://github.com/jeffshurtliff/obfuscidian/issues/15) | Implemented locally; validation passed; uncommitted; review pending |
 | 14 | Release preparation | 13 | [#14](https://github.com/jeffshurtliff/obfuscidian/issues/14) | Not started |
 
-All fourteen issues are assigned to `jeffshurtliff` and belong to the
+The fourteen original issues and documentation follow-up #15 are assigned to `jeffshurtliff` and belong to the
 [v1.0.0 milestone](https://github.com/jeffshurtliff/obfuscidian/milestone/1).
 Issue numbers are tracking identifiers; creating them does not start or
 complete implementation. Existing repository labels categorize each thread.
@@ -1155,6 +1160,25 @@ rendered key usage/security/restore pages. Check Markdown/reST literal syntax.
 > examples, test a full synthetic restore tutorial, and validate a strict docs
 > build and rendered pages. Do not publish docs or create tool companion files
 > unless separately requested. Leave changes uncommitted.
+
+### Thread 13a — Primary-shell installation and automation documentation
+
+**GitHub issue:** [#15](https://github.com/jeffshurtliff/obfuscidian/issues/15)
+
+**Goal/deliverable:** Explain installation for primary-shell use without venv
+activation, including pipx as the recommended method and pip `--user` where the
+selected Python permits it. Retain venv installation and add concise unattended
+job examples with explicit paths, consent, exit-code handling and platform limits.
+**Depends on:** 13; the completed CLI/packaging and platform contracts remain authoritative.
+**Status:** Implemented and validated locally; changes remain unstaged/uncommitted
+for maintainer review. Issue #15 remains open; see the implementation handoff below.
+
+**Acceptance/demo:** README and beginner/detailed Sphinx installation pages agree;
+strict Sphinx and rendered references pass; disposable installation and synthetic
+automation checks demonstrate shell access and failure handling where feasible.
+Native Windows and hosted validation are reported only when executed. No runtime,
+dependency, packaging, backup-format, scheduler registration or release changes.
+Issue #15 stays open pending maintainer review; Thread 14 remains not started.
 
 ### Thread 14 — Release preparation
 
@@ -3538,3 +3562,73 @@ No remaining Thread 13 acceptance blocker is identified. Optional broader
 external linkcheck/screen-reader and generated search/index favicon work remains
 separate from this accepted scope. Thread 14 release preparation is the next
 eligible roadmap thread but remains **not started** and requires a new request.
+
+
+### Thread 13a — Primary-shell installation documentation handoff (7 October 2026)
+
+**Tracking:** [Issue #15](https://github.com/jeffshurtliff/obfuscidian/issues/15).
+The maintainer approved the plan and requested implementation on the existing
+`docs/15-thread-13a-add-install-instructions-for-primary-env` branch, leaving
+all changes unstaged/uncommitted for review. Thread 13's completed documentation,
+console entry point and Python/platform requirements were checked against the
+current checkout and dependency issue. This is a bounded follow-up, not release work.
+
+**Local deliverables:**
+
+- [README](../README.md) and [beginner installation](../docs/getting-started/installation.md)
+  recommend pipx for primary-shell access without activation, explain its managed
+  environment, retain venv installation and link to the user-install alternative.
+- [Detailed installation](../docs/guides/installation.md) covers pipx prerequisites,
+  explicit Python selection, POSIX/PowerShell discovery, pip `--user` outside a
+  venv, interpreter-derived scripts directories, temporary/persistent PATH setup,
+  externally managed Python and competing-installation troubleshooting.
+- The detailed guide adds a dry-run-first POSIX cron backup example and native
+  Windows read-only verification/Task Scheduler fields, with absolute synthetic
+  paths, consent, rollback storage, status propagation, execution-account and
+  scheduling coordination, private logging and manual recovery guidance.
+- [Unreleased changelog](../docs/CHANGELOG.md), thread index and this handoff record
+  track the addition. No CLI, Python headers, dependencies, lock, packaging,
+  backup format, scheduler configuration or release tooling changed.
+
+**Executed local validation (macOS, Python 3.12.7):**
+
+- Strict fresh Sphinx HTML build with warnings treated as errors passed; an
+  initial cross-page heading-anchor warning was corrected before the final build.
+- The existing offline HTML checker passed across 33 rendered pages, covering
+  local links/assets/fragments. README local targets and Markdown fences were checked.
+- Existing synthetic documentation integration tests: **3 passed**. No new
+  application tests or full application suite were run for this documentation change.
+- Built a current wheel into a disposable directory and fetched runtime wheels
+  there. The sandbox initially blocked the download; an authorized network retry
+  succeeded. Both subsequent installation smoke checks used the local wheelhouse.
+- Disposable pipx and non-venv pip `--user` installs passed; the latter derived
+  its scripts path from the selected interpreter with a temporary user base.
+  Bash and zsh discovered the CLI and ran help/version from an unrelated directory
+  without activation. Primary package directories and shell profiles were not edited.
+- Synthetic automation commands extracted from the guide ran under `/bin/sh`
+  with a minimal environment, unrelated working directory and spaced absolute paths.
+  Dry run left the absent mirror absent; backup preserved source bytes; verification
+  preserved mirror bytes. A repeat backup replaced changed content with explicit
+  consent; omission of `--yes` failed with status 1 without changing the mirror.
+  Missing mirror and wrong key returned 1; missing selector returned 2. The final
+  disposable harness passed all **19 checks**, including installation/discovery.
+- Rendered beginner/detailed pages and cross-page navigation were inspected in
+  the browser, including desktop dark/light views and a 390-pixel narrow viewport.
+  Code blocks remain scrollable and task tables use the existing theme layout.
+- Diff whitespace, changed-file scope and public-safe content checks passed.
+
+**Limits and review:** PowerShell/native Windows installation or Task Scheduler
+execution, native Linux, hosted CI/docs publication, real vault/cloud tests,
+external linkcheck and a full accessibility audit were not run. No scheduler was
+registered. All commands used synthetic data; no real keys/vaults were accessed.
+No dependency-support or native Windows write claim was added.
+
+The GitHub connector could read the issue but refused comment writes. The local
+GitHub CLI posted the authorized start, progress and validation/review handoff
+comments; issue metadata and original discussion were preserved.
+
+The five changed Markdown files remain unstaged/uncommitted on the existing
+branch. No commit, push, PR, merge, tag, release, publishing or issue closure was
+performed. Local implementation/validation is ready for maintainer review;
+issue #15 stays open until acceptance. Thread 14 remains **not started** and
+requires a separate request.

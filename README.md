@@ -1,5 +1,7 @@
 
-<img src="docs/_static/obfuscidian-logo-horizontal-web.png" style="max-height: 160px;" alt="Obfuscidian Logo">
+<img src="docs/_static/obfuscidian-logo-horizontal-web.png" 
+     style="max-height: 160px;" 
+     alt="Obfuscidian Logo">
 
 # Obfuscidian
 
@@ -28,7 +30,25 @@ Thread 14 release preparation remains not started.
 
 ## Install from source
 
-Python 3.12+ is required. From the repository root in a POSIX shell:
+Python 3.12+ is required. For use directly from Bash, zsh or PowerShell without
+activating an environment, **pipx is recommended**. With 
+[pipx installed](https://pipx.pypa.io/latest/how-to/install-pipx.html), run
+from the repository root in a POSIX shell:
+
+```sh
+python3.12 --version
+pipx ensurepath
+pipx install --python python3.12 .
+```
+
+Reopen your terminal after PATH setup, then run `obfuscidian --version` and
+`obfuscidian --help` from any folder. pipx manages an isolated Python environment
+internally; you do not activate it. See [installation](docs/guides/installation.md)
+for pipx prerequisites, PowerShell commands, **pip `--user` installation outside
+a venv**, local wheels and developer setup. For unattended use, follow
+[scheduled jobs and automation](docs/guides/installation.md#scheduled-jobs-and-automation).
+
+Alternatively, install into a venv from the repository root:
 
 ```sh
 python3 -m venv .venv
@@ -37,10 +57,8 @@ python -m pip install .
 obfuscidian --help
 ```
 
-For pipx, run `pipx install --python python3.12 .` from the checkout.
-See [installation](docs/guides/installation.md) for Windows PowerShell,
-local wheel and developer setup. Both `obfuscidian` and `python -m obfuscidian`
-offer the same behavior.
+`python -m obfuscidian` offers the same behavior when that Python interpreter
+contains the package; your primary Python may not contain a pipx installation.
 
 ## First backup and restore
 

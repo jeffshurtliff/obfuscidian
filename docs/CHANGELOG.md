@@ -18,6 +18,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Primary-shell installation guidance using pipx without activation or pip
+  `--user` where supported, interpreter-specific PATH setup, and concise
+  cron/PowerShell Task Scheduler examples with unattended-operation limits (#15).
+
 - Locked `sphinx-favicon` documentation dependency and extension activation for
   the configured browser and Apple touch icons, including Read the Docs builds.
 
