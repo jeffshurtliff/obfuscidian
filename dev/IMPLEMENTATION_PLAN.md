@@ -37,10 +37,11 @@ complete, reviewed and merged/pushed into `main` at `47ef238`;
 completed. The maintainer explicitly accepted the documentation-only hosted CI
 skip; strict local Sphinx and rendered reference checks passed. See its completion
 record below for evidence and retained validation limits.
-Thread 13b — Stable-update guidance and advisory — was reviewed and merged/pushed
-for [issue #16](https://github.com/jeffshurtliff/obfuscidian/issues/16) at `449c41a`.
-All six Linux/macOS CI jobs passed; Windows test corrections remain uncommitted
-for review and hosted reruns. The issue remains open. See its Windows CI follow-up below.
+Thread 13b — Stable-update guidance and advisory — is complete, reviewed and
+merged/pushed into `main`, including the Windows test corrections at `ad1180d`.
+All nine Linux/macOS/Windows CI jobs passed on Python 3.12–3.14;
+[issue #16](https://github.com/jeffshurtliff/obfuscidian/issues/16) is closed as
+completed under explicit maintainer authorization. See its completion record below.
 Thread 14 remains not started.
 See the Thread 13 completion record below. See the Thread 11 completion record below. See the Thread 10
 completion record below and Thread 09 completion record for evidence and limits.
@@ -578,7 +579,7 @@ commits, publication, or PRs are implied. Update status only after acceptance cr
 | 12 | Cross-platform hardening | 11 | [#12](https://github.com/jeffshurtliff/obfuscidian/issues/12) | Complete; reviewed/merged; nine-job OS/Python matrix passed |
 | 13 | Documentation and contribution guidance | 12; incremental docs accompany earlier threads | [#13](https://github.com/jeffshurtliff/obfuscidian/issues/13) | Complete; reviewed/merged; nine-job OS/Python matrix passed |
 | 13a | Primary-shell installation and automation documentation | 13 | [#15](https://github.com/jeffshurtliff/obfuscidian/issues/15) | Complete; reviewed/merged; docs-only CI skip accepted |
-| 13b | Stable-update guidance and advisory | 11, 13, 13a | [#16](https://github.com/jeffshurtliff/obfuscidian/issues/16) | Merged; Windows CI follow-up pending |
+| 13b | Stable-update guidance and advisory | 11, 13, 13a | [#16](https://github.com/jeffshurtliff/obfuscidian/issues/16) | Complete; reviewed/merged; nine-job OS/Python matrix passed |
 | 14 | Release preparation | 13 | [#14](https://github.com/jeffshurtliff/obfuscidian/issues/14) | Not started |
 
 The fourteen original issues and follow-ups #15/#16 are assigned to `jeffshurtliff` and belong to the
@@ -1200,9 +1201,10 @@ Issue #15 is closed as completed; Thread 14 remains not started.
 installations, and provide an optional advisory PyPI check without modifying
 application data or installing packages.
 **Depends on:** 11 (private logging), 13 (Sphinx), 13a (installation guidance).
-**Status:** Reviewed and merged/pushed at `449c41a`; Linux/macOS CI passed.
-Windows CI test corrections remain uncommitted for review and native reruns;
-issue #16 remains open. See the Windows CI follow-up below.
+**Status:** Complete, reviewed and merged/pushed, including the Windows test
+corrections at `ad1180d`. All nine Linux/macOS/Windows Python 3.12–3.14 CI jobs
+passed; issue #16 is closed as completed under explicit maintainer authorization.
+See the completion record below.
 
 **Maintainer decisions, 7 October 2026:** Use `GPT-6.1 Sol` in changed Python
 headers. Silently skip unavailable PyPI checks, superseding the issue's proposed
@@ -3858,3 +3860,48 @@ PR, merge, release or publication was performed. Native Windows execution with
 these corrections is not available locally; review and a fresh hosted matrix
 remain pending. Existing CI results establish the failures and Linux/macOS
 success at the merged feature commit, not Windows success for this correction.
+
+### Thread 13b — Stable-update feature completion record (7 October 2026)
+
+**Status/authorization:** Complete, accepted by the maintainer and closed as
+completed under the explicit request after the passing CI rerun.
+[Issue #16](https://github.com/jeffshurtliff/obfuscidian/issues/16) was closed on
+7 October 2026, with the
+[completion evidence](https://github.com/jeffshurtliff/obfuscidian/issues/16#issuecomment-6048357987)
+posted before closure. Labels, assignee and milestone were preserved.
+This record supersedes the earlier pending review/merge/Windows-rerun statuses.
+
+**Git/CI verification:** The feature was merged at `449c41a`; the reviewed Windows
+test corrections were committed/pushed by the maintainer at
+[`ad1180d`](https://github.com/jeffshurtliff/obfuscidian/commit/ad1180da3d8818338e9d0807b3aeb7efa50516f1).
+Local `main`, `origin/main` and GitHub's `main` all matched
+`ad1180da3d8818338e9d0807b3aeb7efa50516f1`; the worktree was clean before closure
+bookkeeping, and the feature merge was verified as an ancestor.
+[CI run 37696146866](https://github.com/jeffshurtliff/obfuscidian/actions/runs/37696146866)
+completed successfully on this exact commit. All nine Linux/macOS/Windows jobs
+on Python 3.12–3.14 passed style/security, offline tests, coverage reporting and
+fresh artifact validation. Earlier Windows failures are resolved by this rerun;
+skipped platform capabilities are not claimed as exercised.
+
+**Accepted deliverables:** [README](../README.md) and the dedicated
+[Getting Started update page](../docs/getting-started/updating.md) cover stable
+upgrades for primary-shell and isolated installations, interpreter/PATH discovery,
+scheduled jobs and release announcements. The internal urllib3 notifier selects
+stable, non-yanked releases, displays a stderr advisory and records it after safe
+optional log opening. Suppression skips the check, display and logging; unavailable
+checks silently skip notices under the recorded maintainer decision. The original
+handoff retains local offline, packaging, strict Sphinx and synthetic upgrade evidence.
+
+**Closure checks/handoff:** The GitHub issue state was reread and confirmed
+`closed` with reason `completed`. A fresh strict Sphinx build and rendered local
+reference check passed across **34 HTML pages** after the changelog update;
+external URLs were not requested. Diff, status, consistency and public-safe
+content were reviewed. Only this roadmap and the Unreleased changelog remain
+unstaged/uncommitted on `main` for review; no code change, commit, push, branch
+change, release or publication was performed during closure.
+
+**Retained limits/next work:** No feature acceptance blocker remains. Live PyPI
+release upgrades and hosted documentation publication are not claimed; the owner
+must connect the approved short URL when the destination page is published.
+Existing Windows mutation/recovery/append limits remain. Thread 14 is the next
+eligible roadmap thread and remains **not started**, requiring a separate request.
