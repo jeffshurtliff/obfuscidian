@@ -37,10 +37,10 @@ complete, reviewed and merged/pushed into `main` at `47ef238`;
 completed. The maintainer explicitly accepted the documentation-only hosted CI
 skip; strict local Sphinx and rendered reference checks passed. See its completion
 record below for evidence and retained validation limits.
-Thread 13b — Stable-update guidance and advisory — is implemented locally for
-[issue #16](https://github.com/jeffshurtliff/obfuscidian/issues/16), pending
-maintainer review, with local validation passed. Changes remain uncommitted;
-the issue is open. See its implementation handoff below.
+Thread 13b — Stable-update guidance and advisory — was reviewed and merged/pushed
+for [issue #16](https://github.com/jeffshurtliff/obfuscidian/issues/16) at `449c41a`.
+All six Linux/macOS CI jobs passed; Windows test corrections remain uncommitted
+for review and hosted reruns. The issue remains open. See its Windows CI follow-up below.
 Thread 14 remains not started.
 See the Thread 13 completion record below. See the Thread 11 completion record below. See the Thread 10
 completion record below and Thread 09 completion record for evidence and limits.
@@ -578,7 +578,7 @@ commits, publication, or PRs are implied. Update status only after acceptance cr
 | 12 | Cross-platform hardening | 11 | [#12](https://github.com/jeffshurtliff/obfuscidian/issues/12) | Complete; reviewed/merged; nine-job OS/Python matrix passed |
 | 13 | Documentation and contribution guidance | 12; incremental docs accompany earlier threads | [#13](https://github.com/jeffshurtliff/obfuscidian/issues/13) | Complete; reviewed/merged; nine-job OS/Python matrix passed |
 | 13a | Primary-shell installation and automation documentation | 13 | [#15](https://github.com/jeffshurtliff/obfuscidian/issues/15) | Complete; reviewed/merged; docs-only CI skip accepted |
-| 13b | Stable-update guidance and advisory | 11, 13, 13a | [#16](https://github.com/jeffshurtliff/obfuscidian/issues/16) | Local validation passed; maintainer review pending |
+| 13b | Stable-update guidance and advisory | 11, 13, 13a | [#16](https://github.com/jeffshurtliff/obfuscidian/issues/16) | Merged; Windows CI follow-up pending |
 | 14 | Release preparation | 13 | [#14](https://github.com/jeffshurtliff/obfuscidian/issues/14) | Not started |
 
 The fourteen original issues and follow-ups #15/#16 are assigned to `jeffshurtliff` and belong to the
@@ -1200,8 +1200,9 @@ Issue #15 is closed as completed; Thread 14 remains not started.
 installations, and provide an optional advisory PyPI check without modifying
 application data or installing packages.
 **Depends on:** 11 (private logging), 13 (Sphinx), 13a (installation guidance).
-**Status:** Implemented and validated locally; maintainer review pending.
-Changes remain uncommitted on the existing issue branch; issue #16 remains open.
+**Status:** Reviewed and merged/pushed at `449c41a`; Linux/macOS CI passed.
+Windows CI test corrections remain uncommitted for review and native reruns;
+issue #16 remains open. See the Windows CI follow-up below.
 
 **Maintainer decisions, 7 October 2026:** Use `GPT-6.1 Sol` in changed Python
 headers. Silently skip unavailable PyPI checks, superseding the issue's proposed
@@ -3803,3 +3804,57 @@ assignee, milestone or closure was changed. All **18 modified tracked files and
 4 new files** remain unstaged/uncommitted on the original branch. No branch
 change, stage, development commit, push, PR, merge, tag, release, publication,
 scheduler registration or real CLI upgrade was performed.
+
+### Thread 13b — Windows CI follow-up (7 October 2026)
+
+**Scope/status:** The maintainer reviewed and merged/pushed the update feature
+at [`449c41a`](https://github.com/jeffshurtliff/obfuscidian/commit/449c41a852db9e1d60a405656d574d4a7cd510a9).
+[CI run 37694270042](https://github.com/jeffshurtliff/obfuscidian/actions/runs/37694270042)
+completed with all six Linux/macOS Python 3.12–3.14 jobs passing and all three
+Windows jobs failing offline tests. Windows style/security passed; fresh artifact
+checks were skipped after the failures. This record supersedes the original
+handoff's pending merge/hosted-CI status. Issue #16 remains open; Thread 14 remains
+**not started**.
+
+**Causes and corrections:**
+
+- All three Windows jobs reported setup and teardown errors for the oversized
+  update-response case: pytest derived a **1,048,650-character** node ID from the
+  1 MiB payload. Setting `PYTEST_CURRENT_TEST` exceeded Windows' **32,767-character**
+  environment-variable limit, before the response-handling test could run.
+  [Update tests](../tests/unit/test_updates.py) now use short explicit IDs for
+  malformed JSON, invalid UTF-8 and oversized responses. Payloads, assertions,
+  response-size limits and resource-cleanup coverage are retained.
+- Windows/Python 3.14 also reported that `test_addition_during_scan` did not raise.
+  That fixture assumed file creation immediately changed observable directory
+  metadata. [Inventory integration tests](../tests/integration/test_inventory.py)
+  now explicitly set a distinct directory modification time after the injected
+  addition. This exercises the existing best-effort change check without relying
+  on filesystem timestamp timing. No production check or platform skip was changed.
+- [Unreleased changelog](../docs/CHANGELOG.md), roadmap index and current status
+  reflect the corrections and pending native validation. Application behavior,
+  dependencies, backup format and Windows mutation/recovery limits are unchanged.
+
+**Executed validation, local macOS/Python 3.12.7:**
+
+- Focused update-response and inventory integration suites: **78 passed**.
+- Full offline `poetry run pytest -q`: **1331 passed, 7 native Windows skips**.
+- Ruff lint/format across the repository, strict Poetry lock validation, Bandit
+  and `git diff --check`: passed; Bandit found no issues.
+- Collection check: all **1338** test IDs, including pytest's teardown suffix,
+  fit the Windows environment-variable limit. Update-test IDs are at most
+  **94 characters**; the full-suite maximum is **20,067 characters**.
+- Synthetic probe restored the original directory modification time immediately
+  after file creation; the corrected inventory fixture still produced the expected
+  refusal and retained the injected synthetic file.
+- Diff, scope and public-safe content reviewed; no new skip/xfail was introduced.
+
+**Issue/Git handoff:** The
+[start update](https://github.com/jeffshurtliff/obfuscidian/issues/16#issuecomment-6047937132)
+and [validation handoff](https://github.com/jeffshurtliff/obfuscidian/issues/16#issuecomment-6048028573)
+were posted to the existing issue. Four tracked files remain unstaged/uncommitted
+on the current `main` branch at `449c41a`; no stage, commit, branch change, push,
+PR, merge, release or publication was performed. Native Windows execution with
+these corrections is not available locally; review and a fresh hosted matrix
+remain pending. Existing CI results establish the failures and Linux/macOS
+success at the merged feature commit, not Windows success for this correction.

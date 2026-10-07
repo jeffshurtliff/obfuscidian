@@ -113,6 +113,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Update-response tests use short explicit IDs to stay within Windows' environment-variable limit (#16).
+- The inventory addition-during-scan fixture sets a distinct directory modification time instead of relying on immediate timestamp updates.
 - Stale planned-command wording and README installation/platform claims; synchronized current user and contributor guidance.
 
 - Open-file replacement tests accept safe directory-guard sharing refusal, verify descriptor cleanup and preserve source bytes.

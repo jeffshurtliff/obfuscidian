@@ -4,7 +4,7 @@
 :Synopsis:          Synthetic preservation and changing-source preflight scenarios
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     06 Oct 2026
+:Modified Date:     07 Oct 2026
 """
 
 from __future__ import annotations
@@ -235,6 +235,7 @@ def test_changes_during_file_read(vault: Path, monkeypatch: pytest.MonkeyPatch, 
 def test_addition_during_scan(vault: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Refuse a source that changes after directory enumeration begins."""
     real_scan = os.scandir
+    before = vault.stat()
     changed = False
 
     class ChangingScan:
@@ -253,6 +254,9 @@ def test_addition_during_scan(vault: Path, monkeypatch: pytest.MonkeyPatch) -> N
             if not changed:
                 changed = True
                 (vault / 'late.bin').write_bytes(b'SYNTHETIC ADDITION')
+                # Force an observable directory change even with coarse/delayed
+                # Windows directory timestamps; scanning is best-effort observation.
+                os.utime(vault, ns=(before.st_atime_ns, before.st_mtime_ns + 2_000_000_000))
             return iter(children)
 
     monkeypatch.setattr(inv.os, 'scandir', ChangingScan)

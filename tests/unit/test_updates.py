@@ -197,7 +197,12 @@ def test_http_errors_close_without_reading(fake_pool, status):
     assert fake_pool.response.closed and fake_pool.cleared
 
 
-@pytest.mark.parametrize('body', [b'not JSON', b'\xff', b'{}' + b' ' * const.UPDATE_RESPONSE_BYTES])
+@pytest.mark.parametrize(
+    'body',
+    [b'not JSON', b'\xff', b'{}' + b' ' * const.UPDATE_RESPONSE_BYTES],
+    # Payload-derived IDs exceed Windows' PYTEST_CURRENT_TEST environment limit.
+    ids=['invalid-json', 'invalid-utf8', 'oversized'],
+)
 def test_bad_or_oversized_json_closes_response(fake_pool, body):
     fake_pool.response.body = body
     with pytest.raises((ValueError, UnicodeError)):
