@@ -7,6 +7,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- Thread 13 documentation accepted by the maintainer and completed on `main` at
+  `c4bda3c`, with passing nine-job Linux/macOS/Windows CI on Python 3.12–3.14;
+  issue #13 closed as completed. Documentation hosting/publication remains separate.
+
 - Reorganized Getting Started into nine beginner topics with short examples and
   task cards; moved detailed installation and restore rehearsal into User Guides.
 - Removed development-thread references from Sphinx pages except this changelog,

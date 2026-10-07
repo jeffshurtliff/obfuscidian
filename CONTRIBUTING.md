@@ -74,9 +74,12 @@ Thread 11 — CLI polish — is complete, reviewed and merged/pushed into
 Thread 12 is complete, reviewed and merged/pushed into `origin/main`; issue #12
 is closed as completed. Linux/macOS/Windows CI passed on Python 3.12–3.14.
 Native Windows mutation/recovery and existing-log append still fail closed.
-See [platform validation](docs/PLATFORMS.md). Thread 13 documentation tooling
-is implemented locally, pending maintainer review;
-Thread 14 remains not started.
+See [platform validation](docs/PLATFORMS.md). Thread 13 documentation is
+complete, reviewed and merged/pushed into `origin/main`; issue #13 is closed
+as completed under explicit maintainer authorization. All nine Linux/macOS/
+Windows CI jobs passed on Python 3.12–3.14 at `c4bda3c`; strict Sphinx and
+synthetic tutorial validation passed locally. Read the Docs configuration is
+prepared; no hosted docs build/publication is claimed. Thread 14 remains not started.
 
 The test workflow targets Linux/macOS/Windows on Python 3.12–3.14;
 all nine jobs passed in the [Thread 12 completion run](https://github.com/jeffshurtliff/obfuscidian/actions/runs/37519004246).

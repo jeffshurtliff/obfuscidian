@@ -28,8 +28,10 @@ is closed as completed and Linux CI passed on Python 3.12–3.14. Thread 12 is
 complete, reviewed and merged/pushed into `origin/main`; issue #12 is closed
 as completed. All nine Linux/macOS/Windows jobs passed on Python 3.12–3.14.
 See the Thread 12 completion record below for evidence and retained limitations.
-Thread 13 is implemented locally, pending maintainer review; Thread 14 remains
-not started. See the Thread 13 handoff record below. See the Thread 11 completion record below. See the Thread 10
+Thread 13 is complete, reviewed and merged/pushed into `origin/main`; issue #13
+is closed as completed under explicit maintainer authorization. All nine
+Linux/macOS/Windows CI jobs passed on Python 3.12–3.14 at `c4bda3c`.
+Thread 14 remains not started. See the Thread 13 completion record below. See the Thread 11 completion record below. See the Thread 10
 completion record below and Thread 09 completion record for evidence and limits.
 
 **Intended first stable release:** `1.0.0` (current metadata: `1.0.0.dev0`).
@@ -562,7 +564,7 @@ commits, publication, or PRs are implied. Update status only after acceptance cr
 | 10 | Git merge restore | 09 | [#10](https://github.com/jeffshurtliff/obfuscidian/issues/10) | Complete; reviewed/merged; Linux CI passed |
 | 11 | CLI polish | 10 | [#11](https://github.com/jeffshurtliff/obfuscidian/issues/11) | Complete; reviewed/merged; Linux CI passed |
 | 12 | Cross-platform hardening | 11 | [#12](https://github.com/jeffshurtliff/obfuscidian/issues/12) | Complete; reviewed/merged; nine-job OS/Python matrix passed |
-| 13 | Documentation and contribution guidance | 12; incremental docs accompany earlier threads | [#13](https://github.com/jeffshurtliff/obfuscidian/issues/13) | Implemented locally; review pending |
+| 13 | Documentation and contribution guidance | 12; incremental docs accompany earlier threads | [#13](https://github.com/jeffshurtliff/obfuscidian/issues/13) | Complete; reviewed/merged; nine-job OS/Python matrix passed |
 | 14 | Release preparation | 13 | [#14](https://github.com/jeffshurtliff/obfuscidian/issues/14) | Not started |
 
 All fourteen issues are assigned to `jeffshurtliff` and belong to the
@@ -1110,12 +1112,13 @@ append refusal pending native file ownership/DACL validation.
 **Goal/deliverable:** Coherent, buildable user/contributor/security documentation
 that describes completed behavior rather than the template.
 **Depends on:** 12 for completion; earlier threads add incremental help/docs.
-**Status:** Documentation and previous revisions committed locally through
-`73960ba`; requested favicon dependency/configuration revision implemented locally
-and uncommitted, pending review. Issue #13 remains open. Strict Sphinx, local links
-and an isolated Read the Docs-style docs-only build pass. No hosted publication/
-build is claimed; optional external linkcheck remains limited by earlier GitHub
-rate limiting. See the latest Thread 13 handoff below. Thread 14 remains not started.
+**Status:** Complete, reviewed and merged/pushed into `origin/main` at `c4bda3c`.
+Issue #13 is closed as completed under the maintainer's explicit approval.
+All nine Linux/macOS/Windows Python 3.12–3.14 CI jobs passed. Strict local Sphinx,
+synthetic examples, links and an isolated docs-only install/build passed.
+Read the Docs configuration is prepared; no hosted docs build/publication is
+claimed. Earlier external linkcheck limits remain recorded. See the completion
+record below. Thread 14 remains not started.
 
 1. Add Poetry `docs` dependencies and Sphinx/reST/MyST with `pydata_sphinx_theme`.
    Adapt the structure of SalesPyForce/PyDPlus: overview/getting started, CLI
@@ -3493,3 +3496,45 @@ Six modified tracked files remain unstaged/uncommitted on the existing
 Thread 13 branch at `73960ba`; no Git history, PR, release, publication or tool
 companion was created. Issue #13 remains open for review. Thread 14 remains
 not started and requires a separate request.
+
+
+### Thread 13 — Documentation completion record (6 October 2026)
+
+The maintainer explicitly accepted Issue #13 as complete and requested closure.
+At closure, local `main`, `origin/main` and GitHub `main` all resolved to
+`c4bda3c6e3f118e92aded8dde6fc3725c4d77470` (
+[final favicon commit](https://github.com/jeffshurtliff/obfuscidian/commit/c4bda3c6e3f118e92aded8dde6fc3725c4d77470)).
+The worktree was clean before this status synchronization. Issue #12 is closed,
+and existing dependency implementation/validation remains unchanged.
+
+[CI run `37562420529`](https://github.com/jeffshurtliff/obfuscidian/actions/runs/37562420529)
+completed successfully on this exact commit. All nine Ubuntu/macOS/Windows jobs
+passed on Python 3.12, 3.13 and 3.14. These jobs check style/security, offline
+tests/coverage and fresh wheel/sdist validation; they do not execute a hosted
+Read the Docs build or establish documentation publication.
+
+Acceptance evidence is retained in the implementation/revision handoffs above:
+locked Sphinx/reST/MyST/PyData tooling and dark-mode branding, nine beginner
+pages and detailed user/reference guides, contributor/security guidance,
+synthetic complete restore and Git examples, strict warning-free local builds,
+local links, rendered/accessibility review and isolated RTD-style docs-only
+installation/build with sphinx-favicon. The full local suite previously passed
+1268 tests with 7 platform skips. The final favicon revision passed the strict
+local/isolated builds and 33-page local reference checks. Runtime/platform and
+backup-format behavior did not change.
+
+Issue #13 is closed as **completed**, with the maintainer review checkbox and
+implementation status synchronized. Prior handoffs describing local/uncommitted
+work remain historical. README, AGENTS, CONTRIBUTING, changelog and current
+roadmap status now reflect completion.
+
+No application tests, hosted build, publication or release action was triggered
+for closure. The status-only changes were checked with strict local Sphinx,
+local rendered references and diff whitespace; these newly generated status
+changes remain unstaged/uncommitted on `main`. No staging, commit, push, PR,
+merge, tag, release, publishing or tool companion creation was performed.
+
+No remaining Thread 13 acceptance blocker is identified. Optional broader
+external linkcheck/screen-reader and generated search/index favicon work remains
+separate from this accepted scope. Thread 14 release preparation is the next
+eligible roadmap thread but remains **not started** and requires a new request.

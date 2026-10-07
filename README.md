@@ -20,7 +20,10 @@ restore writes are implemented. Native Windows supports key creation,
 verification and read-only planning; vault mutation/recovery and existing-log
 append still fail closed. See [platform validation](docs/PLATFORMS.md).
 
-Thread 13 documentation is implemented locally, pending maintainer review.
+Thread 13 documentation is complete, reviewed and merged into `main`, with
+[passing CI](https://github.com/jeffshurtliff/obfuscidian/actions/runs/37562420529).
+Issue #13 is closed as completed. Read the Docs configuration is prepared;
+no hosted documentation build/publication is claimed.
 Thread 14 release preparation remains not started.
 
 ## Install from source
