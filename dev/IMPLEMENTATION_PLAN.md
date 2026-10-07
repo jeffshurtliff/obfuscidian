@@ -32,8 +32,11 @@ Thread 13 is complete, reviewed and merged/pushed into `origin/main`; issue #13
 is closed as completed under explicit maintainer authorization. All nine
 Linux/macOS/Windows CI jobs passed on Python 3.12–3.14 at `c4bda3c`.
 Thread 13a — Primary-shell installation and automation documentation — is
-implemented locally under [issue #15](https://github.com/jeffshurtliff/obfuscidian/issues/15);
-validation passed locally; changes remain uncommitted for maintainer review.
+complete, reviewed and merged/pushed into `main` at `47ef238`;
+[issue #15](https://github.com/jeffshurtliff/obfuscidian/issues/15) is closed as
+completed. The maintainer explicitly accepted the documentation-only hosted CI
+skip; strict local Sphinx and rendered reference checks passed. See its completion
+record below for evidence and retained validation limits.
 Thread 14 remains not started.
 See the Thread 13 completion record below. See the Thread 11 completion record below. See the Thread 10
 completion record below and Thread 09 completion record for evidence and limits.
@@ -569,7 +572,7 @@ commits, publication, or PRs are implied. Update status only after acceptance cr
 | 11 | CLI polish | 10 | [#11](https://github.com/jeffshurtliff/obfuscidian/issues/11) | Complete; reviewed/merged; Linux CI passed |
 | 12 | Cross-platform hardening | 11 | [#12](https://github.com/jeffshurtliff/obfuscidian/issues/12) | Complete; reviewed/merged; nine-job OS/Python matrix passed |
 | 13 | Documentation and contribution guidance | 12; incremental docs accompany earlier threads | [#13](https://github.com/jeffshurtliff/obfuscidian/issues/13) | Complete; reviewed/merged; nine-job OS/Python matrix passed |
-| 13a | Primary-shell installation and automation documentation | 13 | [#15](https://github.com/jeffshurtliff/obfuscidian/issues/15) | Implemented locally; validation passed; uncommitted; review pending |
+| 13a | Primary-shell installation and automation documentation | 13 | [#15](https://github.com/jeffshurtliff/obfuscidian/issues/15) | Complete; reviewed/merged; docs-only CI skip accepted |
 | 14 | Release preparation | 13 | [#14](https://github.com/jeffshurtliff/obfuscidian/issues/14) | Not started |
 
 The fourteen original issues and documentation follow-up #15 are assigned to `jeffshurtliff` and belong to the
@@ -1170,15 +1173,18 @@ activation, including pipx as the recommended method and pip `--user` where the
 selected Python permits it. Retain venv installation and add concise unattended
 job examples with explicit paths, consent, exit-code handling and platform limits.
 **Depends on:** 13; the completed CLI/packaging and platform contracts remain authoritative.
-**Status:** Implemented and validated locally; changes remain unstaged/uncommitted
-for maintainer review. Issue #15 remains open; see the implementation handoff below.
+**Status:** Complete, reviewed and merged/pushed into `main` at `47ef238`.
+Issue #15 is closed as completed under explicit maintainer authorization.
+Hosted CI did not run because the existing workflow excludes documentation-only
+changes; the maintainer explicitly accepted that gap. Strict local Sphinx and
+rendered references passed. See the completion record below.
 
 **Acceptance/demo:** README and beginner/detailed Sphinx installation pages agree;
 strict Sphinx and rendered references pass; disposable installation and synthetic
 automation checks demonstrate shell access and failure handling where feasible.
 Native Windows and hosted validation are reported only when executed. No runtime,
 dependency, packaging, backup-format, scheduler registration or release changes.
-Issue #15 stays open pending maintainer review; Thread 14 remains not started.
+Issue #15 is closed as completed; Thread 14 remains not started.
 
 ### Thread 14 — Release preparation
 
@@ -3632,3 +3638,42 @@ branch. No commit, push, PR, merge, tag, release, publishing or issue closure wa
 performed. Local implementation/validation is ready for maintainer review;
 issue #15 stays open until acceptance. Thread 14 remains **not started** and
 requires a separate request.
+
+
+### Thread 13a — Installation documentation completion record (7 October 2026)
+
+The maintainer reviewed and pushed the changes, confirmed acceptance, and
+explicitly requested closure of [issue #15](https://github.com/jeffshurtliff/obfuscidian/issues/15).
+The maintainer separately accepted the documentation-only hosted CI skip before
+closure. Issue #15 is now closed as **completed**; see the
+[completion comment](https://github.com/jeffshurtliff/obfuscidian/issues/15#issuecomment-6045848374).
+
+Local `main`, `origin/main` and GitHub `main` were verified at
+`47ef238a8509009c43ec63e8b8e349546d17c29f` (
+[merge commit](https://github.com/jeffshurtliff/obfuscidian/commit/47ef238a8509009c43ec63e8b8e349546d17c29f)),
+which includes the five-file documentation implementation at
+[e70ec16](https://github.com/jeffshurtliff/obfuscidian/commit/e70ec162f1ad6f157904e25fd833b09c5d5c6517).
+The worktree was clean before this completion-record synchronization.
+
+Acceptance evidence remains in the implementation handoff above: README and
+beginner/detailed installation choices, pipx without activation, pip `--user`
+where permitted, interpreter-specific PATH setup, concise cron/PowerShell task
+examples, consent/exit-code handling and accurate Windows/platform limits;
+3 synthetic tutorial tests and 19 disposable installation/automation checks
+passed on macOS/Python 3.12.7. A fresh strict Sphinx HTML build and the existing
+local reference/asset/fragment checker across 33 rendered pages passed again for
+closure, as did diff whitespace and scope review.
+
+GitHub reports no Actions runs or check runs for the exact merge commit. The
+existing Test workflow excludes README, `dev/**` and `docs/**` changes, so hosted
+CI did not execute. This is an explicitly accepted validation gap, not a passing
+matrix claim. Native Windows/PowerShell/Task Scheduler execution, native Linux,
+hosted docs publication and the other skipped checks recorded above were not
+rerun or promoted to verified results. No scheduler or release workflow was activated.
+
+The roadmap's current status, thread index/section and Unreleased changelog now
+reflect accepted completion. Earlier uncommitted/open-review handoffs are
+historical records. These two status-document changes remain unstaged/uncommitted
+on `main`; no stage, commit, push, PR, merge, tag, release or publication action
+was performed by the agent for closure. Thread 14 remains **not started** and
+requires a separate maintainer request.

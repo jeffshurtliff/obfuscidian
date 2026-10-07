@@ -7,6 +7,11 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- Thread 13a primary-shell installation documentation accepted, reviewed and
+  merged/pushed to `main` at `47ef238`; issue #15 closed as completed. The
+  maintainer accepted the documentation-only hosted CI skip; local Sphinx and
+  rendered reference checks passed. Hosting/publication remains separate.
+
 - Thread 13 documentation accepted by the maintainer and completed on `main` at
   `c4bda3c`, with passing nine-job Linux/macOS/Windows CI on Python 3.12–3.14;
   issue #13 closed as completed. Documentation hosting/publication remains separate.
