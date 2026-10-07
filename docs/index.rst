@@ -23,6 +23,7 @@ Choose a task
 * :doc:`VERIFY`: authenticate the complete mirror without application writes.
 * :doc:`RESTORE`: restore a saved snapshot or review restored files using Git.
 * :doc:`CONFIGURATION`: key selection, permissions, environment variables and custody.
+* :doc:`getting-started/updating`: update the CLI for fixes and security patches.
 * :doc:`SECURITY`: threat model, limits and private reporting.
 * :doc:`TROUBLESHOOTING`: failures, recovery and retained plaintext cleanup.
 

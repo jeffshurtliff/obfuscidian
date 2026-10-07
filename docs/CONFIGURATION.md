@@ -78,6 +78,14 @@ CLI origin/mirror paths also override `OBFUSCIDIAN_ORIGIN_VAULT` and
 without creating or inspecting vaults. Vault commands then reject overlap, key placement inside either vault and
 unsafe inventory paths before any write.
 
+## Update notice suppression
+
+`OBFUSCIDIAN_SUPPRESS_UPDATE_NOTICE=true` or `1` skips the PyPI lookup and all
+update notices in the terminal and optional logs. Values are case-insensitive
+and surrounding whitespace is ignored. Other values leave checks enabled.
+See [Updating Obfuscidian](getting-started/updating.md#suppress-the-check-and-notice)
+for shell examples and how to keep receiving release announcements.
+
 ## Permissions and custody
 
 POSIX key creation uses mode `0600`, exclusive no-follow creation, and protected

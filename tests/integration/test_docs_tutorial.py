@@ -4,7 +4,7 @@
 :Synopsis:          Executes public beginner examples and the synthetic restore rehearsal
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     06 Oct 2026
+:Modified Date:     07 Oct 2026
 """
 
 from __future__ import annotations
@@ -29,6 +29,7 @@ def _example_blocks(page: str) -> list[str]:
 def _example_environment(tmp_path: Path) -> dict[str, str]:
     """Use the installed CLI with isolated home, Git configuration and temporary files."""
     environment = {name: value for name, value in os.environ.items() if not name.startswith(('OBFUSCIDIAN_', 'GIT_', 'PYTHON'))}
+    environment['OBFUSCIDIAN_SUPPRESS_UPDATE_NOTICE'] = '1'
     environment['PATH'] = os.pathsep.join((str(Path(sys.executable).parent), environment.get('PATH', '')))
     environment['TMPDIR'] = str(tmp_path)
     environment['HOME'] = str(tmp_path)

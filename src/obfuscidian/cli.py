@@ -4,7 +4,7 @@
 :Synopsis:          Secure keys, encrypted backups, fresh/Git restore and read-only verification CLI
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     05 Oct 2026
+:Modified Date:     07 Oct 2026
 """
 
 from __future__ import annotations
@@ -17,7 +17,7 @@ from pathlib import Path
 
 import click
 
-from obfuscidian import backup, config, git_restore, keys, output, restore, verification
+from obfuscidian import backup, config, git_restore, keys, output, restore, updates, verification
 from obfuscidian import constants as const
 from obfuscidian.errors import _ConfigurationError, _OperationalError
 from obfuscidian.transactions import _TransactionError, _TransactionResult
@@ -51,6 +51,18 @@ class _PrivateGroup(click.Group):
     """Keep parsing and entry-point failures private, with one product name."""
 
     command_class = _PrivateCommand
+
+    def make_context(self, info_name: str | None, args: list[str], parent: click.Context | None = None, **extra) -> click.Context:
+        """Check once at the root, including eager help/version, but never during completion."""
+        notice = None
+        if parent is None and not extra.get('resilient_parsing', self.context_settings.get('resilient_parsing', False)):
+            notice = updates._notice()
+            if notice is not None:
+                click.echo(notice, err=True)
+        context = super().make_context(info_name, args, parent, **extra)
+        if parent is None:
+            context.meta['update_notice'] = notice
+        return context
 
     def parse_args(self, ctx: click.Context, args: list[str]) -> list[str]:
         try:
@@ -114,6 +126,7 @@ def _operation(*, logging: bool = True):
                 raise click.UsageError('--log-paths requires --log-file.')
             command = function.__name__ + (f' {kwargs["mode"]}' if 'mode' in kwargs else '')
             current = output._Output(command, None, log_paths)
+            current.update_notice = click.get_current_context().meta.get('update_notice')
             click.get_current_context().meta['output'] = current
             try:
                 if log_file is not None:
@@ -180,6 +193,7 @@ def cli() -> None:
 
     Keygen, shroud fresh/merge, unshroud fresh/merge, and read-only verify are available.
     Write commands support private --log-file records and explicit --log-paths.
+    PyPI update notices use stderr; OBFUSCIDIAN_SUPPRESS_UPDATE_NOTICE=true disables checks.
     Operation options follow the command; shroud/unshroud require fresh or merge.
     Exit codes: 0 success/dry run/no-op; 1 failure/refusal; 2 usage; 130 interrupt.
 

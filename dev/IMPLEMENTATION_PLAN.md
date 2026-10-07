@@ -37,6 +37,10 @@ complete, reviewed and merged/pushed into `main` at `47ef238`;
 completed. The maintainer explicitly accepted the documentation-only hosted CI
 skip; strict local Sphinx and rendered reference checks passed. See its completion
 record below for evidence and retained validation limits.
+Thread 13b — Stable-update guidance and advisory — is implemented locally for
+[issue #16](https://github.com/jeffshurtliff/obfuscidian/issues/16), pending
+maintainer review, with local validation passed. Changes remain uncommitted;
+the issue is open. See its implementation handoff below.
 Thread 14 remains not started.
 See the Thread 13 completion record below. See the Thread 11 completion record below. See the Thread 10
 completion record below and Thread 09 completion record for evidence and limits.
@@ -338,6 +342,7 @@ Click subgroup. Preserve these environment variables:
 | `OBFUSCIDIAN_KEY_DIR` | Alias lookup directory; defaults to home |
 | `OBFUSCIDIAN_ORIGIN_VAULT` | Plaintext backup source or fresh restore destination; repository for merge restore |
 | `OBFUSCIDIAN_MIRROR_VAULT` | Encrypted backup destination or restore/verification source |
+| `OBFUSCIDIAN_SUPPRESS_UPDATE_NOTICE` | `true` or `1` skips the advisory PyPI lookup, terminal notice and log event |
 
 | Command | Planned options |
 | --- | --- |
@@ -573,9 +578,10 @@ commits, publication, or PRs are implied. Update status only after acceptance cr
 | 12 | Cross-platform hardening | 11 | [#12](https://github.com/jeffshurtliff/obfuscidian/issues/12) | Complete; reviewed/merged; nine-job OS/Python matrix passed |
 | 13 | Documentation and contribution guidance | 12; incremental docs accompany earlier threads | [#13](https://github.com/jeffshurtliff/obfuscidian/issues/13) | Complete; reviewed/merged; nine-job OS/Python matrix passed |
 | 13a | Primary-shell installation and automation documentation | 13 | [#15](https://github.com/jeffshurtliff/obfuscidian/issues/15) | Complete; reviewed/merged; docs-only CI skip accepted |
+| 13b | Stable-update guidance and advisory | 11, 13, 13a | [#16](https://github.com/jeffshurtliff/obfuscidian/issues/16) | Local validation passed; maintainer review pending |
 | 14 | Release preparation | 13 | [#14](https://github.com/jeffshurtliff/obfuscidian/issues/14) | Not started |
 
-The fourteen original issues and documentation follow-up #15 are assigned to `jeffshurtliff` and belong to the
+The fourteen original issues and follow-ups #15/#16 are assigned to `jeffshurtliff` and belong to the
 [v1.0.0 milestone](https://github.com/jeffshurtliff/obfuscidian/milestone/1).
 Issue numbers are tracking identifiers; creating them does not start or
 complete implementation. Existing repository labels categorize each thread.
@@ -1185,6 +1191,39 @@ automation checks demonstrate shell access and failure handling where feasible.
 Native Windows and hosted validation are reported only when executed. No runtime,
 dependency, packaging, backup-format, scheduler registration or release changes.
 Issue #15 is closed as completed; Thread 14 remains not started.
+
+### Thread 13b — Stable-update guidance and advisory
+
+**GitHub issue:** [#16](https://github.com/jeffshurtliff/obfuscidian/issues/16)
+
+**Goal/deliverable:** Explain stable updates for primary-shell and isolated CLI
+installations, and provide an optional advisory PyPI check without modifying
+application data or installing packages.
+**Depends on:** 11 (private logging), 13 (Sphinx), 13a (installation guidance).
+**Status:** Implemented and validated locally; maintainer review pending.
+Changes remain uncommitted on the existing issue branch; issue #16 remains open.
+
+**Maintainer decisions, 7 October 2026:** Use `GPT-6.1 Sol` in changed Python
+headers. Silently skip unavailable PyPI checks, superseding the issue's proposed
+versionless fallback. Retain the short-link placeholder until the owner connects
+it to the published update page.
+
+**Acceptance/demo:** README and a dedicated Getting Started page cover stable
+updates using pipx, pip user installs, venvs and local sources/wheels, executable
+discovery, scheduled jobs and release announcements. urllib3 requests PyPI over
+verified HTTPS with bounded response/socket timeouts and no retries/redirects.
+PEP 440 comparison excludes pre/dev/local versions and releases without any
+non-yanked file. A newer stable version produces one stderr notice per invocation
+and one record after safe optional log opening. `true`/`1` suppression skips
+the request, display and logging; unavailable checks are silent. Read-only commands
+and failed preflight create no logs/caches or application artifacts.
+
+**Validation:** Offline synthetic update/API/CLI/logging tests; full available
+common/security checks; fresh package-content/installed-entry validation; strict
+Sphinx and rendered references; disposable upgrade examples where feasible.
+Unexecuted native/hosted checks are reported explicitly. No release, version
+promotion, update installation, scheduler registration or publication is part
+of this task. Thread 14 remains not started.
 
 ### Thread 14 — Release preparation
 
@@ -3677,3 +3716,90 @@ historical records. These two status-document changes remain unstaged/uncommitte
 on `main`; no stage, commit, push, PR, merge, tag, release or publication action
 was performed by the agent for closure. Thread 14 remains **not started** and
 requires a separate maintainer request.
+
+### Thread 13b — Stable-update guidance and advisory handoff (7 October 2026)
+
+**Scope/status:** Implemented the maintainer-requested
+[#16](https://github.com/jeffshurtliff/obfuscidian/issues/16) follow-up on the
+existing `feature/16-add-update-instructions-and-notification` branch. Local
+acceptance checks passed; changes remain unstaged/uncommitted for maintainer
+review. Issue #16 remains open. Thread 14 release preparation remains **not started**.
+The worktree was clean before this task. Dependencies were verified against the
+current CLI/private-log implementation, Sphinx setup and merged installation
+guidance; issue #15 was read and is closed.
+
+**Deliverables:**
+
+- [README](../README.md) and the dedicated
+  [Getting Started update page](../docs/getting-started/updating.md) explain
+  stable updates using pipx, pip user packages outside a venv, venvs and local
+  source/wheel installs. They cover interpreter/PATH discovery, job executables,
+  release announcements, Python compatibility and retention of external keys.
+  Beginner/detailed installation, task navigation and security/configuration/CLI
+  guides link to this page.
+- [Internal notifier](../src/obfuscidian/updates.py) uses urllib3 over verified
+  HTTPS and packaging's PEP 440 comparison. It selects stable, non-local,
+  uploaded/non-yanked releases; requests have 2-second connection/read socket
+  timeouts, a 1 MiB response limit and no retries/redirects/cache. It sends no
+  key/vault data, paths, command arguments or installed version. DNS resolution
+  follows the system resolver; socket timeouts are not a guaranteed total deadline.
+- [CLI](../src/obfuscidian/cli.py) checks once per invocation, including
+  help/version/read-only commands, skips completion and writes notices to stderr.
+  [Private logging](../src/obfuscidian/output.py) records the same message only
+  after safe log opening. Preflight failures, verify and dry runs create no logs.
+  `true`/`1` suppression skips metadata/network/display/logging. Unavailable
+  checks are silent, as explicitly requested by the maintainer, superseding the
+  issue's proposed versionless fallback. Python headers use the maintainer-confirmed
+  `GPT-6.1 Sol` identifier and 7 October 2026 date.
+- urllib3 and packaging were promoted from existing locked development/docs
+  dependencies to explicit runtime requirements using `poetry add`; versions and
+  unrelated dependencies are unchanged. [Changelog](../docs/CHANGELOG.md),
+  roadmap and package-content checks reflect the feature and new Getting Started page.
+
+**Executed validation, macOS/Python 3.12.7:**
+
+- `poetry check --lock --strict`, Ruff lint/format, Bandit and `git diff --check`:
+  passed; Bandit found no issues.
+- Focused offline notifier/CLI/logging checks: **63 passed**. Fake responses cover
+  semantic ordering, pre/dev/local and yanked/deleted/malformed releases,
+  suppression, HTTP/TLS/network/decode/size failures, resource cleanup, stderr,
+  safe log opening, no-op logging and byte/write-time preservation in read-only modes.
+- Final `poetry run coverage run -m pytest -q`: **1331 passed, 7 native Windows
+  skips**; **91%** total coverage, **99%** for the notifier. Ordinary tests and
+  subprocess tutorials explicitly suppress live update checks; notifier tests
+  use deterministic offline responses. Initial failures were incorrect new-test
+  expectations for existing exit-code/no-op wording; the corrected final suite passed.
+- Fresh development-version wheel/sdist builds and strict Twine checks: passed.
+  Fully isolated dependency-wheelhouse package checks: **3 passed**, including
+  archive contents, dependency metadata, both installed entry points with a fake
+  newer release, `pip check` and synthetic installed workflows outside the checkout.
+- Four disposable offline upgrades passed: pipx package-index installation using
+  `pipx upgrade`, pipx local-wheel installation using `runpip ... --upgrade`, a venv,
+  and a non-venv pip user installation with an isolated user base. Synthetic
+  `1.0.0`/`1.1.0` wheel versions existed only in temporary fixture copies; the
+  tracked project remains `1.0.0.dev0`. Executable/module version checks passed;
+  pipx/venv dependency checks passed. The current pipx refreshed its source record
+  after runpip; the documented repeated runpip command explicitly chooses the index.
+- Strict fresh Sphinx HTML build and local references/assets/anchors across
+  **34 rendered pages**: passed. The update page's introduction and source-update
+  table were inspected in the local in-app browser. README/Sphinx consistency,
+  privacy and final tracked/untracked diff scope were reviewed.
+
+**Limits and remaining work:** No new hosted CI, native Linux/Windows/PowerShell,
+Python 3.13/3.14, broad external-link audit, screen-reader audit, live project-PyPI
+release update or hosted docs publication was executed. Local wheelhouse checks
+prove installer behavior with synthetic releases, not live publication. The
+short URL remains an explicitly documented placeholder; the owner must connect
+it to the published update page. Maintainer review/commit/merge and authorized
+hosted CI remain pending. Thread 14 requires a separate request.
+
+**Issue/Git handoff:** The connector could read the issue but lacked comment
+permission. Existing GitHub CLI access successfully posted the
+[start update](https://github.com/jeffshurtliff/obfuscidian/issues/16#issuecomment-6046889564)
+and [maintainer decisions/progress](https://github.com/jeffshurtliff/obfuscidian/issues/16#issuecomment-6046997877).
+The [final validation handoff](https://github.com/jeffshurtliff/obfuscidian/issues/16#issuecomment-6047120798)
+is also posted to the existing issue; no labels,
+assignee, milestone or closure was changed. All **18 modified tracked files and
+4 new files** remain unstaged/uncommitted on the original branch. No branch
+change, stage, development commit, push, PR, merge, tag, release, publication,
+scheduler registration or real CLI upgrade was performed.
