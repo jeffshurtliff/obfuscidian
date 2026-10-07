@@ -4,7 +4,7 @@
 :Synopsis:          Private operational logs and deliberate CLI path disclosure
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     05 Oct 2026
+:Modified Date:     07 Oct 2026
 """
 
 from __future__ import annotations
@@ -37,6 +37,7 @@ class _Output:
         self.existing: paths._PathState | None = None
         self.descriptor: int | None = None
         self.identity: tuple[int, int] | None = None
+        self.update_notice: str | None = None
 
     def _prepare(self, *, protected: tuple[Path, ...], key: Path) -> None:
         """Validate log custody and permissions read-only, before any application write."""
@@ -121,6 +122,8 @@ class _Output:
                 self.descriptor = descriptor
                 descriptor = None
             self._record('started')
+            if self.update_notice is not None:
+                self._record('update_notice', message=self.update_notice)
         except OSError:
             raise _OperationalError('Cannot open the private log; no operation was started.') from None
         finally:

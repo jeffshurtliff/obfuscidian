@@ -62,6 +62,15 @@ logs. Neither prints keys or file contents. Logs are optional and their parents
 must exist privately outside vaults, Git and recovery trees. Verification and
 dry runs create no logs or other application files. Read [the CLI contract](CLI.md).
 
+## Stay current with fixes
+
+Use [Updating Obfuscidian](getting-started/updating.md) to install stable updates
+in the environment your shell or jobs actually use. Watch repository releases
+and read upgrade notes. The advisory PyPI check does not audit vulnerabilities
+or guarantee that a version is safe; failed or suppressed checks cannot establish
+that you are current. It sends no vault/key data and writes no cache; ordinary
+connection metadata is visible to PyPI. Suppression also skips network access.
+
 ## Report a concern privately
 
 Use GitHub **Security → Report a vulnerability** if enabled. If unavailable,

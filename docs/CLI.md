@@ -30,6 +30,17 @@ escaped; ordinary printable Unicode names remain readable. Parser misuse
 messages identify supported options or required arguments without echoing the
 invalid value or arbitrary unknown command/option name.
 
+## Update availability notices
+
+Each invocation checks PyPI for newer stable releases unless
+`OBFUSCIDIAN_SUPPRESS_UPDATE_NOTICE=true` or `1` is set. Checks include eager
+help/version and read-only commands, skip shell completion, and write no cache.
+The advisory goes to stderr so normal stdout remains usable by scripts.
+Unavailable checks silently skip the notice and do not change the command's
+result. Notices never install packages or send vault/key data, paths, command
+arguments or the installed version to PyPI. See
+[Updating Obfuscidian](getting-started/updating.md) for instructions and privacy details.
+
 ## Optional private logs
 
 `keygen`, `shroud` and `unshroud` accept `--log-file FILE`. The existing parent
@@ -46,7 +57,9 @@ on ACL-capable volumes; appending existing Windows logs is refused pending
 file ownership/DACL validation. This does not claim broader Windows support.
 
 Logs contain UTF-8 JSON lines: fixed command/mode, phase events, inventory
-counts/bytes, completion/failure exit category and no-op events. They do not
+counts/bytes, completion/failure exit category and no-op events. An update
+advisory is an `update_notice` event with a `message` field, recorded once after
+safe log opening; suppressed notices are never recorded. Logs do not
 capture stdout/stderr, prompts, absolute handoff locations or exception text.
 `--verbose` alone cannot add paths to logs. `--log-paths` requires `--log-file`
 and explicitly permits escaped relative names, including ignored restore names.

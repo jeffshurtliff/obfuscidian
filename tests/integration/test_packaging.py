@@ -4,7 +4,7 @@
 :Synopsis:          Build, inspect, and install package artifacts offline
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     06 Oct 2026
+:Modified Date:     07 Oct 2026
 """
 
 from __future__ import annotations
@@ -43,6 +43,7 @@ _PUBLIC_SDIST_DOCS = (
     'docs/getting-started/what-is-obfuscidian.md',
     'docs/getting-started/quickstart.md',
     'docs/getting-started/installation.md',
+    'docs/getting-started/updating.md',
     'docs/getting-started/using-the-cli.md',
     'docs/getting-started/private-key.md',
     'docs/getting-started/choosing-a-workflow.md',
@@ -118,7 +119,12 @@ def _assert_metadata(data: bytes) -> None:
     assert metadata['Requires-Python'] == '>=3.12'
     assert metadata['License-Expression'] == 'Apache-2.0'
     assert metadata.get_all('License-File') == ['LICENSE']
-    assert set(metadata.get_all('Requires-Dist')) == {'click (>=8.5.0)', 'cryptography (>=50.0.2)'}
+    assert set(metadata.get_all('Requires-Dist')) == {
+        'click (>=8.5.0)',
+        'cryptography (>=50.0.2)',
+        'urllib3 (>=2.8,<3)',
+        'packaging (>=26,<27)',
+    }
 
 
 def test_artifact_contents(artifacts: tuple[Path, Path]) -> None:
@@ -143,6 +149,7 @@ def test_artifact_contents(artifacts: tuple[Path, Path]) -> None:
         'restore.py',
         'git_restore.py',
         'output.py',
+        'updates.py',
     }
     with zipfile.ZipFile(wheel) as archive:
         prefix = 'obfuscidian-1.0.0.dev0.dist-info/'
@@ -325,6 +332,7 @@ def test_installation_entry_points(
 
         def failure_run(prefix, command_arguments=arguments):
             environment = {k: v for k, v in os.environ.items() if not k.startswith('OBFUSCIDIAN_') and k != 'PYTHONPATH'}
+            environment[const.ENV_SUPPRESS_UPDATE_NOTICE] = '1'
             return subprocess.run(
                 [*prefix, *command_arguments], cwd=outside, env=environment, input='', capture_output=True, text=True, timeout=30
             )
@@ -349,6 +357,33 @@ def test_installation_entry_points(
             assert (
                 'Commands:' in console_result.stdout and 'keygen' in console_result.stdout and 'shroud' in console_result.stdout
             )
+    # Exercise the notifier from each installed artifact, not the editable development package.
+    notice_script = """
+import os
+import sys
+from importlib.metadata import distribution
+from obfuscidian import constants as const, updates
+os.environ.pop(const.ENV_SUPPRESS_UPDATE_NOTICE, None)
+updates._fetch_releases = lambda: {'releases': {'99.0.0': [{'yanked': False}]}}
+entry_mode = sys.argv[1]
+sys.argv = ['obfuscidian', '--version']
+if entry_mode == 'console':
+    entry = next(e for e in distribution('obfuscidian').entry_points if e.group == 'console_scripts' and e.name == 'obfuscidian')
+    entry.load()()
+else:
+    import runpy
+    runpy.run_module('obfuscidian', run_name='__main__')
+"""
+    notices = [_run([str(python), '-c', notice_script, entry], outside) for entry in ('console', 'module')]
+    assert notices[0].stdout == notices[1].stdout == 'obfuscidian, version 1.0.0.dev0\n'
+    assert (
+        notices[0].stderr
+        == notices[1].stderr
+        == (
+            'A newer version of obfuscidian (v99.0.0) is available. '
+            f'Visit {const.UPDATE_INSTRUCTIONS_URL} for update instructions.\n'
+        )
+    )
     key_directory = (tmp_path / 'synthetic-keys').resolve()
     key_directory.mkdir()
     for arguments in (

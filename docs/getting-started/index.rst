@@ -64,6 +64,12 @@ key creation, verification and previews. See :doc:`../PLATFORMS`.
 
       Review restored files in a separate Git workspace.
 
+   .. container:: beginner-card
+
+      **10.** :doc:`updating`
+
+      Update the CLI for features, fixes and security patches.
+
 Go deeper when you are ready
 ----------------------------
 
@@ -84,3 +90,4 @@ Use the :doc:`../reference/cli` to look up individual command options.
    creating-a-backup
    fresh-restore
    merge-restore
+   updating

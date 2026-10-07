@@ -23,6 +23,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Stable-release update instructions in README and a dedicated Getting Started
+  page, covering pipx, pip user installs, venvs, local sources/wheels and job/PATH checks (#16).
+- Best-effort urllib3 PyPI notices on stderr and safely opened private logs,
+  PEP 440 stable/non-yanked selection, and `OBFUSCIDIAN_SUPPRESS_UPDATE_NOTICE` (#16).
+  urllib3 and packaging are explicit runtime dependencies; checks never install updates or write a cache.
+
 - Primary-shell installation guidance using pipx without activation or pip
   `--user` where supported, interpreter-specific PATH setup, and concise
   cron/PowerShell Task Scheduler examples with unattended-operation limits (#15).

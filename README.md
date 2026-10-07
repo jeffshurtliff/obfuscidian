@@ -60,6 +60,36 @@ obfuscidian --help
 `python -m obfuscidian` offers the same behavior when that Python interpreter
 contains the package; your primary Python may not contain a pipx installation.
 
+## Update to a newer stable version
+
+Keep the CLI current to receive features, fixes and security patches. **Once
+stable releases are published on PyPI**, update the installation you actually
+run:
+
+| Installation | Update command |
+| --- | --- |
+| pipx, originally installed from PyPI | `pipx upgrade obfuscidian` |
+| pipx, switching a source/wheel install to PyPI | `pipx runpip obfuscidian install --upgrade obfuscidian` |
+| pip user install, outside a venv | `python3 -m pip install --user --upgrade obfuscidian` |
+| Activated venv | `python -m pip install --upgrade obfuscidian` |
+
+Use the original installation's Python; in PowerShell a user install may use
+`py -3.12 -m pip install --user --upgrade obfuscidian`. Afterward, run
+`obfuscidian --version` in your usual shell and check the exact executable used
+by scheduled jobs. pipx needs no activation. A source/wheel pipx install normally
+retains its original source for `pipx upgrade`; use `runpip` again for subsequent
+PyPI updates, or follow the local-source instructions in
+[Updating Obfuscidian](docs/getting-started/updating.md).
+
+The CLI checks PyPI for newer stable versions and displays an advisory on stderr,
+also recording it when an optional private operational log opens. Set
+`OBFUSCIDIAN_SUPPRESS_UPDATE_NOTICE=true` or `1` to disable the request and notice.
+Checks never install updates. Subscribe to repository releases through GitHub
+**Watch → Custom → Releases** and read the [changelog](docs/CHANGELOG.md).
+The [update guide](docs/getting-started/updating.md) covers all installation
+methods, failed checks, competing PATH entries and the current short-link placeholder.
+Until the first stable publication, use its source/local-wheel instructions.
+
 ## First backup and restore
 
 New to command-line backups? Start with [What is Obfuscidian?](docs/getting-started/what-is-obfuscidian.md)

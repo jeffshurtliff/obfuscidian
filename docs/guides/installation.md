@@ -254,6 +254,13 @@ propagate the captured CLI status to its caller.
   Installing a shell command does not synchronize devices or make unattended
   restores safe. See [restore guidance](../RESTORE.md) before planning one.
 
+## Updating an existing installation
+
+See [Updating Obfuscidian](../getting-started/updating.md) for stable-release
+upgrades, source/wheel updates, pipx source metadata, version checks, release
+notifications and disabling the online advisory. Update the same installation
+used by your shell or scheduler.
+
 ## Installation troubleshooting
 
 | Symptom | Check or action |

@@ -81,6 +81,12 @@ different folder. For the PowerShell venv equivalent, local wheels or contributo
 setup, follow [Installation and supported environments](../guides/installation.md).
 The current source install does not require a published package on PyPI.
 
+## Keep your CLI current
+
+Follow [Updating Obfuscidian](updating.md) for your installation method, including
+pipx and pip user installations in your main shell. Check the version actually
+used by your shell and scheduled jobs after each update.
+
 ## Scheduled jobs
 
 Once the CLI works in your shell, use the
