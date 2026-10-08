@@ -86,8 +86,9 @@ also recording it when an optional private operational log opens. Set
 `OBFUSCIDIAN_SUPPRESS_UPDATE_NOTICE=true` or `1` to disable the request and notice.
 Checks never install updates. Subscribe to repository releases through GitHub
 **Watch → Custom → Releases** and read the [changelog](docs/CHANGELOG.md).
+The notice links to [update instructions](https://bit.ly/updating-obfuscidian).
 The [update guide](docs/getting-started/updating.md) covers all installation
-methods, failed checks, competing PATH entries and the current short-link placeholder.
+methods, failed checks and competing PATH entries.
 Until the first stable publication, use its source/local-wheel instructions.
 
 ## First backup and restore
