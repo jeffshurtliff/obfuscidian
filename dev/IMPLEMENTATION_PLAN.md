@@ -3937,3 +3937,28 @@ unstaged/uncommitted on the maintainer's current branch. The maintainer's consta
 commit and header were preserved; no runtime file was edited, and no commit,
 merge, push or publication was performed. Issue #16 remains closed; Thread 14
 remains **not started**.
+
+### Thread 13b — Getting Started card layout follow-up (8 October 2026)
+
+**Scope/status:** On the maintainer's `docs/16-fix-getting-started-tile-layout`
+branch, the unconditional last-card column span made card 10 start a new row.
+[Custom CSS](../docs/_static/custom.css) now applies that span only to
+`:last-child:nth-child(odd)`. Cards 9 and 10 share the normal two-column row;
+an unpaired final card retains the full-width layout. The existing card markup,
+order and narrow-screen breakpoint remain unchanged. The Unreleased changelog
+records the correction.
+
+**Validation/handoff:** Strict fresh Sphinx and rendered local-reference checks
+passed across **34 HTML pages**. Browser geometry and a screenshot confirmed
+equal-width cards 9 and 10 at the same vertical position with a **1280px** viewport.
+At **375px**, all ten cards stack in one column without horizontal overflow.
+The temporary viewport override was reset and the local preview tab/server were
+closed. Diff, scope and public-safe content checks passed. No runtime tests or
+hosted CI/publication were run for this CSS-only correction.
+
+The [start update](https://github.com/jeffshurtliff/obfuscidian/issues/16#issuecomment-6064715453)
+and [validation handoff](https://github.com/jeffshurtliff/obfuscidian/issues/16#issuecomment-6064767490)
+were posted to the existing closed issue. The worktree was initially clean;
+three documentation files remain unstaged/uncommitted on the maintainer's branch
+for review. No commit, merge or push was performed. Issue #16 remains closed;
+Thread 14 remains **not started**.
