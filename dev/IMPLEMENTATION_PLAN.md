@@ -1208,8 +1208,9 @@ See the completion record below.
 
 **Maintainer decisions, 7 October 2026:** Use `GPT-6.1 Sol` in changed Python
 headers. Silently skip unavailable PyPI checks, superseding the issue's proposed
-versionless fallback. Retain the short-link placeholder until the owner connects
-it to the published update page.
+versionless fallback. The initial decision was to retain the short-link placeholder
+until the owner connected it to the update page. The owner subsequently supplied the final
+URL, `https://bit.ly/updating-obfuscidian`; see the final-URL follow-up below.
 
 **Acceptance/demo:** README and a dedicated Getting Started page cover stable
 updates using pipx, pip user installs, venvs and local sources/wheels, executable
@@ -3792,8 +3793,8 @@ guidance; issue #15 was read and is closed.
 Python 3.13/3.14, broad external-link audit, screen-reader audit, live project-PyPI
 release update or hosted docs publication was executed. Local wheelhouse checks
 prove installer behavior with synthetic releases, not live publication. The
-short URL remains an explicitly documented placeholder; the owner must connect
-it to the published update page. Maintainer review/commit/merge and authorized
+short URL was still a documented placeholder at this handoff; see the final-URL
+follow-up below for its resolution. Maintainer review/commit/merge and authorized
 hosted CI remain pending. Thread 14 requires a separate request.
 
 **Issue/Git handoff:** The connector could read the issue but lacked comment
@@ -3901,7 +3902,38 @@ unstaged/uncommitted on `main` for review; no code change, commit, push, branch
 change, release or publication was performed during closure.
 
 **Retained limits/next work:** No feature acceptance blocker remains. Live PyPI
-release upgrades and hosted documentation publication are not claimed; the owner
-must connect the approved short URL when the destination page is published.
+release upgrades and hosted documentation publication were not verified during
+closure. The owner-managed short URL was pending then; see the final-URL follow-up
+below for its resolution.
 Existing Windows mutation/recovery/append limits remain. Thread 14 is the next
 eligible roadmap thread and remains **not started**, requiring a separate request.
+
+### Thread 13b — Final update URL follow-up (7 October 2026)
+
+**Scope/status:** The maintainer supplied the final instructions URL,
+`https://bit.ly/updating-obfuscidian`, in local commit `623640e` on
+`chore/16-change-const-value-for-update-url`. That commit has not been merged or
+pushed. The worktree was clean before this documentation follow-up.
+
+The notifier and its tests already consume `UPDATE_INSTRUCTIONS_URL` dynamically.
+[README](../README.md) and the [update guide](../docs/getting-started/updating.md)
+now use the final URL and omit current placeholder instructions. The
+[changelog](../docs/CHANGELOG.md) records the final URL; earlier planning decisions
+and handoffs explicitly retain the placeholder as historical rather than pending work.
+
+**Validation:** All **54** existing offline notifier unit tests passed. A consistency
+check confirmed that the README link and notice example match the constant, with
+no obsolete URL or placeholder wording in those user guides. Strict fresh Sphinx
+and local rendered-reference checks passed across **34 HTML pages**. A separate
+HTTP redirect probe reached the Read the Docs `getting-started/updating.html` page
+with **HTTP 200**; this does not claim the local wording is already published.
+Diff, privacy and scope checks passed. No new hosted CI or release was run.
+
+**Issue/Git handoff:** The
+[start update](https://github.com/jeffshurtliff/obfuscidian/issues/16#issuecomment-6049642808)
+and [validation handoff](https://github.com/jeffshurtliff/obfuscidian/issues/16#issuecomment-6049663157)
+were posted to the existing closed issue. Four documentation files remain
+unstaged/uncommitted on the maintainer's current branch. The maintainer's constant
+commit and header were preserved; no runtime file was edited, and no commit,
+merge, push or publication was performed. Issue #16 remains closed; Thread 14
+remains **not started**.

@@ -175,12 +175,11 @@ available, non-yanked file. Development, alpha, beta and release-candidate
 versions are excluded. When a newer stable release exists, stderr shows:
 
 ```text
-A newer version of obfuscidian (v1.1.0) is available. Visit https://bit.ly/update-obfuscidian for update instructions.
+A newer version of obfuscidian (v1.1.0) is available. Visit https://bit.ly/updating-obfuscidian for update instructions.
 ```
 
-The short URL is a **development placeholder**. The project owner must connect
-it to this page after documentation publication; until then, use this page
-directly. The notice never downloads or installs a release.
+The notice links to [these update instructions](https://bit.ly/updating-obfuscidian).
+It never downloads or installs a release.
 
 If the lookup fails, the CLI silently skips the notice and commands still run
 with their normal exit status. Absence of a newer-version notice is
