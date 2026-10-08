@@ -75,7 +75,8 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   padding: 1.1rem;
 }
 
-.beginner-grid .beginner-card:last-child {
+/* Span both columns only when the final card has no partner. */
+.beginner-grid .beginner-card:last-child:nth-child(odd) {
   grid-column: 1 / -1;
 }
 

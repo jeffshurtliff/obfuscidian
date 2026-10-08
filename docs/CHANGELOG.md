@@ -121,6 +121,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Getting Started cards 9 and 10 share a row; only an unpaired final card spans both grid columns (#16).
 - Update-response tests use short explicit IDs to stay within Windows' environment-variable limit (#16).
 - The inventory addition-during-scan fixture sets a distinct directory modification time instead of relying on immediate timestamp updates.
 - Stale planned-command wording and README installation/platform claims; synchronized current user and contributor guidance.
