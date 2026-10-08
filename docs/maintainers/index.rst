@@ -9,3 +9,4 @@ and release/publication actions each require explicit maintainer authorization.
 
    contributing
    documentation
+   releasing

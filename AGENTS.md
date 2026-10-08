@@ -6,158 +6,76 @@ tools belongs here. Future `CLAUDE.md` and `GEMINI.md` files are thin, secondary
 supplements for their respective tools; they must point here and must not
 contradict this file. Do not create those companions unless requested.
 
-Direct maintainer instructions define the authorized task. Read this file,
-[the implementation roadmap](dev/IMPLEMENTATION_PLAN.md), and root
-[`CONTRIBUTING.md`](CONTRIBUTING.md) before changing anything.
-`CONTRIBUTING.md` owns the detailed contributor workflow; this file owns
-agent participation and summarizes the day-to-day standards. If instructions
-conflict and the conflict cannot be resolved from the maintainer's request, ask.
+Direct maintainer instructions define the authorized task. Read this file and
+root [CONTRIBUTING.md](CONTRIBUTING.md) before changing anything.
+`CONTRIBUTING.md` owns the detailed contributor workflow; this file owns agent
+participation and summarizes the day-to-day standards. If instructions conflict
+and the maintainer's request does not resolve them, ask.
 
 ## Project and scope
 
-Obfuscidian is a cross-platform Python CLI built with Click. It will back up
-Obsidian vaults as individually encrypted files with an encrypted path manifest,
-and restore those backups safely. The origin vault and encrypted mirror are
-separate locations. Git hosting and publication remain user-managed.
+Obfuscidian is a Python/Click CLI for individually encrypted Obsidian vault
+backups with an encrypted path manifest and safe restores. The origin vault and
+encrypted mirror are separate locations. The CLI is the supported public
+interface; Git hosting and publication remain user-managed.
 
-- Implement only the requested roadmap thread and its necessary subtasks.
-- Read that thread's dependencies and acceptance criteria before starting.
-- Do not implement later threads, widen the scope, or perform unrelated cleanup.
-- Record newly discovered work in the roadmap for a future thread. Ask before
-  changing approved behavior, public interfaces, or the backup format.
-- A roadmap is a target, not evidence that a feature has already been built.
-  Verify the actual code, configuration, and tooling before using them.
-- Preserve user changes. Keep work localized, reviewable, and uncommitted unless
+- Implement only the requested task and its necessary subtasks. Review its
+  dependencies and acceptance criteria against actual code and validation.
+- Do not widen scope or perform unrelated cleanup. Record unrelated discoveries
+  in the existing issue or handoff for future work.
+- Ask before changing approved behavior, public interfaces or the backup format.
+- Preserve user changes. Keep work localized, reviewable and uncommitted unless
   the maintainer explicitly authorizes committing.
 
-## Roadmap issue updates
+## Issue updates
 
-Each implementation thread has a dedicated GitHub issue linked in the roadmap's
-thread index and its individual thread section. When the maintainer requests
-work on a thread, keeping that existing issue updated is part of the authorized
-task; routine progress comments and checklist edits do not require renewed
-permission. Issue tracking does not authorize implementing other threads or
-performing Git history, release, or publication actions.
+When the maintainer requests implementation work tied to an existing issue,
+keeping that issue updated is part of the authorized task. Routine progress
+comments and verified checklist edits do not need renewed permission. Issue
+tracking does not authorize Git history, release or publication actions.
 
-- Before starting, read the linked issue and its dependency issues alongside
-  the current roadmap. Check actual code and validation evidence; an issue's
-  existence or closed state alone does not establish that a dependency works.
-- Post a concise start comment describing the requested scope and dependency
-  readiness. Update the existing issue rather than creating duplicate tracking.
-- Record meaningful progress, verified checklist completion, blockers, and
-  maintainer decisions. Keep the roadmap index, thread status, and handoff
-  record consistent with the issue; preserve existing discussion and user edits.
-- At handoff, post deliverables/file links, checks actually run and results,
-  skipped checks, remaining acceptance criteria, blockers, next eligible work,
-  and accurate Git status. Do not report uncommitted local work as merged or
-  unexecuted hosted CI as passing.
-- Leave the issue open for partial work, unmet acceptance criteria, or pending
-  maintainer review. Close it only after acceptance criteria are met and the
-  maintainer has approved completion or explicitly requested closure. Do not
-  change its assignee, milestone, or labels without a relevant maintainer request.
-- Use only public-safe planning and synthetic examples. Never post real keys,
-  vault content, credentials, identifying local paths, or sensitive security
-  details. Follow private reporting guidance for suspected vulnerabilities.
-- If GitHub access is unavailable, record the unsent update in the roadmap's
-  handoff record and report the limitation. Do not claim the issue was updated;
-  synchronize the existing issue when access becomes available.
+- Read the linked issue and its dependencies; verify actual implementation and
+  validation evidence rather than relying on issue state alone.
+- Post concise public-safe start, meaningful progress and handoff updates.
+  Preserve discussion and user edits; do not change assignees, labels or
+  milestones without a relevant maintainer request.
+- Report deliverables, executed/skipped checks, limitations and accurate Git
+  status. Never describe uncommitted work as merged or unexecuted CI as passing.
+- Leave issues open for partial work or pending review. Close only after
+  acceptance criteria are met and the maintainer approves completion or requests
+  closure.
+- If GitHub is unavailable, record the unsent update in the handoff and report
+  the limitation; synchronize it when access becomes available.
 
-## Current environment versus planned environment
+## Environment and checks
 
-Thread 01 establishes Poetry/poetry-core, `src/obfuscidian/`, Python `>=3.12`,
-locked developer tooling, and help/version-only CLI behavior. Runtime requirements
-are authoritative in `pyproject.toml`; there is no second requirements list.
+Obfuscidian 1.0.0 uses Poetry/poetry-core, `src/obfuscidian/` and Python `>=3.12`.
+Runtime requirements in `pyproject.toml` and the CI matrix are authoritative.
+CI targets Linux/macOS/Windows on Python 3.12, 3.13 and 3.14. Linux/macOS support
+vault writes; native Windows mutation/recovery and existing-log append fail
+closed. See [supported environments](docs/PLATFORMS.md). Local checks do not
+establish hosted CI or publication success.
 
-Thread 02 adds configuration/key resolution, secure keygen, and internal key
-loading; it is complete, reviewed, and merged into `origin/main`, with issue #2
-closed and Linux CI passing on Python 3.12–3.14. 
-
-Thread 03 — Vault inventory and path preflight — is complete, reviewed, and
-merged into `origin/main`; issue #3 is closed and Linux CI passed on Python
-3.12–3.14. It adds internal read-only helpers; no vault command is exposed.
-
-Thread 04 — Encrypted backup format — is complete, reviewed, and merged into
-`origin/main`; issue #4 is closed and Linux CI passed on Python 3.12–3.14.
-Internal codecs and complete read-only validation are documented in
-[the format guide](docs/FORMAT.md).
-
-Thread 05 — Safe publication and recovery — is complete, reviewed, and
-merged/pushed into `origin/main`; issue #5 is closed and Linux CI passed on
-Python 3.12–3.14. See [the transaction guide](docs/TRANSACTIONS.md) and roadmap
-completion record for evidence and platform limits.
-
-Thread 06 — Fresh backup — is complete, reviewed, and merged/pushed into
-`origin/main`; issue #6 is closed and Linux CI passed on Python 3.12–3.14.
-See [fresh backup](docs/BACKUP.md) and the roadmap completion record for
-validation and platform limits. `shroud fresh` and additive `shroud merge` are
-available; `verify` performs complete read-only validation. Fresh and additive
-Git merge restore are available; Thread 11 adds optional private operational
-logging.
-
-Thread 07 — Merge backup — is complete, reviewed, and merged/pushed into
-`origin/main`; issue #7 is closed and Linux CI passed on Python 3.12–3.14.
-See the backup guide and roadmap completion record for evidence and limits.
-
-Thread 08 — Read-only verification — is complete, reviewed, and merged/pushed
-into `origin/main`; issue #8 is closed as completed. Linux CI passed on Python
-3.12–3.14. See [verification](docs/VERIFY.md) and the roadmap completion record
-for evidence and limits.
-
-Thread 09 — Fresh restore — is complete, reviewed and merged/pushed into
-`origin/main`; issue #9 is closed as completed. Linux CI passed on Python
-3.12/3.13; Python 3.14 was canceled before execution because no hosted runner
-acquired the job. The maintainer accepted that validation gap for closure; see
-[fresh restore](docs/RESTORE.md) and the roadmap completion record. 
-
-Thread 10 — Git merge restore — is complete, reviewed and merged/pushed into
-`origin/main`; issue #10 is closed as completed. Linux CI passed on Python
-3.12–3.14. See [merge restore](docs/RESTORE.md#additive-git-merge-restore) and the
-[completion record](dev/IMPLEMENTATION_PLAN.md#thread-10--git-merge-restore-completion-record-5-october-2026).
-
-Thread 11 — CLI polish — is complete, reviewed and merged/pushed into
-`origin/main`; issue #11 is closed as completed. Linux CI passed on Python
-3.12–3.14. See [the CLI contract](docs/CLI.md) and the
-[completion record](dev/IMPLEMENTATION_PLAN.md#thread-11--cli-polish-completion-record-5-october-2026).
-
-Thread 12 is complete, reviewed and merged/pushed into `origin/main`; issue #12
-is closed as completed. Linux/macOS/Windows CI passed on Python 3.12–3.14.
-Native Windows mutation/recovery and existing-log append still fail closed.
-See [platform validation](docs/PLATFORMS.md). Thread 13 documentation is
-complete, reviewed and merged/pushed into `origin/main`; issue #13 is closed
-as completed under explicit maintainer authorization. All nine Linux/macOS/
-Windows CI jobs passed on Python 3.12–3.14 at `c4bda3c`; strict Sphinx and
-synthetic tutorial validation passed locally. Read the Docs configuration is
-prepared; no hosted docs build/publication is claimed. Thread 14 remains not started.
-
-Use Poetry 2.2 or newer, below 3.0, for development, dependencies, and packaging.
-CI targets Linux/macOS/Windows on Python 3.12, 3.13, and 3.14; Thread 12 records
-the passing matrix and retained platform limits. Local results alone do not prove hosted validation.
-Package metadata and the CI matrix are the operational source of truth; do not
-silently change support requirements.
+Use Poetry 2.2 or newer, below 3.0:
 
 ```sh
-poetry install --with dev
+poetry install --with dev,docs
 poetry check --lock --strict
 poetry run ruff check .
 poetry run ruff format --check .
 poetry run pytest -q
 poetry run bandit -r src/obfuscidian
 poetry build
-```
-
-Documentation checks (optional `docs` group):
-
-```sh
-poetry install --with dev,docs
 poetry run sphinx-build -W --keep-going -E -a -b html docs docs/_build/html
 poetry run python .github/scripts/check_docs.py docs/_build/html
 ```
 
-Use Poetry commands to add dependencies and regenerate `poetry.lock`; never edit
-the lockfile by hand. Justify additional runtime dependencies. Do not introduce
-a second manually maintained runtime dependency list. Generated package
-metadata, build output, caches, coverage reports, and rendered docs are not
-source files and must not be hand-edited or committed accidentally.
+Use Poetry to manage dependencies and regenerate `poetry.lock`; never edit the
+lockfile by hand or maintain a second runtime dependency list. Justify additional
+runtime dependencies. Generated package metadata, builds, caches, coverage and
+rendered docs are ignored outputs, not source files. See the
+[release runbook](docs/maintainers/releasing.md) for candidate validation and
+separately authorized publication.
 
 ## Coding standards
 
@@ -188,26 +106,17 @@ important usage limitations. Use Sphinx/reST field lists (`:param name:`,
 Document constructors on the class rather than duplicating full parameter
 documentation in both the class and `__init__`.
 
-Version-history directives are required only for releases after `1.0.0`: new
-public callables/classes/exceptions need `.. versionadded:: X.Y.Z`, and public
-behavior or signature changes need `.. versionchanged:: X.Y.Z`. During initial
-`1.0.0` development, do not maintain summarized docstring changes or add
-`.. versionchanged:: 1.0.0`; it will be the first released version.
+For releases after `1.0.0`, new public callables/classes/exceptions need
+`.. versionadded:: X.Y.Z`; public behavior or signature changes need
+`.. versionchanged:: X.Y.Z`. Preserve existing directives, including the bare
+`.. versionadded:: 1.0.0` on public CLI callables. Initial-release callables
+outside the CLI do not need retroactive directives.
 
-The initial-release exception is `src/obfuscidian/cli.py`: retain the existing
-`.. versionadded:: 1.0.0` lines and include this single, bare directive on each
-additional public CLI callable introduced for the first release. Place it below
-the `\f` line and above the Sphinx field list (`:param`, `:returns:`, `:raises`),
-without a summarized change description. Other initial-release public
-callables/classes/exceptions do not require version directives.
-
-For later releases, preserve earlier directives. In CLI docstrings, keep version
-directives below `\f` and above the field list; elsewhere, place new directives
-after the field list. Use the intended stable
-release version derived from `pyproject.toml` without development/prerelease
-suffixes (`1.0.0.dev0` means `1.0.0`). Private helpers and internal refactors do
-not receive public version directives. The CLI is the initial public contract;
-do not expose an unsupported Python library API incidentally.
+In CLI docstrings, place directives below `\f` and above the Sphinx field list;
+elsewhere, place new directives after the field list. Use the intended stable
+version from `pyproject.toml`, without prerelease suffixes. Private helpers and
+internal refactors receive no public directives. Do not expose an unsupported
+Python library API incidentally.
 
 New Python modules and tests use the existing header convention:
 
@@ -238,7 +147,7 @@ clarify verified identifiers but must not hard-code a stale model.
   Use synthetic content, temporary generated test keys, and obvious placeholders.
   Fixed compatibility-fixture keys are permitted only when clearly labeled as
   synthetic and never used for real data; never print even test keys in CLI logs.
-- `dev/` is tracked/public-safe planning material. `local/` is ignored private
+- Historical planning material is public-safe. `local/` is ignored private
   material, not a source of fixtures to copy into Git. Relevant safe reference
   documentation under `local/vendor_docs/` may be read when present; other
   private local content requires explicit authorization. Do not inspect `.env`
@@ -274,15 +183,14 @@ Behavior changes require meaningful tests; fixes require regression tests. Use
 deterministic, isolated, and offline. Local synthetic integration tests run in
 the normal suite; real vault/cloud tests require separate explicit authorization.
 
-Do not execute any `dev/example-*.py` against real vaults. In particular,
-`example-encrypt-decrypt-concept.py` modifies files in place, can overwrite a key,
-and catches errors while continuing; it is a concept reference, not production
-code or a safe migration tool.
+Do not execute historical concept scripts against real vaults. They can modify
+files in place, overwrite keys and continue after errors; they are references,
+not production code or safe migration tools.
 
 Test binary byte preservation, wrong keys, corruption, object substitution,
 missing files, unsupported formats, path safety, permission failures, source
 changes, interrupted writes, rollback, confirmations, no-op backups, and output
-privacy as relevant to the requested thread. CLI tests use Click's `CliRunner`
+privacy as relevant to the requested task. CLI tests use Click's `CliRunner`
 and absolute temporary paths; never run concurrent `CliRunner` invocations in
 threads within one interpreter.
 
@@ -293,7 +201,7 @@ accurately. Do not claim passing tests from a failed or unexecuted command.
 
 ## Documentation and changelog
 
-Keep the roadmap's status and decisions accurate. Update user-facing docs and
+Keep issue status and maintainer decisions accurate. Update user-facing docs and
 docstrings for public behavior changes, and `docs/CHANGELOG.md` under
 `[Unreleased]`. Use Keep a Changelog categories.
 Internal refactors, tooling, CI, and dependency maintenance belong in the
@@ -320,11 +228,12 @@ they work. Do not claim publication or supported-platform validation prematurely
   mention the filename for a single-file commit. Reference applicable issue
   numbers. Authorized PRs follow actual templates and labels; include `codex`
   for Codex-created PRs when configured, and report unavailable conventions.
-- Do not activate release/publication automation as a side effect. The current
-  template workflow publishes on a GitHub release event; Thread 14 must replace
-  its assumptions before release use. Do not trigger it during preparation.
+- Follow [the release runbook](docs/maintainers/releasing.md). Publication is
+  manual through Twine by default; the optional guarded workflow requires
+  separate authorization and external controls. Never dispatch it during
+  preparation or activate publication as a side effect.
 
-## End-of-thread handoff
+## Handoff
 
 Before returning work, inspect the diff and status, run relevant available
 checks, verify that scope is unchanged, and ensure no secrets or private files
@@ -332,9 +241,9 @@ entered the proposed change. Include:
 
 1. What changed and why, with links to the relevant files.
 2. Acceptance criteria met and checks actually executed, including limitations.
-3. Remaining work, dependency blockers, and the next appropriate roadmap thread.
+3. Remaining work, dependency blockers and appropriate follow-up tasks.
 4. Accurate Git status and whether changes remain uncommitted.
 
-Update thread status in the roadmap only when its acceptance criteria are met;
-record partial work explicitly. A handoff must not turn a planned feature or a
+Update issue status only when its acceptance criteria are met; record partial
+work explicitly. A handoff must not turn a planned feature or a
 skipped platform test into a completed claim.

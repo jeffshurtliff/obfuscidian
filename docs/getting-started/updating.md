@@ -4,10 +4,9 @@ Use the latest stable version to receive new features, bug fixes and security
 patches. An older CLI keeps its old code even after a fix is published. Updating
 Obfuscidian is a separate step from updating Python or Obsidian.
 
-This project is currently `1.0.0.dev0`, installed from source. **The PyPI commands
-below apply once the first stable release is published.** Until then, use the
-[source or wheel instructions](#source-or-local-wheel-installations). No published
-package or hosted documentation is assumed by this page.
+Stable releases are available through PyPI. Update the installation you use for
+backups, then check its reported version. Source and local-wheel installations
+can also be updated [directly](#source-or-local-wheel-installations).
 
 ## 1. Check the version and installation you use
 
@@ -66,7 +65,7 @@ your main shell would update a different Python installation.
 
 **If you installed from a source folder or local wheel**, pipx normally retains
 that original source for upgrades. To deliberately switch that installation to
-stable PyPI releases after publication, run:
+stable PyPI releases, run:
 
 ```sh
 pipx runpip obfuscidian install --upgrade obfuscidian

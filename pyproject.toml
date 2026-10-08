@@ -1,6 +1,6 @@
 [project]
 name = "obfuscidian"
-version = "1.0.0.dev0"
+version = "1.0.0"
 description = "Obfuscate and encrypt your Obsidian vault to create secure and private backups."
 readme = "README.md"
 authors = [
@@ -14,7 +14,7 @@ license-files = ["LICENSE"]
 requires-python = ">=3.12"
 classifiers = [
     # Project maturity
-    "Development Status :: 2 - Pre-Alpha",
+    "Development Status :: 5 - Production/Stable",
 
     # Intended audience and environment
     "Intended Audience :: End Users/Desktop",
@@ -75,7 +75,7 @@ include = [
 ]
 # Use a small package boundary, plus explicit exclusions for private/generated content.
 exclude = [
-    "local", ".env", ".env.*", "*.key", "**/*.key", "scratch.txt", "**/scratch.txt",
+    "dev", "local", ".env", ".env.*", "*.key", "**/*.key", "scratch.txt", "**/scratch.txt",
     "tempCodeRunnerFile.py", "**/tempCodeRunnerFile.py", "**/__pycache__", "**/*.pyc",
     "**/.DS_Store", "**/._*", ".venv", "dist", "build", "docs/_build",
 ]

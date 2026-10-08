@@ -4,7 +4,7 @@
 :Synopsis:          Internal deterministic read-only inventory and resource estimates
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     06 Oct 2026
+:Modified Date:     08 Oct 2026
 """
 
 from __future__ import annotations
@@ -263,7 +263,8 @@ def _read_file(inventory: _Inventory, entry: _InventoryEntry) -> bytes:
 
     POSIX reads use no-follow descriptors anchored to inspected directories.
     Other hosts use no-follow inspection and pre/post-I/O identity checks;
-    native Windows race hardening remains Thread 12. No content is decoded.
+    native Windows uses best-effort observation rather than directory anchoring.
+    No content is decoded.
 
     :param inventory: Source inventory containing this entry.
     :param entry: Included regular file record to read.
@@ -349,17 +350,17 @@ class _ResourceEstimate:
 def _estimate_resources(
     inventory: _Inventory, *, manifest_plaintext_bytes: int, retained_bytes: int = 0, rollback_copy_bytes: int = 0
 ) -> _ResourceEstimate:
-    """Account for bounded actual manifest serialization and future staging payload.
+    """Account for bounded actual manifest serialization and staged payload.
 
-    The caller supplies actual serialized manifest length once Thread 04 exists;
+    The caller supplies the actual serialized manifest length;
     inventory alone cannot know its IDs/metadata serialization. Retained bytes
-    and rollback-copy bytes are explicit hooks for later merge/transactions.
+    and rollback-copy bytes account for merge staging and transaction retention.
     Estimates exclude filesystem allocation, journals, and metadata overhead.
 
     :param inventory: Included plaintext file records.
     :param manifest_plaintext_bytes: Actual serialized manifest length, before encryption.
-    :param retained_bytes: Existing ciphertext that later merge planning must stage.
-    :param rollback_copy_bytes: Additional copies required by a later transaction plan.
+    :param retained_bytes: Existing ciphertext that merge planning must stage.
+    :param rollback_copy_bytes: Additional copies required by the transaction plan.
     :returns: Payload totals without allocation, encryption, or destination creation.
     :raises _ConfigurationError: A size or object/manifest cap is invalid.
     """
@@ -380,7 +381,7 @@ def _estimate_resources(
 def _check_space(parent: Path, estimate: _ResourceEstimate) -> None:
     """Check existing staging-parent permissions/free space without reserving it.
 
-    :param parent: Existing location chosen by future transaction planning.
+    :param parent: Existing location chosen by transaction planning.
     :param estimate: Additional payload bytes required there.
     :raises _OperationalError: Access, free space, or filesystem identity checks fail.
     :raises _ConfigurationError: The parent is missing, unsafe, or incorrectly typed.

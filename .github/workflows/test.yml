@@ -1,6 +1,12 @@
 name: Test
 
 on:
+  workflow_call:
+    inputs:
+      release_ref:
+        required: false
+        default: ""
+        type: string
   push:
     paths-ignore:
       - README.md
@@ -52,6 +58,8 @@ jobs:
       POETRY_VIRTUALENVS_IN_PROJECT: "true"
     steps:
       - uses: actions/checkout@v5
+        with:
+          ref: ${{ inputs.release_ref || github.sha }}
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v6
         with:
