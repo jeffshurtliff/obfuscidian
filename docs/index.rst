@@ -11,9 +11,10 @@ The :doc:`guides/index` have the detailed instructions and safety guidance.
 
 .. important::
 
-   This version, ``1.0.0.dev0``, installs from source. Backup and restore writes
+   Obfuscidian 1.0.0 is the first stable release. See
+   :doc:`getting-started/installation` for pipx and pip installation. Backup and restore writes
    work on Linux/macOS. Native Windows supports key creation, verification and
-   previews; writing or recovering vaults is not yet available. See
+   previews; vault writes and recovery are refused. See
    :doc:`PLATFORMS` for tested capabilities and limitations.
 
 Choose a task
@@ -42,5 +43,5 @@ Source and tracking
 
 The `source repository <https://github.com/jeffshurtliff/obfuscidian>`_ and
 `issue tracker <https://github.com/jeffshurtliff/obfuscidian/issues>`_ contain
-development evidence. Remote hosting, repository privacy and publication are
+source code, release history and support requests. Remote hosting, repository privacy and publication are
 user-managed. The Apache-2.0 license applies to the project.

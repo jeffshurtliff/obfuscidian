@@ -2,7 +2,7 @@
 
 The repository's [CONTRIBUTING.md](https://github.com/jeffshurtliff/obfuscidian/blob/main/CONTRIBUTING.md)
 owns detailed contributor policy; [AGENTS.md](https://github.com/jeffshurtliff/obfuscidian/blob/main/AGENTS.md)
-is the canonical guide for every agent. Read both and the approved roadmap before
+is the canonical guide for every agent. Read both before
 changing code. Direct maintainer instructions define authorized scope.
 
 ## Setup and checks
@@ -39,17 +39,16 @@ New Python modules/tests use the repository header convention. Preserve
 `Jeff Shurtliff (via <actual-model-identifier>)` and `Modified Date` to the local
 date as `DD Mon YYYY`. Use the actual generating model, not a pinned sample.
 
-During initial `1.0.0` development, public version directives are not required
-except for the existing CLI exception: each public CLI callable includes one
-bare `.. versionadded:: 1.0.0` below `\f` and before its field list. Later releases
-require version-added/changed directives for public changes while preserving
-earlier ones. Private refactors get no public version directives.
+For releases after 1.0.0, add version-added/changed directives for public changes
+and preserve earlier directives. The CLI's existing bare `.. versionadded:: 1.0.0`
+lines stay below `\f` and before field lists. Other initial-release callables need
+no retroactive directives. Private refactors get no public version directives.
 
 Use deterministic offline pytest fixtures in `tests/unit/` and
 `tests/integration/`, temporary vaults/repos and synthetic keys. Behavior changes
 need meaningful tests; fixes need regression tests. No concurrent CliRunner calls
 in interpreter threads. Real vault/cloud tests need separate authorization.
-Do not run historical `dev/example-*.py` against real data.
+Do not run historical concept scripts against real data.
 
 Update user docs for observable behavior and `docs/CHANGELOG.md` under Unreleased
 with Keep a Changelog categories. Package and format versions are separate;
@@ -58,7 +57,7 @@ backticks in reST. See [documentation maintenance](documentation.md).
 
 ## Issues, review and authorization
 
-Use the existing roadmap issue and actual repository issue templates. Base
+Use the existing task issue and actual repository issue templates. Base
 branches on `main`; Codex uses `codex/<type>/<issue-number>-<description>` when a
 real issue exists. Do not invent an issue just for naming. Preserve user edits
 and keep work focused. Post public-safe start/progress/handoff evidence for the
@@ -70,8 +69,9 @@ single-file change, and the applicable issue number. PRs explain the resulting
 behavior, checks and limits, following any actual template and configured labels
 (including `codex` for Codex work). No PR template is currently configured.
 
-Do not trigger the template release workflow. Release preparation remains
-a separate task. A handoff states actual Git status,
+Follow [the release runbook](releasing.md); release events never upload to PyPI.
+Publication through Twine or the optional guarded workflow requires explicit
+authorization. A handoff states actual Git status,
 executed/skipped checks, blockers and next eligible work. Never equate local
 results with hosted CI, publication or guaranteed recovery. Handle suspected
 vulnerabilities through [private reporting](../SECURITY.md#report-a-concern-privately).

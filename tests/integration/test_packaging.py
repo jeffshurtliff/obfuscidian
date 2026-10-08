@@ -4,7 +4,7 @@
 :Synopsis:          Build, inspect, and install package artifacts offline
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     07 Oct 2026
+:Modified Date:     08 Oct 2026
 """
 
 from __future__ import annotations
@@ -73,6 +73,7 @@ def artifacts(pytestconfig: pytest.Config, tmp_path_factory: pytest.TempPathFact
             shutil.copy2(root / name, destination)
         # Deliberately seed obvious synthetic private/scratch content, never real vault data.
         for name in (
+            'dev/IMPLEMENTATION_PLAN.md',
             'local/private.txt',
             '.env',
             'scratch.txt',
@@ -115,8 +116,9 @@ def _assert_metadata(data: bytes) -> None:
     """Check installation and license metadata retained by both build formats."""
     metadata = BytesParser().parsebytes(data)
     assert metadata['Name'] == 'obfuscidian'
-    assert metadata['Version'] == '1.0.0.dev0'
+    assert metadata['Version'] == '1.0.0'
     assert metadata['Requires-Python'] == '>=3.12'
+    assert 'Development Status :: 5 - Production/Stable' in metadata.get_all('Classifier')
     assert metadata['License-Expression'] == 'Apache-2.0'
     assert metadata.get_all('License-File') == ['LICENSE']
     assert set(metadata.get_all('Requires-Dist')) == {
@@ -152,7 +154,7 @@ def test_artifact_contents(artifacts: tuple[Path, Path]) -> None:
         'updates.py',
     }
     with zipfile.ZipFile(wheel) as archive:
-        prefix = 'obfuscidian-1.0.0.dev0.dist-info/'
+        prefix = 'obfuscidian-1.0.0.dist-info/'
         assert set(archive.namelist()) == {f'obfuscidian/{name}' for name in modules} | {
             prefix + name for name in ('METADATA', 'WHEEL', 'entry_points.txt', 'RECORD', 'licenses/LICENSE')
         }
@@ -162,7 +164,7 @@ def test_artifact_contents(artifacts: tuple[Path, Path]) -> None:
         assert entry_points['console_scripts']['obfuscidian'] == 'obfuscidian.cli:cli'
         assert archive.read(prefix + 'licenses/LICENSE').startswith(b'                                 Apache License')
     with tarfile.open(sdist, 'r:gz') as archive:
-        prefix = 'obfuscidian-1.0.0.dev0/'
+        prefix = 'obfuscidian-1.0.0/'
         names = {member.name for member in archive.getmembers() if member.isfile()}
         assert names == {prefix + f'src/obfuscidian/{name}' for name in modules} | {
             prefix + name for name in ('pyproject.toml', 'poetry.lock', 'README.md', 'LICENSE', 'PKG-INFO', *_PUBLIC_SDIST_DOCS)
@@ -350,7 +352,7 @@ def test_installation_entry_points(
         assert console_result.stdout == module_result.stdout
         assert console_result.stderr == module_result.stderr == ''
         if option == '--version':
-            assert console_result.stdout == 'obfuscidian, version 1.0.0.dev0\n'
+            assert console_result.stdout == 'obfuscidian, version 1.0.0\n'
         else:
             assert 'Usage: obfuscidian [OPTIONS]' in console_result.stdout
             assert '--log-file' in console_result.stdout and 'Exit codes:' in console_result.stdout
@@ -375,7 +377,7 @@ else:
     runpy.run_module('obfuscidian', run_name='__main__')
 """
     notices = [_run([str(python), '-c', notice_script, entry], outside) for entry in ('console', 'module')]
-    assert notices[0].stdout == notices[1].stdout == 'obfuscidian, version 1.0.0.dev0\n'
+    assert notices[0].stdout == notices[1].stdout == 'obfuscidian, version 1.0.0\n'
     assert (
         notices[0].stderr
         == notices[1].stderr

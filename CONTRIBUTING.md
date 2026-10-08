@@ -1,107 +1,38 @@
 # Contributing to Obfuscidian
 
-Contributions are welcome. Obfuscidian is a Python/Click CLI being developed to
-back up Obsidian vaults as individually encrypted files with an encrypted path
-manifest and restore them safely. Data preservation, privacy, clear CLI behavior,
-and meaningful tests guide contributions.
+Contributions are welcome. Obfuscidian is a Python/Click CLI for individually
+encrypted Obsidian vault backups and safe restores. Data preservation, privacy,
+clear CLI behavior and meaningful tests guide contributions.
 
-Read [AGENTS.md](AGENTS.md) and the
-[implementation roadmap](dev/IMPLEMENTATION_PLAN.md) before starting. This guide
-owns the contributor workflow; AGENTS.md is the canonical agent guide, and the
-roadmap defines approved behavior, dependencies, and acceptance criteria. Direct
-maintainer instructions define the authorized task. Resolve conflicts with the
-maintainer before changing approved behavior, public interfaces, or the backup
-format.
+Read [AGENTS.md](AGENTS.md) before starting. This guide owns contributor policy;
+AGENTS.md is the canonical agent guide. Direct maintainer instructions define
+authorized scope. Resolve conflicts with the maintainer before changing approved
+behavior, public interfaces or the backup format.
 
-## Current project status
+## Supported environment
 
-Thread 01 establishes Poetry/poetry-core packaging, `src/obfuscidian/`, Python
-3.12+, locked developer tools, foundation CLI help/version, and offline unit and
-installation tests. 
+Obfuscidian 1.0.0 requires Python 3.12+. CI covers Linux/macOS/Windows on Python
+3.12–3.14. Linux/macOS implement backup and restore writes. Native Windows
+supports private key creation, verification and read-only planning; mutation,
+recovery and existing-log append fail closed. See [supported environments](docs/PLATFORMS.md).
 
-Thread 02 adds configuration/key resolution, secure keygen,
-and internal key loading; it is complete, reviewed, and merged into `origin/main`,
-with issue #2 closed and Linux CI passing on Python 3.12–3.14. 
-
-Thread 03 — Vault inventory and path preflight — is complete, reviewed, and
-merged into `origin/main`; issue #3 is closed and Linux CI passed on Python
-3.12–3.14. Internal read-only inventory/path/resource helpers are documented
-in [the inventory guide](docs/INVENTORY.md).
-
-Thread 04 — Encrypted backup format — is complete, reviewed, and merged into
-`origin/main`; issue #4 is closed and Linux CI passed on Python 3.12–3.14.
-Internal codecs and complete read-only validation are documented in
-[the format guide](docs/FORMAT.md).
-
-Thread 05 — Safe publication and recovery — is complete, reviewed, and
-merged/pushed into `origin/main`; issue #5 is closed and Linux CI passed on
-Python 3.12–3.14. See [the transaction guide](docs/TRANSACTIONS.md) and roadmap
-completion record for evidence and platform limits.
-
-Thread 06 — Fresh backup — is complete, reviewed, and merged/pushed into
-`origin/main`; issue #6 is closed and Linux CI passed on Python 3.12–3.14.
-See [fresh backup](docs/BACKUP.md) and the roadmap completion record for
-validation and platform limits. `shroud fresh` and additive `shroud merge` are
-available; `verify` performs complete read-only validation. Fresh and additive
-Git merge restore are available; Thread 11 adds optional private operational
-logging.
-
-Thread 07 — Merge backup — is complete, reviewed, and merged/pushed into
-`origin/main`; issue #7 is closed and Linux CI passed on Python 3.12–3.14.
-See the backup guide and roadmap completion record for evidence and limits.
-
-Thread 08 — Read-only verification — is complete, reviewed, and merged/pushed
-into `origin/main`; issue #8 is closed as completed. Linux CI passed on Python
-3.12–3.14. See [verification](docs/VERIFY.md) and the roadmap completion record
-for evidence and limits.
-
-Thread 09 — Fresh restore — is complete, reviewed and merged/pushed into
-`origin/main`; issue #9 is closed as completed. Linux CI passed on Python
-3.12/3.13; Python 3.14 was canceled before execution because no hosted runner
-acquired the job. The maintainer accepted that validation gap for closure; see
-[fresh restore](docs/RESTORE.md) and the roadmap completion record. 
-
-Thread 10 — Git merge restore — is complete, reviewed and merged/pushed into
-`origin/main`; issue #10 is closed as completed. Linux CI passed on Python
-3.12–3.14. See [merge restore](docs/RESTORE.md#additive-git-merge-restore) and the
-[completion record](dev/IMPLEMENTATION_PLAN.md#thread-10--git-merge-restore-completion-record-5-october-2026).
-
-Thread 11 — CLI polish — is complete, reviewed and merged/pushed into
-`origin/main`; issue #11 is closed as completed. Linux CI passed on Python
-3.12–3.14. See [the CLI contract](docs/CLI.md) and the
-[completion record](dev/IMPLEMENTATION_PLAN.md#thread-11--cli-polish-completion-record-5-october-2026).
-
-Thread 12 is complete, reviewed and merged/pushed into `origin/main`; issue #12
-is closed as completed. Linux/macOS/Windows CI passed on Python 3.12–3.14.
-Native Windows mutation/recovery and existing-log append still fail closed.
-See [platform validation](docs/PLATFORMS.md). Thread 13 documentation is
-complete, reviewed and merged/pushed into `origin/main`; issue #13 is closed
-as completed under explicit maintainer authorization. All nine Linux/macOS/
-Windows CI jobs passed on Python 3.12–3.14 at `c4bda3c`; strict Sphinx and
-synthetic tutorial validation passed locally. Read the Docs configuration is
-prepared; no hosted docs build/publication is claimed. Thread 14 remains not started.
-
-The test workflow targets Linux/macOS/Windows on Python 3.12–3.14;
-all nine jobs passed in the [Thread 12 completion run](https://github.com/jeffshurtliff/obfuscidian/actions/runs/37519004246).
-
-Thread 13 adds optional locked Sphinx/reST/MyST and `pydata_sphinx_theme` tooling.
-Build and inspect locally. `.readthedocs.yaml` prepares locked Poetry-based hosted
-builds; no account/project connection, hosted build or documentation publication
-is established by that file. See [docs maintenance](docs/maintainers/documentation.md).
+Poetry manages locked development tools and the optional Sphinx/reST/MyST docs
+group. The Read the Docs configuration uses those locked tools; see
+[documentation maintenance](docs/maintainers/documentation.md). Runtime
+requirements and the CI matrix are the operational source of truth.
 
 ## Development workflow
 
-1. Choose a bounded roadmap thread or a maintainer-approved task. Read its
-   dependencies and acceptance criteria; do not implement later threads or
-   unrelated cleanup as a side effect.
+1. Choose a bounded maintainer-approved task. Read its dependencies and
+   acceptance criteria; avoid unrelated cleanup or capabilities.
 2. Search existing issues before filing a new one. Use the appropriate template
    below and reference a real issue when one exists. A direct maintainer request
-   or roadmap task may proceed without creating an issue solely for naming.
+   may proceed without creating an issue solely for naming.
 3. Base the work on `main` and use the branch conventions below. Preserve
    existing user changes; never commit directly to `main`.
 4. Make focused changes and add meaningful tests for behavior changes and
    regression tests for fixes. Keep the Click layer thin.
-5. Update relevant docs, docstrings, and the changelog once it exists. Keep
+5. Update relevant docs, docstrings, and the changelog. Keep
    unimplemented capabilities clearly marked as planned.
 6. Run available checks proportionate to the task, inspect the diff and Git
    status, and report executed checks, skipped checks, and remaining blockers.
@@ -109,9 +40,8 @@ is established by that file. See [docs maintenance](docs/maintainers/documentati
    uncommitted by default; Git history and publication actions require the
    separate permissions described below.
 
-Record unrelated discoveries in the roadmap for a future thread. Update a
-thread's status only when its acceptance criteria are met; record partial work
-explicitly rather than marking a full thread complete.
+Record unrelated discoveries in the existing issue or handoff for future work.
+Update status only when acceptance criteria are met; record partial work explicitly.
 
 ## Issues and branch naming
 
@@ -244,7 +174,9 @@ work needs link, consistency, privacy, and whitespace checks; it does not requir
 installing dependencies or changing application code. Report missing tools and
 unexecuted checks accurately. The CI runs Poetry checks, Ruff,
 pytest/coverage, Bandit, and fresh artifact validation on Linux/macOS/Windows
-and Python 3.12–3.14. It ignores several documentation paths. Sphinx builds are local Thread 13 checks; configured CI is not evidence of hosted success.
+and Python 3.12–3.14. It ignores several documentation paths; release validation
+also runs strict Sphinx and rendered-reference checks. Configured CI does not
+establish hosted success.
 
 ## Code standards
 
@@ -270,26 +202,17 @@ using Sphinx/reST fields (`:param name:`, `:returns:`, `:raises ExceptionType:`)
 Do not repeat clear signature types. Document constructors on the class rather
 than duplicating parameter documentation in `__init__`.
 
-Version-history directives are required only for releases after `1.0.0`: new
-public callables, classes, and exceptions need `.. versionadded:: X.Y.Z`, and
-public behavior or signature changes need `.. versionchanged:: X.Y.Z`. Initial
-`1.0.0` development does not need summarized docstring changes or
-`.. versionchanged:: 1.0.0`, because it will be the first released version.
+For releases after `1.0.0`, new public callables/classes/exceptions need
+`.. versionadded:: X.Y.Z`; public behavior or signature changes need
+`.. versionchanged:: X.Y.Z`. Preserve earlier directives, including the bare
+initial-release directive on public CLI callables. Other initial-release
+callables do not need retroactive directives.
 
-For that first release, each public callable in `src/obfuscidian/cli.py` retains
-or includes one bare `.. versionadded:: 1.0.0` line, including additional public
-CLI callables. Place it below `\f` and above the Sphinx field list (`:param`,
-`:returns:`, `:raises`), without a summarized change description. Other
-initial-release public callables, classes, and exceptions do not require version
-directives. See [the canonical agent guidance](AGENTS.md#docstrings-and-module-headers).
-
-For later releases, preserve earlier directives. In CLI docstrings, keep version
-directives below `\f` and above the field list; elsewhere, place new directives
-after the field list. Derive the intended stable
-release version from `pyproject.toml` without development/prerelease suffixes:
-`1.0.0.dev0` means `1.0.0`. Private helpers and internal refactors receive no
-public version directives. The CLI is the initial public contract; do not
-incidentally expose an unsupported Python library API.
+In CLI docstrings, place version directives below `\f` and above field lists;
+elsewhere, add them after field lists. Use the intended stable version from
+`pyproject.toml` without prerelease suffixes. Private refactors receive no public
+directives. The CLI is the supported public interface; do not expose an
+unsupported Python library API incidentally.
 
 New Python modules and tests use this header convention:
 
@@ -331,9 +254,8 @@ concurrent `CliRunner` invocations in threads within one interpreter; use proces
 isolation when parallelism is needed. Platform skips must be narrow and explained.
 Report local results separately from actual hosted matrix results.
 
-Do not execute `dev/example-*.py` against real vaults. In particular,
-`example-encrypt-decrypt-concept.py` encrypts in place, can overwrite a key,
-and catches errors while continuing. These scripts are historical concepts,
+Do not execute historical concept scripts against real vaults. They can modify
+files in place, overwrite keys and continue after errors; they are references,
 not production code or migration tools.
 
 ## Security and data preservation
@@ -342,12 +264,12 @@ Use synthetic content and placeholder paths in code, tests, docs, issues, and
 logs. Never include real key contents, credentials, vault content, or identifying
 local paths in tracked artifacts. Clearly labeled synthetic compatibility keys
 are permitted only as fixtures and must never protect real data or appear in
-CLI output. `dev/` is public-safe planning material; `local/` is ignored private
+CLI output. Historical planning material is public-safe; `local/` is ignored private
 material, not a fixture source. Relevant safe docs in `local/vendor_docs/` may
 be read if present; other private material requires explicit authorization.
 Do not inspect `.env` or real keys to discover credentials or test availability.
 
-Implement the approved roadmap safety contracts:
+Preserve these safety contracts:
 
 - Keep keys outside origin and mirror locations. Create them exclusively;
   never overwrite, print, or automatically regenerate a missing key.
@@ -400,8 +322,8 @@ and backup-format version are separate contracts. Version promotion requires
 an explicit request; do not bump versions incidentally.
 
 Use single backticks for Markdown/MyST inline code. Double backticks belong in
-`.rst` files and reST docstrings. Thread 13 establishes Sphinx/reST/MyST
-docs organization and the PyData theme with a dark default and reader-selectable light mode. Do not copy private content or unrelated
+`.rst` files and reST docstrings. Sphinx/reST/MyST docs use the PyData theme
+with a dark default and reader-selectable light mode. Do not copy private content or unrelated
 extensions from reference projects. Check local links and examples without
 claiming unexecuted validation. See [docs maintenance](docs/maintainers/documentation.md).
 
@@ -424,23 +346,22 @@ issue templates are not PR templates. Include tests and docs as appropriate,
 and require relevant available CI checks before merge. Do not present unexecuted
 hosted checks as passing or require nonexistent checks.
 
-Release preparation belongs to Thread 14 after Thread 13. Use the Maintainer
-Release template to record facts, validation, blockers, and separate authorization
-checkpoints. Do not assume a release runbook, tag convention, external publishing
-configuration, or PyPI publication exists. The current template workflow publishes
-on a GitHub release event; Thread 14 must replace its assumptions before use.
-Never trigger it or activate publication automation as a preparation side effect.
+Follow [the maintainer release runbook](docs/maintainers/releasing.md) for version
+promotion, fresh candidate validation, exact-commit builds, bare annotated tags,
+GitHub drafts, manual Twine uploads and post-release verification. The optional
+manual publication workflow requires separate authorization and configured
+external protections; GitHub release events never initiate uploads.
 
 ## Handoff checklist
 
 Before returning work, inspect the diff and status and verify scope and privacy.
 Report what changed with file links, acceptance criteria met, checks actually
 executed, limitations, remaining work, dependency blockers, and the next eligible
-roadmap thread. Update roadmap evidence for completed or partial work without
+task. Update issue evidence for completed or partial work without
 overstating completion. State the accurate Git status and whether changes remain
 uncommitted.
 
 This guide and the issue templates were adapted from the public
 [SalesPyForce contributor guide](https://github.com/jeffshurtliff/salespyforce/blob/2cbc66bc4fee815e27b748990222c97c1fe0222e/CONTRIBUTING.md)
 and [issue templates](https://github.com/jeffshurtliff/salespyforce/tree/2cbc66bc4fee815e27b748990222c97c1fe0222e/.github/ISSUE_TEMPLATE),
-with Obfuscidian's approved roadmap and agent instructions controlling project-specific behavior.
+with Obfuscidian's agent instructions controlling project-specific behavior.

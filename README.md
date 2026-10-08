@@ -1,6 +1,6 @@
 
-<img src="docs/_static/obfuscidian-logo-horizontal-web.png" 
-     style="max-height: 160px;" 
+<img src="https://raw.githubusercontent.com/jeffshurtliff/obfuscidian/1.0.0/docs/_static/obfuscidian-logo-horizontal-web.png"
+     style="max-height: 160px;"
      alt="Obfuscidian Logo">
 
 # Obfuscidian
@@ -13,47 +13,40 @@ individual Fernet-encrypted files and an encrypted path manifest in a separate
 mirror, then authenticates and restores the complete snapshot. Notes and binary
 attachments retain their exact bytes. The CLI is the supported public interface.
 
-## Status and supported environments
+## Version and supported environments
 
-Initial version `1.0.0.dev0` is in development; no PyPI release or hosted docs
-publication is claimed. Threads 01–12 are reviewed and merged, including a
-passing Linux/macOS/Windows CI matrix on Python 3.12–3.14. Linux/macOS backup and
-restore writes are implemented. Native Windows supports key creation,
-verification and read-only planning; vault mutation/recovery and existing-log
-append still fail closed. See [platform validation](docs/PLATFORMS.md).
+Obfuscidian 1.0.0 is the first stable release and requires Python 3.12 or newer.
+The tested matrix covers Linux, macOS and Windows on Python 3.12–3.14.
+Linux/macOS support backup and restore writes. Native Windows supports key
+creation, verification and read-only planning; vault mutation/recovery and
+existing-log append fail closed. See [supported environments](https://github.com/jeffshurtliff/obfuscidian/blob/1.0.0/docs/PLATFORMS.md).
 
-Thread 13 documentation is complete, reviewed and merged into `main`, with
-[passing CI](https://github.com/jeffshurtliff/obfuscidian/actions/runs/37562420529).
-Issue #13 is closed as completed. Read the Docs configuration is prepared;
-no hosted documentation build/publication is claimed.
-Thread 14 release preparation remains not started.
-
-## Install from source
+## Install
 
 Python 3.12+ is required. For use directly from Bash, zsh or PowerShell without
-activating an environment, **pipx is recommended**. With 
+activating an environment, **pipx is recommended**. With
 [pipx installed](https://pipx.pypa.io/latest/how-to/install-pipx.html), run
-from the repository root in a POSIX shell:
+in a POSIX shell:
 
 ```sh
 python3.12 --version
 pipx ensurepath
-pipx install --python python3.12 .
+pipx install --python python3.12 obfuscidian
 ```
 
 Reopen your terminal after PATH setup, then run `obfuscidian --version` and
 `obfuscidian --help` from any folder. pipx manages an isolated Python environment
-internally; you do not activate it. See [installation](docs/guides/installation.md)
+internally; you do not activate it. See [installation](https://github.com/jeffshurtliff/obfuscidian/blob/1.0.0/docs/guides/installation.md)
 for pipx prerequisites, PowerShell commands, **pip `--user` installation outside
 a venv**, local wheels and developer setup. For unattended use, follow
-[scheduled jobs and automation](docs/guides/installation.md#scheduled-jobs-and-automation).
+[scheduled jobs and automation](https://github.com/jeffshurtliff/obfuscidian/blob/1.0.0/docs/guides/installation.md#scheduled-jobs-and-automation).
 
-Alternatively, install into a venv from the repository root:
+Alternatively, install into a venv:
 
 ```sh
 python3 -m venv .venv
 . .venv/bin/activate
-python -m pip install .
+python -m pip install obfuscidian
 obfuscidian --help
 ```
 
@@ -62,9 +55,8 @@ contains the package; your primary Python may not contain a pipx installation.
 
 ## Update to a newer stable version
 
-Keep the CLI current to receive features, fixes and security patches. **Once
-stable releases are published on PyPI**, update the installation you actually
-run:
+Keep the CLI current to receive features, fixes and security patches. Update
+the installation you actually run:
 
 | Installation | Update command |
 | --- | --- |
@@ -79,25 +71,24 @@ Use the original installation's Python; in PowerShell a user install may use
 by scheduled jobs. pipx needs no activation. A source/wheel pipx install normally
 retains its original source for `pipx upgrade`; use `runpip` again for subsequent
 PyPI updates, or follow the local-source instructions in
-[Updating Obfuscidian](docs/getting-started/updating.md).
+[Updating Obfuscidian](https://github.com/jeffshurtliff/obfuscidian/blob/1.0.0/docs/getting-started/updating.md).
 
 The CLI checks PyPI for newer stable versions and displays an advisory on stderr,
 also recording it when an optional private operational log opens. Set
 `OBFUSCIDIAN_SUPPRESS_UPDATE_NOTICE=true` or `1` to disable the request and notice.
 Checks never install updates. Subscribe to repository releases through GitHub
-**Watch → Custom → Releases** and read the [changelog](docs/CHANGELOG.md).
+**Watch → Custom → Releases** and read the [changelog](https://github.com/jeffshurtliff/obfuscidian/blob/1.0.0/docs/CHANGELOG.md).
 The notice links to [update instructions](https://bit.ly/updating-obfuscidian).
-The [update guide](docs/getting-started/updating.md) covers all installation
+The [update guide](https://github.com/jeffshurtliff/obfuscidian/blob/1.0.0/docs/getting-started/updating.md) covers all installation
 methods, failed checks and competing PATH entries.
-Until the first stable publication, use its source/local-wheel instructions.
 
 ## First backup and restore
 
-New to command-line backups? Start with [What is Obfuscidian?](docs/getting-started/what-is-obfuscidian.md)
-and the [Quickstart](docs/getting-started/quickstart.md). The beginner pages introduce keys,
+New to command-line backups? Start with [What is Obfuscidian?](https://github.com/jeffshurtliff/obfuscidian/blob/1.0.0/docs/getting-started/what-is-obfuscidian.md)
+and the [Quickstart](https://github.com/jeffshurtliff/obfuscidian/blob/1.0.0/docs/getting-started/quickstart.md). The beginner pages introduce keys,
 backup choices and restore steps one topic at a time.
 
-Follow the [complete synthetic rehearsal](docs/guides/restore-rehearsal.md)
+Follow the [complete synthetic rehearsal](https://github.com/jeffshurtliff/obfuscidian/blob/1.0.0/docs/guides/restore-rehearsal.md)
 before using a real vault. It creates a private key outside both vaults,
 previews and writes a fresh backup, verifies every object, restores to a new
 location and compares all bytes and directories.
@@ -126,11 +117,11 @@ Obfuscidian never stages, commits, merges or pushes them.
 
 ## Documentation
 
-- [Configuration and key custody](docs/CONFIGURATION.md)
-- [Fresh/additive backup](docs/BACKUP.md), [verification](docs/VERIFY.md) and [restore](docs/RESTORE.md)
-- [Command reference](docs/reference/cli.md) and [output/privacy/logging](docs/CLI.md)
-- [Security and limits](docs/SECURITY.md), [private reporting policy](SECURITY.md) and [troubleshooting](docs/TROUBLESHOOTING.md)
-- [Contributor guide](CONTRIBUTING.md), [changelog](docs/CHANGELOG.md) and [approved roadmap](dev/IMPLEMENTATION_PLAN.md)
+- [Configuration and key custody](https://github.com/jeffshurtliff/obfuscidian/blob/1.0.0/docs/CONFIGURATION.md)
+- [Fresh/additive backup](https://github.com/jeffshurtliff/obfuscidian/blob/1.0.0/docs/BACKUP.md), [verification](https://github.com/jeffshurtliff/obfuscidian/blob/1.0.0/docs/VERIFY.md) and [restore](https://github.com/jeffshurtliff/obfuscidian/blob/1.0.0/docs/RESTORE.md)
+- [Command reference](https://github.com/jeffshurtliff/obfuscidian/blob/1.0.0/docs/reference/cli.md) and [output/privacy/logging](https://github.com/jeffshurtliff/obfuscidian/blob/1.0.0/docs/CLI.md)
+- [Security and limits](https://github.com/jeffshurtliff/obfuscidian/blob/1.0.0/docs/SECURITY.md), [private reporting policy](https://github.com/jeffshurtliff/obfuscidian/blob/1.0.0/SECURITY.md) and [troubleshooting](https://github.com/jeffshurtliff/obfuscidian/blob/1.0.0/docs/TROUBLESHOOTING.md)
+- [Contributor guide](https://github.com/jeffshurtliff/obfuscidian/blob/1.0.0/CONTRIBUTING.md) and [changelog](https://github.com/jeffshurtliff/obfuscidian/blob/1.0.0/docs/CHANGELOG.md)
 
 Build the local Sphinx/reST/MyST site with the PyData theme (dark by default,
 with a reader-selectable light mode):
@@ -141,7 +132,7 @@ poetry run sphinx-build -W --keep-going -E -a -b html docs docs/_build/html
 poetry run python .github/scripts/check_docs.py docs/_build/html
 ```
 
-Open `docs/_build/html/index.html`. See [documentation maintenance](docs/maintainers/documentation.md)
+Open `docs/_build/html/index.html`. See [documentation maintenance](https://github.com/jeffshurtliff/obfuscidian/blob/1.0.0/docs/maintainers/documentation.md)
 for tutorial tests, rendered/accessibility review and optional external link checks.
 This build does not publish or configure hosting.
 
@@ -161,10 +152,10 @@ poetry run bandit -r src/obfuscidian
 poetry build
 ```
 
-Read [AGENTS.md](AGENTS.md) and [CONTRIBUTING.md](CONTRIBUTING.md) before changing
-code. Keep work within the requested thread and leave changes reviewable.
+Read [AGENTS.md](https://github.com/jeffshurtliff/obfuscidian/blob/1.0.0/AGENTS.md) and [CONTRIBUTING.md](https://github.com/jeffshurtliff/obfuscidian/blob/1.0.0/CONTRIBUTING.md) before changing
+code. Keep work within the requested task and leave changes reviewable.
 Git history and publication actions require separate maintainer authorization.
-The project is licensed under [Apache-2.0](LICENSE).
+The project is licensed under [Apache-2.0](https://github.com/jeffshurtliff/obfuscidian/blob/1.0.0/LICENSE).
 
 ---
 

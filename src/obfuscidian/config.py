@@ -3,8 +3,8 @@
 :Module:            obfuscidian.config
 :Synopsis:          Internal CLI and environment configuration resolution
 :Created By:        Jeff Shurtliff
-:Last Modified:     Jeff Shurtliff (via GPT-6)
-:Modified Date:     03 Oct 2026
+:Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
+:Modified Date:     08 Oct 2026
 """
 
 from __future__ import annotations
@@ -103,7 +103,7 @@ def _resolve_generation_path(
 def _resolve_vault_paths(
     *, origin: str | None = None, mirror: str | None = None, environ: Mapping[str, str] | None = None
 ) -> tuple[Path | None, Path | None]:
-    """Resolve optional vault paths, leaving inventory/preflight to Thread 03."""
+    """Resolve optional vault paths separately from inventory and path preflight."""
     env = os.environ if environ is None else environ
     origin_value = origin if origin is not None else env.get(const.ENV_ORIGIN)
     mirror_value = mirror if mirror is not None else env.get(const.ENV_MIRROR)

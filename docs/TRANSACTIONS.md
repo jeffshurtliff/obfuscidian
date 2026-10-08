@@ -156,5 +156,5 @@ for internal Git activity. A journal and ownership record are local recovery
 metadata, not independently authenticated backup-format data; an attacker able
 to rewrite all private controls can falsify them. These primitives promise
 conservative preservation/refusal, not guaranteed recovery or immunity to power
-loss. Future orchestration must surface private locations, plaintext sensitivity,
+loss. Command orchestration surfaces private locations, plaintext sensitivity,
 durability warnings, and retained recovery requirements explicitly.

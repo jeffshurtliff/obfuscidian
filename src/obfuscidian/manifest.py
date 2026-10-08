@@ -4,7 +4,7 @@
 :Synopsis:          Internal frozen v1 manifest codec and complete read-only validation
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     06 Oct 2026
+:Modified Date:     08 Oct 2026
 """
 
 from __future__ import annotations
@@ -76,7 +76,7 @@ class _VerifiedMirror:
     """Return complete verification metadata without retaining all object payloads.
 
     This is a best-effort read-only observation. File helpers recheck its state
-    and authenticate the selected object again; future publication must still
+    and authenticate the selected object again; publication must still
     revalidate. No destination is inspected or modified.
     """
 

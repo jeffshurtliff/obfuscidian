@@ -1,8 +1,8 @@
 # Security policy
 
-Obfuscidian is in initial `1.0.0` development. No released-version support window,
-independent security certification or guaranteed recovery is claimed. Report
-suspected vulnerabilities in the current source privately.
+Report suspected vulnerabilities in Obfuscidian 1.0.0 and the current source
+privately. No fixed support window, independent security certification or
+guaranteed recovery is claimed. Include the affected version in your report.
 
 Use the repository's GitHub **Security → Report a vulnerability** action if
 private reporting is enabled; its availability is not assumed. If unavailable,

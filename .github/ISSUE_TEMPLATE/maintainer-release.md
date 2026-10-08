@@ -18,17 +18,15 @@ require separate, explicit maintainer instructions.
 - Target stable version (to): `X.Y.Z`
 - Target release date, if agreed: `YYYY-MM-DD`
 
-Follow [Thread 14 of the implementation roadmap](https://github.com/jeffshurtliff/obfuscidian/blob/main/dev/IMPLEMENTATION_PLAN.md#thread-14--release-preparation),
-[AGENTS.md](https://github.com/jeffshurtliff/obfuscidian/blob/main/AGENTS.md), and
+Follow [the maintainer release runbook](https://github.com/jeffshurtliff/obfuscidian/blob/main/docs/maintainers/releasing.md),
+[AGENTS.md](https://github.com/jeffshurtliff/obfuscidian/blob/main/AGENTS.md) and
 [CONTRIBUTING.md](https://github.com/jeffshurtliff/obfuscidian/blob/main/CONTRIBUTING.md).
-Thread 14 depends on Thread 13 and will establish the maintainer release runbook
-and reviewed publication workflow. Do not assume those deliverables exist.
 
 ---
 
 ## Motivation
 
-Why is this release being prepared now? Link completed roadmap work, relevant
+Why is this release being prepared now? Link completed work, relevant
 issues, and pull requests. Identify any remaining release blockers.
 
 ---
@@ -40,7 +38,7 @@ Resolve values from actual metadata, code, and validation; do not guess.
 - Distribution name: `obfuscidian`
 - Primary branch: `main`
 - Previous stable tag, if any:
-- Proposed target tag and tag convention (requires maintainer decision):
+- Target tag (bare annotated version):
 - Release branch: `chore/<issue-number>-prepare-<version>-release`;
   Codex uses `codex/chore/<issue-number>-prepare-<version>-release`
 - Next development version, if separately requested:
@@ -77,10 +75,10 @@ explicit maintainer authorization for each action separately:
 - [ ] Publish a GitHub Release
 - [ ] Configure or activate external publication automation
 
-The current template workflow publishes on a GitHub release event. Do not create
-a release or trigger that workflow during preparation. Thread 14 must replace
-its assumptions before release use. Coordinate publication methods so one
-authorized action does not accidentally start a second upload.
+GitHub release events never initiate PyPI uploads. Manual Twine is the default;
+the optional manual-dispatch workflow requires separate authorization and verified
+external environment protections and trusted-publisher configuration. Select one
+upload method; never dispatch an upload for files already uploaded manually.
 
 ---
 
@@ -88,7 +86,7 @@ authorized action does not accidentally start a second upload.
 
 Preparation (local and reviewable):
 
-- [ ] Thread 13 prerequisites completed; scope and version confirmed
+- [ ] Dependencies verified; scope, version and publication method confirmed
 - [ ] Work based on `main`; existing user changes preserved
 - [ ] Version edits limited to explicitly requested changes; lock regenerated through Poetry if needed
 - [ ] Changelog, docs, version metadata, and compatibility policy reviewed

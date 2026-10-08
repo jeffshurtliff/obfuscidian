@@ -1,6 +1,6 @@
 # Installation steps
 
-Obfuscidian currently installs from its source code. You need **Python 3.12
+Install Obfuscidian from PyPI. You need **Python 3.12
 or newer**. Backup and restore writes work on Linux and macOS; native Windows
 supports key creation, verification and previews only.
 
@@ -8,12 +8,11 @@ If Python is missing or older, get a supported version from
 [Python downloads](https://www.python.org/downloads/), then reopen your terminal.
 The tested Python versions are 3.12–3.14.
 
-## 1. Get the source code
+## 1. Check Python
 
-Download the source ZIP from the
-[Obfuscidian repository](https://github.com/jeffshurtliff/obfuscidian) using
-**Code → Download ZIP**, then extract it. Alternatively, use an existing clone.
-Open a terminal in the extracted folder containing `pyproject.toml`.
+On Linux/macOS, run `python3 --version`. In PowerShell with the Python launcher,
+run `py -3.12 --version`. Select an installed Python 3.12 or newer for the
+commands below. No source download is needed.
 
 ## 2. Choose an installation method
 
@@ -37,7 +36,7 @@ if it is not already available. On Linux/macOS, using an installed Python 3.12:
 ```sh
 python3.12 --version
 pipx ensurepath
-pipx install --python python3.12 .
+pipx install --python python3.12 obfuscidian
 ```
 
 In Windows PowerShell, select the installed Python 3.12 using the Python launcher:
@@ -46,7 +45,7 @@ In Windows PowerShell, select the installed Python 3.12 using the Python launche
 py -3.12 --version
 $Python = py -3.12 -c "import sys; print(sys.executable)"
 pipx ensurepath
-pipx install --python "$Python" .
+pipx install --python "$Python" obfuscidian
 ```
 
 You may select an installed newer supported Python instead. See the detailed
@@ -59,27 +58,27 @@ obfuscidian --version
 obfuscidian --help
 ```
 
-These two commands also work in PowerShell. No activation or return to the
-source folder is needed after installation.
+These two commands also work in PowerShell. No environment activation is needed.
 
 ### Alternative: a venv
 
 A virtual environment keeps Obfuscidian's Python packages separate from your
 other applications. On Linux/macOS, check `python3 --version` reports Python
-3.12 or newer, then run from the source folder:
+3.12 or newer, then run in a folder where you want to keep the venv:
 
 ```sh
 python3 -m venv .venv
 . .venv/bin/activate
-python -m pip install .
+python -m pip install obfuscidian
 obfuscidian --version
 ```
 
-In a **new terminal**, return to this source folder and run
+In a **new terminal**, return to the folder containing `.venv` and run
 `. .venv/bin/activate` before using `obfuscidian`. Your vault can be in a
 different folder. For the PowerShell venv equivalent, local wheels or contributor
 setup, follow [Installation and supported environments](../guides/installation.md).
-The current source install does not require a published package on PyPI.
+To install a reviewed source checkout instead, substitute `.` for `obfuscidian`
+from the folder containing `pyproject.toml`; for a local wheel, use its path.
 
 ## Keep your CLI current
 

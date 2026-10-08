@@ -4,7 +4,7 @@
 :Synopsis:          Internal read-only filesystem and target path preflight
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     06 Oct 2026
+:Modified Date:     08 Oct 2026
 """
 
 from __future__ import annotations
@@ -290,7 +290,7 @@ class _VaultPaths:
 
 
 def _check_mirror_namespace(mirror: _PathState) -> tuple[_PathState, ...]:
-    """Refuse unmanaged names/types without authenticating the future backup format."""
+    """Refuse unmanaged names/types before authenticating the backup format."""
     if not mirror.exists:
         return ()
     inspected = []
@@ -343,7 +343,7 @@ def _preflight_vault_paths(origin: Path, mirror: Path, key: Path, *, restore: bo
     :param mirror: Encrypted backup destination or existing restore source.
     :param key: Existing regular selected key outside both vaults.
     :param restore: Require the mirror source and allow an absent origin destination.
-    :returns: Protected identities to recheck during future operations.
+    :returns: Protected identities to recheck during subsequent operations.
     :raises _ConfigurationError: A location violates the approved safety contract.
     :raises _OperationalError: Filesystem inspection fails or changes.
     """

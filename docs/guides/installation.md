@@ -1,9 +1,8 @@
 # Installation and supported environments
 
 Obfuscidian requires Python 3.12 or newer. The tested matrix is Linux, macOS
-and Windows on Python 3.12–3.14. This initial development version has no claimed
-PyPI publication; install from a source checkout or a locally built artifact.
-Run installation commands from the folder containing `pyproject.toml`.
+and Windows on Python 3.12–3.14. Install the stable release from PyPI using
+pipx or pip. Source checkouts and local wheels are alternatives described below.
 
 Linux/macOS implement backup and restore writes. Native Windows implements
 help/configuration, private key creation, verification and read-only planning;
@@ -23,7 +22,8 @@ Obsidian does not have to be running; no plugins are executed.
 
 All three methods install the same CLI. They do not change platform capabilities.
 pip resolves runtime dependencies from `pyproject.toml`; docs tooling is optional.
-For a local wheel, substitute its actual path for `.` in the install command.
+For a local wheel, substitute its actual path for `obfuscidian` in the install
+command. For a reviewed source checkout, use `.` from its repository root.
 
 ## pipx without activation (recommended)
 
@@ -39,7 +39,7 @@ On Linux/macOS, select an installed Python 3.12+ explicitly. This example uses 3
 ```sh
 python3.12 --version
 pipx ensurepath
-pipx install --python python3.12 .
+pipx install --python python3.12 obfuscidian
 ```
 
 If your supported interpreter is named `python3` instead, check
@@ -52,7 +52,7 @@ Windows PowerShell with the Python launcher:
 py -3.12 --version
 $Python = py -3.12 -c "import sys; print(sys.executable)"
 pipx ensurepath
-pipx install --python "$Python" .
+pipx install --python "$Python" obfuscidian
 ```
 
 If `py` is unavailable, check `python --version` is 3.12+ and set
@@ -79,8 +79,7 @@ obfuscidian --help
 pipx manages an isolated environment internally; these commands do not activate
 it. Discover the installed executable rather than assuming a fixed bin directory.
 The installation is normally available to the account that installed it, not
-every user on the machine. These examples install the checkout, without relying
-on an Obfuscidian package-index release.
+every user on the machine. These examples install the stable PyPI package.
 
 ## User installation outside a venv
 
@@ -92,7 +91,7 @@ and that `sys.prefix == sys.base_prefix` reports `True`:
 ```sh
 python3 --version
 python3 -c "import sys; print(sys.prefix == sys.base_prefix)"
-python3 -m pip install --user .
+python3 -m pip install --user obfuscidian
 USER_SCRIPTS=$(python3 -c "import sysconfig; print(sysconfig.get_path('scripts', sysconfig.get_preferred_scheme('user')))")
 export PATH="$USER_SCRIPTS:$PATH"
 command -v obfuscidian
@@ -112,7 +111,7 @@ Windows PowerShell, using Python 3.12 selected by the launcher:
 ```powershell
 py -3.12 --version
 py -3.12 -c "import sys; print(sys.prefix == sys.base_prefix)"
-py -3.12 -m pip install --user .
+py -3.12 -m pip install --user obfuscidian
 $UserScripts = py -3.12 -c "import sysconfig; print(sysconfig.get_path('scripts', sysconfig.get_preferred_scheme('user')))"
 $env:Path = "$UserScripts;$env:Path"
 Get-Command obfuscidian -CommandType Application | Select-Object -ExpandProperty Source
@@ -141,12 +140,12 @@ and [pip user installs](https://pip.pypa.io/en/stable/user_guide/#user-installs)
 
 ## pip in a venv
 
-From the repository root, POSIX shell:
+In a folder where you want to keep the venv, POSIX shell:
 
 ```sh
 python3 -m venv .venv
 . .venv/bin/activate
-python -m pip install .
+python -m pip install obfuscidian
 obfuscidian --version
 ```
 
@@ -154,7 +153,7 @@ Windows PowerShell, using a Python 3.12+ interpreter:
 
 ```powershell
 py -3.12 -m venv .venv
-.\.venv\Scripts\python.exe -m pip install .
+.\.venv\Scripts\python.exe -m pip install obfuscidian
 .\.venv\Scripts\obfuscidian.exe --help
 ```
 
