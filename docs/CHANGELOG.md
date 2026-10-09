@@ -19,6 +19,10 @@ Package versions and encrypted backup-format versions are separate contracts.
 
 ### Security
 
+- Denied GitHub Actions cache reads and writes throughout the guarded release
+  workflow, including reusable tests, to mitigate the cache-poisoning risk
+  reported in code-scanning alerts #1–3 (issue [#22](https://github.com/jeffshurtliff/obfuscidian/issues/22)).
+
 ## [1.0.0] - 2026-10-08
 
 First stable release of the Obfuscidian CLI for individually encrypted Obsidian

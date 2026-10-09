@@ -198,6 +198,10 @@ matching package metadata and dated changelog, the full reusable nine-job test
 matrix, strict docs checks, inspected/installed fresh artifacts and checksums.
 Tests and builds use the resolved commit SHA from preflight instead of resolving
 the tag again.
+The release workflow sets `cache-mode: none` to deny GitHub Actions cache reads
+and writes in every job, including the reusable test matrix. This limits the
+job's scoped cache token even when no cache action is configured; see
+[GitHub's cache access reference](https://docs.github.com/en/actions/reference/workflows-and-actions/dependency-caching#controlling-cache-access-with-cache-mode).
 `publish` defaults to false; only an explicitly authorized true selection reaches
 the upload job, which alone has `id-token: write`.
 
