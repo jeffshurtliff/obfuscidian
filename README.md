@@ -5,6 +5,7 @@
 
 # Obfuscidian
 
+[![PyPI Version](https://img.shields.io/pypi/v/obfuscidian)](https://pypi.org/project/obfuscidian/)
 [![Tests](https://github.com/jeffshurtliff/obfuscidian/actions/workflows/test.yml/badge.svg)](https://github.com/jeffshurtliff/obfuscidian/actions/workflows/test.yml)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://github.com/jeffshurtliff/obfuscidian/blob/main/LICENSE)
 
