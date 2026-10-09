@@ -11,6 +11,10 @@ Package versions and encrypted backup-format versions are separate contracts.
 
 ### Fixed
 
+- Packaging checks now derive expected artifact metadata, archive paths and CLI
+  version output from `pyproject.toml`, allowing development and release version
+  changes without stale version assertions failing CI.
+
 ### Removed
 
 ### Security
