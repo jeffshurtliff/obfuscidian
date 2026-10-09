@@ -42,12 +42,13 @@ merged/pushed into `main`, including the Windows test corrections at `ad1180d`.
 All nine Linux/macOS/Windows CI jobs passed on Python 3.12–3.14;
 [issue #16](https://github.com/jeffshurtliff/obfuscidian/issues/16) is closed as
 completed under explicit maintainer authorization. See its completion record below.
-Thread 14 release preparation is approved; publication remains pending.
-See its Phase 1 handoff and Phase 2 authorization record below.
+Thread 14 is complete: `1.0.0` is published on PyPI and GitHub, with verified
+installed-package checks and stable/latest Read the Docs builds. See its release
+completion record below.
 See the Thread 13 completion record below. See the Thread 11 completion record below. See the Thread 10
 completion record below and Thread 09 completion record for evidence and limits.
 
-**First stable release target:** `1.0.0` (current metadata: `1.0.0`; publication pending).
+**First stable release:** `1.0.0`, published 8 October 2026 (current metadata: `1.0.0`).
 
 **Codex model selection — maintainer confirmed 4 October 2026:** Use
 `GPT-6.1 Sol` for all Obfuscidian project threads performed by Codex unless
@@ -581,7 +582,7 @@ commits, publication, or PRs are implied. Update status only after acceptance cr
 | 13 | Documentation and contribution guidance | 12; incremental docs accompany earlier threads | [#13](https://github.com/jeffshurtliff/obfuscidian/issues/13) | Complete; reviewed/merged; nine-job OS/Python matrix passed |
 | 13a | Primary-shell installation and automation documentation | 13 | [#15](https://github.com/jeffshurtliff/obfuscidian/issues/15) | Complete; reviewed/merged; docs-only CI skip accepted |
 | 13b | Stable-update guidance and advisory | 11, 13, 13a | [#16](https://github.com/jeffshurtliff/obfuscidian/issues/16) | Complete; reviewed/merged; nine-job OS/Python matrix passed |
-| 14 | Release preparation | 13 | [#14](https://github.com/jeffshurtliff/obfuscidian/issues/14) | Release preparation approved; publication pending |
+| 14 | Release preparation | 13 | [#14](https://github.com/jeffshurtliff/obfuscidian/issues/14) | Complete; 1.0.0 published and verified |
 
 The fourteen original issues and follow-ups #15/#16 are assigned to `jeffshurtliff` and belong to the
 [v1.0.0 milestone](https://github.com/jeffshurtliff/obfuscidian/milestone/1).
@@ -1234,9 +1235,10 @@ of this task. Thread 14 remains not started.
 
 **GitHub issue:** [#14](https://github.com/jeffshurtliff/obfuscidian/issues/14)
 
-**Goal/deliverable:** A reviewable release candidate, validated artifacts,
-maintainer runbook, and safe publication workflow proposal; no publication.
-**Depends on:** 13. **Status:** Release preparation approved; publication pending.
+**Goal/deliverable:** The reviewed, validated and published stable `1.0.0`
+release, maintainer runbook and safe publication workflow, following the three
+maintainer-approved checkpoints below.
+**Depends on:** 13. **Status:** Complete; `1.0.0` published and verified.
 
 **Maintainer decision (8 October 2026):** Promote to stable `1.0.0`, use
 Production/Stable metadata and date/summarize the changelog as `2026-10-08`.
@@ -4041,3 +4043,63 @@ Pause after Phase 2 so the maintainer can upload the unchanged final distributio
 to PyPI with Twine. PyPI upload is maintainer-managed; GitHub publication and issue
 closure remain pending confirmed PyPI upload in Phase 3. No next-version bump,
 trusted-publishing dispatch or external environment configuration is authorized.
+
+### Thread 14 — Stable 1.0.0 release completion (8 October 2026)
+
+The maintainer approved preparation and Phase 2, then confirmed successful manual
+Twine upload to PyPI. That confirmation satisfied the original Phase 3 condition
+authorizing publication of the existing GitHub draft and closure of
+[issue #14](https://github.com/jeffshurtliff/obfuscidian/issues/14). All three release
+phases are complete; the immutable release tag and archives were not changed.
+Issue #14 was verified closed with state reason `COMPLETED` at
+`2026-10-08T23:55:19Z`; its
+[final release handoff](https://github.com/jeffshurtliff/obfuscidian/issues/14#issuecomment-6071380640)
+records the independent publication checks.
+
+- Preparation commit: `9a80e3f59311981e844e257cf71839256580a354`. Main merge and
+  annotated tag `1.0.0` target: `f86647f781ae8043ab7f0ca91819174e6b570bb6`.
+  Live main/local main/origin main/tag agree at verification.
+- [Main CI 37855813048](https://github.com/jeffshurtliff/obfuscidian/actions/runs/37855813048)
+  and [tag CI 37856552248](https://github.com/jeffshurtliff/obfuscidian/actions/runs/37856552248)
+  each passed all nine Linux/macOS/Windows × Python 3.12–3.14 jobs.
+- [PyPI 1.0.0](https://pypi.org/project/obfuscidian/1.0.0/): expected wheel and
+  sdist, both non-yanked; Python `>=3.12`, Production/Stable, Apache-2.0, project
+  URLs and rendered Markdown README verified. The hosted logo loads. Description
+  content matches the source with only an extra trailing blank line in metadata.
+- Both public PyPI file downloads match final local artifact SHA-256 values and
+  GitHub asset digests. Final wheel: `5adfc8f475a05fac54a264cfa555d7cc67cda9f9d358001ff7392ad879668e32`;
+  final sdist: `8feec4b38887ba1f94c01ccd946881cd0479efab4159c3cbd051db413d3022e0`.
+- A fresh temporary venv outside the checkout installed `obfuscidian==1.0.0`
+  from the production PyPI index with `--no-cache-dir`. `pip check`, distribution
+  metadata and isolated installed-import location passed. Console/module
+  help/version parity, keygen, no-write previews, fresh/no-op/additive backup,
+  historical ciphertext retention, verification and byte-exact restore passed
+  with synthetic notes, binary attachments and an empty directory.
+- [GitHub release — obfuscidian 1.0.0](https://github.com/jeffshurtliff/obfuscidian/releases/tag/1.0.0)
+  was published from the existing draft and verified as stable/latest with exactly
+  the unchanged wheel, sdist and `SHA256SUMS`. GitHub publication time is
+  `2026-10-08T23:53:30Z`; the dated source changelog remains `2026-10-08`.
+- [Read the Docs stable build 35028701](https://app.readthedocs.org/projects/obfuscidian/builds/35028701/)
+  and [latest build 35028609](https://app.readthedocs.org/projects/obfuscidian/builds/35028609/)
+  passed at the exact release SHA. Public version metadata reports `stable` active,
+  built and resolving to tag `1.0.0`; the
+  [hosted stable landing page](https://obfuscidian.readthedocs.io/en/stable/)
+  renders the stable version, task navigation and retained platform limits.
+
+Native Windows vault mutation/recovery and existing-log append remain refused.
+No real-vault/cloud tests, optional upload-workflow dispatch, external environment
+changes, cryptographic/format changes or next-version bump were performed. The
+explicit Read the Docs `1.0.0` version is currently inactive/unbuilt, although the
+`stable` alias is published; enabling an immutable versioned docs URL is an
+optional separate hosting task.
+
+The approved implementation roadmap is complete. Suggested next workstreams:
+collect post-release feedback and choose a patch/minor target separately; design
+native Windows write/recovery and existing-log ACL validation; add safe bounded
+rollback retention/cleanup; refine target filesystem capability detection and
+durable Git recovery ownership. Each requires its own reviewed scope and tests.
+
+At this handoff, the completion record is a local, uncommitted update on
+`codex/docs/14-release-completion`; GitHub/PyPI publication and the issue's verified
+completion evidence are authoritative external results. No follow-up source
+commit/push was inferred from Phase 3 publication/closure authorization.
