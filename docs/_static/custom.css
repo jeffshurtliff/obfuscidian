@@ -1,3 +1,11 @@
+/*!
+ * Obfuscidian Documentation
+ * Description: Stylesheet for main layout and components
+ * Author: Jeff Shurtliff
+ * Last Modified: Jeff Shurtliff
+ * Modified Date: 09 Oct 2026
+ */
+
 /* Violet and cyan from the supplied logo, subdued around readable content.
    Keep PyData's semantic warning/error colors and accessible syntax palette. */
 html[data-theme="dark"] {
@@ -39,6 +47,11 @@ html[data-theme="light"] {
   /* background: #14121d; */
   border-radius: 0.35rem;
   padding: 0.25rem 0.5rem;
+}
+
+/* Vertically align the copyright section of footer */
+.bd-footer .footer-items__start {
+    justify-content: start;
 }
 
 .bd-article-container {

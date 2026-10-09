@@ -4,7 +4,7 @@
 :Synopsis:          Configures the local Obfuscidian documentation build
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff
-:Modified Date:     06 Oct 2026
+:Modified Date:     09 Oct 2026
 """
 
 import tomllib
@@ -35,16 +35,25 @@ myst_links_external_new_tab = True
 html_theme = 'pydata_sphinx_theme'
 html_title = f'{project} {release} Documentation'
 html_static_path = ['_static']
+templates_path = ['_templates']
 html_css_files = ['custom.css']
 html_logo = '_static/obfuscidian-logo-horizontal-web.png'
 html_context = {'default_mode': 'dark'}
 html_theme_options = {
     'logo': {'alt_text': 'Obfuscidian Documentation — Home'},
     'navbar_end': ['theme-switcher', 'navbar-icon-links'],
-    'icon_links': [{'name': 'GitHub', 'url': 'https://github.com/jeffshurtliff/obfuscidian', 'icon': 'fa-brands fa-github'}],
+    'icon_links': [
+        {
+            'name': 'GitHub',
+            'url': 'https://github.com/jeffshurtliff/obfuscidian',
+            'icon': 'fa-brands fa-github',
+        },
+    ],
     'show_prev_next': True,
     'navigation_depth': 2,
     'show_toc_level': 2,
+    'footer_start': ['custom_copyright'],
+    'footer_end': ['sphinx-version', 'theme-version'],
 }
 html_show_sourcelink = True
 html_copy_source = True
