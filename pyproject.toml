@@ -1,6 +1,6 @@
 [project]
 name = "obfuscidian"
-version = "1.0.0"
+version = "1.0.1.dev0"
 description = "Obfuscate and encrypt your Obsidian vault to create secure and private backups."
 readme = "README.md"
 authors = [
@@ -42,8 +42,9 @@ requires = ["poetry-core>=2.2.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [project.urls]
-Homepage = "https://github.com/jeffshurtliff/obfuscidian"
-Changelog = "https://github.com/jeffshurtliff/obfuscidian/blob/main/docs/CHANGELOG.md"
+Documentation = "https://obfuscidian.readthedocs.io/en/stable/"
+Repository = "https://github.com/jeffshurtliff/obfuscidian"
+Changelog = "https://obfuscidian.readthedocs.io/en/latest/CHANGELOG.html"
 Issues = "https://github.com/jeffshurtliff/obfuscidian/issues"
 CI = "https://github.com/jeffshurtliff/obfuscidian/actions"
 
