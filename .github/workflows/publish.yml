@@ -19,6 +19,11 @@ on:
 permissions:
   contents: read
 
+# Release jobs execute the selected commit in the default-branch context.
+# Deny cache reads and writes through scoped tokens, including reusable tests;
+# omitting cache actions alone does not remove the job's cache access.
+cache-mode: none
+
 concurrency:
   group: stable-release-${{ inputs.version }}
   cancel-in-progress: false

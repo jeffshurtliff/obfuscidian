@@ -4,7 +4,7 @@
 :Synopsis:          Verify stable publication gates against synthetic Git repositories
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     08 Oct 2026
+:Modified Date:     09 Oct 2026
 """
 
 from __future__ import annotations
@@ -106,6 +106,20 @@ def test_release_guard_refuses_invalid_release_state(release_repository, failure
         git('tag', '-a', '1.0.0', '-m', 'Synthetic invalid tag')
     with pytest.raises((ValueError, subprocess.CalledProcessError)):
         _GUARD._check_release('1.0.0', root)
+
+
+def test_release_workflow_denies_cache_access_including_reusable_tests() -> None:
+    """Release execution cannot read or poison caches, even without explicit cache actions."""
+    workflow = yaml.load((_ROOT / '.github/workflows/publish.yml').read_text(), Loader=yaml.BaseLoader)
+    assert workflow['cache-mode'] == 'none'
+    for job in workflow['jobs'].values():
+        assert job.get('cache-mode', workflow['cache-mode']) == 'none'
+        if 'uses' in job:
+            called = yaml.load((_ROOT / job['uses']).read_text(), Loader=yaml.BaseLoader)
+            # GitHub propagates the caller's explicit limit; a broader request fails validation.
+            assert called.get('cache-mode', 'none') == 'none'
+            for called_job in called['jobs'].values():
+                assert called_job.get('cache-mode', called.get('cache-mode', 'none')) == 'none'
 
 
 def test_upload_workflow_requires_manual_opt_in_and_all_validation() -> None:
