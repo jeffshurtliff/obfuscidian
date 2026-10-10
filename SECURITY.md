@@ -1,6 +1,6 @@
 # Security policy
 
-Report suspected vulnerabilities in Obfuscidian 1.0.0 and the current source
+Report suspected vulnerabilities in Obfuscidian 1.0.1 and the current source
 privately. No fixed support window, independent security certification or
 guaranteed recovery is claimed. Include the affected version in your report.
 

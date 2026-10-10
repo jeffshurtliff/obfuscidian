@@ -49,7 +49,7 @@ tracking does not authorize Git history, release or publication actions.
 
 ## Environment and checks
 
-Obfuscidian 1.0.0 uses Poetry/poetry-core, `src/obfuscidian/` and Python `>=3.12`.
+Obfuscidian 1.0.1 uses Poetry/poetry-core, `src/obfuscidian/` and Python `>=3.12`.
 Runtime requirements in `pyproject.toml` and the CI matrix are authoritative.
 CI targets Linux/macOS/Windows on Python 3.12, 3.13 and 3.14. Linux/macOS support
 vault writes; native Windows mutation/recovery and existing-log append fail

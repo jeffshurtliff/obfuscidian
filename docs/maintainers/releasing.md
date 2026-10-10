@@ -3,7 +3,7 @@
 This is the maintainer runbook for Obfuscidian. The distribution and import
 package are `obfuscidian`; the supported public interface is the CLI. Poetry
 uses static `[project].version` in `pyproject.toml`. Stable tags are bare,
-annotated versions such as `1.0.0`, and the primary branch is `main`.
+annotated versions such as `1.0.1`, and the primary branch is `main`.
 
 ## Authorization and release order
 
@@ -13,14 +13,15 @@ GitHub draft creation, uploads and GitHub publication need explicit maintainer
 instructions. An existing authorization remains valid within its stated phase;
 never treat a request to prepare as permission to publish.
 
-For 1.0.0, the maintainer chose three checkpoints:
+For 1.0.1 ([release issue #23](https://github.com/jeffshurtliff/obfuscidian/issues/23)),
+the maintainer chose three checkpoints:
 
 1. Prepare stable metadata, release notes, documentation, runbook and workflow;
    validate locally, then pause with changes uncommitted for review.
 2. After approval, commit the release branch, merge into `main` and push. Wait
    for the nine CI jobs on the exact merged commit. Build fresh distributions
-   from that clean commit, create/push the annotated `1.0.0` tag and create the
-   GitHub draft titled `obfuscidian 1.0.0` with archives and checksums attached.
+   from that clean commit, create/push the annotated `1.0.1` tag and create the
+   GitHub draft titled `obfuscidian 1.0.1` with archives and checksums attached.
    Pause while the maintainer uploads those exact files using Twine.
 3. After confirmed PyPI upload, verify version, hashes and clean installation;
    publish the existing GitHub draft and close the release issue. Verify stable
@@ -35,7 +36,7 @@ PyPI. Do not dispatch the optional upload workflow after a manual Twine upload.
 ## Preflight facts and compatibility
 
 Record the target version/date, existing release issue, branch, exact source SHA,
-previous reachable stable tag (none for the first release), required checks and
+previous reachable stable tag (`1.0.0` for this release), required checks and
 publication method. Use a real issue number; preserve an existing maintainer
 branch. New Codex branches use `codex/chore/<issue>-prepare-<version>-release`.
 
@@ -46,11 +47,11 @@ git status --short --branch
 git remote -v
 git log -5 --oneline
 git tag --merged main
-git ls-remote --tags origin refs/tags/1.0.0
+git ls-remote --tags origin refs/tags/1.0.1
 ```
 
-For 1.0.0, the release date is `2026-10-08`. Check the version-specific
-[PyPI JSON endpoint](https://pypi.org/pypi/obfuscidian/1.0.0/json): HTTP 404 means
+For 1.0.1, the release date is `2026-10-10`. Check the version-specific
+[PyPI JSON endpoint](https://pypi.org/pypi/obfuscidian/1.0.1/json): HTTP 404 means
 unused; HTTP 200 means the version exists and cannot be reused. Network or
 permission failures are unresolved checks, not evidence of availability.
 
@@ -63,19 +64,19 @@ for a version promotion. No audit proves the absence of unknown vulnerabilities.
 Retain backup-format v1 compatibility, the 50 MiB encrypted-token cap, exact byte
 preservation and documented [platform limits](../PLATFORMS.md). Linux/macOS
 support vault writes; native Windows mutation/recovery and existing-log append
-remain refused in 1.0.0. A stable classifier does not expand platform capabilities.
+remain refused in 1.0.1. A stable classifier does not expand platform capabilities.
 
 ## Prepare source and documentation
 
 ```sh
-poetry version 1.0.0
+poetry version 1.0.1
 poetry check --lock --strict
 ```
 
 Set the Production/Stable classifier for a stable release. Move Unreleased
-entries into `## [1.0.0] - 2026-10-08`, retain an empty category skeleton and
-update comparison links using the bare tag. For the initial release, link the
-version heading to its release page instead of inventing a previous tag.
+entries into `## [1.0.1] - 2026-10-10`, retain an empty category skeleton and
+update comparison links using the bare tag: `Unreleased` compares `1.0.1...HEAD`,
+and `1.0.1` compares `1.0.0...1.0.1`. Preserve earlier release entries and links.
 
 Review README, security/contributor/agent guidance, Sphinx pages, packaged docs,
 CLI version output and packaging expectations. Historical planning artifacts
@@ -107,7 +108,7 @@ From the repository root, choose a new candidate directory:
 ```sh
 RELEASE_DIST_DIR=$(mktemp -d)
 poetry run python .github/scripts/check_artifacts.py \
-  --output-dir "$RELEASE_DIST_DIR" --expected-version 1.0.0
+  --output-dir "$RELEASE_DIST_DIR" --expected-version 1.0.1
 ```
 
 The helper refuses a nonempty output directory. It builds exactly one wheel and
@@ -123,7 +124,7 @@ The helper requires network access to populate the dependency wheelhouse;
 subsequent installation/tests use it offline. It uploads nothing.
 
 Also install the wheel with `--no-deps` into another temporary venv and assert
-`importlib.metadata.version('obfuscidian') == '1.0.0'`; this is a metadata-only
+`importlib.metadata.version('obfuscidian') == '1.0.1'`; this is a metadata-only
 check, separate from dependency-aware functional validation. Inspect the full
 diff, archive contents, README rendering and candidate hashes before review.
 Any failed check blocks release readiness; do not weaken checks to proceed.
@@ -131,7 +132,7 @@ Any failed check blocks release readiness; do not weaken checks to proceed.
 ## Approved merge, exact-commit build and GitHub draft
 
 Stage only reviewed files. Use a focused past-tense message referencing the
-release issue, such as `Prepared obfuscidian 1.0.0 release (#14)`. When the
+release issue, such as `Prepared obfuscidian 1.0.1 release (#23)`. When the
 maintainer authorizes a local merge, synchronize `main`, merge without rewriting
 history and push `origin/main`. A PR is a separate action when requested.
 
@@ -144,17 +145,17 @@ in the release issue. Never upload pre-merge candidates.
 Only after those checks and the applicable approval:
 
 ```sh
-git tag -a 1.0.0 -m "obfuscidian 1.0.0"
-git push origin refs/tags/1.0.0
-gh release create 1.0.0 --repo jeffshurtliff/obfuscidian --verify-tag \
-  --draft --title "obfuscidian 1.0.0" --notes-file "$RELEASE_NOTES_FILE" \
-  "$RELEASE_DIST_DIR/obfuscidian-1.0.0-py3-none-any.whl" \
-  "$RELEASE_DIST_DIR/obfuscidian-1.0.0.tar.gz" \
+git tag -a 1.0.1 -m "obfuscidian 1.0.1"
+git push origin refs/tags/1.0.1
+gh release create 1.0.1 --repo jeffshurtliff/obfuscidian --verify-tag \
+  --draft --title "obfuscidian 1.0.1" --notes-file "$RELEASE_NOTES_FILE" \
+  "$RELEASE_DIST_DIR/obfuscidian-1.0.1-py3-none-any.whl" \
+  "$RELEASE_DIST_DIR/obfuscidian-1.0.1.tar.gz" \
   "$RELEASE_DIST_DIR/SHA256SUMS"
 ```
 
 `RELEASE_NOTES_FILE` is a reviewed public-safe Markdown file, summarizing the
-release and its Windows limits, with a full-changelog link at tag `1.0.0`.
+release and its Windows limits, with a full-changelog link at tag `1.0.1`.
 Confirm the tag peels to the verified main SHA and the release is still a draft,
 not a prerelease. Creating a draft is a review checkpoint, not publication.
 
@@ -164,11 +165,11 @@ Run strict checks on exactly the intended wheel and source archive:
 
 ```sh
 poetry run twine check --strict \
-  "$RELEASE_DIST_DIR/obfuscidian-1.0.0-py3-none-any.whl" \
-  "$RELEASE_DIST_DIR/obfuscidian-1.0.0.tar.gz"
+  "$RELEASE_DIST_DIR/obfuscidian-1.0.1-py3-none-any.whl" \
+  "$RELEASE_DIST_DIR/obfuscidian-1.0.1.tar.gz"
 poetry run twine upload --repository pypi \
-  "$RELEASE_DIST_DIR/obfuscidian-1.0.0-py3-none-any.whl" \
-  "$RELEASE_DIST_DIR/obfuscidian-1.0.0.tar.gz"
+  "$RELEASE_DIST_DIR/obfuscidian-1.0.1-py3-none-any.whl" \
+  "$RELEASE_DIST_DIR/obfuscidian-1.0.1.tar.gz"
 ```
 
 Enter credentials through Twine's prompt or the maintainer's existing secure
@@ -178,12 +179,12 @@ checksum file is a GitHub asset, not a PyPI distribution. Do not use
 rehearsal needs separate authorization and does not reserve a production version.
 
 Compare PyPI filenames and SHA-256 values with the local `SHA256SUMS`. In a new
-venv outside the checkout, install `obfuscidian==1.0.0` from PyPI, run `pip check`,
+venv outside the checkout, install `obfuscidian==1.0.1` from PyPI, run `pip check`,
 both help/version entry points and a synthetic round trip on a supported write
 platform. After verified upload and authorization, publish the existing draft:
 
 ```sh
-gh release edit 1.0.0 --repo jeffshurtliff/obfuscidian --draft=false --latest
+gh release edit 1.0.1 --repo jeffshurtliff/obfuscidian --draft=false --latest
 ```
 
 Verify the public title/tag/assets, stable status, PyPI metadata and hashes,
@@ -216,7 +217,7 @@ Before any upload dispatch, the maintainer must separately configure/verify:
 - A single selected upload method and evidence that the version is still unused.
 
 These external controls are prerequisites, not configured by preparation code.
-The 1.0.0 procedure uses manual Twine, so no workflow dispatch, environment or
+The 1.0.1 procedure uses manual Twine, so no workflow dispatch, environment or
 publisher configuration is required for that upload. Never dispatch an upload
 for a version already uploaded manually. Workflow code review/local tests do not
 establish a successful hosted run or correctly configured external protections.

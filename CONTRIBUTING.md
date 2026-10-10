@@ -11,7 +11,7 @@ behavior, public interfaces or the backup format.
 
 ## Supported environment
 
-Obfuscidian 1.0.0 requires Python 3.12+. CI covers Linux/macOS/Windows on Python
+Obfuscidian 1.0.1 requires Python 3.12+. CI covers Linux/macOS/Windows on Python
 3.12–3.14. Linux/macOS implement backup and restore writes. Native Windows
 supports private key creation, verification and read-only planning; mutation,
 recovery and existing-log append fail closed. See [supported environments](docs/PLATFORMS.md).
