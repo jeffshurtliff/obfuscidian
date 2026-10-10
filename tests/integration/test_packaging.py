@@ -149,6 +149,7 @@ def test_artifact_contents(artifacts: tuple[Path, Path], project_version: str) -
         'errors.py',
         'keys.py',
         '_windows.py',
+        '_windows_native.py',
         'inventory.py',
         'paths.py',
         'crypto.py',

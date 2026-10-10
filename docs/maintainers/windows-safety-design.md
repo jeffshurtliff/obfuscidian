@@ -474,3 +474,123 @@ in that checkout:
 > append refusal intact. Use synthetic offline fixtures, update #17/#26 as work
 > progresses and distinguish local checks from native Windows CI. Use GPT-6.1 Sol
 > in changed Python headers. Leave changes uncommitted; do not start #27 or publish.
+
+
+## Thread 2 local implementation handoff
+
+Thread 2 / #26 adds `src/obfuscidian/_windows_native.py`, isolated from the CLI,
+key/new-log helper and POSIX transaction backend. The module is internal;
+its presence does not qualify Windows write support or complete #17. No
+transaction lifecycle, recovery schema, backup/restore builder or Git integration
+has started. Existing-log append remains refused.
+
+Implemented foundations:
+
+- Lazy 64-bit native loader with explicit pointer-width-safe Win32 signatures,
+  noninherited context-managed handles and redacted safety failures. There is no
+  CRT descriptor transfer: binary I/O stays on the owned Win32 handle throughout.
+- Read-only guarded ancestor acquisition, normalized handle namespace checks,
+  fixed local NTFS/persistent-ACL/read-only-volume checks and full 128-bit file
+  IDs plus volume identity. Reparse/offline/EFS objects, non-disk kinds, multiple
+  file links and unresolved short/drive/UNC/device aliases are refused.
+- Explicit effective-user owner SID and protected private DACL at file/directory
+  creation; existing artifacts require the same owner, protection and complete
+  exact ACE policy on their opened descriptor. No repair or inheritance exception
+  is introduced. The directory policy has OI/CI grants; controls require explicit
+  protected grants. The external Git inherited-policy validator belongs to #28.
+- Exclusive `CREATE_NEW` or existing ownership acquisition with no sharing;
+  bounded reads use the held handle. Process death retains the record. Explicit
+  release requires matching bounded terminal bytes supplied by a future
+  schema-validating transaction backend; disposition/close failures are errors.
+- Bounded binary writes with short-write completion, checked truncation and
+  `FlushFileBuffers`; held-handle timestamps with explicit 100 ns precision;
+  no-clobber `FileRenameInfo` publication retaining source/target parents and
+  the source handle. File publication rechecks full IDs, primary-stream digest
+  and private ACL. Directory-tree/content reconciliation remains a lifecycle
+  responsibility; the primitive does not establish descendant ownership.
+- Exact held-identity disposition without recursive traversal or an overwrite/
+  copy-delete fallback. A nonempty directory is preserved by kernel refusal.
+  New checkpoints are bounded, exclusive, private and flushed.
+
+API choices reviewed against the official references above. Publication uses
+`RootDirectory = NULL` and a full DOS target path under the complete retained
+target guard chain, with a DWORD-sized initial union and UTF-16 byte length in
+the variable-size rename structure. Relative-target resolution is therefore
+not assumed. Native file and directory rename/sharing tests must prove this
+combination before any caller is enabled.
+
+### Unresolved proof gates
+
+**Exact existing-journal replacement is deliberately refused.** A deny-delete
+handle pins the old journal but also prevents an ordinary overwrite rename.
+Closing it to overwrite by path would lose the exact-identity guard; relaxing
+sharing without an atomic destination identity comparison would permit target
+substitution. `_checkpoint(previous=...)` refuses before creating/writing a
+candidate. A future design must resolve this within #26 before journal integration,
+for example by reviewing a bounded immutable-generation protocol with retained
+old generations; no such recovery-schema change is implemented here.
+
+**Native guard/privacy/ownership evidence remains pending.** Denying ordinary
+write/delete sharing alone does not prove in-place reparse prevention: Microsoft
+explicitly distinguishes attribute access in
+[CreateFileW sharing semantics](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createfilew).
+The native junction test includes a successful unelevated positive conversion
+and an actual `FSCTL_SET_REPARSE_POINT` attempt using an attribute handle acquired
+before the guard. If this succeeds, the guard design is insufficient and must
+be revised before integration. Directory creation's create-then-open boundary
+also needs native qualification; failed acquisition retains the uncertain empty
+artifact without pathname cleanup. No path-only fallback is authorized.
+
+The native suite is `tests/integration/test_windows_native.py`. It requires
+eligible storage and mandatory fixture setup rather than skipping failed setup
+on Windows. Cases cover created/reused DACLs, null/extra/inherited/unsupported
+ACE/OWNER RIGHTS rejection, restricted-token `AccessCheck` plus a real denied
+kernel open and permissive positive control, full file/directory publication,
+late-target preservation, hard links, junctions, sharing/substitution, bounded
+I/O/timestamps/disposition, real terminated-owner retention and reacquisition,
+explicit terminal release and injected short-write/flush failures. Native
+process coordination uses a bounded thread/queue/pipe protocol. Restricted-token
+fixture failure is a qualification blocker; it is not replaced by descriptor
+inspection alone.
+
+Still required within #26: native execution and repair on the supported Windows
+builds/Python versions; an actual changed-owner fixture (OWNER RIGHTS rejection
+is an unsafe grant test, not changed-owner evidence); drive/short-name alias and
+unsupported-volume qualification; directory create/acquisition failure and
+process-interruption evidence; complete journal replacement protocol/proof.
+POSIX parser/failure tests are supplementary and do not discharge these gates.
+No runtime OS-build support claim is made by the 64-bit loader.
+
+### Validation and scope
+
+Local macOS / Python 3.12.7 results:
+
+- New scoped tests: 45 passed, 16 native Windows cases skipped.
+- Full coverage run: 1,404 passed, 23 skipped, 14 TLS fixture setup errors because
+  the sandbox refused an ephemeral loopback socket. A permitted loopback rerun
+  with coverage append passed all 14 affected tests; this is separate retry
+  evidence, not a claim that the initial invocation passed. Aggregate: 1,418
+  passing tests, 23 platform skips. Coverage report: 82% overall, 21% for the
+  new native module; unexecuted Win32 branches remain unqualified.
+- Strict Poetry lock, Ruff lint/format, Bandit, fresh wheel/sdist build and strict
+  Twine checks passed. Default offline packaging tests use available development
+  dependencies through an explicit path; no downloaded wheelhouse isolation or
+  native installed-write smoke qualification is claimed.
+- Strict fresh Sphinx and rendered local references passed (36 HTML pages).
+  External URL availability was not checked by the rendered-reference script.
+- Diff/whitespace, changed-header, public-safe path/privacy and scope checks
+  passed. The packaging module allowlist now includes the new private module;
+  the initial suite's allowlist failure was corrected before the coverage rerun.
+
+Exact results are also recorded in the #26 issue handoff.
+Native cases skip narrowly on POSIX because Win32 enforcement cannot execute
+there. Windows/hosted matrix results, runner/storage/build/Git versions and
+exact-commit evidence are unavailable until separately authorized publication
+and actual native execution. No real vaults, keys, accounts or elevated privileges
+were used. No dependency, package version, encrypted format or public interface
+changed. Changed Python headers use `Jeff Shurtliff (via GPT-6.1 Sol)` and
+`10 Oct 2026`.
+
+Leave #26 and #17 open for these gates and maintainer review. The next request
+must finish #26's remaining proof before authorizing #27; this handoff is not
+permission to begin a successor. All changes remain unstaged and uncommitted.

@@ -12,6 +12,13 @@ Package versions and encrypted backup-format versions are separate contracts.
   [#17](https://github.com/jeffshurtliff/obfuscidian/issues/17)). Windows write
   support remains planned pending implementation and native validation.
 
+- Internal Windows safety primitives and synthetic native qualification tests
+  (issue [#26](https://github.com/jeffshurtliff/obfuscidian/issues/26)): explicit
+  private DACLs, guarded handles/full identities, bounded I/O, lifetime ownership,
+  no-clobber rename, checked disposition and timestamps. Native runtime evidence
+  and exact guarded existing-journal replacement remain pending; CLI mutation
+  gates and existing-log append refusal remain in place.
+
 ### Changed
 
 ### Fixed
