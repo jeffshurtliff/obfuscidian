@@ -11,6 +11,12 @@ Package versions and encrypted backup-format versions are separate contracts.
 
 ### Fixed
 
+- PyPI update checks use a runtime CA bundle when default Python certificate
+  discovery is unavailable (issue [#24](https://github.com/jeffshurtliff/obfuscidian/issues/24)).
+  Explicit `SSL_CERT_FILE`/`SSL_CERT_DIR` settings replace bundled trust;
+  certificate and hostname verification remain required, and failed checks
+  continue to skip the notice silently.
+
 ### Removed
 
 ### Security

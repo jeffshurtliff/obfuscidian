@@ -4,28 +4,53 @@
 :Synopsis:          Best-effort stable-release notices without application filesystem writes
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     07 Oct 2026
+:Modified Date:     10 Oct 2026
 """
 
 from __future__ import annotations
 
 import json
 import os
+import ssl
 from importlib.metadata import version
 
+import certifi
 import urllib3
 from packaging.version import InvalidVersion, Version
 
 from obfuscidian import constants as const
 
 
+def _tls_context() -> ssl.SSLContext:
+    """Require verified TLS using a packaged bundle or explicit custom trust.
+
+    SSL_CERT_FILE and SSL_CERT_DIR replace bundled trust when either is set.
+    Empty settings are rejected, and failed custom trust never falls back to
+    the bundle or default certificate discovery. Paths are used as supplied.
+
+    :returns: A context requiring certificate and hostname verification.
+    :raises ValueError: An explicit trust location is empty.
+    :raises OSError: A certificate file cannot be read or parsed.
+    """
+    ca_file = os.environ.get(const.ENV_SSL_CERT_FILE)
+    ca_directory = os.environ.get(const.ENV_SSL_CERT_DIR)
+    if ca_file == '' or ca_directory == '':
+        raise ValueError('Empty update certificate trust setting')
+    if ca_file is None and ca_directory is None:
+        ca_file = certifi.where()
+    return ssl.create_default_context(cafile=ca_file, capath=ca_directory)
+
+
 def _fetch_releases() -> object:
     """Read bounded JSON over verified HTTPS, without redirects, retries or a cache.
+
+    Certificate trust comes from the packaged CA bundle unless explicitly
+    replaced with SSL_CERT_FILE and/or SSL_CERT_DIR.
 
     :returns: Decoded PyPI project metadata; no response text is emitted.
     :raises Exception: Network, decoding or response validation failure.
     """
-    with urllib3.PoolManager(cert_reqs='CERT_REQUIRED') as pool:
+    with urllib3.PoolManager(cert_reqs='CERT_REQUIRED', ssl_context=_tls_context()) as pool:
         response = pool.request(
             'GET',
             const.UPDATE_API_URL,

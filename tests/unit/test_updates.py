@@ -4,12 +4,13 @@
 :Synopsis:          Offline stable-release selection, bounded requests and suppression
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     07 Oct 2026
+:Modified Date:     10 Oct 2026
 """
 
 from __future__ import annotations
 
 import json
+import ssl
 from importlib.metadata import PackageNotFoundError
 
 import pytest
@@ -39,6 +40,8 @@ def test_suppression_skips_network_and_metadata(monkeypatch, value):
 
     monkeypatch.setattr(updates, '_fetch_releases', forbidden)
     monkeypatch.setattr(updates, 'version', forbidden)
+    monkeypatch.setattr(updates.certifi, 'where', forbidden)
+    monkeypatch.setattr(updates.ssl, 'create_default_context', forbidden)
     assert updates._notice() is None
 
 
@@ -139,6 +142,8 @@ def test_invalid_installed_version_skips_network(enabled, monkeypatch):
 @pytest.fixture
 def fake_pool(monkeypatch):
     """Capture the HTTPS request and response cleanup without any network access."""
+    monkeypatch.delenv(const.ENV_SSL_CERT_FILE, raising=False)
+    monkeypatch.delenv(const.ENV_SSL_CERT_DIR, raising=False)
 
     class Response:
         status = 200
@@ -177,7 +182,11 @@ def fake_pool(monkeypatch):
 
 def test_request_is_private_bounded_and_verified(fake_pool):
     assert updates._fetch_releases() == {'releases': {}}
-    assert fake_pool.options == {'cert_reqs': 'CERT_REQUIRED'}
+    assert fake_pool.options['cert_reqs'] == 'CERT_REQUIRED'
+    context = fake_pool.options['ssl_context']
+    assert context.verify_mode == ssl.CERT_REQUIRED
+    assert context.check_hostname
+    assert context.get_ca_certs()
     assert fake_pool.request_args == ('GET', const.UPDATE_API_URL)
     options = fake_pool.request_options
     assert options['retries'] is False and options['redirect'] is False and options['preload_content'] is False
@@ -186,6 +195,76 @@ def test_request_is_private_bounded_and_verified(fake_pool):
     assert options['timeout'].read_timeout == const.UPDATE_READ_TIMEOUT
     assert fake_pool.response.reads == [(const.UPDATE_RESPONSE_BYTES + 1, {'decode_content': False})]
     assert fake_pool.response.closed and fake_pool.cleared
+
+
+def test_bundled_context_does_not_load_default_trust(monkeypatch):
+    """Default certificate discovery is unnecessary even on a broken installation."""
+    for name in (const.ENV_SSL_CERT_FILE, const.ENV_SSL_CERT_DIR):
+        monkeypatch.delenv(name, raising=False)
+    monkeypatch.setattr(ssl.SSLContext, 'load_default_certs', lambda *args: pytest.fail('Default trust must not be loaded'))
+    context = updates._tls_context()
+    assert context.verify_mode == ssl.CERT_REQUIRED and context.check_hostname
+    assert context.get_ca_certs()
+
+
+@pytest.mark.parametrize('with_directory', [False, True])
+def test_custom_ca_file_replaces_bundle(monkeypatch, tmp_path, with_directory):
+    """Explicit custom certificates do not require or add packaged trust."""
+    bundle = updates.certifi.where()
+    monkeypatch.setenv(const.ENV_SSL_CERT_FILE, bundle)
+    monkeypatch.delenv(const.ENV_SSL_CERT_DIR, raising=False)
+    if with_directory:
+        monkeypatch.setenv(const.ENV_SSL_CERT_DIR, str(tmp_path))
+    monkeypatch.setattr(updates.certifi, 'where', lambda: pytest.fail('Custom trust must not consult the bundle'))
+    context = updates._tls_context()
+    assert context.verify_mode == ssl.CERT_REQUIRED and context.check_hostname
+    assert context.get_ca_certs()
+
+
+def test_custom_ca_directory_has_no_implicit_roots(monkeypatch, tmp_path):
+    """A directory-only override must not add bundled or system certificates."""
+    monkeypatch.delenv(const.ENV_SSL_CERT_FILE, raising=False)
+    monkeypatch.setenv(const.ENV_SSL_CERT_DIR, str(tmp_path))
+    monkeypatch.setattr(updates.certifi, 'where', lambda: pytest.fail('Custom trust must not consult the bundle'))
+    monkeypatch.setattr(ssl.SSLContext, 'load_default_certs', lambda *args: pytest.fail('Default trust must not be loaded'))
+    context = updates._tls_context()
+    assert context.verify_mode == ssl.CERT_REQUIRED and context.check_hostname
+    # An empty directory has no roots; populated hashed directories load roots lazily.
+    assert context.get_ca_certs() == []
+
+
+@pytest.mark.parametrize('setting', [const.ENV_SSL_CERT_FILE, const.ENV_SSL_CERT_DIR])
+def test_empty_trust_override_skips_request_privately(fake_pool, monkeypatch, setting):
+    monkeypatch.setenv(setting, '')
+    monkeypatch.delenv(const.ENV_SUPPRESS_UPDATE_NOTICE, raising=False)
+    result = CliRunner().invoke(cli, ['--version'])
+    assert result.exit_code == 0
+    assert result.stderr == ''
+    assert not hasattr(fake_pool, 'request_args')
+
+
+@pytest.mark.parametrize('contents', [None, b'not a certificate'])
+def test_bad_ca_file_skips_request_privately(fake_pool, monkeypatch, tmp_path, contents):
+    ca_file = tmp_path / 'synthetic-private-trust.pem'
+    if contents is not None:
+        ca_file.write_bytes(contents)
+    monkeypatch.setenv(const.ENV_SSL_CERT_FILE, str(ca_file))
+    monkeypatch.delenv(const.ENV_SUPPRESS_UPDATE_NOTICE, raising=False)
+    monkeypatch.setattr(updates.certifi, 'where', lambda: pytest.fail('Failed custom trust must not fall back'))
+    result = CliRunner().invoke(cli, ['--help'])
+    assert result.exit_code == 0
+    assert result.stderr == ''
+    assert str(ca_file) not in result.output
+    assert not hasattr(fake_pool, 'request_args')
+
+
+def test_unreadable_bundle_skips_request_privately(fake_pool, monkeypatch, tmp_path):
+    monkeypatch.setattr(updates.certifi, 'where', lambda: str(tmp_path / 'missing-synthetic-ca.pem'))
+    monkeypatch.delenv(const.ENV_SUPPRESS_UPDATE_NOTICE, raising=False)
+    result = CliRunner().invoke(cli, ['--help'])
+    assert result.exit_code == 0
+    assert result.stderr == ''
+    assert not hasattr(fake_pool, 'request_args')
 
 
 @pytest.mark.parametrize('status', [301, 404, 429, 500])

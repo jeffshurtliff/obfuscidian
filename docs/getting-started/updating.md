@@ -192,6 +192,39 @@ Shell completion skips the check. The notice is recorded as an `update_notice`
 JSON event only when a requested operational log opens after safe preflight.
 Failed preflight, help/version, verification and dry runs never create a log.
 
+### Certificate trust and missing notices
+
+Starting with 2.0.0, update checks use the Mozilla CA bundle supplied by the
+runtime `certifi` dependency. This also works when Python cannot locate its
+default system CA certificates. This change is currently unreleased; older
+installed versions retain their original certificate lookup behavior.
+
+To use custom trust, set `SSL_CERT_FILE` to a PEM CA bundle and/or `SSL_CERT_DIR`
+to an OpenSSL-style directory of hashed CA certificates. When either variable
+is set, only those explicit locations are used; bundled and default system
+trust are not added. Paths are used as supplied, without expanding `~` or other
+variables. Use the trust locations approved for your environment, including
+any required organizational CA certificates.
+
+An empty setting, unreadable or invalid CA file, or certificates that cannot
+authenticate the endpoint cause the check to be skipped silently. A failed
+custom trust setting never falls back to another CA source. Certificate and
+hostname verification remain enabled.
+
+For older macOS installations with `/etc/ssl/cert.pem` available, this temporary
+workaround supplies the system CA bundle for one invocation:
+
+```sh
+SSL_CERT_FILE=/etc/ssl/cert.pem obfuscidian --version
+```
+
+This changes neither the installed version nor your shell configuration. Check
+that suppression is disabled and run the exact executable you normally use.
+If a notice is still absent, confirm the latest stable release independently;
+failed networking or trust checks are deliberately silent. Restarting a shell
+does not repair missing certificate trust. Do not disable TLS verification to
+obtain an update notice.
+
 ### Suppress the check and notice
 
 Set `OBFUSCIDIAN_SUPPRESS_UPDATE_NOTICE` to `true` or `1` to skip the request,

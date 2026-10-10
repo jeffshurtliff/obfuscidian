@@ -3,8 +3,8 @@
 :Module:            obfuscidian.constants
 :Synopsis:          Shared configuration, key, path, and resource constants
 :Created By:        Jeff Shurtliff
-:Last Modified:     Jeff Shurtliff
-:Modified Date:     07 Oct 2026
+:Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
+:Modified Date:     10 Oct 2026
 """
 
 ENV_KEY_PATH = 'OBFUSCIDIAN_KEY_PATH'
@@ -15,6 +15,8 @@ ENV_MIRROR = 'OBFUSCIDIAN_MIRROR_VAULT'
 
 # Advisory PyPI lookup; no package download, installation or persistent cache.
 ENV_SUPPRESS_UPDATE_NOTICE = 'OBFUSCIDIAN_SUPPRESS_UPDATE_NOTICE'
+ENV_SSL_CERT_FILE = 'SSL_CERT_FILE'
+ENV_SSL_CERT_DIR = 'SSL_CERT_DIR'
 UPDATE_API_URL = 'https://pypi.org/pypi/obfuscidian/json'
 UPDATE_INSTRUCTIONS_URL = 'https://bit.ly/updating-obfuscidian'
 UPDATE_CONNECT_TIMEOUT = 2.0

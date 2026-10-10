@@ -4,7 +4,7 @@
 :Synopsis:          Secure keys, encrypted backups, fresh/Git restore and read-only verification CLI
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     07 Oct 2026
+:Modified Date:     10 Oct 2026
 """
 
 from __future__ import annotations
@@ -200,6 +200,10 @@ def cli() -> None:
     \f
 
     .. versionadded:: 1.0.0
+
+    .. versionchanged:: 2.0.0
+       Update checks use a packaged CA bundle unless SSL_CERT_FILE or SSL_CERT_DIR
+       explicitly supplies custom trust.
 
     :returns: No value; Click dispatches commands or renders help/version.
     """
