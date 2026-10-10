@@ -7,6 +7,11 @@ Package versions and encrypted backup-format versions are separate contracts.
 
 ### Added
 
+- Maintainer safety design and staged implementation plan for native Windows
+  backup, restore and recovery in 2.0.0 (issue
+  [#17](https://github.com/jeffshurtliff/obfuscidian/issues/17)). Windows write
+  support remains planned pending implementation and native validation.
+
 ### Changed
 
 ### Fixed
