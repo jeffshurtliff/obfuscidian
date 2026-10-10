@@ -1,6 +1,6 @@
 [project]
 name = "obfuscidian"
-version = "1.0.1"
+version = "2.0.0.dev0"
 description = "Obfuscate and encrypt your Obsidian vault to create secure and private backups."
 readme = "README.md"
 authors = [
