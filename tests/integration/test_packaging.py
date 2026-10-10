@@ -4,7 +4,7 @@
 :Synopsis:          Build, inspect, and install package artifacts offline
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     09 Oct 2026
+:Modified Date:     10 Oct 2026
 """
 
 from __future__ import annotations
@@ -133,6 +133,7 @@ def _assert_metadata(data: bytes, project_version: str) -> None:
         'cryptography (>=50.0.2)',
         'urllib3 (>=2.8,<3)',
         'packaging (>=26,<27)',
+        'certifi (>=2026.7.22)',
     }
 
 
@@ -367,16 +368,47 @@ def test_installation_entry_points(
             assert (
                 'Commands:' in console_result.stdout and 'keygen' in console_result.stdout and 'shroud' in console_result.stdout
             )
-    # Exercise the notifier from each installed artifact, not the editable development package.
+    # Exercise installed CA loading and CLI hooks, mocking only the HTTP boundary.
     notice_script = """
+import json
 import os
+import ssl
 import sys
 from importlib.metadata import distribution
+from pathlib import Path
+import certifi
 from obfuscidian import constants as const, updates
 os.environ.pop(const.ENV_SUPPRESS_UPDATE_NOTICE, None)
-updates._fetch_releases = lambda: {'releases': {'99.0.0': [{'yanked': False}]}}
+os.environ.pop(const.ENV_SSL_CERT_FILE, None)
+os.environ.pop(const.ENV_SSL_CERT_DIR, None)
+if sys.argv[2] == 'isolated':
+    assert Path(certifi.__file__).is_relative_to(Path(sys.prefix))
+    assert Path(certifi.where()).is_relative_to(Path(sys.prefix))
+def no_default_trust(*args, **kwargs):
+    raise AssertionError('The installed package must not rely on default CA discovery')
+ssl.SSLContext.load_default_certs = no_default_trust
+class Response:
+    status = 200
+    def read(self, size, **kwargs):
+        return json.dumps({'releases': {'99.0.0': [{'yanked': False}]}}).encode()
+    def close(self):
+        pass
+class Pool:
+    def __init__(self, **kwargs):
+        context = kwargs['ssl_context']
+        assert kwargs['cert_reqs'] == 'CERT_REQUIRED'
+        assert context.verify_mode == ssl.CERT_REQUIRED and context.check_hostname
+        assert context.get_ca_certs()
+    def __enter__(self):
+        return self
+    def __exit__(self, *args):
+        pass
+    def request(self, method, url, **kwargs):
+        assert method == 'GET' and url == const.UPDATE_API_URL
+        return Response()
+updates.urllib3.PoolManager = Pool
 entry_mode = sys.argv[1]
-sys.argv = ['obfuscidian', '--version']
+sys.argv = ['obfuscidian', *sys.argv[3:]]
 if entry_mode == 'console':
     entry = next(e for e in distribution('obfuscidian').entry_points if e.group == 'console_scripts' and e.name == 'obfuscidian')
     entry.load()()
@@ -384,16 +416,26 @@ else:
     import runpy
     runpy.run_module('obfuscidian', run_name='__main__')
 """
-    notices = [_run([str(python), '-c', notice_script, entry], outside) for entry in ('console', 'module')]
-    assert notices[0].stdout == notices[1].stdout == expected_version_output
-    assert (
-        notices[0].stderr
-        == notices[1].stderr
-        == (
-            'A newer version of obfuscidian (v99.0.0) is available. '
-            f'Visit {const.UPDATE_INSTRUCTIONS_URL} for update instructions.\n'
+    for arguments in (
+        ['--help'],
+        ['--version'],
+        ['keygen', '--help'],
+        ['verify', '--mirror', str(verify_mirror), '--key', str(verify_key), '--non-interactive'],
+    ):
+        baseline = _run([str(console), *arguments], outside)
+        notices = [
+            _run([str(python), '-c', notice_script, entry, 'isolated' if wheelhouse else 'shared', *arguments], outside)
+            for entry in ('console', 'module')
+        ]
+        assert notices[0].stdout == notices[1].stdout == baseline.stdout
+        assert (
+            notices[0].stderr
+            == notices[1].stderr
+            == (
+                'A newer version of obfuscidian (v99.0.0) is available. '
+                f'Visit {const.UPDATE_INSTRUCTIONS_URL} for update instructions.\n' + baseline.stderr
+            )
         )
-    )
     key_directory = (tmp_path / 'synthetic-keys').resolve()
     key_directory.mkdir()
     for arguments in (
