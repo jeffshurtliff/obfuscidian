@@ -30,7 +30,7 @@ A practice restore also lets you check that your notes come back as expected.
 
 Backup and restore writes currently work on Linux and macOS. On native Windows,
 you can create a key, verify an existing backup and preview operations; writing
-or recovering vaults is refused in 1.0.0. See [supported environments](../PLATFORMS.md).
+or recovering vaults is refused in 1.0.1. See [supported environments](../PLATFORMS.md).
 
 Encryption protects the backed-up contents and names. Someone who has your key
 can read the backup, and someone viewing the encrypted folder can still see

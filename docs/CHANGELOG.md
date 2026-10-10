@@ -11,11 +11,31 @@ Package versions and encrypted backup-format versions are separate contracts.
 
 ### Fixed
 
+### Removed
+
+### Security
+
+## [1.0.1] - 2026-10-10
+
+Maintenance release with packaging checks, release-workflow hardening and
+updated documentation presentation. CLI behavior, runtime dependencies,
+supported platforms and encrypted backup-format v1 are unchanged.
+
+### Added
+
+- Social preview image assets for the documentation.
+
+### Changed
+
+- Package metadata now links to stable documentation, the source repository and
+  the rendered changelog; the README includes a PyPI version badge.
+- Documentation uses a custom copyright footer with adjusted alignment.
+
+### Fixed
+
 - Packaging checks now derive expected artifact metadata, archive paths and CLI
   version output from `pyproject.toml`, allowing development and release version
   changes without stale version assertions failing CI.
-
-### Removed
 
 ### Security
 
@@ -80,5 +100,6 @@ an encrypted manifest and a 50 MiB cap per encrypted object or manifest.
   snapshots or universal power-loss guarantees. Restore rollback contains
   sensitive plaintext and needs deliberate custody and cleanup.
 
-[Unreleased]: https://github.com/jeffshurtliff/obfuscidian/compare/1.0.0...HEAD
+[Unreleased]: https://github.com/jeffshurtliff/obfuscidian/compare/1.0.1...HEAD
+[1.0.1]: https://github.com/jeffshurtliff/obfuscidian/compare/1.0.0...1.0.1
 [1.0.0]: https://github.com/jeffshurtliff/obfuscidian/releases/tag/1.0.0

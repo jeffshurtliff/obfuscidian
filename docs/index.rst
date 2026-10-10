@@ -11,7 +11,7 @@ The :doc:`guides/index` have the detailed instructions and safety guidance.
 
 .. important::
 
-   Obfuscidian 1.0.0 is the first stable release. See
+   Obfuscidian 1.0.1 is a stable maintenance release. See
    :doc:`getting-started/installation` for pipx and pip installation. Backup and restore writes
    work on Linux/macOS. Native Windows supports key creation, verification and
    previews; vault writes and recovery are refused. See
