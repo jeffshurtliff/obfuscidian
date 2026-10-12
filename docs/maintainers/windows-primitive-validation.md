@@ -4,8 +4,8 @@ This procedure qualifies the internal safety primitives and immutable checkpoint
 store on synthetic temporary data. It does not enable Windows backup, restore,
 recovery or existing-log append. #26's implementation handoff is accepted under
 the **12 October 2026 approved ownership-proof deferral to #29**. Internal #27
-development may begin in a new chat with production CLI gates retained; #27 has
-not started here. Read
+development proceeded in the separate [private lifecycle candidate](windows-lifecycle-validation.md)
+with production CLI gates retained. Historical evidence below belongs to #26. Read
 [the safety design](windows-safety-design.md), `AGENTS.md`, `CONTRIBUTING.md` and
 the #26 handoff first.
 

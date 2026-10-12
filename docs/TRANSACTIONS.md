@@ -14,7 +14,10 @@ roots, overlap, missing parents, links/junctions, special files, nested reposito
 payloads, unsafe Git controls, unmanaged mirrors, inadequate access, and inadequate
 estimated free space. The caller must provide actual target naming rules and a
 staging estimate. The estimate includes staged bytes and any caller-owned copies;
-rename-based rollback retains existing allocation. A separate metadata reserve
+POSIX rename-based rollback retains existing allocation. Windows read-only
+estimates now include both saved private copies and separate inverse copies,
+including allocation reserves. Production Windows mutation/recovery remains
+gated; see the [private lifecycle candidate](maintainers/windows-lifecycle-validation.md). A separate metadata reserve
 is checked too. This is a preflight estimate, not a disk reservation or a quota;
 actual writes can still fail. Large journals fail at a bounded 16 MiB limit.
 

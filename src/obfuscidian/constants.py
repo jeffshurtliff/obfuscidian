@@ -4,7 +4,7 @@
 :Synopsis:          Shared configuration, key, path, and resource constants
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     10 Oct 2026
+:Modified Date:     12 Oct 2026
 """
 
 ENV_KEY_PATH = 'OBFUSCIDIAN_KEY_PATH'
@@ -158,3 +158,14 @@ WINDOWS_CHECKPOINT_COUNT = 4096
 WINDOWS_CHECKPOINT_TOTAL_BYTES = 128 * 1024 * 1024
 WINDOWS_CHECKPOINT_PREFIX = '.checkpoint-'
 WINDOWS_CHECKPOINT_PENDING = '.pending'
+
+# Private Windows lifecycle bounds; unrelated to encrypted backup format v1.
+WINDOWS_TRANSACTION_SCHEMA = 'windows-copy-1'
+WINDOWS_TRANSACTION_ENTRIES = 256
+WINDOWS_TRANSACTION_DEPTH = 32
+WINDOWS_TRANSACTION_CONTROLS = 'controls'
+WINDOWS_TRANSACTION_INVERSE = 'inverse'
+WINDOWS_WRITE_DAC = 0x00040000
+WINDOWS_STREAM_INFORMATION = 7
+WINDOWS_SUPPORTED_ATTRIBUTES = 0x10 | 0x20 | 0x80
+WINDOWS_PROTECTED_DACL_INFORMATION = 0x80000004

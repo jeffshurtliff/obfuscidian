@@ -4,7 +4,7 @@
 :Synopsis:          Internal native Windows safety primitives awaiting qualification
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     10 Oct 2026
+:Modified Date:     12 Oct 2026
 """
 
 from __future__ import annotations
@@ -387,6 +387,7 @@ class _Api:
         exclusive: bool = False,
         removable: bool = False,
         security: object = None,
+        security_write: bool = False,
     ) -> _Handle:
         """Create/open one no-follow component using a retained native root handle.
 
@@ -413,6 +414,8 @@ class _Api:
             rights |= const.WINDOWS_GENERIC_WRITE
         if removable:
             rights |= const.WINDOWS_DELETE
+        if security_write:
+            rights |= const.WINDOWS_WRITE_DAC
         raw, result = ctypes.c_void_p(), _IoStatus()
         status = self.ntdll.NtCreateFile(
             ctypes.byref(raw),

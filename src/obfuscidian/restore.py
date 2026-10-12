@@ -4,7 +4,7 @@
 :Synopsis:          Internal complete verification, private reconstruction and fresh restore
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     05 Oct 2026
+:Modified Date:     12 Oct 2026
 """
 
 from __future__ import annotations
@@ -149,21 +149,28 @@ def _set_time(path: Path, mtime_ns: int, unsupported: set[str], relative: str) -
     paths._recheck_path(state)
 
 
-def _build_restore(plan: _RestorePlan, stage: Path, unsupported: set[str]) -> None:
+def _build_restore(plan: _RestorePlan, stage: Path, unsupported: set[str], *, _writer=None, _directory=None, _time=None) -> None:
     """Reconstruct authenticated bytes exclusively with private files and directories."""
+    if _writer is None:
+        _writer = backup._write_token
+    if _time is None:
+        _time = _set_time
     for record in sorted(plan.directories, key=lambda r: (r.path.count('/'), r.path)):
         target = stage / record.path
-        with paths._directory_handle(paths._inspect_path(target.parent)) as handle:
-            os.mkdir(target.name, 0o700, dir_fd=handle)
+        if _directory is not None:
+            _directory(target.parent, target.name)
+        else:
+            with paths._directory_handle(paths._inspect_path(target.parent)) as handle:
+                os.mkdir(target.name, 0o700, dir_fd=handle)
     for record in plan.files:
         data = manifest._read_validated_file(plan.snapshot, record, plan.fernet)
         target = stage / record.path
-        backup._write_token(target.parent, target.name, data)
+        _writer(target.parent, target.name, data)
         del data
-        _set_time(target, record.mtime_ns, unsupported, record.path)
+        _time(target, record.mtime_ns, unsupported, record.path)
     # Children must be finished before restoring directory times.
     for record in sorted(plan.directories, key=lambda r: (-r.path.count('/'), r.path)):
-        _set_time(stage / record.path, record.mtime_ns, unsupported, record.path)
+        _time(stage / record.path, record.mtime_ns, unsupported, record.path)
 
 
 def _verify_stage(plan: _RestorePlan, stage: Path, unsupported: set[str]) -> None:
@@ -241,3 +248,33 @@ def _recover_restore(
     plan = _plan_restore(origin, mirror, key, preserve_config=preserve_config, allow_pending=True)
     _recheck_source(plan)
     return transactions._recover_transaction(plan.transaction, yes=yes, non_interactive=non_interactive, prompt=prompt)
+
+
+def _publish_windows_restore(plan: _RestorePlan, *, yes=False, non_interactive=False, prompt=None, dry_run=False):
+    """Privately reconstruct authenticated bytes without enabling production Windows CLI writes."""
+    from obfuscidian import _windows_files as files
+    from obfuscidian import _windows_transactions as windows
+
+    unsupported = set()
+
+    def timestamp(path, mtime_ns, warnings, relative):
+        with files._entry(path.parent, path.name, path.is_dir(), private=True, writable=True) as handle:
+            handle._set_time(mtime_ns)
+            if path.stat().st_mtime_ns != mtime_ns:
+                warnings.add(relative)
+
+    _recheck_source(plan)
+    plan.locations._recheck()
+    result = windows._execute(
+        plan.transaction,
+        lambda stage: _build_restore(plan, stage, unsupported, _writer=files._write, _directory=files._mkdir, _time=timestamp),
+        lambda stage: _verify_stage(plan, stage, unsupported),
+        yes=yes or not plan.transaction.before,
+        non_interactive=non_interactive,
+        prompt=prompt,
+        dry_run=dry_run,
+        prepublish=lambda: _recheck_source(plan),
+    )
+    if result is not None and unsupported:
+        result = replace(result, warnings=result.warnings + ('Some modification times could not be preserved exactly.',))
+    return result

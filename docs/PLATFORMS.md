@@ -24,6 +24,11 @@ lifecycle development with production Windows CLI gates retained; the deferred
 proof remains mandatory before Windows writes are enabled or 2.0.0 Windows
 support is described as qualified. It does not change current supported behavior.
 
+The [private #27 lifecycle candidate](maintainers/windows-lifecycle-validation.md)
+adds synthetic backup/restore/recovery fixtures with production gates retained.
+Its portable injected model checks are distinct from actual native Windows
+execution, which remains pending. No new support claim follows from those checks.
+
 ## Validation evidence
 
 All nine Linux/macOS/Windows CI jobs passed on Python 3.12–3.14 in

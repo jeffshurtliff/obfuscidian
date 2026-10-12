@@ -12,3 +12,4 @@ and release/publication actions each require explicit maintainer authorization.
    releasing
    windows-safety-design
    windows-primitive-validation
+   windows-lifecycle-validation

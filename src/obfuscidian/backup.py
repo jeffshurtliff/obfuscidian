@@ -4,7 +4,7 @@
 :Synopsis:          Internal read-only fresh/merge planning and encrypted publication
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     05 Oct 2026
+:Modified Date:     12 Oct 2026
 """
 
 from __future__ import annotations
@@ -210,13 +210,18 @@ def _write_token(parent: Path, name: str, token: bytes) -> None:
                 raise _OperationalError('Incomplete staged token write; no partial snapshot is accepted.')
 
 
-def _build_backup(plan: _BackupPlan, stage: Path) -> None:
+def _build_backup(plan: _BackupPlan, stage: Path, *, _writer=None, _directory=None) -> None:
     """Build either mode from stable current bytes and authenticated retained ciphertext."""
+    if _writer is None:
+        _writer = _write_token
     managed = stage / const.MANAGED_DIRECTORY
     objects = managed / const.OBJECTS_DIRECTORY
     for parent, child in ((stage, managed), (managed, objects)):
-        with paths._directory_handle(paths._inspect_path(parent)) as handle:
-            os.mkdir(child.name, 0o700, dir_fd=handle)
+        if _directory is not None:
+            _directory(parent, child.name)
+        else:
+            with paths._directory_handle(paths._inspect_path(parent)) as handle:
+                os.mkdir(child.name, 0o700, dir_fd=handle)
     old_files = {record.path: record for record in plan.previous.manifest.files} if plan.previous else {}
     entries = {entry.path: entry for entry in plan.source.entries if entry.kind == 'file'}
     reserved = {record.object_id for record in old_files.values()}
@@ -227,7 +232,7 @@ def _build_backup(plan: _BackupPlan, stage: Path) -> None:
             # Only additive merge proposals can contain a historic, absent path.
             token, data = manifest._validated_token(plan.previous, proposed, plan.fernet)
             del data
-            _write_token(objects, f'{proposed.object_id}.obf', token)
+            _writer(objects, f'{proposed.object_id}.obf', token)
             del token
             records.append(proposed)
             continue
@@ -243,7 +248,7 @@ def _build_backup(plan: _BackupPlan, stage: Path) -> None:
             reserved.add(object_id)
             record, token = manifest._encode_file(entry.path, data, entry.mtime_ns, object_id, plan.fernet)
         del data
-        _write_token(objects, f'{record.object_id}.obf', token)
+        _writer(objects, f'{record.object_id}.obf', token)
         del token
         records.append(record)
     final = replace(
@@ -253,7 +258,7 @@ def _build_backup(plan: _BackupPlan, stage: Path) -> None:
         created_at=datetime.now(UTC).isoformat(timespec='microseconds').replace('+00:00', 'Z'),
         files=tuple(records),
     )
-    _write_token(managed, const.MANIFEST_FILENAME, manifest._encrypt_manifest(final, plan.fernet))
+    _writer(managed, const.MANIFEST_FILENAME, manifest._encrypt_manifest(final, plan.fernet))
 
 
 def _recheck_source(plan: _BackupPlan) -> None:
@@ -322,3 +327,24 @@ def _recover_backup(
         origin, mirror, mirror=True, fernet=fernet, allow_pending=True, target_rules=_mirror_rules(mirror.parent)
     )
     return transactions._recover_transaction(plan, yes=yes, non_interactive=non_interactive, prompt=prompt)
+
+
+def _publish_windows_backup(plan: _BackupPlan, *, yes=False, non_interactive=False, prompt=None, dry_run=False):
+    """Exercise the private Windows lifecycle while keeping supported CLI gates intact."""
+    from obfuscidian import _windows_files as files
+    from obfuscidian import _windows_transactions as windows
+
+    _recheck_source(plan)
+    plan.locations._recheck()
+    if plan.previous is not None:
+        manifest._recheck_mirror(plan.previous)
+    return windows._execute(
+        plan.transaction,
+        lambda stage: _build_backup(plan, stage, _writer=files._write, _directory=files._mkdir),
+        lambda stage: _recheck_source(plan),
+        yes=yes or not plan.confirmation,
+        non_interactive=non_interactive,
+        prompt=prompt,
+        dry_run=dry_run or plan.no_op,
+        prepublish=lambda: _recheck_source(plan),
+    )

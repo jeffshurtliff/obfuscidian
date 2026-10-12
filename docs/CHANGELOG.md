@@ -7,6 +7,13 @@ Package versions and encrypted backup-format versions are separate contracts.
 
 ### Added
 
+- Private Windows copy-based transaction, fresh/merge backup, fresh restore and
+  explicit recovery candidate for [#27](https://github.com/jeffshurtliff/obfuscidian/issues/27),
+  with bounded ownership/checkpoint binding, independently verified saved and
+  inverse copies, copy-inclusive estimates and synthetic lifecycle/termination
+  fixtures. Production Windows CLI mutation/recovery and existing-log append
+  remain refused; actual native lifecycle execution and qualification are pending.
+
 - Maintainer safety design and staged implementation plan for native Windows
   backup, restore and recovery in 2.0.0 (issue
   [#17](https://github.com/jeffshurtliff/obfuscidian/issues/17)). Windows write

@@ -40,7 +40,9 @@ relax production owner/DACL checks or establish passing native qualification.
   qualification gates are satisfied. Existing-log append stays refused.
 
 #26 is ready for the internal #27 handoff under this exception. #17 remains in
-progress; #27 and #29 have not started. Issues remain open; this decision does
+progress; #27 now has a [private implementation candidate](windows-lifecycle-validation.md)
+pending native execution/review, and #28/#29 implementation has not started.
+Issues remain open; this decision does
 not authorize closure, Git history changes, remote delivery or publication.
 The r3 diagnostic result remains **907 passed, 1 failed, 596 skipped**, with
 three passing owner supplements; Store-based CPython 3.13.14/AMD64/64-bit
