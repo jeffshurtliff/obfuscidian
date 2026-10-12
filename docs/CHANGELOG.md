@@ -51,6 +51,10 @@ Package versions and encrypted backup-format versions are separate contracts.
 
 ### Fixed
 
+- Python 3.14 qualification wrapper loads its shared helper as a script block
+  when invoked from source text, preserving repository discovery and validation
+  without a nested `.ps1` invocation or execution-policy setting changes (#27).
+
 - Revised internal Windows acquisition/publication to use retained native root
   handles after the first qualification run exposed insufficient pathname
   guarding. Added numeric native diagnostics and conversion-race fixtures;

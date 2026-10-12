@@ -168,6 +168,23 @@ For the Store-installed CPython 3.14 testing host, use the
 & .\.github\scripts\check_windows_lifecycle-314.ps1 -Python python -ReportDirectory "$env:TEMP\obfuscidian-27-reports-314"
 ```
 
+For the maintainer's source-text invocation on the testing host where `.ps1`
+execution is disabled, run this from the repository root:
+
+```powershell
+$lifecycleScriptPath = (Resolve-Path '.\.github\scripts\check_windows_lifecycle-314.ps1').Path
+$lifecycleScriptDirectory = Split-Path -Parent $lifecycleScriptPath
+$lifecycleSource = Get-Content -LiteralPath $lifecycleScriptPath -Raw
+$lifecycleBlock = [ScriptBlock]::Create($lifecycleSource.Replace('$PSScriptRoot', '$lifecycleScriptDirectory'))
+& $lifecycleBlock -Python python -ReportDirectory "$env:TEMP\obfuscidian-27-reports-314"
+```
+
+The wrapper loads only the adjacent shared helper as a script block, binding its
+script directory explicitly so repository discovery remains correct. No nested
+`.ps1` invocation or execution-policy setting change is performed. Both files must
+come from the reviewed source snapshot. The helper's checks and selected tests
+remain unchanged.
+
 This selects minor version 3.14 and reuses the shared helper, including both test
 runs and the unchanged real-owner fixture. The actual patch version (for example,
 3.14.6) is recorded and compared with the Poetry interpreter. It does not require
@@ -182,8 +199,8 @@ architecture or elevated token, verifies the Poetry interpreter's actual patch
 version, validates the existing lock and runs the private native suite plus full
 diagnostic suite. It records OS/build/Git, source-file SHA-256s, interpreter
 metadata, exit codes, JUnit and text reports outside the checkout. It neither
-changes machine policy nor dispatches hosted CI. Follow existing execution policy;
-no policy bypass or machine-wide adjustment is required or authorized.
+changes machine policy nor dispatches hosted CI. No execution-policy setting or
+machine-wide adjustment is performed by either invocation method.
 
 Keep native reports and machine paths private. Return sanitized OS/build/storage,
 actual Python version/architecture/Store detection, candidate source hashes,
