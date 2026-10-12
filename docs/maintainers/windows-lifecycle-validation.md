@@ -202,6 +202,12 @@ metadata, exit codes, JUnit and text reports outside the checkout. It neither
 changes machine policy nor dispatches hosted CI. No execution-policy setting or
 machine-wide adjustment is performed by either invocation method.
 
+The helper installs locked runtime/development requirements with
+`poetry install --with dev --without docs --no-interaction`. Its selected and full
+pytest runs do not import Sphinx or build documentation. Optional documentation
+dependencies and strict documentation builds remain separate qualification
+checks; this helper does not establish documentation-build success.
+
 Keep native reports and machine paths private. Return sanitized OS/build/storage,
 actual Python version/architecture/Store detection, candidate source hashes,
 commands/exits, individual failure names, counts and narrow skips. Distinguish
@@ -234,6 +240,23 @@ tooling and transaction model tests; Ruff lint/format, strict Sphinx and rendere
 references passed. The six tooling passes use injected interpreter/token
 responses; the two real Windows shell cases were not executed here. PowerShell,
 native lifecycle execution and hosted CI remain unexecuted for this repair.
+
+### Documentation dependency installation refusal — 12 October 2026
+
+The next supplied attempt stopped during locked dependency installation with
+`FileNotFoundError` for a `sphinxcontrib-serializinghtml` 2.0.0 locale file. This
+occurred before the Poetry probe and lifecycle tests, so it does not verify the
+interpreter repair or provide a native lifecycle result. The complete missing
+path and traceback were not supplied; a path-length, cache or installer cause
+has not been established. No machine policy or environment deletion is needed
+for the bounded helper change.
+
+The helper previously installed the optional docs group even though it never
+ran Sphinx. It now explicitly excludes that group while retaining locked runtime
+and development requirements, strict lock validation and every existing pytest
+selection. The docs group and lockfile remain unchanged. The supplied host must
+rerun the helper; strict documentation build and broader native qualification
+remain separate gates.
 
 ## Remaining qualification and scope
 

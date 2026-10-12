@@ -42,7 +42,9 @@ $Executable = & $Python -c 'import sys; print(sys.executable)'
 if ($LASTEXITCODE -ne 0 -or -not $Executable) { throw 'Could not select the actual interpreter.' }
 & poetry env use $Executable
 if ($LASTEXITCODE -ne 0) { throw 'Poetry interpreter selection failed.' }
-& poetry install --with dev,docs --no-interaction
+# Lifecycle and full pytest diagnostics use runtime/dev requirements. The optional
+# Sphinx group is for separate documentation builds, not this native test run.
+& poetry install --with dev --without docs --no-interaction
 if ($LASTEXITCODE -ne 0) { throw 'Locked dependency installation failed.' }
 & poetry check --lock --strict
 if ($LASTEXITCODE -ne 0) { throw 'Strict lock validation failed.' }

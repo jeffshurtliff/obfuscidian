@@ -51,6 +51,11 @@ Package versions and encrypted backup-format versions are separate contracts.
 
 ### Fixed
 
+- Windows lifecycle validation installs locked runtime/development requirements
+  without the unused optional Sphinx group, keeping documentation installation
+  failures separate from native pytest diagnostics. Documentation-build
+  qualification remains a separate check (#27).
+
 - Windows lifecycle interpreter validation executes its multiline probe as a
   file, avoiding Windows shell handling of multiline `poetry run python -c`
   arguments. Missing/invalid metadata is refused before patch comparison; genuine
