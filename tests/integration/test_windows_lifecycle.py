@@ -194,6 +194,7 @@ def observe(label):
             print('SYNTHETIC READY', os.getpid(), flush=True)
             sys.stdin.readline()
 win._boundary = observe
+files._publication_boundary = observe
 plan = tx._plan_transaction(source, destination, target_rules=backup._mirror_rules(destination.parent), allow_pending=recovery)
 def build(stage):
     files._mkdir(stage, 'new')
@@ -250,6 +251,60 @@ def test_actual_child_termination_each_forward_boundary(locations, boundary, occ
             win._recover(plan, yes=True)
         assert _snapshot(locations[0].parent) == retained
         assert plan.lock.exists()
+
+
+@pytest.mark.parametrize('boundary', ['publication-before-metadata', 'publication-after-metadata'])
+@pytest.mark.parametrize('phase', ['forward', 'inverse-proposal', 'inverse-reconstruction'])
+def test_actual_same_name_publication_death_at_metadata_boundary(locations, boundary, phase, record_property):
+    """Kill the real worker around same-name metadata sealing; retain any uncertain state."""
+    destination = locations[1]
+    files._write(destination, 'top.bin', b'SYNTHETIC PREVIOUS\x00\xff')
+    with files._entry(destination, 'top.bin', False, private=True, writable=True) as handle:
+        original = files._record(handle, private=True)
+        # A clearly older synthetic creation time distinguishes the tunnel cache
+        # from the fresh proposal. This changes only a temporary fixture file.
+        original['created'] = const.WINDOWS_FILETIME_EPOCH
+        files._metadata(handle, original)
+    before = _snapshot(destination)
+    if phase == 'forward':
+        # The builder publishes new/ first, then the same-name top.bin file.
+        _terminate(locations, boundary, occurrence=2)
+    else:
+        _terminate(locations, 'published')
+        # Inverse work first returns both proposal tops, then reconstructs old/
+        # and top.bin before its nested original files.
+        occurrence = 2 if phase == 'inverse-proposal' else 4
+        _terminate(locations, boundary, occurrence=occurrence, recovery=True)
+    plan = _plan(locations, allow_pending=True)
+    with win._Session(plan, recovery=True) as session:
+        owner = win._json(session.owner._read(const.TRANSACTION_LOCK_BYTES), const.TRANSACTION_LOCK_BYTES)
+        session._controls(plan.workspace_parent / (const.TRANSACTION_PREFIX + owner['binding']['id']))
+        # Inspection only: this store read never authorizes inverse work. The
+        # production recovery below still requires ownership/cursor/artifact proof.
+        journal = win._json(session.store._read().payload, const.TRANSACTION_JOURNAL_BYTES)
+        win._schema(journal)
+        workspace = session.workspace
+    expected = journal['inverse']['top.bin'] if phase == 'inverse-reconstruction' else journal['after']['top.bin']
+    observed_root = workspace / 'stage' if phase == 'inverse-proposal' else destination
+    actual = files._capture(observed_root)['top.bin']
+    drift = actual['created'] != expected['created']
+    record_property('actual_creation_time_tunnel_observed', drift)
+    assert actual == {**expected, 'created': actual['created']}
+    if drift:
+        assert boundary == 'publication-before-metadata'
+        if phase == 'forward':
+            assert actual['created'] == original['created']
+        elif phase == 'inverse-reconstruction':
+            assert actual['created'] == journal['after']['top.bin']['created']
+        retained = _snapshot(locations[0].parent)
+        with pytest.raises(tx._TransactionError):
+            win._recover(plan, yes=True)
+        assert _snapshot(locations[0].parent) == retained
+        assert plan.lock.exists()
+    else:
+        win._recover(plan, yes=True)
+        assert _snapshot(destination) == before
+        assert not plan.lock.exists()
 
 
 @pytest.mark.parametrize(

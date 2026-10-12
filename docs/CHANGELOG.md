@@ -52,12 +52,21 @@ Package versions and encrypted backup-format versions are separate contracts.
 
 ### Fixed
 
+- Private Windows lifecycle publication restores creation time after its own
+  held-handle rename only when all other recorded fields match, then requires
+  full record equality. Added injected metadata-failure/refusal regressions and
+  native child-termination fixtures for forward/inverse metadata boundaries.
+  Targeted replacement-restore diagnostics locate post-publication mismatch;
+  this candidate awaits native confirmation. Uncertain recovery artifacts remain
+  preserved; production CLI gates and real-owner checks are unchanged (#27).
+
 - Private Windows replacement-restore tests report suppressed backend exception
   types, code locations and strictly filtered numeric API status without private
   messages, paths or contents. Retry3 native
   evidence retains one lifecycle failure and the mandatory owner-fixture failure:
   selected 151 passed/2 failed; full 1012 passed/2 failed/596 skipped, both exit 1.
-  Production behavior and safety checks remain unchanged; diagnosis is pending (#27).
+  Production gates and safety checks remain unchanged; the later targeted trace
+  and candidate repair are recorded in the lifecycle validation handoff (#27).
 
 - Windows lifecycle qualification fixtures use long-path spelling for retained
   control/copy inspection and injected model I/O. Child termination targets and

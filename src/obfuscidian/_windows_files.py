@@ -300,6 +300,10 @@ def _delete(path: Path, record: dict) -> None:
         )
 
 
+def _publication_boundary(label: str) -> None:
+    """Provide private synthetic observation points while the moved handle stays held."""
+
+
 def _move(source: Path, target: Path, record: dict) -> dict:
     """No-clobber publish an exact private proposal or reconstruction leaf."""
     with _entry(source.parent, source.name, record['id'][2], private=True, writable=True, removable=True) as handle:
@@ -307,7 +311,21 @@ def _move(source: Path, target: Path, record: dict) -> dict:
             raise _fail('Windows proposal changed before publication.')
         with _Guard(target.parent) as guard:
             guard._rename(handle, target.name, handle._identity())
-            return _record(handle, private=True)
+            actual = _record(handle, private=True)
+            # NTFS can tunnel a removed same-name entry's creation time into a
+            # rename. The exact private proposal was checked before this held
+            # handle's own operation. No other metadata/content/security drift
+            # may be accepted or rewritten. Recovery still requires exact records.
+            if actual != {**record, 'created': actual['created']}:
+                raise _fail('Windows publication changed beyond creation time; preserve pending artifacts.')
+            _publication_boundary('publication-before-metadata')
+            if actual['created'] != record['created']:
+                _metadata(handle, record)
+            actual = _record(handle, private=True)
+            if actual != record:
+                raise _fail('Windows publication metadata verification failed; preserve pending artifacts.')
+            _publication_boundary('publication-after-metadata')
+            return actual
 
 
 def _directory_time(handle, record: dict) -> None:

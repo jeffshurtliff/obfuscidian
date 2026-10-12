@@ -372,3 +372,98 @@ def test_injected_backend_backup_restore_v1_roundtrip(model):
     restore._publish_windows_restore(restore._plan_restore(target, mirror, key))
     assert (target / 'add.bin').read_bytes() == bytes(range(256))
     assert manifest._verify_mirror(mirror, keys._load_key(key)[0]).manifest.format_version == 1
+
+
+def _creation_tunnel(monkeypatch):
+    """Inject creation-time changes after model rename; never call this native evidence."""
+    record, metadata, rename = files._record, files._metadata, _ModelGuard._rename
+    created = {}
+
+    def observe(handle, **options):
+        result = record(handle, **options)
+        return {**result, 'created': created.get(tuple(result['id']), result['created'])}
+
+    def set_metadata(handle, expected):
+        metadata(handle, expected)
+        created[tuple(files._id(handle))] = expected['created']
+
+    def move(guard, handle, name, expected):
+        rename(guard, handle, name, expected)
+        if not expected.directory and name == 'top.bin':
+            created[tuple(files._id(handle))] = 22
+
+    monkeypatch.setattr(files, '_record', observe)
+    monkeypatch.setattr(files, '_metadata', set_metadata)
+    monkeypatch.setattr(_ModelGuard, '_rename', move)
+
+
+def _same_name_build(stage):
+    _build(stage)
+    files._write(stage, 'top.bin', b'SYNTHETIC NEW\x00\xff')
+
+
+def test_injected_creation_tunnel_publication_and_inverse_preserve_exact_records(model, monkeypatch):
+    (model[1] / 'top.bin').write_bytes(b'SYNTHETIC OLD\x00\xff')
+    _creation_tunnel(monkeypatch)
+    result = win._execute(_plan(model), _same_name_build, lambda _: None, yes=True)
+    assert (model[1] / 'top.bin').read_bytes() == b'SYNTHETIC NEW\x00\xff'
+    # Saved copies are independent and never consumed by normalization/recovery.
+    saved = _snapshot(result.rollback)
+    # Use a second pending transaction so explicit inverse publication exercises
+    # the same injected rename effect without changing the completed journal.
+    original_recover = win._recover
+    monkeypatch.setattr(win, '_recover', lambda *a, **kw: (_ for _ in ()).throw(win._fail()))
+
+    def stop(label):
+        if label == 'published':
+            raise OSError('SYNTHETIC STOP')
+
+    monkeypatch.setattr(win, '_boundary', stop)
+    with pytest.raises(tx._TransactionError):
+        win._execute(_plan(model), lambda stage: files._write(stage, 'top.bin', b'SYNTHETIC NEXT'), lambda _: None, yes=True)
+    monkeypatch.setattr(win, '_boundary', lambda _: None)
+    monkeypatch.setattr(win, '_recover', original_recover)
+    win._recover(_plan(model, allow_pending=True), yes=True)
+    assert (model[1] / 'top.bin').read_bytes() == b'SYNTHETIC NEW\x00\xff'
+    assert _snapshot(result.rollback) == saved
+    assert b'SYNTHETIC OLD\x00\xff' in saved.values()
+
+
+def test_injected_creation_normalization_failure_preserves_uncertain_state(model, monkeypatch):
+    _creation_tunnel(monkeypatch)
+    metadata = files._metadata
+
+    def refuse(handle, expected):
+        if handle.path == model[1] / 'top.bin':
+            raise OSError('SYNTHETIC METADATA FAILURE')
+        metadata(handle, expected)
+
+    monkeypatch.setattr(files, '_metadata', refuse)
+    with pytest.raises(tx._TransactionError):
+        win._execute(_plan(model), _same_name_build, lambda _: None, yes=True)
+    retained = _snapshot(model[0].parent)
+    with pytest.raises(tx._TransactionError):
+        win._recover(_plan(model, allow_pending=True), yes=True)
+    assert _snapshot(model[0].parent) == retained
+
+
+@pytest.mark.parametrize('field', ['id', 'size', 'digest', 'written', 'attributes', 'security'])
+def test_injected_post_rename_other_changes_refused_without_metadata_rewrite(model, monkeypatch, field):
+    source = model[0] / 'proposal.bin'
+    source.write_bytes(b'SYNTHETIC PROPOSAL')
+    with files._entry(source.parent, source.name, False) as handle:
+        expected = files._record(handle)
+    record = files._record
+    target = model[1] / 'top.bin'
+
+    def altered(handle, **options):
+        result = record(handle, **options)
+        if handle.path == target:
+            result[field] = None
+        return result
+
+    monkeypatch.setattr(files, '_record', altered)
+    monkeypatch.setattr(files, '_metadata', lambda *a: pytest.fail('Unexpected metadata rewrite after non-creation drift.'))
+    with pytest.raises(OSError, match='beyond creation time'):
+        files._move(source, target, expected)
+    assert target.read_bytes() == b'SYNTHETIC PROPOSAL'

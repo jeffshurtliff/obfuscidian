@@ -42,7 +42,8 @@ relax production owner/DACL checks or establish passing native qualification.
 #26 is ready for the internal #27 handoff under this exception. #17 remains in
 progress; #27 now has a [private implementation candidate](windows-lifecycle-validation.md)
 with retry3 native evidence: one unresolved replacement-restore failure and the
-deferred owner-fixture failure. The replacement failure needs diagnosis within #27;
+deferred owner-fixture failure. Targeted diagnostics locate a post-publication
+record mismatch; a creation-time preservation candidate needs native validation within #27;
 #28/#29 implementation has not started.
 Issues remain open; this decision does
 not authorize closure, Git history changes, remote delivery or publication.

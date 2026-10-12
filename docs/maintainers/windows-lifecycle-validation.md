@@ -3,7 +3,8 @@
 **Date:** 12 October 2026. **Target:** 2.0.0. **Status:** implementation candidate
 on the existing `feature/17-add-safe-native-windows-support` branch. The retry3
 native run has one unresolved replacement-restore failure plus the deferred
-owner-fixture failure. Test diagnostics await a targeted native rerun. Production Windows CLI mutation/recovery
+owner-fixture failure. A targeted diagnostic locates post-publication record
+reconciliation; a creation-time preservation repair awaits native confirmation. Production Windows CLI mutation/recovery
 and existing-log append remain refused. No qualified support claim is made.
 
 The clean starting checkout contained reviewed #26 continuation `2316457` and
@@ -407,9 +408,77 @@ executed here. All diagnostic/evidence updates remain unstaged/uncommitted on
 the same branch. #28/#29 implementation is unstarted; the original #26 r3 result
 and mandatory deferred owner proof remain unchanged.
 
+### Targeted diagnostic and publication metadata candidate — 12 October 2026
+
+The supplied targeted PowerShell transcript shows the maintainer pulling
+diagnostic commit `8a0fcfe` and running the single replacement roundtrip test:
+**1 failed in 18.93 seconds**. Its filtered context locates the underlying
+`_NativeSafetyError` in `_execute:849` → `_reconcile:498`, after publication.
+That check requires each proposal group to exist exactly once, at its recorded
+stage or destination location, with complete matching records. The transcript
+does not identify which field differs. It contains no new interpreter metadata,
+source-hash manifest or JUnit report; retry3's host metadata remains earlier
+evidence. This is actual native failure evidence, not a passing rerun.
+
+Creation-time tunneling is a plausible cause, rather than a confirmed diagnosis
+from that trace. [Microsoft documents](https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/fltkernel/nf-fltkernel-fltgettunneledname)
+that a delete followed by a same-name rename can reuse cached creation time.
+An injected model reproduces that effect and causes the prior `_move`
+implementation to fail. This controlled counterexample does not establish that
+the supplied Windows failure was caused by tunneling.
+
+The candidate repair checks the complete private proposal before its own rename
+and keeps its native handle held through the subsequent observation and metadata
+verification. Only creation-time drift from that operation may be restored to
+the already recorded value, after identity, type, size, digest, write time,
+attributes and exact owner/DACL all match. Any other drift is refused before
+metadata rewriting. The final record must match completely. The same private
+move serves forward publication, returning proposals and inverse reconstruction.
+Recovery record matching, original real-owner assertions and native owner/DACL
+validators remain unchanged; no checkpoint-only authorization is introduced.
+
+Metadata I/O failure or termination before correction can leave an uncertain
+creation time. Explicit recovery still refuses that mismatch and retains all
+artifacts and ownership. It does not retrospectively normalize unexplained
+changes. Six new native child-process cases target both sides of metadata
+verification during forward publication, proposal return and inverse
+reconstruction. Each records `actual_creation_time_tunnel_observed`: a host that
+does not produce cache drift does not establish that particular native proof.
+Exact states must recover; uncertain states must refuse without inverse writes.
+The native cases have not yet executed for this repair.
+
+Eight added injected regressions cover exact forward/inverse records and binary
+saved-copy preservation, metadata failure retention and refusal of six kinds
+of non-creation drift before any metadata rewrite. Local scoped checks on macOS
+ARM64 CPython 3.12.7 / Poetry 2.4.2: **60 passed, 111 Windows-only skips**.
+The controlled prior-implementation comparison returned its expected **1 failed**;
+the current injected transaction model returned **37 passed**. These are
+supplementary local evidence, not native qualification. Final full local
+regression: **1510 passed, 118 platform skips**, exit 0, with loopback access
+for synthetic localhost TLS fixtures. Ruff lint/format (119 files), Bandit,
+strict Poetry lock validation, strict Sphinx and local references across
+**38 HTML pages** passed. Diff, header, scope and privacy checks passed.
+Windows execution, PowerShell and hosted CI were not executed locally.
+
+After maintainer review/commit/sync, run the existing helper from the repository
+root on the original unelevated Store Python 3.13 machine; no new wrapper is
+needed:
+
+```powershell
+& .\.github\scripts\check_windows_lifecycle.ps1 -Python python -ExpectedMinor 13 -ReportDirectory "$env:TEMP\obfuscidian-27-reports-313-retry4"
+```
+
+Return the private reports and tested commit. The helper retains the mandatory
+owner fixture in both suites. On the same unavailable token, its known failure
+remains expected and must be reported; all other failures need investigation.
+No policy, naming, dependency, public interface or production CLI gate change
+is included. Hosted CI, other interpreters/hosts and native repair confirmation
+remain unexecuted. Six repair/source/test/document files remain unstaged and
+uncommitted on the existing branch; no agent Git delivery was performed.
+
 ## Remaining qualification and scope
 
-- Diagnose/repair the confirmed replacement-restore failure within #27, then
+- Validate the candidate repair for the confirmed replacement-restore failure within #27, then
   rerun/review the native suite in a fresh external report directory, including actual sharing/DACL/namespace,
   metadata/stream APIs, every real child boundary and broader baseline finalization.
   Any failure must retain affected production gates and be fixed/retested within
