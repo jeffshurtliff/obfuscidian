@@ -11,3 +11,4 @@ and release/publication actions each require explicit maintainer authorization.
    documentation
    releasing
    windows-safety-design
+   windows-primitive-validation

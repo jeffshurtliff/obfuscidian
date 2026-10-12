@@ -13,6 +13,7 @@ import ctypes
 import hashlib
 import ntpath
 import os
+import re
 import struct
 from collections.abc import Iterator
 from contextlib import contextmanager
@@ -73,6 +74,19 @@ def _sid_bytes(data: bytes) -> bytes:
     return data
 
 
+def _api_path(path: str) -> str:
+    """Add the native long-path prefix only after ordinary namespace validation.
+
+    Caller-supplied device/UNC paths remain forbidden. Control filenames can
+    exceed MAX_PATH beneath ordinary temporary roots; their Win32 spelling must
+    not depend on a machine-wide long-path registry setting.
+    """
+    result = '\\\\?\\' + _absolute(path)
+    if len(result.encode('utf-16-le')) // 2 >= const.WINDOWS_PATH_CHARS:
+        raise _fail('Windows native path exceeds its bound.')
+    return result
+
+
 def _private_acl(data: bytes, owner: bytes, *, directory: bool) -> None:
     """Parse the entire bounded ACL and require precisely the creator's one ACE.
 
@@ -115,6 +129,42 @@ class _Identity:
         return (self.volume, self.file_id, self.directory) == (other.volume, other.file_id, other.directory)
 
 
+class _UnicodeString(ctypes.Structure):
+    """Match the native counted UTF-16 string using fixed-width fields."""
+
+    _fields_ = [('length', ctypes.c_uint16), ('maximum', ctypes.c_uint16), ('buffer', ctypes.c_void_p)]
+
+
+class _ObjectAttributes(ctypes.Structure):
+    """Bind one component to a retained directory handle and creation security."""
+
+    _fields_ = [
+        ('length', ctypes.c_uint32),
+        ('root', ctypes.c_void_p),
+        ('name', ctypes.POINTER(_UnicodeString)),
+        ('attributes', ctypes.c_uint32),
+        ('security', ctypes.c_void_p),
+        ('quality', ctypes.c_void_p),
+    ]
+
+
+class _IoStatus(ctypes.Structure):
+    """Reserve the pointer-sized status union and information field."""
+
+    _fields_ = [('status', ctypes.c_size_t), ('information', ctypes.c_size_t)]
+
+
+class _Rename(ctypes.Structure):
+    """Match FILE_RENAME_INFORMATION, including its initial DWORD-sized union."""
+
+    _fields_ = [
+        ('flags', ctypes.c_uint32),
+        ('root', ctypes.c_void_p),
+        ('length', ctypes.c_uint32),
+        ('name', ctypes.c_uint16 * 1),
+    ]
+
+
 class _Api:
     """Load precisely typed Win32 declarations only on native 64-bit Windows."""
 
@@ -126,6 +176,7 @@ class _Api:
         self.wt = wt
         self.kernel = ctypes.WinDLL('kernel32', use_last_error=True)
         self.advapi = ctypes.WinDLL('advapi32', use_last_error=True)
+        self.ntdll = ctypes.WinDLL('ntdll', use_last_error=True)
         ptr = ctypes.c_void_p
         dword = wt.DWORD
         boolean = wt.BOOL
@@ -155,15 +206,32 @@ class _Api:
         class _Id(ctypes.Structure):
             _fields_ = [('volume', ctypes.c_uint64), ('file_id', ctypes.c_ubyte * 16)]
 
-        class _Rename(ctypes.Structure):
-            # The first union occupies a DWORD even for FileRenameInfo's BOOLEAN.
-            _fields_ = [('flags', dword), ('root', handle), ('length', dword), ('name', ctypes.c_uint16 * 1)]
-
         self.SecurityAttributes = _SecurityAttributes
         self.Basic = _Basic
         self.Standard = _Standard
         self.Id = _Id
         self.Rename = _Rename
+        self._bind(
+            self.ntdll,
+            'NtCreateFile',
+            ctypes.c_int32,
+            [
+                pptr,
+                dword,
+                ctypes.POINTER(_ObjectAttributes),
+                ctypes.POINTER(_IoStatus),
+                ptr,
+                dword,
+                dword,
+                dword,
+                dword,
+                ptr,
+                dword,
+            ],
+        )
+        self._bind(
+            self.ntdll, 'NtSetInformationFile', ctypes.c_int32, [handle, ctypes.POINTER(_IoStatus), ptr, dword, ctypes.c_int]
+        )
         declarations = (
             ('CreateFileW', handle, [wide, dword, dword, ctypes.POINTER(_SecurityAttributes), dword, dword, handle]),
             ('CreateDirectoryW', boolean, [wide, ctypes.POINTER(_SecurityAttributes)]),
@@ -175,6 +243,7 @@ class _Api:
             ('GetFinalPathNameByHandleW', dword, [handle, lpwide, dword, dword]),
             ('GetVolumeInformationByHandleW', boolean, [handle, lpwide, dword, pword, pword, pword, lpwide, dword]),
             ('GetDriveTypeW', dword, [wide]),
+            ('QueryDosDeviceW', dword, [wide, lpwide, dword]),
             ('GetCurrentProcess', handle, []),
             ('GetCurrentThread', handle, []),
             ('LocalFree', ptr, [ptr]),
@@ -213,7 +282,20 @@ class _Api:
     def _check(self, success: object) -> None:
         """Refuse a failed native call without formatting a sensitive OS message."""
         if not success:
-            raise _fail()
+            error = ctypes.get_last_error()
+            raise _fail(f'Native Windows call refused (WinError {error}); preserve pending artifacts.')
+
+    @staticmethod
+    def _nt_check(status: int, result: _IoStatus, *, collision: bool = False) -> None:
+        """Require completed synchronous success; report only numeric status codes."""
+        code = status & 0xFFFFFFFF
+        if collision and code == 0xC0000035:
+            raise FileExistsError('Native Windows target already exists.')
+        if code or result.status & 0xFFFFFFFF:
+            raise _fail(
+                f'Native Windows call refused (NTSTATUS 0x{code:08X}, I/O 0x{result.status & 0xFFFFFFFF:08X}); '
+                'preserve pending artifacts.'
+            )
 
     def _owner(self) -> tuple[bytes, str]:
         """Read the effective user token; fall back only for ERROR_NO_TOKEN."""
@@ -273,18 +355,17 @@ class _Api:
         removable: bool = False,
         security: object = None,
     ) -> _Handle:
-        """Open a non-inherited no-follow handle with explicit sharing and rights."""
-        rights = const.WINDOWS_READ_CONTROL | const.WINDOWS_GENERIC_READ
-        if writable:
-            rights |= const.WINDOWS_GENERIC_WRITE
-        if removable:
-            rights |= const.WINDOWS_DELETE
+        """Acquire observational ancestors only; refuse pathname mutation opens."""
+        if create or writable or exclusive or removable or security is not None:
+            raise _fail('Pathname mutation acquisition refused; a retained relative root is required.')
+        rights = const.WINDOWS_READ_CONTROL | const.WINDOWS_SYNCHRONIZE | const.WINDOWS_READ_ATTRIBUTES
+        rights |= const.WINDOWS_DIRECTORY_TRAVERSE if directory else const.WINDOWS_GENERIC_READ
         raw = self.kernel.CreateFileW(
-            path,
+            _api_path(path),
             rights,
-            0 if exclusive else const.WINDOWS_SHARE_READ,
-            ctypes.byref(security) if security is not None else None,
-            const.WINDOWS_CREATE_NEW if create else const.WINDOWS_OPEN_EXISTING,
+            const.WINDOWS_SHARE_READ | const.WINDOWS_SHARE_WRITE,
+            None,
+            const.WINDOWS_OPEN_EXISTING,
             const.WINDOWS_OPEN_FLAGS,
             None,
         )
@@ -292,7 +373,72 @@ class _Api:
             error = ctypes.get_last_error()
             if error in (80, 183):
                 raise FileExistsError('Native Windows target already exists.')
-            raise _fail('Native Windows open refused; an entry may be missing, unsafe or held by another process.')
+            raise _fail(f'Native Windows ancestor open refused (WinError {error}).')
+        return self._adopt(raw, path, directory=directory)
+
+    def _open_relative(
+        self,
+        parent: _Handle,
+        name: str,
+        *,
+        directory: bool,
+        create: bool = False,
+        writable: bool = False,
+        exclusive: bool = False,
+        removable: bool = False,
+        security: object = None,
+    ) -> _Handle:
+        """Create/open one no-follow component using a retained native root handle.
+
+        Directory attribute handles can convert a root to a reparse point even
+        while it is guarded. No descendant acquisition re-resolves a DOS path.
+        OBJ_DONT_REPARSE additionally refuses traversal requiring reparsing.
+        """
+        encoded = _component(name).encode('utf-16-le')
+        parent._require_open()
+        parent._recheck(parent.identity, metadata=False)
+        storage = ctypes.create_string_buffer(encoded + b'\x00\x00')
+        string = _UnicodeString(len(encoded), len(encoded) + 2, ctypes.addressof(storage))
+        attributes = _ObjectAttributes(
+            ctypes.sizeof(_ObjectAttributes),
+            parent.raw,
+            ctypes.pointer(string),
+            const.WINDOWS_OBJECT_ATTRIBUTES,
+            security.descriptor if security is not None else None,
+            None,
+        )
+        rights = const.WINDOWS_READ_CONTROL | const.WINDOWS_SYNCHRONIZE
+        rights |= (const.WINDOWS_READ_ATTRIBUTES | const.WINDOWS_DIRECTORY_TRAVERSE) if directory else const.WINDOWS_GENERIC_READ
+        if create or writable:
+            rights |= const.WINDOWS_GENERIC_WRITE
+        if removable:
+            rights |= const.WINDOWS_DELETE
+        raw, result = ctypes.c_void_p(), _IoStatus()
+        status = self.ntdll.NtCreateFile(
+            ctypes.byref(raw),
+            rights,
+            ctypes.byref(attributes),
+            ctypes.byref(result),
+            None,
+            0,
+            0 if exclusive else const.WINDOWS_SHARE_READ,
+            const.WINDOWS_NATIVE_CREATE if create else const.WINDOWS_NATIVE_OPEN,
+            const.WINDOWS_NATIVE_OPEN_OPTIONS | (const.WINDOWS_NATIVE_DIRECTORY if directory else const.WINDOWS_NATIVE_FILE),
+            None,
+            0,
+        )
+        try:
+            self._nt_check(status, result, collision=True)
+        except BaseException:
+            if raw.value not in (None, ctypes.c_void_p(-1).value):
+                self._check(self.kernel.CloseHandle(raw))
+            raise
+        if raw.value in (None, ctypes.c_void_p(-1).value):
+            raise _fail('Native Windows creation returned no valid handle.')
+        return self._adopt(raw.value, ntpath.join(parent.path, name), directory=directory)
+
+    def _adopt(self, raw: int, path: str, *, directory: bool) -> _Handle:
+        """Validate a noninherited acquired handle; never unlink on failed adoption."""
         handle = _Handle(self, raw, path)
         try:
             flags = self.wt.DWORD()
@@ -574,10 +720,12 @@ class _Handle:
 
 
 class _Guard:
-    """Hold every ancestor with no write/delete sharing through a primitive.
+    """Retain every ancestor and acquire descendants relative to the held root.
 
-    Directory attribute access is not covered by all sharing restrictions.
-    Native reparse-conversion proof remains mandatory before write integration.
+    Deny delete sharing to pin namespace identities; permit write sharing with
+    minimal observational rights so kernel rename target acquisition can work.
+    Attribute access can convert roots in place. Rechecks refuse that change;
+    relative native operations must prove that they cannot follow the new link.
     This module is internal and the CLI still refuses native transactions.
     """
 
@@ -592,6 +740,10 @@ class _Guard:
         if parts and not parts[-1]:
             parts.pop()
         current = drive + '\\'
+        mapping = ctypes.create_unicode_buffer(const.WINDOWS_PATH_CHARS)
+        length = self.api.kernel.QueryDosDeviceW(drive, mapping, len(mapping))
+        if not 0 < length < len(mapping) or re.fullmatch(r'\\Device\\HarddiskVolume[0-9]+', mapping.value) is None:
+            raise _fail('Unresolved Windows drive mapping refused.')
         try:
             for part in [None, *parts]:
                 if part is not None:
@@ -662,11 +814,25 @@ class _Guard:
         path = self._child(name)
         if create:
             with self.api._security(directory=False) as security:
-                handle = self.api._open(
-                    path, directory=False, create=True, writable=True, exclusive=ownership, removable=True, security=security
+                handle = self.api._open_relative(
+                    self.handles[-1],
+                    name,
+                    directory=False,
+                    create=True,
+                    writable=True,
+                    exclusive=ownership,
+                    removable=True,
+                    security=security,
                 )
         else:
-            handle = self.api._open(path, directory=False, writable=writable, exclusive=ownership, removable=True)
+            handle = self.api._open_relative(
+                self.handles[-1],
+                name,
+                directory=False,
+                writable=writable,
+                exclusive=ownership,
+                removable=True,
+            )
         try:
             handle.parent = self
             handle.can_write_record = create or ownership
@@ -683,16 +849,20 @@ class _Guard:
     def _create_directory(self, name: str) -> _Handle:
         """Create protected directory security before any descendant or payload.
 
-        CreateDirectoryW returns no handle. If the following acquisition fails,
-        retain the uncertain empty artifact instead of removing it by pathname.
+        NtCreateFile applies creation security and returns the exact new handle
+        in one call. Failed validation retains the uncertain private artifact.
         """
         path = self._child(name)
         with self.api._security(directory=True) as security:
-            if not self.api.kernel.CreateDirectoryW(path, ctypes.byref(security)):
-                if ctypes.get_last_error() in (80, 183):
-                    raise FileExistsError('Native Windows directory already exists.')
-                raise _fail('Cannot create a private Windows directory.')
-        handle = self.api._open(path, directory=True, writable=True, removable=True)
+            handle = self.api._open_relative(
+                self.handles[-1],
+                name,
+                directory=True,
+                create=True,
+                writable=True,
+                removable=True,
+                security=security,
+            )
         try:
             handle.parent = self
             handle._private()
@@ -707,8 +877,8 @@ class _Guard:
     def _rename(self, source: _Handle, name: str, expected: _Identity) -> None:
         """Publish one exact private held entry without overwriting a late target.
 
-        Uses a full target DOS path under the retained complete guard chain;
-        RootDirectory is NULL. No source handle is dropped for rename. There is
+        NtSetInformationFile receives the retained target directory handle and
+        one validated component. No source handle is dropped for rename. There is
         no overwrite, copy/delete or sharing-failure fallback.
         """
         target = self._child(name)
@@ -720,20 +890,19 @@ class _Guard:
         if expected.volume != self.handles[-1].identity.volume:
             raise _fail('Cross-volume Windows publication refused.')
         digest = None if expected.directory else hashlib.sha256(source._read(const.MAX_ENCRYPTED_BYTES)).digest()
-        encoded = target.encode('utf-16-le')
+        encoded = _component(name).encode('utf-16-le')
         record = self.api.Rename
-        size = max(ctypes.sizeof(record), record.name.offset + len(encoded) + 2)
+        size = ctypes.sizeof(record) + len(encoded)
         buffer = ctypes.create_string_buffer(size)
         header = record.from_buffer(buffer)
-        header.flags, header.root, header.length = 0, None, len(encoded)
+        header.flags, header.root, header.length = 0, self.handles[-1].raw, len(encoded)
         ctypes.memmove(ctypes.addressof(buffer) + record.name.offset, encoded, len(encoded))
-        self.api._check(
-            self.api.kernel.SetFileInformationByHandle(
-                source.raw,
-                const.WINDOWS_RENAME_INFORMATION,
-                buffer,
-                size,
-            )
+        result = _IoStatus()
+        self.api._nt_check(
+            self.api.ntdll.NtSetInformationFile(
+                source.raw, ctypes.byref(result), buffer, size, const.WINDOWS_NATIVE_RENAME_INFORMATION
+            ),
+            result,
         )
         # Record the new spelling even if a postcheck fails; retain the handle.
         source.path = target
@@ -751,13 +920,13 @@ class _Guard:
 
         FileRenameInfo overwrite cannot compare-and-replace an exact destination
         ID while a deny-delete target handle remains held. Releasing that guard
-        is unsafe. Thread 2 must resolve a separately reviewed journal protocol;
-        this helper never introduces a path-based overwrite fallback.
+        is unsafe. The internal immutable checkpoint store implements logical
+        replacements using new names; this creator never overwrites by path.
         """
         if not isinstance(data, bytes) or len(data) > const.TRANSACTION_JOURNAL_BYTES:
             raise _fail('Windows journal exceeds its bound.')
         if previous is not None:
-            raise _fail('Exact guarded Windows journal replacement remains unqualified.')
+            raise _fail('Exact guarded Windows journal overwrite refused; use immutable generations.')
         handle = self._open_file(name, create=True)
         try:
             handle._write(data, const.TRANSACTION_JOURNAL_BYTES)

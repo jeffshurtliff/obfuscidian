@@ -1,7 +1,8 @@
 # Native Windows safety design for 2.0.0
 
-**Status:** Design delivered for review; no Windows write operation is enabled by
-this document. **Date:** 10 October 2026. **Parent:** [#17](https://github.com/jeffshurtliff/obfuscidian/issues/17).
+**Status:** #26 implementation handoff accepted with the limited qualification
+deferral approved on **12 October 2026**; no Windows write operation is enabled.
+**Design date:** 10 October 2026. **Parent:** [#17](https://github.com/jeffshurtliff/obfuscidian/issues/17).
 Package metadata already targets `2.0.0.dev0`; the intended stable version is
 `2.0.0`. Package version and encrypted backup-format version remain separate.
 
@@ -11,13 +12,47 @@ Subsequent implementation must resolve the named proof gates before enabling
 an operation. A design, mocked API test or passing job that skips writes does
 not establish native Windows support.
 
+## Approved ownership-proof deferral — 12 October 2026
+
+The maintainer explicitly accepted the #26 implementation handoff with one
+precise evidence gap: actual synthetic filesystem ownership-transition refusal.
+That proof is now a **mandatory #29 qualification gate**, rather than a blocker
+to beginning internal #27 development. This decision supersedes earlier handoff
+statements requiring that specific proof before #27. It does not waive the test,
+relax production owner/DACL checks or establish passing native qualification.
+
+- Retain the original real-owner test and its mandatory assertions. The existing
+  token still lacks the assignable owner fixture; report its failure explicitly.
+  The passing injected-descriptor supplement remains supplementary evidence.
+- #27 may implement and test the private Windows backup/fresh-restore/recovery
+  lifecycle; #28 may later implement its separately authorized Git lifecycle.
+  Keep production Windows CLI mutation/recovery gates intact through this work.
+  Exercise synthetic lifecycle writes through private backend tests without a
+  user-facing bypass or incidental unsupported library API.
+- #29 must obtain actual changed-owner proof on an eligible existing unelevated
+  host/token or reviewed real-owner fixture, with native identity, original bytes
+  and exact protected DACL preserved around the owner change and actual
+  production refusal. Record the positive fixture, OS/storage/interpreter,
+  candidate/commit and real native results. No account creation, privilege
+  activation, replacement by injection, skip or xfail is authorized.
+- Do not enable production Windows writes/recovery or claim qualified 2.0.0
+  Windows support until that proof and the applicable operation/matrix/artifact
+  qualification gates are satisfied. Existing-log append stays refused.
+
+#26 is ready for the internal #27 handoff under this exception. #17 remains in
+progress; #27 and #29 have not started. Issues remain open; this decision does
+not authorize closure, Git history changes, remote delivery or publication.
+The r3 diagnostic result remains **907 passed, 1 failed, 596 skipped**, with
+three passing owner supplements; Store-based CPython 3.13.14/AMD64/64-bit
+metadata is confirmed. No native test result is relabeled by the deferral.
+
 ## Delivery sequence
 
 | Thread | Issue | Deliverable | Dependency |
 | --- | --- | --- | --- |
 | 1 | [#25](https://github.com/jeffshurtliff/obfuscidian/issues/25) | This safety contract, implementation map and validation plan | Current baseline and #12 evidence |
 | 2 | [#26](https://github.com/jeffshurtliff/obfuscidian/issues/26) | Native ACL, handle, ownership and publication primitives with native tests | Reviewed #25 design |
-| 3 | [#27](https://github.com/jeffshurtliff/obfuscidian/issues/27) | Fresh/merge backup, fresh restore and explicit recovery | Proven #26 primitives |
+| 3 | [#27](https://github.com/jeffshurtliff/obfuscidian/issues/27) | Private fresh/merge backup, fresh restore and explicit recovery lifecycle; CLI gates retained | Accepted #26 handoff with the approved ownership-proof deferral |
 | 4 | [#28](https://github.com/jeffshurtliff/obfuscidian/issues/28) | Git merge restore and ordinary-failure cleanup | Complete #27 lifecycle |
 | 5 | [#29](https://github.com/jeffshurtliff/obfuscidian/issues/29) | Native matrix, exchanged v1 backups, installed artifacts and support docs | Complete #27 and #28 implementations |
 
@@ -130,8 +165,9 @@ required native proof gates in #26.
 
 ## Private objects and access-control validation
 
-Use explicit security attributes on `CreateFileW(CREATE_NEW)` and
-`CreateDirectoryW`, with non-inheritable handles. The protected DACL grants
+Use explicit creation security on handle-relative `NtCreateFile(FILE_CREATE)`
+for transaction files and directories, with non-inheritable handles. The
+existing key/new-log helper continues using `CreateFileW(CREATE_NEW)`. The protected DACL grants
 full access only to the current effective user SID; validate that the owner is
 that SID. Do not use a group owner or accept an arbitrary owner merely because
 an `OWNER RIGHTS` ACE exists. Keep the existing key/log helper contract stable;
@@ -163,7 +199,7 @@ Microsoft's [file security guidance](https://learn.microsoft.com/en-us/windows/w
 states that moving an object does not assign a new default descriptor and that
 parent ACLs do not govern a child's access. Therefore a private rollback parent
 does not prove the privacy of preexisting children. Creation and inspection APIs
-are documented in [CreateDirectoryW](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createdirectoryw)
+are documented in [NtCreateFile](https://learn.microsoft.com/en-us/windows/win32/api/winternl/nf-winternl-ntcreatefile)
 and [GetSecurityInfo](https://learn.microsoft.com/en-us/windows/win32/api/aclapi/nf-aclapi-getsecurityinfo).
 
 ## Handle guards, identity and publication
@@ -172,15 +208,20 @@ Keep native mutation guards distinct from best-effort read-only traversal.
 Acquire directory components from the trusted root outward, opening each with
 `FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_OPEN_REPARSE_POINT`. Query the opened
 attributes/type and compare volume/file IDs before accessing a child. Retain
-ancestor handles through the operation. Directory guards must deny delete
-sharing and establish that in-place reparse conversion is prevented; denying
-write sharing is the candidate policy to test. Check already-open incompatible
-handles and preserve data on sharing violations.
+ancestor handles through the operation. Directory guards deny delete sharing
+to pin the namespace, with traverse/read-attribute/read-control/synchronize
+rights and read/write sharing compatible with kernel rename-target acquisition.
+Attribute-only handles can still convert a directory in place. Descendant
+creation/acquisition therefore uses a retained native root, one validated
+component and `OBJ_DONT_REPARSE | FILE_OPEN_REPARSE_POINT`; rechecks detect unsafe
+changes. Prove that conversion both before and during the native call cannot
+redirect reads/writes or publication into the new link target. Check
+incompatible handles and preserve data on sharing violations.
 
 An absolute path assembled from inspected strings is insufficient without
-these live guards. `FILE_FLAG_OPEN_REPARSE_POINT` affects the opened component;
-it does not independently protect every intermediate component. If the pinned
-chain cannot prevent substitution or reparse conversion on a qualified system,
+handle-relative operations. `FILE_FLAG_OPEN_REPARSE_POINT` affects the opened
+component; it does not independently protect every intermediate component. If
+the retained-root combination cannot prevent redirected operations on a qualified system,
 leave writes refused and revise the backend design. Do not replace it with
 `lstat`/write/`lstat` and call that anchoring.
 
@@ -199,20 +240,23 @@ identity or suppress changed-content comparisons. Bind alternate path spellings
 to the same destination ownership; reject aliases that cannot be canonicalized
 and checked safely, including unresolved short-name/drive aliases.
 
-For publication, prefer `SetFileInformationByHandle(FileRenameInfo)` on the
+For publication, use `NtSetInformationFile(FileRenameInformation)` on the
 validated source, with `ReplaceIfExists = FALSE`, a single validated target
-component and a held target-directory guard. Verify the target handle-relative
-resolution on the supported API/OS combinations; if using a full target path,
-retain the entire target chain. Postcheck moved identity, bytes and DACL.
+component and the held target-directory handle in `RootDirectory`. Verify this
+combination on supported API/OS builds. Postcheck moved identity, bytes and DACL.
 Never use overwrite flags for payload publication, reboot-delayed moves or
 cross-volume fallbacks. Close file read/flush handles before their required
 rename, retaining the appropriate rename handle and directory guards.
 
-Journal replacement is a separate narrowly authorized overwrite of the exact
-held journal identity. Validate an existing journal before replacement and keep
-the flushed new candidate when replacement is uncertain. Checked cleanup uses
-handle disposition on proven entries, children before directories, and refuses
-unknown children; no broad `rmtree` fallback.
+The #26 continuation implements logical journal replacement as immutable
+checkpoint generations. A held deny-delete old file cannot also be an ordinary
+overwrite-rename target; dropping its handle would lose the identity guard.
+Validate all earlier generations and publish a flushed new candidate to a new
+name with no overwrite. Retain all previous generations and uncertain candidates.
+This private control protocol does not change the encrypted backup format or the
+POSIX journal reader. Checked cleanup uses handle disposition on proven entries,
+children before directories, and refuses unknown children; no broad `rmtree`
+fallback.
 
 The relevant contracts are [CreateFileW](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createfilew),
 [FILE_ID_INFO](https://learn.microsoft.com/en-us/windows/win32/api/winbase/ns-winbase-file_id_info),
@@ -378,9 +422,11 @@ where possible, while isolating POSIX and Windows mutation state explicitly.
 | Git reconstruction/output/cleanup | `git_restore._copy_tree`, `_stage_overlay`, `_publish_merge`, `_cleanup_git` | Native Git worktree privacy from creation, preserved origin/index and retained uncertainty |
 | Installed support/evidence | `test_packaging.py`, `check_artifacts.py`, `.github/workflows/test.yml`, operation docs | Installed native round trips/recovery/Git and exact-commit matrix evidence |
 
-Thread 2 must leave CLI mutation gates intact. Thread 3 may enable only complete
-common backup/restore/recovery operations. Thread 4 may enable Git merge only
-after its own evidence. Thread 5 must not describe unrun native checks as passing.
+Thread 2 must leave CLI mutation gates intact. Under the approved deferral,
+Threads 3 and 4 implement/test their private lifecycles while keeping production
+Windows CLI mutation/recovery gates. Thread 5 must clear the deferred real-owner
+proof and applicable operation qualification before any Windows write enabling.
+Thread 5 must not describe unrun native checks as passing.
 Existing-log append remains refused in every thread. Any failed proof leaves
 the affected operation refused; retain partial status in #17.
 
@@ -388,7 +434,7 @@ The implementation must resolve these concrete gates with actual native tests:
 
 - Guard sharing compatibility for reading/copying, creating children, timestamps,
   directory rename and handle disposition; guard close ordering without an
-  unprotected mutation gap; prevention of in-place reparse conversion.
+  unprotected mutation gap; refusal and no redirection during in-place reparse conversion.
 - Handle-relative rename target resolution and variable-length structure layout
   across supported Python/Windows builds; full file IDs and alias ownership.
 - Journal replacement while guarding its identity and handling sharing denial;
@@ -431,6 +477,8 @@ was denied. Combine parsed descriptors, restricted-token access attempts and
 the kernel-enforced file API in native tests. Do not create accounts, request
 elevation or substitute an administrator bypass for the owner-only test. A
 missing required enforcement fixture is an explicit qualification blocker.
+The approved exception changes the deadline for real-owner proof to #29; it
+permits gated internal development without removing that qualification blocker.
 Microsoft documents the token/descriptor role in
 [AccessCheck](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-accesscheck).
 
@@ -478,6 +526,11 @@ in that checkout:
 
 ## Thread 2 local implementation handoff
 
+The initial primitive implementation was reviewed and committed by the maintainer
+as `36be5e0847d93fd46a20d61d79cd0b95a4dac643`, without push or merge. The
+continuation described below is additional unstaged, uncommitted work on that
+branch. Earlier local check results below apply to the initial implementation.
+
 Thread 2 / #26 adds `src/obfuscidian/_windows_native.py`, isolated from the CLI,
 key/new-log helper and POSIX transaction backend. The module is internal;
 its presence does not qualify Windows write support or complete #17. No
@@ -504,7 +557,7 @@ Implemented foundations:
   schema-validating transaction backend; disposition/close failures are errors.
 - Bounded binary writes with short-write completion, checked truncation and
   `FlushFileBuffers`; held-handle timestamps with explicit 100 ns precision;
-  no-clobber `FileRenameInfo` publication retaining source/target parents and
+  no-clobber `NtSetInformationFile(FileRenameInformation)` publication retaining source/target parents and
   the source handle. File publication rechecks full IDs, primary-stream digest
   and private ACL. Directory-tree/content reconciliation remains a lifecycle
   responsibility; the primitive does not establish descendant ownership.
@@ -512,36 +565,78 @@ Implemented foundations:
   copy-delete fallback. A nonempty directory is preserved by kernel refusal.
   New checkpoints are bounded, exclusive, private and flushed.
 
-API choices reviewed against the official references above. Publication uses
-`RootDirectory = NULL` and a full DOS target path under the complete retained
-target guard chain, with a DWORD-sized initial union and UTF-16 byte length in
-the variable-size rename structure. Relative-target resolution is therefore
-not assumed. Native file and directory rename/sharing tests must prove this
-combination before any caller is enabled.
+API choices were revised after the first native candidate failed. Creation and
+existing-leaf acquisition now use `NtCreateFile` with a retained root handle and
+one counted UTF-16 component. Directory creation returns its protected handle in
+the creation call. Publication uses the held target root and one component in
+`FILE_RENAME_INFORMATION`, including its DWORD-sized initial union and UTF-16
+byte length. The buffer includes the full structure size plus filename bytes.
+Microsoft's [rename structure contract](https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/ntifs/ns-ntifs-_file_rename_information)
+describes both relative resolution and minimal root rights compatible with the
+kernel's target open. These are candidate API choices, awaiting actual native
+qualification. No full-path mutation fallback is available.
 
-### Unresolved proof gates
+The internal `\\?\` spelling remains only for observational ancestor opens and
+directory enumeration after validating an ordinary absolute path, including
+prefix bytes in the path bound. Enumeration rechecks guards and acquires selected
+files through the retained native root. External device/UNC input remains
+rejected. The actual long-control-path case still requires native execution.
 
-**Exact existing-journal replacement is deliberately refused.** A deny-delete
+### Checkpoint continuation and unresolved native proof
+
+**Exact existing-journal overwrite is deliberately refused.** A deny-delete
 handle pins the old journal but also prevents an ordinary overwrite rename.
 Closing it to overwrite by path would lose the exact-identity guard; relaxing
 sharing without an atomic destination identity comparison would permit target
 substitution. `_checkpoint(previous=...)` refuses before creating/writing a
-candidate. A future design must resolve this within #26 before journal integration,
-for example by reviewing a bounded immutable-generation protocol with retained
-old generations; no such recovery-schema change is implemented here.
+candidate. The continuation resolves logical replacement with the internal
+`_windows_checkpoints.py` store, conditional on native qualification:
 
-**Native guard/privacy/ownership evidence remains pending.** Denying ordinary
+- A dedicated private control directory and live exclusive ownership handle
+  bind every frame to the ownership volume and full 128-bit file ID. The filename
+  namespace includes a full SHA-256 of the logical control name and the owner ID.
+- Frames contain a fixed magic, generation, ownership identity, predecessor
+  SHA-256, exact payload length and opaque binary payload. The entire frame stays
+  within the existing 16 MiB journal bound. SHA-256 binds sequence and content;
+  it does not authenticate records against their owner or encrypt plaintext.
+- A candidate is exclusively created at the next generation's `.pending` name,
+  completely written and flushed, then published by the guarded no-clobber
+  rename to its content-addressed `.bin` name. All prior files remain unchanged.
+  A post-publication error still reports failure; rereading observes the actual
+  retained state rather than assuming the failed call did nothing.
+- Reads validate every committed generation from 1, exact names, bounds, digest,
+  predecessor and owner binding. Unknown children, gaps, duplicates, unsafe
+  files and changed enumeration refuse without cleanup. One correctly numbered
+  private pending candidate may be partial; it is never authoritative and blocks
+  further appends until explicit reconciliation.
+- At most 4,096 generations and 128 MiB aggregate framed bytes, including a
+  candidate, are allowed. Exhaustion refuses before candidate creation. There
+  is no pruning or automatic pending-candidate deletion. The future lifecycle
+  must reserve enough checkpoint storage before destructive work; this primitive
+  does not establish that a complete transaction fits the budget.
+
+An internally valid chain does not prove that its last generation is complete:
+removing a valid tail can leave a valid prefix. #27 must validate a bounded Windows
+recovery schema, reconcile payload/control artifacts and bind expected progress
+to its retained ownership record before inverse writes. Empty chains and pending
+candidates cannot authorize recovery actions by themselves. This continuation
+does not implement that lifecycle or alter the POSIX recovery schema.
+
+**Revised native guard/privacy/ownership qualification remains pending.** Denying ordinary
 write/delete sharing alone does not prove in-place reparse prevention: Microsoft
 explicitly distinguishes attribute access in
 [CreateFileW sharing semantics](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createfilew).
-The native junction test includes a successful unelevated positive conversion
-and an actual `FSCTL_SET_REPARSE_POINT` attempt using an attribute handle acquired
-before the guard. If this succeeds, the guard design is insufficient and must
-be revised before integration. Directory creation's create-then-open boundary
-also needs native qualification; failed acquisition retains the uncertain empty
-artifact without pathname cleanup. No path-only fallback is authorized.
+The first Windows candidate demonstrated successful conversion while guarded.
+The revised native junction tests require matching successful attribute-only
+positive conversions, then exercise detected conversion and conversion at the
+native file-open, directory-create and rename boundaries. Every operation must
+refuse and leave the link target untouched. A pending artifact in the original
+held directory may remain after an ambiguous call; it is not removed by path.
+Native directory creation/adoption and interruption tests likewise retain an
+uncertain private artifact. No path-only fallback is authorized.
 
-The native suite is `tests/integration/test_windows_native.py`. It requires
+The native suites are `tests/integration/test_windows_native.py` and
+`tests/integration/test_windows_checkpoints.py`. They require
 eligible storage and mandatory fixture setup rather than skipping failed setup
 on Windows. Cases cover created/reused DACLs, null/extra/inherited/unsupported
 ACE/OWNER RIGHTS rejection, restricted-token `AccessCheck` plus a real denied
@@ -551,19 +646,35 @@ I/O/timestamps/disposition, real terminated-owner retention and reacquisition,
 explicit terminal release and injected short-write/flush failures. Native
 process coordination uses a bounded thread/queue/pipe protocol. Restricted-token
 fixture failure is a qualification blocker; it is not replaced by descriptor
-inspection alone.
+inspection alone. Continuation cases add immutable replacement/old identity
+retention, late collisions, malformed chains and real child termination during
+partial writes, flushed candidates, completed publication and directory creation
+before handle adoption/validation. Fault injection chooses boundaries; the native
+creation, handles, writes, rename, termination and reacquisition remain real.
 
-Still required within #26: native execution and repair on the supported Windows
-builds/Python versions; an actual changed-owner fixture (OWNER RIGHTS rejection
-is an unsafe grant test, not changed-owner evidence); drive/short-name alias and
-unsupported-volume qualification; directory create/acquisition failure and
-process-interruption evidence; complete journal replacement protocol/proof.
+Continuation fixtures also cover a real changed-owner attempt using an already
+enabled owner-assignable token group without privilege activation; an isolated
+per-session drive mapping; the actual short-name branch when 8.3 aliases exist;
+and injected unsupported-volume responses on real handles. `QueryDosDeviceW`
+requires an ordinary `\Device\HarddiskVolumeN` mapping before opening the
+ancestor chain, rejecting drive substitutions rather than assuming a drive
+letter establishes custody. Actual unsupported filesystem volumes are not
+qualified by those injected responses. The short-name test records whether a
+real alias was available in JUnit; disabled 8.3 generation proves syntax refusal
+only, with no support claim for an unavailable fixture.
+
+Still required within #26: native execution and repairs on the selected Windows
+builds/Python versions, including guard/reparse, directory creation/acquisition,
+privacy/kernel denial, changed ownership, alias and checkpoint interruption
+proof. If an unelevated token has no eligible owner group, report the fixture
+failure and revisit the test strategy; do not elevate or turn it into a passing
+skip. Follow the [native validation procedure](windows-primitive-validation.md).
 POSIX parser/failure tests are supplementary and do not discharge these gates.
 No runtime OS-build support claim is made by the 64-bit loader.
 
 ### Validation and scope
 
-Local macOS / Python 3.12.7 results:
+Initial implementation: local macOS / Python 3.12.7 results:
 
 - New scoped tests: 45 passed, 16 native Windows cases skipped.
 - Full coverage run: 1,404 passed, 23 skipped, 14 TLS fixture setup errors because
@@ -585,12 +696,176 @@ Local macOS / Python 3.12.7 results:
 Exact results are also recorded in the #26 issue handoff.
 Native cases skip narrowly on POSIX because Win32 enforcement cannot execute
 there. Windows/hosted matrix results, runner/storage/build/Git versions and
-exact-commit evidence are unavailable until separately authorized publication
-and actual native execution. No real vaults, keys, accounts or elevated privileges
+exact candidate/commit evidence require actual native execution. A private local
+source snapshot can be tested without push or publication; hosted CI still
+requires separately authorized remote delivery. No real vaults, keys, accounts or elevated privileges
 were used. No dependency, package version, encrypted format or public interface
 changed. Changed Python headers use `Jeff Shurtliff (via GPT-6.1 Sol)` and
 `10 Oct 2026`.
 
 Leave #26 and #17 open for these gates and maintainer review. The next request
 must finish #26's remaining proof before authorizing #27; this handoff is not
-permission to begin a successor. All changes remain unstaged and uncommitted.
+permission to begin a successor. Continuation changes remain unstaged and
+uncommitted; the maintainer's initial commit has not been pushed or merged.
+
+### Previous candidate local validation — 10 October 2026
+
+On macOS / Python 3.12.7, the final full coverage invocation passed **1,440 tests**
+with **50 platform skips** in one run. The test sandbox permitted the isolated
+loopback TLS fixtures; no retry was required for this continuation result.
+Scoped primitive/checkpoint suites: **67 passed, 43 native integration cases
+skipped**. At that point native Windows execution and hosted matrix evidence
+were unavailable; the later native attempt below supersedes that status.
+Coverage is 82% overall, 82% for portable checkpoint sequencing and 23% for the
+native wrapper; these percentages do not qualify unexecuted Win32 enforcement.
+
+Strict Poetry lock, Ruff lint/format, Bandit, fresh wheel/sdist build, strict
+Twine and all three installed-candidate packaging checks passed. The packaging
+checks used available development dependencies through an explicit path, without
+a downloaded wheelhouse; isolated wheelhouse and native installed-write smoke
+checks remain unexecuted. Strict fresh Sphinx and local rendered references
+passed across 37 HTML pages; external URLs were not checked by the reference
+script. Changed headers, scope, whitespace, empty Git index and public-safe
+source checks passed. CLI, transaction, Git restore, existing-log and key helper
+files, dependencies and version metadata are unchanged from the maintainer's
+initial commit.
+
+The maintainer offered to run the candidate on a Windows machine. The
+[validation procedure](windows-primitive-validation.md) includes source-hash
+verification, PowerShell commands and reporting requirements. A local archive
+contains the tracked checkout plus only the scoped continuation sources and a
+manifest, without Git/private workspace material. Its manifest digest identifies
+the exact candidate; it does not turn this work into a committed or hosted run.
+Return native failures/results for review before #26 completion or #27 work.
+
+### Failed native candidate and repaired local candidate — 10 October 2026
+
+Maintainer-supplied Windows 11 Home build 26200 / AMD64 CPython 3.13.14 evidence
+for the previous source candidate reports **90 passed, 20 failed, 1 POSIX-only
+skip**. The two native integration modules had **23 passes, 20 failures and no
+skips**. Full regression/coverage did not run after failure. Actual 8.3 alias
+availability was true. Source-file hash verification and strict lock validation
+succeeded; elevation, PowerShell version and archive checksum were not
+independently recorded. Raw reports remain private because they contain host
+identifiers and temporary paths.
+
+The guard allowed in-place conversion. Thirteen publication/checkpoint cases
+failed at rename, usually before the requested fault scenario. Three child tests
+exited before their interruption boundaries without captured startup diagnostics.
+An unavailable owner-group fixture, an ACL assertion that lost read access and
+an incorrect CLI exit-code expectation account for the other failures. No
+interpreter-version or Microsoft Store distribution defect has been established.
+
+The revised retained-root API combination and conversion-race fixtures described
+above address the guard/publication design. Native calls report numeric errors
+without formatting paths. Unsafe-ACL assertions retain an existing fully shared
+reader, and CLI assertions preserve the existing exit 1 transaction refusal and
+exit 2 existing-log refusal. Directory interruption now occurs after native
+creation and before handle adoption/validation. The owner-group fixture remains
+mandatory and unresolved on the supplied token.
+
+Repaired local macOS / Python 3.12.7 checks: **1,448 passed, 53 platform skips**
+in one full coverage invocation with permitted isolated loopback sockets; scoped
+suites **75 passed, 47 platform skips**, including 46 native integration cases.
+Strict lock/style/Bandit, fresh build/strict Twine, three installed-candidate
+packaging checks and strict Sphinx/local references (37 HTML pages) passed.
+Packaging used available development dependencies without downloaded wheelhouse
+isolation. These checks do not execute the revised Windows kernel behavior.
+
+The revised candidate requires another native run. Existing alternate-owner
+fixture availability or a reviewed alternate strategy remains a dependency;
+do not elevate, create accounts or replace the mandatory failure with a skip.
+Other Windows builds/interpreters and hosted CI remain unexecuted. All
+continuation/repair changes remain unstaged/uncommitted on the existing branch;
+CLI mutation/recovery gates and existing-log append refusal remain in place.
+#27 has not started, and #26/#17 remain open pending proof and maintainer review.
+
+### Repaired candidate native evidence — 11 October 2026
+
+The maintainer returned r2 results for source manifest digest
+`eec6f6890b9171e60dc24939941077ca3cb1c9072979352ebc3718d96c1be8e9`.
+Selected suites: **120 passed, 1 failed, 1 POSIX-only skip**, exit code 1. The
+native integration modules contributed **45 passes, 1 failure and no skips**.
+The revised conversion/rename/checkpoint cases passed on Windows 11 Home build
+26200, AMD64 CPython 3.13.14, with the elevated-administrator check false.
+PowerShell was 5.1.26100.9444; Poetry 2.5.1 and Git 2.55.0.windows.5. Actual
+8.3 alias availability was true. Source hashes and strict lock/interpreter
+validation succeeded; archive checksum verification was not recorded.
+
+The only failed case found no assignable alternate owner group, before changing
+an owner. This is an unavailable fixture prerequisite rather than an observed
+owner-refusal defect. Actual owner-transition rejection remains unproved. Full
+Windows regression/coverage did not run. Other OS/interpreter combinations and
+hosted CI remain unexecuted. A separate web handoff mistyped the digest; raw
+terminal output matches the r2 candidate. These selected native passes do not
+complete #26 or authorize #27.
+
+An existing eligible token or a reviewed two-existing-account synthetic fixture
+can supply the remaining ownership proof; the latter must verify unchanged
+native identity, bytes and the original protected DACL around the real owner
+transition. See the [validation procedure](windows-primitive-validation.md).
+Do not weaken production policy, enable privileges, create accounts or convert
+the failed prerequisite to a skip. The r2 evidence does not require another
+production repair by itself. CLI gates and existing-log refusal remain retained.
+
+### Single-account fixture limitation — 11 October 2026
+
+The maintainer has only the current Windows account available; the proposal
+using two existing accounts cannot be executed on that machine. The original
+actual owner-transition test remains mandatory and now records its fixture
+availability in JUnit. Additional portable tests exercise the production
+validator's positive and foreign-owner branches plus descriptor release. A
+supplementary Windows case injects a native-created foreign-owner descriptor
+into the getter response for one real private synthetic file, then checks the
+original ID, bytes and owner/DACL remain unchanged. It installs no descriptor
+and changes no owner/ACL.
+
+The new native-descriptor case is injected response evidence, with a distinct
+JUnit property, and is unexecuted on Windows until the maintainer runs it. It
+does not silently replace actual ownership reassignment proof. The
+[validation procedure](windows-primitive-validation.md) provides targeted
+supplementary checks and a full diagnostic Windows regression invocation that
+keeps the original failing case selected. A suitable existing token/host or an
+explicit maintainer revision to the required ownership evidence remains needed.
+#26 is incomplete; #27 has not started. CLI gates remain intact.
+
+### R3 full diagnostic and Store Python evidence — 11 October 2026
+
+The maintainer returned the r3 script/transcript/JUnit reports. Archive and all
+source-file checksums matched the supplied candidate. The script selected the
+maintainer-identified Microsoft Store interpreter with `python`, rather than
+requiring `py -3.13`; Poetry created a Python 3.13 virtualenv. Windows 11 Home
+build 26200, 64-bit OS and elevation false were recorded. Exact Python patch
+version/architecture stdout was not retained in this transcript, so r2's
+AMD64 CPython 3.13.14 metadata remains earlier evidence.
+
+Supplementary owner checks: **3 passed, no failures/skips**, exit 0. Full
+diagnostic regression: **907 passed, 1 failed, 596 skipped**, exit 1; no errors.
+The sole failure was the unavailable assignable-owner fixture before any owner
+change. Native integration returned 46 passes/1 failure/no skips, comprising
+45 other native passes and one injected-descriptor supplement. That supplement
+does not establish actual owner reassignment. Installed-artifact packaging
+returned three passes using development dependencies; Windows mutation remains
+gated. Coverage report exit 0: 70% overall, 86% native wrapper, 91% checkpoint
+store. See the [validation procedure](windows-primitive-validation.md) for
+precise evidence classification and revised Store-compatible selection.
+
+Microsoft Store CPython is part of the intended compatibility target, with the
+same native capability/identity/ACL checks. Python documents Store-specific
+path redirection; this virtualenv run does not qualify every direct invocation
+or redirected location. No Store-distribution production defect is established.
+No runtime source, mandatory assertion or permission gate changes are needed
+for this review. Full diagnostic evidence is collected, while actual-owner
+proof remains blocked on the available account. Other target hosts/interpreters
+and hosted CI remain unexecuted. #26 stays incomplete and #27 is unstarted.
+
+### R3 interpreter metadata follow-up — 12 October 2026
+
+The maintainer returned the metadata helper's output from the existing r3
+environment: **CPython 3.13.14, AMD64, 64-bit**, with
+`store_package_path_detected=true`. This closes the omitted version/architecture
+reporting gap and corroborates the reported Store installation. No tests were
+rerun and no dependencies or runtime code changed. The r3 test counts and
+remaining actual ownership-transition proof requirement are unchanged; other
+invocation modes, host/interpreter combinations and hosted CI remain untested.
+CLI mutation/recovery gates and existing-log append refusal remain intact.

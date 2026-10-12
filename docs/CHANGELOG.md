@@ -15,13 +15,38 @@ Package versions and encrypted backup-format versions are separate contracts.
 - Internal Windows safety primitives and synthetic native qualification tests
   (issue [#26](https://github.com/jeffshurtliff/obfuscidian/issues/26)): explicit
   private DACLs, guarded handles/full identities, bounded I/O, lifetime ownership,
-  no-clobber rename, checked disposition and timestamps. Native runtime evidence
-  and exact guarded existing-journal replacement remain pending; CLI mutation
-  gates and existing-log append refusal remain in place.
+  no-clobber rename, checked disposition and timestamps, with bounded immutable
+  checkpoint generations that retain earlier records. Native qualification
+  retains an outstanding real ownership-transition proof; CLI mutation gates
+  and existing-log append refusal remain in place. Added a maintainer Windows qualification procedure and interruption
+  fixtures without starting transaction integration.
+
+- Supplementary owner-validation tests for #26 using injected metadata and a
+  Windows-created in-memory descriptor, with distinct evidence properties and
+  unchanged filesystem owner/ACL checks. The mandatory real owner-transition
+  test remains intact; these supplements do not establish that native proof.
 
 ### Changed
 
+- Accepted the #26 implementation handoff with the maintainer-approved limited
+  real ownership-transition proof deferral to #29. Internal #27 development may
+  proceed with Windows CLI mutation/recovery gates retained; the proof remains
+  mandatory before write enabling or qualified 2.0.0 Windows support claims.
+
+- Windows primitive qualification guidance includes Microsoft Store Python
+  selection without a required `py` launcher, explicit interpreter checks and
+  script-file execution. Recorded r3 native diagnostic evidence retains the
+  outstanding real ownership-transition proof and CLI mutation gates (#26).
+
 ### Fixed
+
+- Revised internal Windows acquisition/publication to use retained native root
+  handles after the first qualification run exposed insufficient pathname
+  guarding. Added numeric native diagnostics and conversion-race fixtures;
+  corrected unsafe-ACL preservation and CLI-gate test expectations. Revised
+  native cases passed on the supplied host, while required real ownership proof
+  remains outstanding before Windows write enabling; its deadline is deferred
+  to #29 under the approved gated development handoff (issue #26).
 
 - PyPI update checks use a runtime CA bundle when default Python certificate
   discovery is unavailable (issue [#24](https://github.com/jeffshurtliff/obfuscidian/issues/24)).

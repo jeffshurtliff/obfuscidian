@@ -5,6 +5,25 @@ supports key creation, authenticated verification and read-only planning;
 vault mutation/recovery and existing-log append are refused. The table below
 distinguishes tested behavior from unavailable writes.
 
+Microsoft Store CPython is included in the Windows compatibility target for
+the supported Python versions. A separate `py` launcher or traditional
+installer is not required; select the actual interpreter with `python` (or its
+versioned executable) and validate the version. The maintainer's Store-based
+CPython 3.13.14/AMD64/64-bit virtualenv returned 907 passes, one unavailable
+ownership-fixture failure and 596 platform skips in the #26 r3 diagnostic run;
+it did not produce passing native qualification. See the
+[primitive validation record](maintainers/windows-primitive-validation.md)
+for the precise candidate, 12 October interpreter metadata follow-up and
+remaining proof gaps. Store-specific path
+redirection still requires the same storage, identity and ACL checks; Windows
+backup/restore mutation and existing-log append remain refused.
+
+The maintainer accepted #26's implementation handoff on 12 October 2026 with
+actual ownership-transition proof deferred to #29. This permits internal
+lifecycle development with production Windows CLI gates retained; the deferred
+proof remains mandatory before Windows writes are enabled or 2.0.0 Windows
+support is described as qualified. It does not change current supported behavior.
+
 ## Validation evidence
 
 All nine Linux/macOS/Windows CI jobs passed on Python 3.12–3.14 in
