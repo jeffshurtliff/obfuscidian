@@ -1,10 +1,10 @@
 # Private Windows lifecycle handoff — #27
 
 **Date:** 12 October 2026. **Target:** 2.0.0. **Status:** implementation candidate
-on the existing `feature/17-add-safe-native-windows-support` branch. The retry3
-native run has one unresolved replacement-restore failure plus the deferred
-owner-fixture failure. A targeted diagnostic locates post-publication record
-reconciliation; a creation-time preservation repair awaits native confirmation. Production Windows CLI mutation/recovery
+on the existing `feature/17-add-safe-native-windows-support` branch. Retry4's
+replacement-restore roundtrip passes; four new metadata interruption fixtures
+fail during payload inspection, plus the deferred owner-fixture failure. The
+test-only inspection correction awaits a targeted native rerun. Production Windows CLI mutation/recovery
 and existing-log append remain refused. No qualified support claim is made.
 
 The clean starting checkout contained reviewed #26 continuation `2316457` and
@@ -476,11 +476,90 @@ is included. Hosted CI, other interpreters/hosts and native repair confirmation
 remain unexecuted. Six repair/source/test/document files remain unstaged and
 uncommitted on the existing branch; no agent Git delivery was performed.
 
+### Retry4 native evidence and protected-control fixture correction — 12 October 2026
+
+The supplied retry4 archive has SHA-256
+`3ba25117be0bd07072fc92268c0afecbfa9f077a98001e2ce9c505471775f95f`.
+All **35 recorded source-file hashes** match maintainer commit `33e8aab`.
+Direct and Poetry reports agree on **Microsoft Store CPython 3.13.14 / AMD64 /
+64-bit**, unelevated, on **Windows 11 Home build 26200**, Git 2.55.0.windows.5.
+Both helper suites executed; no separate PowerShell transcript was supplied.
+The archive records both exits as 1. Reports, host names and identifying paths
+remain private; only sanitized evidence is recorded here.
+
+| Suite | Actual retry4 result |
+| --- | --- |
+| Selected qualification | **166 passed, 5 failed, no skips/errors**; 171 cases, exit 1 |
+| Full diagnostic | **1027 passed, 5 failed, 596 skipped, no errors**; 1628 cases, exit 1 |
+| Private lifecycle module | **57 passed, 4 failed**, no skips |
+| Native checkpoint module | **17 passed**, no failures/skips |
+| Native primitive module | **29 passed, 1 failed**, no skips; unchanged unavailable real-owner fixture |
+| Injected transaction model | **37 passed**; not native API proof |
+| Interpreter tooling | **8 passed**: six injected checks and two Windows shell-file cases |
+| Fixture support | **18 passed**: seventeen portable/injected checks and one Windows long-path I/O case |
+
+The previously failing private backup/restore roundtrip now **passes in both
+suites**, including confirmed replacement of previously restored plaintext.
+This supplies native success evidence for the private metadata-preservation
+candidate on this host, without proving the exact field that caused retry3's
+failure. Existing lifecycle successes, the original 28 actual-worker lifecycle
+interruption cases and production CLI refusal cases also pass. The eight new
+transaction regressions remain injected evidence. Native modules retain their
+injected fault/descriptor supplements; passing module totals do not turn those
+supplements into uninjected filesystem proof or qualified platform support.
+
+Two new proposal-return metadata interruption cases pass, with
+`actual_creation_time_tunnel_observed=False` in both suites. They prove actual
+worker termination and subsequent recovery for the exact observed state, not
+recovery from a real creation-time drift. The four forward/reconstruction cases
+also reach verified child termination, then fail before recording observations
+or attempting recovery: their test inspection calls `_capture` on a destination
+containing protected root `.git`, without passing the transaction's exclusions.
+The production reader correctly refuses it as a nested control. These four
+failures are fixture errors and remain failed evidence; they are not covered by
+the owner deferral or relabeled as successful recovery proof.
+
+The test-only correction passes `_protected_names(plan.preserve_config)` to its
+payload observation. It leaves the whole-tree before/after/retention snapshots
+inclusive of protected controls and retains every metadata and recovery assertion.
+No production reader, transaction, recovery, owner/DACL or CLI check changes.
+The real-owner test still fails with `assignable_owner_group_available=False`
+before reassignment; actual changed-owner proof remains mandatory in #29.
+Four source/document files remain unstaged/uncommitted on the existing branch;
+HEAD is `33e8aab`, and reviewed continuation `2316457` remains an ancestor.
+
+New local checks for this test-only correction: **60 passed, 111 Windows-only
+skips** in the scoped selection. Ruff lint/format (119 files), strict Sphinx,
+local references across **38 rendered HTML pages**, diff/privacy/scope and Python
+header checks passed. No full runtime rerun was needed for the inspection-only
+change; the earlier **1510 passed/118 skipped** result remains earlier evidence.
+PowerShell and the corrected native cases have not executed locally.
+
+After maintainer review/commit/sync, rerun only the six metadata-boundary cases
+from the repository root in the already validated 3.13 Poetry environment:
+
+```powershell
+$metadataReports = "$env:TEMP\obfuscidian-27-metadata-retry5"
+New-Item -ItemType Directory -Force -Path $metadataReports | Out-Null
+git rev-parse HEAD | Set-Content -Encoding UTF8 (Join-Path $metadataReports 'candidate-commit.txt')
+Get-FileHash -Algorithm SHA256 '.\tests\integration\test_windows_lifecycle.py' | Select-Object Hash | ConvertTo-Json | Set-Content -Encoding UTF8 (Join-Path $metadataReports 'test-source-sha256.json')
+& poetry run python -m pytest -q -ra tests/integration/test_windows_lifecycle.py::test_actual_same_name_publication_death_at_metadata_boundary "--junitxml=$metadataReports\metadata.xml" *> "$metadataReports\metadata.txt"
+Write-Output "Metadata interruption exit: $LASTEXITCODE"
+Compress-Archive -Path "$metadataReports\*" -DestinationPath "$metadataReports.zip"
+```
+
+Return that private ZIP. This diagnostic subset does not clear the owner gate,
+replace a full qualification run or claim the unchanged owner fixture passes;
+retry4's complete results and failure counts remain recorded above. A full
+repeat is warranted if these results expose a production change or further
+failure; unchanged native cases need not be repeated to diagnose this fixture.
+Other hosts/interpreters, exchanged artifacts and hosted CI remain unexecuted.
+
 ## Remaining qualification and scope
 
-- Validate the candidate repair for the confirmed replacement-restore failure within #27, then
-  rerun/review the native suite in a fresh external report directory, including actual sharing/DACL/namespace,
-  metadata/stream APIs, every real child boundary and broader baseline finalization.
+- Rerun/review the six metadata interruption fixtures after the protected-control
+  inspection correction. Retry4 confirms private replacement-restore success;
+  four new boundary recovery/refusal assertions remain unexecuted after correction.
   Any failure must retain affected production gates and be fixed/retested within
   the authorized thread before claiming native lifecycle proof.
 - #29 must clear the deferred actual changed-owner refusal proof and applicable

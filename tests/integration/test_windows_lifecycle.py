@@ -286,7 +286,9 @@ def test_actual_same_name_publication_death_at_metadata_boundary(locations, boun
         workspace = session.workspace
     expected = journal['inverse']['top.bin'] if phase == 'inverse-reconstruction' else journal['after']['top.bin']
     observed_root = workspace / 'stage' if phase == 'inverse-proposal' else destination
-    actual = files._capture(observed_root)['top.bin']
+    # Observe payload with the transaction's root-control exclusions. The
+    # fixture's protected .git remains included in the whole-tree snapshots.
+    actual = files._capture(observed_root, protected=tx._protected_names(plan.preserve_config))['top.bin']
     drift = actual['created'] != expected['created']
     record_property('actual_creation_time_tunnel_observed', drift)
     assert actual == {**expected, 'created': actual['created']}

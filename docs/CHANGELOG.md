@@ -16,8 +16,8 @@ Package versions and encrypted backup-format versions are separate contracts.
   with bounded ownership/checkpoint binding, independently verified saved and
   inverse copies, copy-inclusive estimates and synthetic lifecycle/termination
   fixtures. Production Windows CLI mutation/recovery and existing-log append
-  remain refused; native qualification retains a replacement-restore failure and
-  the deferred real-owner proof gap.
+  remain refused; retry4 confirms replacement-restore success, with four new
+  interruption-fixture failures and the deferred real-owner proof gap retained.
 
 - Maintainer safety design and staged implementation plan for native Windows
   backup, restore and recovery in 2.0.0 (issue
@@ -52,12 +52,20 @@ Package versions and encrypted backup-format versions are separate contracts.
 
 ### Fixed
 
+- Windows metadata interruption fixtures exclude the transaction's protected
+  root controls during payload inspection, retaining those controls in complete
+  preservation snapshots. Retry4's replacement restore passes; selected
+  166 passed/5 failed and full 1027 passed/5 failed/596 skipped, both exit 1,
+  retain four fixture failures and the unchanged owner-fixture gap. The fixture
+  correction awaits targeted native execution; production checks are unchanged (#27).
+
 - Private Windows lifecycle publication restores creation time after its own
   held-handle rename only when all other recorded fields match, then requires
   full record equality. Added injected metadata-failure/refusal regressions and
   native child-termination fixtures for forward/inverse metadata boundaries.
   Targeted replacement-restore diagnostics locate post-publication mismatch;
-  this candidate awaits native confirmation. Uncertain recovery artifacts remain
+  replacement restore passes in retry4; the new boundary fixture correction
+  awaits native repetition. Uncertain recovery artifacts remain
   preserved; production CLI gates and real-owner checks are unchanged (#27).
 
 - Private Windows replacement-restore tests report suppressed backend exception
@@ -72,7 +80,8 @@ Package versions and encrypted backup-format versions are separate contracts.
   control/copy inspection and injected model I/O. Child termination targets and
   waits for the actual spawned Python worker before releasing the input barrier
   or reacquiring handles. Verified on the supplied Store CPython 3.13.14 host;
-  replacement-restore and deferred owner-proof gates remain unresolved.
+  replacement restore now passes; metadata interruption fixture and deferred
+  owner-proof gates remain unresolved.
   Recorded the first #27 run accurately: selected 101 passed/38 failed; full
   diagnostic 962 passed/38 failed/596 skipped, both exit 1. The deferred real-owner
   fixture and production Windows safety gates remain unchanged (#27).
