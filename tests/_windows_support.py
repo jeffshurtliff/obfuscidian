@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 :Module:            tests._windows_support
-:Synopsis:          Private long-path fixture I/O and actual Windows worker termination
+:Synopsis:          Private fixture I/O, worker termination and path-free failure diagnostics
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
 :Modified Date:     12 Oct 2026
@@ -11,10 +11,47 @@ from __future__ import annotations
 
 import ctypes
 import os
+import re
 import subprocess
 from pathlib import Path
 
-from obfuscidian._windows_native import _api_path
+from obfuscidian._windows_native import _api_path, _NativeSafetyError
+
+
+def _failure_details(error: BaseException) -> str:
+    """Expose suppressed backend locations/numeric API codes without private arguments.
+
+    Production transaction failures suppress their exception context for output
+    privacy. The context still exists in memory; synthetic tests can identify its
+    code locations without printing exception arguments or filesystem state.
+    """
+    details, seen = [], set()
+    for _ in range(16):
+        if error is None or id(error) in seen:
+            break
+        seen.add(id(error))
+        frames = []
+        traceback = error.__traceback__
+        while traceback is not None:
+            frame = traceback.tb_frame
+            module = frame.f_globals.get('__name__', '')
+            if isinstance(module, str) and module.startswith('obfuscidian.'):
+                frames.append(f'{module}.{frame.f_code.co_name}:{traceback.tb_lineno}')
+            traceback = traceback.tb_next
+        status = ''
+        if type(error) is _NativeSafetyError and len(error.args) == 1 and isinstance(error.args[0], str):
+            # Accept only the native loader's two complete, path-free templates;
+            # never format arbitrary OS/exception text, even from this class.
+            codes = re.fullmatch(
+                r'Native Windows call refused \((WinError [0-9]{1,10}|NTSTATUS 0x[0-9A-F]{8}, I/O 0x[0-9A-F]{8})\); '
+                r'preserve pending artifacts\.',
+                error.args[0],
+            )
+            if codes is not None:
+                status = ' [' + codes.group(1) + ']'
+        details.append(type(error).__name__ + status + (': ' + ' -> '.join(frames) if frames else ': no backend frame'))
+        error = error.__cause__ if error.__cause__ is not None else error.__context__
+    return 'Synthetic lifecycle failure chain (code locations/numeric API status only):\n' + '\n'.join(details)
 
 
 def _io_path(path: Path) -> Path:

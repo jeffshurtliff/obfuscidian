@@ -14,7 +14,45 @@ from types import SimpleNamespace
 
 import pytest
 
+from obfuscidian import transactions as tx
+from obfuscidian._windows_native import _NativeSafetyError
 from tests import _windows_support as support
+
+
+def test_suppressed_backend_context_reports_locations_without_private_arguments():
+    """A from-None failure retains code context without exposing traceback filenames."""
+    namespace = {'__name__': 'obfuscidian.synthetic', 'FileNotFoundError': FileNotFoundError}
+    source = "def fail():\n    raise FileNotFoundError(2, 'SYNTHETIC SECRET', 'C:/private-fixture/secret.bin')\n"
+    exec(compile(source, 'C:/private-fixture/private-code.py', 'exec'), namespace)
+    try:
+        try:
+            namespace['fail']()
+        except FileNotFoundError:
+            raise tx._TransactionError(recovery_required=True) from None
+    except tx._TransactionError as error:
+        assert error.__suppress_context__
+        details = support._failure_details(error)
+    assert '_TransactionError' in details
+    assert 'FileNotFoundError: obfuscidian.synthetic.fail:2' in details
+    for private in ('SYNTHETIC SECRET', 'C:/', 'secret.bin', 'private-code.py'):
+        assert private not in details
+
+
+def test_failure_context_cycle_is_bounded_without_reporting_arguments():
+    first, second = ValueError('SYNTHETIC FIRST'), OSError('SYNTHETIC SECOND')
+    first.__context__, second.__context__ = second, first
+    details = support._failure_details(first)
+    assert details.count('ValueError') == 1 and details.count('OSError') == 1
+    assert 'SYNTHETIC FIRST' not in details and 'SYNTHETIC SECOND' not in details
+
+
+@pytest.mark.parametrize('code', ['WinError 32', 'NTSTATUS 0xC0000043, I/O 0xC0000043'])
+def test_numeric_native_status_uses_only_complete_loader_template(code):
+    error = _NativeSafetyError(f'Native Windows call refused ({code}); preserve pending artifacts.')
+    assert '[' + code + ']' in support._failure_details(error)
+    error = _NativeSafetyError(f'Native Windows call refused ({code}); preserve pending artifacts. C:/private/secret.bin')
+    details = support._failure_details(error)
+    assert code not in details and 'C:/' not in details and 'secret.bin' not in details
 
 
 @pytest.mark.parametrize('message', [b'READY', b'OTHER 123', b'READY -1', b'READY 0', b'READY 123 extra', b'READY 4294967296'])

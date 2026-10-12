@@ -29,7 +29,7 @@ from obfuscidian import constants as const
 from obfuscidian import transactions as tx
 from obfuscidian._windows_native import _Guard, _NativeSafetyError
 from obfuscidian.cli import cli
-from tests._windows_support import _io_path, _terminate_worker
+from tests._windows_support import _failure_details, _io_path, _terminate_worker
 
 pytestmark = pytest.mark.skipif(os.name != 'nt', reason='Actual native Windows lifecycle APIs required.')
 
@@ -112,7 +112,10 @@ def test_private_native_backup_fresh_merge_noop_and_restore_roundtrip(locations)
     backup._publish_windows_backup(plan, yes=True)
     assert {r.path for r in manifest._verify_mirror(mirror, keys._load_key(key)[0]).manifest.files} == {'binary.bin', 'added.md'}
     # Replace existing plaintext only with explicit consent; retain original copies.
-    restore._publish_windows_restore(restore._plan_restore(restored, mirror, key), yes=True)
+    try:
+        restore._publish_windows_restore(restore._plan_restore(restored, mirror, key), yes=True)
+    except tx._TransactionError as error:
+        pytest.fail(_failure_details(error), pytrace=False)
     assert not (restored / 'note.md').exists()
 
 

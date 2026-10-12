@@ -1,8 +1,9 @@
 # Private Windows lifecycle handoff — #27
 
 **Date:** 12 October 2026. **Target:** 2.0.0. **Status:** implementation candidate
-on the existing `feature/17-add-safe-native-windows-support` branch. The first
-native run failed; fixture repairs await native rerun/review. Production Windows CLI mutation/recovery
+on the existing `feature/17-add-safe-native-windows-support` branch. The retry3
+native run has one unresolved replacement-restore failure plus the deferred
+owner-fixture failure. Test diagnostics await a targeted native rerun. Production Windows CLI mutation/recovery
 and existing-log append remain refused. No qualified support claim is made.
 
 The clean starting checkout contained reviewed #26 continuation `2316457` and
@@ -105,7 +106,7 @@ Native child tests use `sys.executable`, bounded pipe/thread coordination,
 readiness at the selected boundary and a reported actual worker PID. The repaired
 harness verifies spawned ancestry, holds the worker process handle, terminates
 and waits for that worker before closing stdin or reacquiring filesystem handles.
-These repairs await native execution. The cases cover
+The retry3 native run exercised this repaired harness successfully. The cases cover
 original descendant deletion, top-level proposal publication, root creation,
 inverse publication/ACL states and terminal ownership release. Unbound root and
 incomplete inverse construction are expected conservative refusal cases.
@@ -330,9 +331,86 @@ loopback access. The preceding sandboxed attempt returned **1484 passed,
 112 skipped, 14 localhost TLS fixture setup errors**, exit 1; it is not relabeled
 as passing. Neither local run executes the new Windows APIs or hosted CI.
 
+### Retry3 native evidence and replacement-restore diagnostic — 12 October 2026
+
+The supplied retry3 transcript and JUnit reports correspond to the maintainer's
+commit `4bc1b1a`; all **35 source-file hashes** match that commit. The archive's
+SHA-256 is `5759996a3538cb69bb691566c29a697e79ba658853be3a89d89848f6df8aa73d`.
+Direct and Poetry probes again report **Store CPython 3.13.14 / AMD64 / 64-bit**,
+unelevated, on **Windows 11 Home build 26200**, Git 2.55.0.windows.5.
+Strict lock/interpreter preflight completed. Both suites still exit 1.
+
+| Suite | Actual retry3 result |
+| --- | --- |
+| Selected qualification | **151 passed, 2 failed, no skips/errors**; 153 cases |
+| Full diagnostic | **1012 passed, 2 failed, 596 skipped, no errors**; 1610 cases |
+| Private lifecycle module | **54 passed, 1 failed**, no skips |
+| Native checkpoint module | **17 passed**, no failures/skips |
+| Native primitive module | **29 passed, 1 failed**, no skips; failure is the unchanged unavailable real-owner fixture |
+| Injected transaction model | **29 passed**; not native API proof |
+| Interpreter tooling | **8 passed**: six injected checks and two Windows shell-file cases |
+| Fixture support | **14 passed**: thirteen portable/injected checks and one actual Windows long-path I/O regression |
+
+The repaired child harness passed all **28 lifecycle interruption cases**:
+13 forward boundaries, 11 inverse boundaries, two created-root cases, broader
+DACL finalization and inverse-root removal. The four primitive checkpoint
+termination cases and exclusive owner-death/reacquisition also passed with actual
+worker termination/wait verification. Boundary/fault selection is injected;
+filesystem operations and child termination are native. Changed-artifact,
+authentication, namespace, sharing, baseline-DACL recovery and four production
+CLI refusal cases passed. Other fault-response supplements remain explicitly
+injected evidence. This is scoped evidence on one host/interpreter, not qualified
+Windows 2.0.0 support or hosted CI.
+
+The remaining lifecycle case is
+`test_private_native_backup_fresh_merge_noop_and_restore_roundtrip`. It now
+passes fresh backup, no-op merge without writes, changed merge retaining historic
+content, fresh binary restore, replacement confirmation refusal and confirmed
+fresh backup replacement. It fails at the final **confirmed replacement of an
+already restored plaintext destination**. The transaction reports that retained
+artifacts require explicit recovery. The reports suppress its underlying
+exception; its exact cause and retained-state integrity cannot be established
+from these attachments. This failure is **not** covered by the owner-proof
+deferral and remains a #27 blocker. No production metadata, reconciliation,
+owner/DACL or sharing policy is changed on an unverified diagnosis.
+
+A test-only diagnostic now inspects the suppressed in-memory exception context
+and prints exception types plus Obfuscidian function names/line numbers and
+numeric API codes matching the native loader's exact path-free templates. It
+excludes arbitrary messages, traceback filenames, locals and filesystem contents; handles
+bounded/cyclic chains. The failing test invokes it only after unexpected
+replacement failure. Production exception handling, API and CLI behavior remain
+unchanged. These new diagnostics are absent from the supplied retry3 candidate
+and need one targeted native execution after maintainer review/commit/sync:
+
+```powershell
+New-Item -ItemType Directory -Force -Path "$env:TEMP\obfuscidian-27-replacement-diagnostic" | Out-Null
+& poetry run python -m pytest -q -ra tests/integration/test_windows_lifecycle.py::test_private_native_backup_fresh_merge_noop_and_restore_roundtrip "--junitxml=$env:TEMP\obfuscidian-27-replacement-diagnostic\replacement.xml" *> "$env:TEMP\obfuscidian-27-replacement-diagnostic\replacement.txt"
+Write-Output "Replacement diagnostic exit: $LASTEXITCODE"
+```
+
+Run from the repository root in the already validated 3.13 Poetry environment.
+This diagnostic subset intentionally targets the single unresolved lifecycle
+case; it is not a qualification suite or a replacement for the unchanged full
+helper/owner test. Return its two private reports and identify the tested commit.
+After diagnosis/repair, repeat the full helper into a fresh report directory.
+
+New local diagnostic checks on macOS ARM64 CPython 3.12.7 / Poetry 2.4.2:
+**52 passed, 105 Windows-only skips** in the scoped selection; four added
+cases verify suppressed context visibility, output privacy/bounds and numeric-code filtering.
+Ruff lint/format, strict Sphinx and local reference checks across **38 HTML pages**
+passed; whitespace, scope, privacy and current Python headers were checked.
+These are synthetic local checks, not native reproduction of the failure.
+The earlier full local result **1498 passed/112 skipped** predates these four
+tests; it is not claimed as a rerun. No new full native suite or hosted CI was
+executed here. All diagnostic/evidence updates remain unstaged/uncommitted on
+the same branch. #28/#29 implementation is unstarted; the original #26 r3 result
+and mandatory deferred owner proof remain unchanged.
+
 ## Remaining qualification and scope
 
-- Rerun/review the repaired #27 native suite in a fresh external report directory, including actual sharing/DACL/namespace,
+- Diagnose/repair the confirmed replacement-restore failure within #27, then
+  rerun/review the native suite in a fresh external report directory, including actual sharing/DACL/namespace,
   metadata/stream APIs, every real child boundary and broader baseline finalization.
   Any failure must retain affected production gates and be fixed/retested within
   the authorized thread before claiming native lifecycle proof.

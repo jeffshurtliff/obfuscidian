@@ -16,7 +16,8 @@ Package versions and encrypted backup-format versions are separate contracts.
   with bounded ownership/checkpoint binding, independently verified saved and
   inverse copies, copy-inclusive estimates and synthetic lifecycle/termination
   fixtures. Production Windows CLI mutation/recovery and existing-log append
-  remain refused; the first native lifecycle run failed and qualification remains pending.
+  remain refused; native qualification retains a replacement-restore failure and
+  the deferred real-owner proof gap.
 
 - Maintainer safety design and staged implementation plan for native Windows
   backup, restore and recovery in 2.0.0 (issue
@@ -51,10 +52,18 @@ Package versions and encrypted backup-format versions are separate contracts.
 
 ### Fixed
 
+- Private Windows replacement-restore tests report suppressed backend exception
+  types, code locations and strictly filtered numeric API status without private
+  messages, paths or contents. Retry3 native
+  evidence retains one lifecycle failure and the mandatory owner-fixture failure:
+  selected 151 passed/2 failed; full 1012 passed/2 failed/596 skipped, both exit 1.
+  Production behavior and safety checks remain unchanged; diagnosis is pending (#27).
+
 - Windows lifecycle qualification fixtures use long-path spelling for retained
   control/copy inspection and injected model I/O. Child termination targets and
   waits for the actual spawned Python worker before releasing the input barrier
-  or reacquiring handles; native verification of these repairs remains pending.
+  or reacquiring handles. Verified on the supplied Store CPython 3.13.14 host;
+  replacement-restore and deferred owner-proof gates remain unresolved.
   Recorded the first #27 run accurately: selected 101 passed/38 failed; full
   diagnostic 962 passed/38 failed/596 skipped, both exit 1. The deferred real-owner
   fixture and production Windows safety gates remain unchanged (#27).
