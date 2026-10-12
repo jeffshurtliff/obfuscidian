@@ -1,8 +1,8 @@
 # Private Windows lifecycle handoff — #27
 
 **Date:** 12 October 2026. **Target:** 2.0.0. **Status:** implementation candidate
-on the existing `feature/17-add-safe-native-windows-support` branch, pending
-review and actual native execution. Production Windows CLI mutation/recovery
+on the existing `feature/17-add-safe-native-windows-support` branch. The first
+native run failed; fixture repairs await native rerun/review. Production Windows CLI mutation/recovery
 and existing-log append remain refused. No qualified support claim is made.
 
 The clean starting checkout contained reviewed #26 continuation `2316457` and
@@ -101,8 +101,11 @@ New local evidence is recorded below. Portable injected
 filesystem responses exercise orchestration/schema logic, not Win32 sharing,
 DACL enforcement, native IDs or process termination. Native fixtures skip narrowly
 on POSIX; on Windows eligible setup is mandatory and failures stay visible.
-Native child tests use `sys.executable`, portable bounded pipe/thread coordination,
-readiness at the selected boundary and actual process termination. They cover
+Native child tests use `sys.executable`, bounded pipe/thread coordination,
+readiness at the selected boundary and a reported actual worker PID. The repaired
+harness verifies spawned ancestry, holds the worker process handle, terminates
+and waits for that worker before closing stdin or reacquiring filesystem handles.
+These repairs await native execution. The cases cover
 original descendant deletion, top-level proposal publication, root creation,
 inverse publication/ACL states and terminal ownership release. Unbound root and
 incomplete inverse construction are expected conservative refusal cases.
@@ -138,7 +141,7 @@ starting commit; the original real-owner fixture, append/Git implementations and
 dependency files have no diff. Public directives describe only the changed
 Windows read-only estimate, never write enabling.
 
-No native #27 run, PowerShell execution/syntax validation, Linux run, hosted CI,
+At this initial implementation handoff, no native #27 run, PowerShell execution/syntax validation, Linux run, hosted CI,
 real-vault/key test or exchanged Windows/POSIX artifact qualification was executed.
 The PowerShell helper is source-reviewed but must be executed on the eligible
 host. New local green checks cannot clear those operation/platform gates.
@@ -258,9 +261,78 @@ selection. The docs group and lockfile remain unchanged. The supplied host must
 rerun the helper; strict documentation build and broader native qualification
 remain separate gates.
 
+### First #27 native diagnostic and fixture repairs — 12 October 2026
+
+The supplied retry2 transcript and JUnit reports establish execution of both
+helper suites at candidate `0a68ace`. All **33 recorded source hashes** match the
+local candidate. Direct and Poetry metadata both report **Microsoft Store CPython
+3.13.14 / AMD64 / 64-bit**, unelevated, on **Windows 11 Home build 26200**;
+Git is 2.55.0.windows.5. Interpreter preflight, development dependency installation
+and strict lock validation completed. This run did not build documentation.
+
+| Suite | Actual result |
+| --- | --- |
+| Selected qualification | **101 passed, 38 failed, no skips/errors**, exit 1; 139 cases |
+| Full diagnostic | **962 passed, 38 failed, 596 skipped, no errors**, exit 1; 1596 cases |
+| Private native lifecycle module | **38 passed, 17 failed**, no skips |
+| Native checkpoint module | **16 passed, 1 failed**, no skips |
+| Native primitive module | **28 passed, 2 failed**, no skips; includes the unchanged unavailable real-owner fixture |
+| Injected transaction model | **11 passed, 18 failed**; never native API proof |
+| Interpreter tooling | **8 passed**: six injected checks and two actual Windows shell-file cases |
+
+Native modules also include injected faults/responses around real filesystem
+operations. Their module totals do not turn those supplements into uninjected
+proof, clear failed cases or establish complete native qualification.
+
+The helper ran to completion, but neither suite passed. Seventeen lifecycle
+failures encounter plain pathname I/O while inspecting/tampering with retained
+long checkpoint paths. The injected model also uses ordinary pathname creation,
+read/write/stat and removal for these long controls; its original exceptions are
+masked by the lifecycle's conservative error. That is a likely fixture cause,
+awaiting native confirmation. The two additional primitive/checkpoint failures
+observe sharing denial during post-termination reacquisition; the failing
+checkpoint boundary differs between the selected and full runs. No production
+sharing refusal is relaxed to make these tests pass.
+
+Fixture-only repairs use the existing internal DOS long-path conversion for
+inspection, model I/O and deliberate corruption, preserving ordinary logical
+bindings and production checkpoint names. A regression exercises actual long
+fixture creation, binary reads, corruption and deletion without a policy change.
+Native transaction, checkpoint and ownership children now report `os.getpid()`;
+the parent validates spawned ancestry and verifies actual worker death and exit
+status before releasing stdin. Windows venv executables are
+[CPython redirectors](https://github.com/python/cpython/blob/v3.13.14/PC/venvlauncher.c).
+The launcher uses a kill-on-close job but waits only for its launched child;
+waiting for launcher termination alone does not explicitly await that worker.
+[Microsoft documents asynchronous process termination](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-terminateprocess),
+requiring a wait on the actual process. The previous child-test passes therefore
+need repetition with the repaired death verification before accepting boundary
+proof. This is a harness correction, not evidence of a Store production defect.
+
+The repaired helper selects the new fixture regressions and hashes their shared
+test support module. Production code, real-owner assertions, owner/DACL validators,
+CLI mutation/recovery and existing-log append gates are unchanged. The known
+owner-fixture failure remains selected and mandatory for #29; the earlier #26 r3
+record remains **907 passed, 1 failed, 596 skipped**, with three owner supplements
+passed. A new native run, other hosts/interpreters, hosted CI and broader artifact
+qualification remain pending. Raw supplied reports and identifying paths are private.
+
+Local fixture-repair checks on macOS ARM64 CPython 3.12.7 / Poetry 2.4.2:
+**48 passed, 105 Windows-only skips** in the scoped selection. The new worker
+ordering/refusal responses are injected; actual long-path I/O and worker APIs
+were skipped here. Ruff lint/format, strict Sphinx and local reference checks
+across **38 HTML pages** passed. PowerShell is unavailable locally. Source,
+dependency/lock and real-owner fixture AST comparisons confirm those boundaries
+are unchanged; reviewed #26 continuation `2316457` remains an ancestor of HEAD.
+All ten scoped repair files remain unstaged/uncommitted on the requested branch.
+Full local regression: **1498 passed, 112 platform skips**, exit 0, with authorized
+loopback access. The preceding sandboxed attempt returned **1484 passed,
+112 skipped, 14 localhost TLS fixture setup errors**, exit 1; it is not relabeled
+as passing. Neither local run executes the new Windows APIs or hosted CI.
+
 ## Remaining qualification and scope
 
-- Execute/review the #27 native suite, including actual sharing/DACL/namespace,
+- Rerun/review the repaired #27 native suite in a fresh external report directory, including actual sharing/DACL/namespace,
   metadata/stream APIs, every real child boundary and broader baseline finalization.
   Any failure must retain affected production gates and be fixed/retested within
   the authorized thread before claiming native lifecycle proof.

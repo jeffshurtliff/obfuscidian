@@ -16,7 +16,7 @@ Package versions and encrypted backup-format versions are separate contracts.
   with bounded ownership/checkpoint binding, independently verified saved and
   inverse copies, copy-inclusive estimates and synthetic lifecycle/termination
   fixtures. Production Windows CLI mutation/recovery and existing-log append
-  remain refused; actual native lifecycle execution and qualification are pending.
+  remain refused; the first native lifecycle run failed and qualification remains pending.
 
 - Maintainer safety design and staged implementation plan for native Windows
   backup, restore and recovery in 2.0.0 (issue
@@ -51,6 +51,14 @@ Package versions and encrypted backup-format versions are separate contracts.
 
 ### Fixed
 
+- Windows lifecycle qualification fixtures use long-path spelling for retained
+  control/copy inspection and injected model I/O. Child termination targets and
+  waits for the actual spawned Python worker before releasing the input barrier
+  or reacquiring handles; native verification of these repairs remains pending.
+  Recorded the first #27 run accurately: selected 101 passed/38 failed; full
+  diagnostic 962 passed/38 failed/596 skipped, both exit 1. The deferred real-owner
+  fixture and production Windows safety gates remain unchanged (#27).
+
 - Windows lifecycle validation installs locked runtime/development requirements
   without the unused optional Sphinx group, keeping documentation installation
   failures separate from native pytest diagnostics. Documentation-build
@@ -59,7 +67,8 @@ Package versions and encrypted backup-format versions are separate contracts.
 - Windows lifecycle interpreter validation executes its multiline probe as a
   file, avoiding Windows shell handling of multiline `poetry run python -c`
   arguments. Missing/invalid metadata is refused before patch comparison; genuine
-  mismatches report both versions. Native verification remains pending (#27).
+  mismatches report both versions. Verified interpreter preflight on the supplied
+  Store CPython 3.13.14 host; lifecycle qualification still has failures (#27).
 
 - Python 3.14 qualification wrapper loads its shared helper as a script block
   when invoked from source text, preserving repository discovery and validation

@@ -29,6 +29,7 @@ from obfuscidian import constants as const
 from obfuscidian import transactions as tx
 from obfuscidian._windows_native import _Guard, _NativeSafetyError
 from obfuscidian.cli import cli
+from tests._windows_support import _io_path, _terminate_worker
 
 pytestmark = pytest.mark.skipif(os.name != 'nt', reason='Actual native Windows lifecycle APIs required.')
 
@@ -62,6 +63,7 @@ def _build(stage):
 
 
 def _snapshot(root):
+    root = _io_path(root)
     return {str(p.relative_to(root)): None if p.is_dir() else p.read_bytes() for p in root.rglob('*')}
 
 
@@ -175,7 +177,7 @@ FORWARD = [
 ]
 
 WORKER = r"""
-import sys
+import os, sys
 from pathlib import Path
 from obfuscidian import _windows_transactions as win, _windows_files as files, backup, transactions as tx
 source, destination = map(Path, sys.argv[1:3])
@@ -186,7 +188,7 @@ def observe(label):
     if label == boundary:
         count += 1
         if count == occurrence:
-            print('SYNTHETIC READY', flush=True)
+            print('SYNTHETIC READY', os.getpid(), flush=True)
             sys.stdin.readline()
 win._boundary = observe
 plan = tx._plan_transaction(source, destination, target_rules=backup._mirror_rules(destination.parent), allow_pending=recovery)
@@ -220,8 +222,7 @@ def _terminate(locations, boundary, occurrence=1, recovery=False):
     thread = threading.Thread(target=lambda: ready.put(process.stdout.readline()), daemon=True)
     thread.start()
     try:
-        assert ready.get(timeout=45).rstrip(b'\r\n') == b'SYNTHETIC READY'
-        process.terminate()
+        _terminate_worker(process, ready.get(timeout=45), b'SYNTHETIC READY')
         _, errors = process.communicate(timeout=15)
         assert process.returncode != 0, errors
     finally:
@@ -301,13 +302,13 @@ def test_native_changed_or_uncertain_artifacts_refuse_before_inverse_writes(loca
     plan = _plan(locations, allow_pending=True)
     workspace = next(p for p in plan.workspace_parent.glob(const.TRANSACTION_PREFIX + '*') if p.is_dir())
     if artifact == 'rollback':
-        next(p for p in (workspace / 'rollback').iterdir() if p.is_file()).write_bytes(b'SYNTHETIC EDIT')
+        next(p for p in _io_path(workspace / 'rollback').iterdir() if p.is_file()).write_bytes(b'SYNTHETIC EDIT')
     elif artifact == 'proposal':
         (locations[1] / 'top.bin').write_bytes(b'SYNTHETIC EDIT')
     elif artifact == 'checkpoint':
-        next((workspace / 'controls').iterdir()).write_bytes(b'CORRUPT')
+        next(_io_path(workspace / 'controls').iterdir()).write_bytes(b'CORRUPT')
     elif artifact == 'latest-truncated':
-        sorted((workspace / 'controls').iterdir())[-1].unlink()
+        sorted(_io_path(workspace / 'controls').iterdir())[-1].unlink()
     elif artifact == 'unknown':
         (workspace / 'foreign.bin').write_bytes(b'SYNTHETIC KEEP')
     else:
@@ -315,10 +316,11 @@ def test_native_changed_or_uncertain_artifacts_refuse_before_inverse_writes(loca
         # must be refused; never repair it or change real host policies.
         from tests.integration.test_windows_native import _set_descriptor
 
-        target = next(p for p in (workspace / 'rollback').iterdir() if p.is_file())
+        observed = next(p for p in _io_path(workspace / 'rollback').iterdir() if p.is_file())
+        target = workspace / 'rollback' / observed.name
         with _Guard(target.parent) as guard:
             _, sid = guard.api._owner()
-            _set_descriptor(guard.api, target, f'D:P(A;;FA;;;{sid})(A;;GR;;;WD)')
+            _set_descriptor(guard.api, _io_path(target), f'D:P(A;;FA;;;{sid})(A;;GR;;;WD)')
     before = _snapshot(locations[0].parent)
     with pytest.raises(tx._TransactionError):
         win._recover(plan, yes=True)

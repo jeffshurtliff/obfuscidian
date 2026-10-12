@@ -4,7 +4,7 @@
 :Synopsis:          Native immutable checkpoint and interruption qualification
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     10 Oct 2026
+:Modified Date:     12 Oct 2026
 """
 
 from __future__ import annotations
@@ -26,6 +26,7 @@ from obfuscidian import constants as const
 from obfuscidian import keys
 from obfuscidian._windows_checkpoints import _CheckpointStore, _encode
 from obfuscidian.cli import cli
+from tests._windows_support import _terminate_worker
 
 pytestmark = pytest.mark.skipif(os.name != 'nt', reason='Actual native Windows APIs required; mocks are not qualification.')
 
@@ -188,14 +189,14 @@ def test_unsafe_control_chain_refused_without_cleanup(parent: Path, unsafe: str)
 
 
 _INTERRUPTED = """
-import sys
+import os, sys
 from pathlib import Path
 from obfuscidian import _windows_native as native
 from obfuscidian import constants as const
 from obfuscidian._windows_checkpoints import _CheckpointStore
 parent, boundary = Path(sys.argv[1]), sys.argv[2]
 def pause():
-    print('READY', flush=True)
+    print('READY', os.getpid(), flush=True)
     sys.stdin.buffer.read(1)
 with native._Guard(parent) as guard:
     if boundary == 'directory-acquisition':
@@ -251,7 +252,8 @@ def test_actual_process_termination_retains_reconcilable_controls(parent: Path, 
     reader = threading.Thread(target=lambda: messages.put(child.stdout.readline()), daemon=True)
     reader.start()
     try:
-        if messages.get(timeout=20).strip() != b'READY':
+        message = messages.get(timeout=20)
+        if not message.startswith(b'READY '):
             child.wait(timeout=20)
             diagnostic = child.stderr.read(8192).decode(errors='replace').replace(str(parent), '<synthetic-root>')
             pytest.fail(f'Native child exited {child.returncode} before the interruption boundary: {diagnostic}')
@@ -259,8 +261,7 @@ def test_actual_process_termination_retains_reconcilable_controls(parent: Path, 
             with native._Guard(parent) as guard:
                 with pytest.raises(native._NativeSafetyError):
                     guard._open_file('ownership', writable=True, ownership=True)
-        child.terminate()
-        child.wait(timeout=20)
+        _terminate_worker(child, message)
         if boundary == 'directory-acquisition':
             with native._Guard(parent / 'controls') as guard:
                 guard.handles[-1]._private()

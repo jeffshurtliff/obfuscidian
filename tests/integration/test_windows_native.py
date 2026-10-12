@@ -4,7 +4,7 @@
 :Synopsis:          Native synthetic Windows primitive safety qualification tests
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     11 Oct 2026
+:Modified Date:     12 Oct 2026
 """
 
 from __future__ import annotations
@@ -22,6 +22,7 @@ import pytest
 
 from obfuscidian import _windows_native as native
 from obfuscidian import constants as const
+from tests._windows_support import _terminate_worker
 
 pytestmark = pytest.mark.skipif(os.name != 'nt', reason='Actual native Windows APIs required; mocks are not qualification.')
 
@@ -273,14 +274,14 @@ def test_existing_unsafe_acl_refused_without_repair(parent: Path, policy: str) -
 def test_exclusive_process_death_reacquisition_and_retained_record(parent: Path) -> None:
     """Terminate a real owner and reacquire its retained complete private record."""
     script = """
-import sys
+import os, sys
 from pathlib import Path
 from obfuscidian._windows_native import _Guard
 from obfuscidian.constants import TRANSACTION_LOCK_BYTES
 with _Guard(Path(sys.argv[1])) as guard:
     with guard._open_file('ownership', create=True, ownership=True) as record:
         record._write(b'SYNTHETIC COMPLETE OWNERSHIP', TRANSACTION_LOCK_BYTES)
-        print('READY', flush=True)
+        print('READY', os.getpid(), flush=True)
         sys.stdin.buffer.read(1)
 """
     child = subprocess.Popen(
@@ -290,12 +291,11 @@ with _Guard(Path(sys.argv[1])) as guard:
     reader = threading.Thread(target=lambda: messages.put(child.stdout.readline()), daemon=True)
     reader.start()
     try:
-        assert messages.get(timeout=20).strip() == b'READY'
+        message = messages.get(timeout=20)
         with native._Guard(parent) as guard:
             with pytest.raises(native._NativeSafetyError):
                 guard._open_file('ownership', writable=True, ownership=True)
-        child.terminate()
-        child.wait(timeout=20)
+        _terminate_worker(child, message)
         with native._Guard(parent) as guard:
             with guard._open_file('ownership', writable=True, ownership=True) as record:
                 assert record._read(const.TRANSACTION_LOCK_BYTES) == b'SYNTHETIC COMPLETE OWNERSHIP'

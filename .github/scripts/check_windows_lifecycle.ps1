@@ -70,6 +70,7 @@ $OperatingSystem = Get-CimInstance Win32_OperatingSystem
 $SourceFiles = @(Get-ChildItem 'src/obfuscidian' -Filter '*.py' -File)
 $SourceFiles += Get-ChildItem 'tests/unit' -Filter 'test_windows*.py' -File
 $SourceFiles += Get-ChildItem 'tests/integration' -Filter 'test_windows*.py' -File
+$SourceFiles += Get-Item 'tests/_windows_support.py'
 $SourceFiles += Get-ChildItem '.github/scripts' -Filter 'check_windows_lifecycle*.ps1' -File
 $SourceFiles | Sort-Object FullName | ForEach-Object {
     $Relative = $_.FullName.Substring($Repository.Length + 1).Replace('\', '/')
@@ -77,6 +78,7 @@ $SourceFiles | Sort-Object FullName | ForEach-Object {
 } | Set-Content -Encoding UTF8 (Join-Path $ReportDirectory 'source-sha256.txt')
 # This does not dispatch hosted CI or bypass the unsupported production CLI.
 & poetry run python -m pytest -q -ra tests/unit/test_windows_transactions.py tests/unit/test_windows_lifecycle_tooling.py `
+    tests/unit/test_windows_fixture_support.py `
     tests/integration/test_windows_lifecycle.py `
     tests/integration/test_windows_checkpoints.py tests/integration/test_windows_native.py `
     "--junitxml=$NativeXml" *> $NativeLog

@@ -25,6 +25,7 @@ from obfuscidian import transactions as tx
 from obfuscidian._windows_checkpoints import _CheckpointStore
 from obfuscidian._windows_native import _Identity
 from obfuscidian.paths import _TargetRules
+from tests._windows_support import _io_path
 
 # Explicitly synthetic SID; the injected model is not native ACL/identity proof.
 SID = b'\x01\x01\x00\x00\x00\x00\x00\x05\x15\x00\x00\x00'
@@ -55,16 +56,17 @@ class _ModelHandle:
         self.closed = True
 
     def _private(self):
-        if self.path.is_symlink():
+        if _io_path(self.path).is_symlink():
             raise win._fail()
 
     def _identity(self):
-        info = self.path.stat()
+        path = _io_path(self.path)
+        info = path.stat()
         return _Identity(
             1,
             info.st_ino.to_bytes(16, 'little'),
-            self.path.is_dir(),
-            0x10 if self.path.is_dir() else 0x20,
+            path.is_dir(),
+            0x10 if path.is_dir() else 0x20,
             info.st_size,
             1,
             1,
@@ -80,7 +82,7 @@ class _ModelHandle:
         return actual
 
     def _read(self, limit):
-        data = self.path.read_bytes()
+        data = _io_path(self.path).read_bytes()
         if len(data) > limit:
             raise win._fail()
         return data
@@ -88,19 +90,20 @@ class _ModelHandle:
     def _write(self, data, limit):
         if len(data) > limit:
             raise win._fail()
-        self.path.write_bytes(data)
+        _io_path(self.path).write_bytes(data)
 
     def _set_time(self, mtime_ns):
-        os.utime(self.path, ns=(mtime_ns, mtime_ns))
+        os.utime(_io_path(self.path), ns=(mtime_ns, mtime_ns))
 
     def _release_ownership(self, terminal):
-        assert self.path.read_bytes() == terminal
-        self.path.unlink()
+        assert _io_path(self.path).read_bytes() == terminal
+        _io_path(self.path).unlink()
         self._close()
 
     def _delete(self, expected):
         self._recheck(expected)
-        self.path.rmdir() if self.path.is_dir() else self.path.unlink()
+        path = _io_path(self.path)
+        path.rmdir() if path.is_dir() else path.unlink()
 
 
 class _ModelGuard:
@@ -121,12 +124,12 @@ class _ModelGuard:
 
     def _open_file(self, name, create=False, ownership=False, writable=False):
         if create:
-            with (self.path / name).open('xb'):
+            with _io_path(self.path / name).open('xb'):
                 pass
         return _ModelHandle(self.path / name, self, ownership)
 
     def _create_directory(self, name):
-        (self.path / name).mkdir()
+        _io_path(self.path / name).mkdir()
         return _ModelHandle(self.path / name, self)
 
     def _checkpoint(self, name, data):
@@ -136,17 +139,17 @@ class _ModelGuard:
 
     def _rename(self, source, name, expected):
         target = self.path / name
-        if target.exists():
+        if _io_path(target).exists():
             raise win._fail()
         source._recheck(expected)
-        source.path.rename(target)
+        _io_path(source.path).rename(_io_path(target))
         source.path, source.parent = target, self
 
 
 class _ModelStore(_CheckpointStore):
     def _names(self):
         self._check()
-        return sorted(p.name for p in self.guard.path.iterdir())
+        return sorted(p.name for p in _io_path(self.guard.path).iterdir())
 
 
 @pytest.fixture
@@ -156,7 +159,7 @@ def model(tmp_path, monkeypatch):
     @contextmanager
     def entry(parent, name, directory, **options):
         path = parent / name
-        if path.is_symlink() or path.is_dir() != directory:
+        if _io_path(path).is_symlink() or _io_path(path).is_dir() != directory:
             raise win._fail()
         yield _ModelHandle(path, _ModelGuard(parent))
 
@@ -183,8 +186,8 @@ def model(tmp_path, monkeypatch):
     monkeypatch.setattr(win, '_CheckpointStore', _ModelStore)
     monkeypatch.setattr(files, '_entry', entry)
     monkeypatch.setattr(files, '_record', record)
-    monkeypatch.setattr(files, '_security', lambda handle, **kw: _security(handle.path.is_dir()))
-    monkeypatch.setattr(files, '_names', lambda path: sorted(p.name for p in path.iterdir()))
+    monkeypatch.setattr(files, '_security', lambda handle, **kw: _security(_io_path(handle.path).is_dir()))
+    monkeypatch.setattr(files, '_names', lambda path: sorted(p.name for p in _io_path(path).iterdir()))
     monkeypatch.setattr(files, '_metadata', lambda handle, record: handle._set_time(record['written']))
     monkeypatch.setattr(files, '_directory_time', lambda handle, record: handle._set_time(record['written']))
     monkeypatch.setattr(files, '_finalize', lambda handle, record: handle._set_time(record['written']))
@@ -211,6 +214,7 @@ def _build(stage):
 
 
 def _snapshot(root):
+    root = _io_path(root)
     return {str(p.relative_to(root)): None if p.is_dir() else p.read_bytes() for p in root.rglob('*')}
 
 
@@ -303,18 +307,19 @@ def test_injected_changed_artifacts_preserved_before_inverse(model, monkeypatch,
     plan = _leave_pending(model, monkeypatch)
     workspace = next(p for p in model[0].parent.glob(const.TRANSACTION_PREFIX + '*') if p.is_dir())
     if artifact == 'copy':
-        next(p for p in (workspace / 'rollback').iterdir() if p.is_file()).write_bytes(b'EDIT')
+        next(p for p in _io_path(workspace / 'rollback').iterdir() if p.is_file()).write_bytes(b'EDIT')
     elif artifact == 'proposal':
         (model[1] / 'new/binary.bin').write_bytes(b'EDIT')
     elif artifact == 'unknown':
         (workspace / 'keep').write_bytes(b'KEEP')
     elif artifact in {'truncated', 'corrupt'}:
         latest = sorted((workspace / 'controls').iterdir())[-1]
+        latest = _io_path(latest)
         latest.unlink() if artifact == 'truncated' else latest.write_bytes(b'CORRUPT')
     elif artifact == 'owner':
         plan.lock.write_bytes(b'CORRUPT')
     else:
-        next(p for p in (workspace / 'rollback').iterdir() if p.is_file()).unlink()
+        next(p for p in _io_path(workspace / 'rollback').iterdir() if p.is_file()).unlink()
     before = _snapshot(model[0].parent)
     with pytest.raises(tx._TransactionError):
         win._recover(plan, yes=True)

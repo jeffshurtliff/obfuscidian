@@ -41,7 +41,8 @@ relax production owner/DACL checks or establish passing native qualification.
 
 #26 is ready for the internal #27 handoff under this exception. #17 remains in
 progress; #27 now has a [private implementation candidate](windows-lifecycle-validation.md)
-pending native execution/review, and #28/#29 implementation has not started.
+with a failed first native run and fixture repairs pending native rerun/review;
+#28/#29 implementation has not started.
 Issues remain open; this decision does
 not authorize closure, Git history changes, remote delivery or publication.
 The r3 diagnostic result remains **907 passed, 1 failed, 596 skipped**, with
