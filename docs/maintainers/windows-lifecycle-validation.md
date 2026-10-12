@@ -209,6 +209,32 @@ real native successes, injected responses and missing fixtures. The known real
 owner fixture remains selected: an unavailable fixture is a failure, not a skip,
 xfail or passing qualification. Do not enable writes in response to a green subset.
 
+### Interpreter preflight repair — 12 October 2026
+
+The supplied 3.13 transcript reached the patch-comparison error before any
+lifecycle tests ran. Direct and Poetry one-line probes both reported CPython
+3.13.14 with exit 0 and one captured JSON line; Poetry was 2.5.1. The requested
+report directory held direct metadata but no Poetry metadata. This does not
+establish a genuine patch mismatch or any native lifecycle result.
+
+The likely cause is the multiline `-c` probe crossing
+[Poetry 2.5.1's Windows shell launch](https://github.com/python-poetry/poetry/blob/2.5.1/src/poetry/utils/env/base_env.py).
+The helper now saves the complete probe as `interpreter-probe.py` outside
+the checkout and executes that file with both interpreters. It requires one
+nonempty JSON line and a nonempty version before comparison, saves both reports,
+prints both versions and retains the exact patch check. A Windows regression
+exercises file execution through the shell with a spaced path and UTF-8 BOM;
+portable injected cases check the probe's success/refusal behavior. These checks
+remain distinct from actual Windows execution, which still requires a rerun.
+The 3.14 wrapper delegates to the repaired shared helper as before. No environment
+removal, dependency change, policy change or production gate relaxation is needed.
+
+New local checks for this repair: **35 passed, 2 Windows-only skips** across the
+tooling and transaction model tests; Ruff lint/format, strict Sphinx and rendered
+references passed. The six tooling passes use injected interpreter/token
+responses; the two real Windows shell cases were not executed here. PowerShell,
+native lifecycle execution and hosted CI remain unexecuted for this repair.
+
 ## Remaining qualification and scope
 
 - Execute/review the #27 native suite, including actual sharing/DACL/namespace,

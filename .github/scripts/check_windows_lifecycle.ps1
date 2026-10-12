@@ -26,9 +26,18 @@ print(json.dumps({'implementation': platform.python_implementation(), 'version':
                   'store_package_path_detected': 'PythonSoftwareFoundation.Python.' in sys.executable,
                   'elevated': False}))
 '@
-$Metadata = & $Python -c $Probe $ExpectedMinor
+# Poetry's Windows shell launch can truncate multiline -c arguments. Execute
+# the complete reviewed probe as a file, including Windows PowerShell's UTF-8 BOM.
+$ProbePath = Join-Path $ReportDirectory 'interpreter-probe.py'
+$Probe | Set-Content -Encoding UTF8 -LiteralPath $ProbePath
+$Metadata = @(& $Python $ProbePath $ExpectedMinor)
 if ($LASTEXITCODE -ne 0) { throw 'Interpreter/architecture/token validation failed.' }
-$Metadata | Set-Content -Encoding UTF8 (Join-Path $ReportDirectory 'selected-interpreter.json')
+if ($Metadata.Count -ne 1 -or [string]::IsNullOrWhiteSpace($Metadata[0])) {
+    throw 'Direct interpreter probe did not return exactly one JSON metadata line.'
+}
+$Metadata | Set-Content -Encoding UTF8 -LiteralPath (Join-Path $ReportDirectory 'selected-interpreter.json')
+$DirectInterpreter = $Metadata[0] | ConvertFrom-Json
+if ([string]::IsNullOrWhiteSpace($DirectInterpreter.version)) { throw 'Direct interpreter metadata has no version.' }
 $Executable = & $Python -c 'import sys; print(sys.executable)'
 if ($LASTEXITCODE -ne 0 -or -not $Executable) { throw 'Could not select the actual interpreter.' }
 & poetry env use $Executable
@@ -37,11 +46,17 @@ if ($LASTEXITCODE -ne 0) { throw 'Poetry interpreter selection failed.' }
 if ($LASTEXITCODE -ne 0) { throw 'Locked dependency installation failed.' }
 & poetry check --lock --strict
 if ($LASTEXITCODE -ne 0) { throw 'Strict lock validation failed.' }
-$Selected = & poetry run python -c $Probe $ExpectedMinor
+$Selected = @(& poetry run python $ProbePath $ExpectedMinor)
 if ($LASTEXITCODE -ne 0) { throw 'Poetry interpreter/architecture/token validation failed.' }
-$Selected | Set-Content -Encoding UTF8 (Join-Path $ReportDirectory 'poetry-interpreter.json')
-if (($Metadata | ConvertFrom-Json).version -ne ($Selected | ConvertFrom-Json).version) {
-    throw 'Poetry selected a different Python patch version.'
+if ($Selected.Count -ne 1 -or [string]::IsNullOrWhiteSpace($Selected[0])) {
+    throw 'Poetry interpreter probe did not return exactly one JSON metadata line.'
+}
+$Selected | Set-Content -Encoding UTF8 -LiteralPath (Join-Path $ReportDirectory 'poetry-interpreter.json')
+$PoetryInterpreter = $Selected[0] | ConvertFrom-Json
+if ([string]::IsNullOrWhiteSpace($PoetryInterpreter.version)) { throw 'Poetry interpreter metadata has no version.' }
+Write-Output "Selected CPython: $($DirectInterpreter.version); Poetry CPython: $($PoetryInterpreter.version)"
+if ($DirectInterpreter.version -ne $PoetryInterpreter.version) {
+    throw "Poetry selected a different Python patch version: direct=$($DirectInterpreter.version); Poetry=$($PoetryInterpreter.version)."
 }
 $NativeXml = Join-Path $ReportDirectory 'native-lifecycle.xml'
 $NativeLog = Join-Path $ReportDirectory 'native-lifecycle.txt'
@@ -59,7 +74,8 @@ $SourceFiles | Sort-Object FullName | ForEach-Object {
     "$((Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant())  $Relative"
 } | Set-Content -Encoding UTF8 (Join-Path $ReportDirectory 'source-sha256.txt')
 # This does not dispatch hosted CI or bypass the unsupported production CLI.
-& poetry run python -m pytest -q -ra tests/unit/test_windows_transactions.py tests/integration/test_windows_lifecycle.py `
+& poetry run python -m pytest -q -ra tests/unit/test_windows_transactions.py tests/unit/test_windows_lifecycle_tooling.py `
+    tests/integration/test_windows_lifecycle.py `
     tests/integration/test_windows_checkpoints.py tests/integration/test_windows_native.py `
     "--junitxml=$NativeXml" *> $NativeLog
 $NativeExit = $LASTEXITCODE

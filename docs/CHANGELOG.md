@@ -51,6 +51,11 @@ Package versions and encrypted backup-format versions are separate contracts.
 
 ### Fixed
 
+- Windows lifecycle interpreter validation executes its multiline probe as a
+  file, avoiding Windows shell handling of multiline `poetry run python -c`
+  arguments. Missing/invalid metadata is refused before patch comparison; genuine
+  mismatches report both versions. Native verification remains pending (#27).
+
 - Python 3.14 qualification wrapper loads its shared helper as a script block
   when invoked from source text, preserving repository discovery and validation
   without a nested `.ps1` invocation or execution-policy setting changes (#27).
