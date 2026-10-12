@@ -53,7 +53,7 @@ $OperatingSystem = Get-CimInstance Win32_OperatingSystem
 $SourceFiles = @(Get-ChildItem 'src/obfuscidian' -Filter '*.py' -File)
 $SourceFiles += Get-ChildItem 'tests/unit' -Filter 'test_windows*.py' -File
 $SourceFiles += Get-ChildItem 'tests/integration' -Filter 'test_windows*.py' -File
-$SourceFiles += Get-Item '.github/scripts/check_windows_lifecycle.ps1'
+$SourceFiles += Get-ChildItem '.github/scripts' -Filter 'check_windows_lifecycle*.ps1' -File
 $SourceFiles | Sort-Object FullName | ForEach-Object {
     $Relative = $_.FullName.Substring($Repository.Length + 1).Replace('\', '/')
     "$((Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant())  $Relative"

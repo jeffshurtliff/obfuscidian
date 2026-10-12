@@ -161,8 +161,23 @@ root, select the actual desired Store interpreter through `python`, or replace
 & .\.github\scripts\check_windows_lifecycle.ps1 -Python python -ExpectedMinor 13 -ReportDirectory "$env:TEMP\obfuscidian-27-reports"
 ```
 
-For another qualified target, use `-ExpectedMinor 12` or `14` with the matching
-explicit executable. The helper rejects the wrong implementation/minor version,
+For the Store-installed CPython 3.14 testing host, use the
+[3.14 wrapper](../../.github/scripts/check_windows_lifecycle-314.ps1):
+
+```powershell
+& .\.github\scripts\check_windows_lifecycle-314.ps1 -Python python -ReportDirectory "$env:TEMP\obfuscidian-27-reports-314"
+```
+
+This selects minor version 3.14 and reuses the shared helper, including both test
+runs and the unchanged real-owner fixture. The actual patch version (for example,
+3.14.6) is recorded and compared with the Poetry interpreter. It does not require
+the `py` launcher. Both helper files are included in source hash evidence. The
+separate report directory keeps this run distinct from the earlier 3.13 evidence.
+The wrapper has been source-reviewed locally; actual PowerShell/native execution
+remains pending and must be reported separately.
+
+For another target under qualification, use `-ExpectedMinor 12` or `14` with the
+shared helper and matching explicit executable. The helper rejects the wrong implementation/minor version,
 architecture or elevated token, verifies the Poetry interpreter's actual patch
 version, validates the existing lock and runs the private native suite plus full
 diagnostic suite. It records OS/build/Git, source-file SHA-256s, interpreter

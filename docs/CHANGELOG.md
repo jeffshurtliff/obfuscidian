@@ -7,6 +7,10 @@ Package versions and encrypted backup-format versions are separate contracts.
 
 ### Added
 
+- Python 3.14 Windows lifecycle validation wrapper for #27, reusing the shared
+  interpreter, safety and diagnostic checks with a separate default report
+  directory. Native execution remains pending.
+
 - Private Windows copy-based transaction, fresh/merge backup, fresh restore and
   explicit recovery candidate for [#27](https://github.com/jeffshurtliff/obfuscidian/issues/27),
   with bounded ownership/checkpoint binding, independently verified saved and
