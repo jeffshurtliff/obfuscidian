@@ -13,3 +13,4 @@ and release/publication actions each require explicit maintainer authorization.
    windows-safety-design
    windows-primitive-validation
    windows-lifecycle-validation
+   windows-git-validation

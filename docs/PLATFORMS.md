@@ -27,7 +27,13 @@ support is described as qualified. It does not change current supported behavior
 The [private #27 lifecycle candidate](maintainers/windows-lifecycle-validation.md)
 adds synthetic backup/restore/recovery fixtures with production gates retained.
 Its portable injected model checks are distinct from actual native Windows
-execution, which remains pending. No new support claim follows from those checks.
+evidence: retry4 confirms replacement restore and retry5 passes the six corrected
+metadata interruption cases. The maintainer accepted that private handoff for
+#28. The [private #28 Git lifecycle candidate](maintainers/windows-git-validation.md)
+adds protected reconstruction/worktree handling and native fixtures; actual
+Git for Windows execution is pending. Historical failed full-suite totals,
+mandatory owner proof and unexecuted qualification remain explicit in those
+records. No new support claim follows from these private candidates.
 
 ## Validation evidence
 
@@ -54,7 +60,7 @@ backup/restore still preserves vault bytes independently of Git text conversion.
 | Key creation | Exclusive private POSIX file | Exclusive protected owner-only DACL; persistent ACL storage required |
 | Inventory and read-only backup/restore/Git planning | Anchored no-follow directory reads | Absolute binary reads with component and pre/post identity checks |
 | Matching fresh/merge backup no-op | No locks, staging or token replacement | Same read-only contract; native matrix passed |
-| Fresh/merge backup and fresh/Git merge restore mutation | POSIX ownership/private staging/recovery | Fails closed; private directory ACL and publication/recovery primitives remain unimplemented |
+| Fresh/merge backup and fresh/Git merge restore mutation | POSIX ownership/private staging/recovery | Production CLI fails closed; private implementation/evidence does not establish qualified write support |
 | New operational log | Private POSIX file | Protected owner-only DACL; ACL capability checked before creation |
 | Existing operational log append | Requires private mode and stable identity | Refused pending file ownership/DACL validation |
 

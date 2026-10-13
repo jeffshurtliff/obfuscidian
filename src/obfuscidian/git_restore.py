@@ -4,7 +4,7 @@
 :Synopsis:          Validated additive restore into an isolated uncommitted Git worktree
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     05 Oct 2026
+:Modified Date:     13 Oct 2026
 """
 
 from __future__ import annotations
@@ -234,6 +234,7 @@ def _plan_merge(
     branch: str | None = None,
     base_branch: str = 'main',
     preserve_config: bool = False,
+    _check_file_modes: bool = True,
 ) -> _MergePlan:
     """Validate clean origin, explicit refs/output and the complete backup without writes.
 
@@ -245,6 +246,7 @@ def _plan_merge(
     :param branch: New suffix under the mandatory obfuscidian/ prefix.
     :param base_branch: Existing local committed base, default main.
     :param preserve_config: Keep the base settings, including their absence.
+    :param _check_file_modes: Internal backend selection; Windows keeps executable modes in the Git index.
     :returns: Authenticated proposal with captured Git/filesystem observations.
     :raises _ConfigurationError: Unsupported repository, unsafe paths, names or refs.
     :raises _OperationalError: Dirty origin, pending operation, integrity or resource failure.
@@ -301,9 +303,8 @@ def _plan_merge(
         raise _OperationalError('Origin must have no untracked or ignored vault entries.')
     for entry in committed:
         data = _git(executable, origin, 'cat-file', 'blob', entry.oid)
-        if (
-            actual[entry.path].get('digest') != hashlib.sha256(data).hexdigest()
-            or bool(actual[entry.path]['identity'][2] & 0o111) != entry.executable
+        if actual[entry.path].get('digest') != hashlib.sha256(data).hexdigest() or (
+            _check_file_modes and bool(actual[entry.path]['identity'][2] & 0o111) != entry.executable
         ):
             raise _OperationalError('Origin working tree must match committed bytes; pause writers and review Git conversions.')
     index = tx._capture(actual_gitdir / 'index')

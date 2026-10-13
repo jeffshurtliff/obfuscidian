@@ -612,17 +612,26 @@ skips** remain earlier validation. Changes stay unstaged/uncommitted on the
 requested branch, HEAD `cbd30bb`; reviewed #26 continuation `2316457` is present.
 #17/#27 stay open pending maintainer review, with #28/#29 implementation unstarted.
 
+## Current successor boundary — 13 October 2026
+
+The maintainer accepted this private #27 handoff for the separately authorized
+#28 continuation. The [private Windows Git candidate](windows-git-validation.md)
+implements only that lifecycle, with native Git execution pending and all
+production gates retained. Historical unstarted statements above record their
+original handoff dates; they are superseded by this continuation status.
+
 ## Remaining qualification and scope
 
-- Maintainer review/acceptance of the bounded private #27 lifecycle and its
-  native/injected evidence is the remaining #27 handoff step. No further native
+- Maintainer acceptance of the bounded private #27 lifecycle and its
+  native/injected evidence permits the #28 continuation. No further native
   rerun is needed for the resolved fixture on unchanged code. Additional failures
   or implementation changes must be investigated and retested before acceptance.
 - #29 must clear the deferred actual changed-owner refusal proof and applicable
   exact-commit OS/Python matrix, exchanged synthetic v1 backups and installed
   wheel/sdist qualification. No account creation, privilege activation or injected
   substitute is authorized. Hosted CI and exchanged artifacts were not run here.
-- #28 Git merge restore remains unstarted. #29 implementation remains unstarted.
+- #28 Git merge restore has a private local candidate; native Git validation
+  remains pending. #29 implementation remains unstarted.
   No Windows write enabling or qualified 2.0.0 claim precedes these required gates.
 - #17/#27 remain open pending review/qualification. Source changes remain
   unstaged/uncommitted; no push, merge, PR, release or publication was performed.

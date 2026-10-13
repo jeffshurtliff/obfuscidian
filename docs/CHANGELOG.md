@@ -7,6 +7,16 @@ Package versions and encrypted backup-format versions are separate contracts.
 
 ### Added
 
+- Private Windows Git merge restore candidate for
+  [#28](https://github.com/jeffshurtliff/obfuscidian/issues/28), with authenticated
+  private reconstruction, precreated private worktree roots, separate exact Git
+  inheritance validation, base index modes, uncommitted differences and
+  conservative ordinary-failure cleanup/retention. Added portable injected and
+  real Git for Windows fixtures plus a source-reviewed native validation helper.
+  Actual native Git execution remains pending; production Windows CLI
+  mutation/recovery and existing-log append gates remain unchanged. No new Git
+  recovery command, rollback pruning, dependencies or Fernet/v1 format change.
+
 - Python 3.14 Windows lifecycle validation wrapper for #27, reusing the shared
   interpreter, safety and diagnostic checks with a separate default report
   directory. Native execution remains pending.

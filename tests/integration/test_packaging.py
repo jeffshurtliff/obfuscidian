@@ -4,7 +4,7 @@
 :Synopsis:          Build, inspect, and install package artifacts offline
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     12 Oct 2026
+:Modified Date:     13 Oct 2026
 """
 
 from __future__ import annotations
@@ -153,6 +153,7 @@ def test_artifact_contents(artifacts: tuple[Path, Path], project_version: str) -
         '_windows_checkpoints.py',
         '_windows_files.py',
         '_windows_transactions.py',
+        '_windows_git_restore.py',
         'inventory.py',
         'paths.py',
         'crypto.py',
