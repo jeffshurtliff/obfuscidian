@@ -66,6 +66,12 @@ def repositories(tmp_path, monkeypatch, record_property):
     _commit(origin)
     _git(origin, 'update-index', '--chmod=+x', 'base-only.bin')
     _git(origin, 'commit', '-qm', 'Recorded synthetic executable Git mode')
+    masks = set()
+    for path in _io_path(origin / '.git' / 'objects').rglob('*'):
+        if path.is_file():
+            with files._entry(path.parent, path.name, False) as handle:
+                masks.add(handle._identity().attributes)
+    record_property('git_object_attribute_masks', ','.join(f'0x{mask:08x}' for mask in sorted(masks)))
     files._mkdir(parent, source.name)
     files._write(source, 'note.md', b'SYNTHETIC BACKUP\r\n\x00\xff')
     files._write(source, 'ignored.bin', bytes(range(256)))
@@ -91,6 +97,26 @@ def _origin_state(origin):
         with files._entry(path.parent, path.name, False) as handle:
             tree['.git/' + name] = win._git_record(handle)
     return tree
+
+
+def test_real_native_readonly_git_objects_keep_exact_attributes_and_payload_refusal(repositories, record_property):
+    plan = _plan(repositories)
+    before = win._administration(plan)
+    objects = {name: record for name, record in before[plan.common].items() if name.startswith('objects/')}
+    readonly = {name: record for name, record in objects.items() if record['attributes'] & const.WINDOWS_ATTRIBUTE_READONLY}
+    record_property('readonly_git_object_count', len(readonly))
+    assert readonly, 'Actual Git-created read-only objects are mandatory for this regression.'
+    for name, record in readonly.items():
+        assert not record['id'][2]
+        path = plan.common / name
+        with files._entry(path.parent, path.name, False) as handle:
+            assert win._git_record(handle, _readonly=True) == record
+            with pytest.raises(_NativeSafetyError, match='Unsupported Windows Git attributes'):
+                win._git_record(handle)
+            with pytest.raises(_NativeSafetyError, match='Unsupported baseline Windows attributes'):
+                files._record(handle)
+    assert win._administration(plan) == before
+    assert not repositories[-1].exists()
 
 
 @pytest.mark.parametrize('preserve', [False, True])
@@ -426,7 +452,14 @@ def observe(label):
         print('SYNTHETIC READY', os.getpid(), flush=True)
         sys.stdin.readline()
 win._boundary = observe
-win._publish_merge(win._plan_merge(origin, mirror, key, worktree=output, branch='synthetic-review'))
+try:
+    win._publish_merge(win._plan_merge(origin, mirror, key, worktree=output, branch='synthetic-review'))
+except BaseException as error:
+    from obfuscidian._windows_native import _NativeSafetyError
+    # Never return a raw traceback, paths or arbitrary exception text to JUnit.
+    detail = str(error) if isinstance(error, _NativeSafetyError) else type(error).__name__
+    print('SYNTHETIC FAILURE', detail, flush=True)
+    raise SystemExit(1) from None
 """
 
 
@@ -444,7 +477,10 @@ def test_real_native_git_worker_death_retains_manual_inspection_state(repositori
     thread = threading.Thread(target=lambda: ready.put(process.stdout.readline()), daemon=True)
     thread.start()
     try:
-        _terminate_worker(process, ready.get(timeout=90), b'SYNTHETIC READY')
+        message = ready.get(timeout=90)
+        if message.startswith(b'SYNTHETIC FAILURE '):
+            pytest.fail(message.decode().strip(), pytrace=False)
+        _terminate_worker(process, message, b'SYNTHETIC READY')
         process.communicate(timeout=15)
     finally:
         if process.poll() is None:

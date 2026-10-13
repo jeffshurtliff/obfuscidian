@@ -4,7 +4,7 @@
 :Synopsis:          Shared configuration, key, path, and resource constants
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     12 Oct 2026
+:Modified Date:     13 Oct 2026
 """
 
 ENV_KEY_PATH = 'OBFUSCIDIAN_KEY_PATH'
@@ -134,6 +134,7 @@ WINDOWS_CREATE_NEW = 1
 WINDOWS_OPEN_EXISTING = 3
 WINDOWS_OPEN_FLAGS = 0x02200000  # BACKUP_SEMANTICS | OPEN_REPARSE_POINT
 WINDOWS_ATTRIBUTE_DIRECTORY = 0x10
+WINDOWS_ATTRIBUTE_READONLY = 0x1  # Observational Git administration policy only; never payload mutation.
 WINDOWS_UNSAFE_ATTRIBUTES = 0x400 | 0x1000 | 0x4000  # reparse, offline, EFS
 WINDOWS_READ_ONLY_VOLUME = 0x00080000
 WINDOWS_DRIVE_FIXED = 3

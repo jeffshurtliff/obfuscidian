@@ -1,7 +1,8 @@
 # Private Windows Git merge restore handoff — #28
 
-**Date:** 13 October 2026. **Target:** 2.0.0. **Status:** private local implementation
-candidate; actual Git for Windows execution remains pending. Production Windows
+**Date:** 13 October 2026. **Target:** 2.0.0. **Status:** private implementation
+candidate; the first actual Git for Windows run failed. The administration
+attribute correction below needs a native rerun. Production Windows
 CLI mutation/recovery and existing-log append remain refused. This is neither
 qualified Windows support nor a supported Python library API.
 
@@ -66,7 +67,9 @@ POSIX publisher and all production gates keep their previous behavior.
 The private candidate deliberately has a narrow envelope: explicitly protected
 owner-only origin and Git administration roots, exact owner-only explicit or
 inherited Git descendants, eligible local NTFS, supported attributes/no named
-streams, and existing per-file bounds. Each audited Git tree includes its root
+streams, and existing per-file bounds. Read-only regular administration files
+are observed without repair; payloads/directories keep the original attribute
+envelope. Each audited Git tree includes its root
 in the 256-entry/32-depth bound. Ordinary permissive repositories, larger Git
 administration trees, unsupported descriptors or uncertain sharing are refused.
 This is a candidate limitation, not a general Windows repository support claim.
@@ -148,8 +151,9 @@ Actual owner transition, positive setup, production refusal and unchanged full
 native identity, bytes and exact protected DACL remain required before Windows
 write enabling or qualified support. This supersedes #28's earlier enabling item.
 
-New actual #28 native execution, actual PowerShell validation, other Windows
-hosts/interpreters, exact-commit nine-job hosted CI, exchanged synthetic v1
+The first actual #28 native/helper execution is recorded below; it failed and
+does not validate the correction. Other Windows hosts/interpreters,
+exact-commit nine-job hosted CI, exchanged synthetic v1
 artifacts and installed wheel/sdist Windows write qualification remain unexecuted.
 Native #28 failures/repairs belong to this thread before its acceptance; #29
 implementation has not started. Native fixture absence is a failure, never a
@@ -181,10 +185,96 @@ Executed on macOS ARM64 CPython 3.12.7 / Poetry 2.4.2:
   and 13 Oct 2026. POSIX publication, production gates, owner/DACL validators,
   real-owner assertions and dependency/lock files retain their original behavior.
 
-Actual native Windows/Git/PowerShell execution and hosted CI are unexecuted here.
+This initial local handoff predates the supplied Windows reports below.
+Actual native Windows/Git/PowerShell execution and hosted CI were unexecuted here.
 Local success does not clear the deferred owner proof or native Git proof. All
-changes remain unstaged/uncommitted on the requested branch; no push, PR, merge,
+changes were unstaged/uncommitted on the requested branch; no push, PR, merge,
 issue closure or publication occurred.
+
+## Supplied native run and administration correction — 13 October 2026
+
+The maintainer supplied private reports for local continuation
+`04633b775218f50064b5323cd7a4bd54cf4e6d18`. All **42 source SHA-256 entries**
+match that checkout, including the helper, production modules, native fixtures,
+dependencies and lifecycle test. Archive SHA-256:
+`df2f10e2e94fc4592086404c99337a651f4c9846dfced10078f62f8bab2817cb`.
+Raw reports, hostname and identifying paths remain private.
+
+The new helper/probes measured Windows 11 Home build 26200, Git
+2.55.0.windows.5 and unelevated Store CPython 3.13.14/AMD64/64-bit. Direct and
+Poetry interpreter metadata agree. The helper ran natively; this establishes
+execution of its reporting path, not successful qualification or independent
+PowerShell parser/static validation. The archive does not report Poetry or
+PowerShell versions.
+
+| Invocation | Passed | Failed | Skipped | Errors | Exit |
+| --- | --- | --- | --- | --- | --- |
+| Scoped #28 plus mandatory real-owner fixture | 17 | 26 | 16 | 0 | 1 |
+| Full diagnostic | 1048 | 26 | 612 | 0 | 1 |
+
+The scoped passes comprise 12 portable ACL-policy cases and five actual native
+cases: existing branch, branch-parent and output collisions; unsafe administration
+DACL refusal without repair; preview and production CLI refusal. Sixteen POSIX
+Git cases with injected Windows I/O skip on this Windows host. The full diagnostic
+has the same 26 failing test names and includes **61 passing native #27 lifecycle
+cases**. These are new results, not replacements for retry4's failed totals or
+retry5's separate six-case pass.
+
+Twenty native #28 cases stop at `Unsupported Windows Git attributes refused`
+during the initial administration audit, before reconstruction/ref/worktree side
+effects. Five child cases return no readiness marker, so no selected worker death
+was exercised. Their reports omit the child error; the same early audit refusal
+is the leading explanation, not independently proven child evidence. The remaining
+failure is the unchanged real-owner fixture with
+`assignable_owner_group_available=False`, still mandatory #29 qualification.
+
+The matching [Git object writer](https://github.com/git-for-windows/git/blob/v2.55.0.windows.5/object-file.c#L613)
+creates loose objects with mode `0444`, and its
+[Windows implementation](https://github.com/git-for-windows/git/blob/v2.55.0.windows.5/compat/mingw.c#L918)
+uses the [Windows C runtime permission mode](https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/open-wopen?view=msvc-170).
+Read-only loose objects are the leading cause;
+the original reports do not contain a rejected numeric mask or object name.
+
+The follow-up permits the read-only attribute **only for regular files during
+audited Git administration observation**. No attribute is cleared or normalized:
+the exact bit remains part of identity/content/security/metadata snapshots and
+cleanup comparisons. Directories, origin/restored payloads, other unsupported
+attributes, streams, types, owner/DACL checks and production baseline validators
+keep their prior refusal. Git alone manages any administration removal; there is
+no new attribute repair, payload write capability or cleanup fallback.
+
+Added six portable injected observation regressions for exact read-only capture,
+unchanged production refusal, other unsupported attributes and attribute changes
+during reads. Added one mandatory real Git-created read-only-object regression
+checking exact retained attributes and both payload refusals, plus numeric object
+attribute-mask properties in the native fixture. Worker failures now report
+sanitized native safety messages or exception types instead of an empty readiness
+marker. These additions are diagnostics/tests, not native success evidence.
+
+The revised candidate needs a **fresh native helper run**, preserving the above
+failed reports. Use a new directory such as `obfuscidian-28-reports-313-retry1`
+with either invocation below. Keep all scoped #28 cases and the unchanged owner
+fixture selected. The known owner gap may still fail the scoped/full commands;
+each #28 failure must be repaired or explicitly resolved before acceptance.
+No #29 work or production write enabling is authorized by this correction.
+
+The maintainer's continuation commit is the starting point for these repairs;
+new edits remain unstaged/uncommitted on the same requested branch. The agent
+performed no Git history, remote delivery, issue closure or publication action.
+
+New macOS ARM64 CPython 3.12.7 / Poetry 2.4.2 validation of the correction:
+**1544 passed / 149 platform skips** in the full synthetic suite, exit 0,
+including permitted localhost TLS fixtures; dedicated #28 selection
+**34 passed / 31 native skips**, exit 0. Six new passing tests inject native
+observations, while the new actual read-only-object regression is skipped here.
+Strict Poetry lock, Ruff lint/format (123 files), Bandit (no findings), strict
+fresh Sphinx and local reference checks across 39 HTML pages passed. External
+URLs were not requested by the reference checker. Full regression includes the
+existing isolated packaging checks using available development dependencies;
+no new installed Windows write qualification or hosted CI was executed.
+Diff/privacy/header/LF, empty-index and production/POSIX/real-owner/dependency
+preservation checks passed; existing constants retain their values. Nine files
+are modified, all unstaged/uncommitted at `04633b7`; no reset or branch change.
 
 ## Exact native validation procedure
 

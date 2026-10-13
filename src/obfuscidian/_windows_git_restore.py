@@ -54,11 +54,19 @@ def _git_acl(security: dict, owner: bytes, *, directory: bool) -> None:
     _private_acl(bytes(explicit), owner, directory=directory)
 
 
-def _git_record(handle: _Handle) -> dict:
-    """Capture a bounded Git-created entry through its pinned native handle."""
+def _git_record(handle: _Handle, *, _readonly: bool = False) -> dict:
+    """Capture Git entries, permitting read-only files only in audited administration.
+
+    Git creates immutable objects read-only. Observe that bit without clearing
+    it, and bind the exact attributes into the snapshot. Payloads, directories,
+    unknown attributes and the production baseline policy remain unchanged.
+    """
     before = handle._identity()
-    if before.attributes & ~const.WINDOWS_SUPPORTED_ATTRIBUTES:
-        raise _fail('Unsupported Windows Git attributes refused.')
+    supported = const.WINDOWS_SUPPORTED_ATTRIBUTES
+    if _readonly and not before.directory:
+        supported |= const.WINDOWS_ATTRIBUTE_READONLY
+    if before.attributes & ~supported:
+        raise _fail(f'Unsupported Windows Git attributes refused (0x{before.attributes:08x}).')
     files._streams(handle)
     security = files._security(handle, baseline=False)
     _git_acl(security, handle.api._owner()[0], directory=before.directory)
@@ -85,7 +93,7 @@ def _git_record(handle: _Handle) -> dict:
     }
 
 
-def _git_tree(root: Path, *, excluded: set[str] = frozenset()) -> dict:
+def _git_tree(root: Path, *, excluded: set[str] = frozenset(), _administrative: bool = False) -> dict:
     """Audit every Git descendant beneath an explicit protected owner-only root."""
     with files._entry(root.parent, root.name, True, private=True) as handle:
         result = {'': _git_record(handle)}
@@ -99,7 +107,7 @@ def _git_tree(root: Path, *, excluded: set[str] = frozenset()) -> dict:
                 continue
             path, relative = parent / name, prefix + name
             with files._entry(parent, name, path.is_dir()) as handle:
-                result[relative] = _git_record(handle)
+                result[relative] = _git_record(handle, _readonly=_administrative)
                 if result[relative]['id'][2]:
                     visit(path, relative + '/', depth + 1)
             if len(result) > const.WINDOWS_TRANSACTION_ENTRIES:
@@ -113,7 +121,7 @@ def _git_tree(root: Path, *, excluded: set[str] = frozenset()) -> dict:
 
 def _administration(plan: git._MergePlan) -> dict:
     """Require privacy for all shared Git control parents before Git may write."""
-    return {root: _git_tree(root) for root in {plan.common, plan.gitdir}}
+    return {root: _git_tree(root, _administrative=True) for root in {plan.common, plan.gitdir}}
 
 
 def _plan_merge(origin: Path, mirror: Path, key: Path, **options) -> git._MergePlan:

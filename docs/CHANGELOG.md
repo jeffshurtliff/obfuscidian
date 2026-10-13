@@ -13,7 +13,7 @@ Package versions and encrypted backup-format versions are separate contracts.
   inheritance validation, base index modes, uncommitted differences and
   conservative ordinary-failure cleanup/retention. Added portable injected and
   real Git for Windows fixtures plus a source-reviewed native validation helper.
-  Actual native Git execution remains pending; production Windows CLI
+  The first native run failed and the correction below needs a rerun; production Windows CLI
   mutation/recovery and existing-log append gates remain unchanged. No new Git
   recovery command, rollback pruning, dependencies or Fernet/v1 format change.
 
@@ -62,6 +62,15 @@ Package versions and encrypted backup-format versions are separate contracts.
   outstanding real ownership-transition proof and CLI mutation gates (#26).
 
 ### Fixed
+
+- Private #28 Git administration observation accepts read-only regular files
+  without clearing their exact attributes or relaxing payload/production policy.
+  Added portable regressions, mandatory real Git read-only-object proof and
+  numeric attribute/worker diagnostics. Initial native scoped results remain
+  17 passed/26 failed/16 skipped; full diagnostic 1048 passed/26 failed/612 skipped,
+  both exit 1. The attribute cause is inferred from matching Git source; the
+  correction needs native confirmation. The unchanged owner-fixture gap remains
+  mandatory #29, and all production Windows gates remain refused.
 
 - Windows metadata interruption fixtures exclude the transaction's protected
   root controls during payload inspection, retaining those controls in complete

@@ -25,6 +25,54 @@ from tests.unit.test_windows_transactions import _ModelGuard, _security, model
 SID = b'\x01\x01\x00\x00\x00\x00\x00\x05\x15\x00\x00\x00'  # Synthetic parser SID only.
 
 
+@pytest.fixture
+def observed_handle(monkeypatch):
+    """Inject observations only; never claim native attribute or identity proof."""
+    identity = SimpleNamespace(directory=False, attributes=0x21, size=4, created=1, written=2, changed=3)
+    handle = SimpleNamespace(
+        _identity=lambda: identity,
+        _recheck=lambda before, **kwargs: identity,
+        _read=lambda limit: b'GIT\x00',
+        api=SimpleNamespace(_owner=lambda: (SID, None)),
+    )
+    monkeypatch.setattr(win.files, '_streams', lambda handle: None)
+    monkeypatch.setattr(win.files, '_security', lambda handle, **kwargs: _security(identity.directory))
+    monkeypatch.setattr(win.files, '_id', lambda handle: [1, '01' * 16, identity.directory])
+    return handle, identity
+
+
+def test_readonly_administration_is_observed_exactly_without_relaxing_payload_policy(observed_handle):
+    handle, identity = observed_handle
+    record = win._git_record(handle, _readonly=True)
+    assert record['attributes'] == identity.attributes == 0x21
+    assert record['size'] == 4 and record['security'] == _security(False)
+    with pytest.raises(_NativeSafetyError, match='0x00000021'):
+        win._git_record(handle)
+    with pytest.raises(_NativeSafetyError, match='Unsupported baseline'):
+        win.files._record(handle)
+
+
+@pytest.mark.parametrize('attributes,directory', [(0x11, True), (0x23, False), (0x221, False), (0x821, False)])
+def test_readonly_administration_still_refuses_directories_and_other_attributes(observed_handle, attributes, directory):
+    handle, identity = observed_handle
+    identity.attributes, identity.directory = attributes, directory
+    with pytest.raises(_NativeSafetyError, match='Unsupported Windows Git attributes'):
+        win._git_record(handle, _readonly=True)
+
+
+def test_readonly_administration_attribute_change_during_read_is_refused(observed_handle):
+    handle, identity = observed_handle
+
+    def changed(limit):
+        handle._identity = lambda: SimpleNamespace(**{**vars(identity), 'attributes': 0x20})
+        handle._recheck = lambda before, **kwargs: handle._identity()
+        return b'GIT\x00'
+
+    handle._read = changed
+    with pytest.raises(_NativeSafetyError, match='changed during observation'):
+        win._git_record(handle, _readonly=True)
+
+
 @pytest.mark.parametrize('directory', [False, True])
 @pytest.mark.parametrize('inherited', [False, True])
 def test_git_owner_policy_and_transaction_policy_remain_separate(directory, inherited):
@@ -81,7 +129,7 @@ def injected(tmp_path, monkeypatch):
     monkeypatch.setattr(win, '_Guard', _ModelGuard)
     monkeypatch.setattr(win, 'os', SimpleNamespace(name='nt'))
 
-    def record(handle):
+    def record(handle, **kwargs):
         return win.files._record(handle)
 
     def timestamp(path, mtime_ns, unsupported, relative):
