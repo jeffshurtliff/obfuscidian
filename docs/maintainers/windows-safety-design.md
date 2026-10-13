@@ -48,8 +48,9 @@ correction. Retry4's failed diagnostic totals and deferred owner-fixture failure
 remain unchanged; this separate subset does not establish full qualification.
 #27's private handoff is accepted for the separately authorized #28 continuation.
 #28 now has a [private local Git lifecycle candidate](windows-git-validation.md),
-whose first actual Git for Windows run failed. Its private administration-attribute
-correction needs a native rerun; production gates remain retained.
+whose first actual Git for Windows run failed and whose retry1 blocked all native
+#28 cases in fixture setup. The test-only setup correction and administration
+attribute handling need native confirmation; production gates remain retained.
 #29 implementation has not started.
 Issues remain open; this decision does
 not authorize closure, Git history changes, remote delivery or publication.

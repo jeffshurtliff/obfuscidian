@@ -63,6 +63,14 @@ Package versions and encrypted backup-format versions are separate contracts.
 
 ### Fixed
 
+- Windows #28 object-attribute diagnostics rebuild ordinary native entry paths
+  from the original fixture root after extended Python enumeration. Production
+  guards and administration handling are unchanged. Retry1's 31 native setup
+  errors are preserved: scoped 18 passed/1 failed/16 skipped/31 errors; full
+  1049 passed/1 failed/612 skipped/31 errors, both exit 1. Added a portable
+  spelling regression; native fixture/administration confirmation remains
+  pending. The unchanged mandatory owner fixture and production gates remain.
+
 - Private #28 Git administration observation accepts read-only regular files
   without clearing their exact attributes or relaxing payload/production policy.
   Added portable regressions, mandatory real Git read-only-object proof and

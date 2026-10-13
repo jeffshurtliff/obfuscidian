@@ -1,8 +1,9 @@
 # Private Windows Git merge restore handoff — #28
 
 **Date:** 13 October 2026. **Target:** 2.0.0. **Status:** private implementation
-candidate; the first actual Git for Windows run failed. The administration
-attribute correction below needs a native rerun. Production Windows
+candidate; the first actual Git for Windows run failed and retry1 blocked all
+31 native #28 cases in fixture setup. The corrected fixture and administration
+attribute handling below need native confirmation. Production Windows
 CLI mutation/recovery and existing-log append remain refused. This is neither
 qualified Windows support nor a supported Python library API.
 
@@ -251,7 +252,7 @@ attribute-mask properties in the native fixture. Worker failures now report
 sanitized native safety messages or exception types instead of an empty readiness
 marker. These additions are diagnostics/tests, not native success evidence.
 
-The revised candidate needs a **fresh native helper run**, preserving the above
+At this initial correction handoff, the candidate needed a **fresh native helper run**, preserving the above
 failed reports. Use a new directory such as `obfuscidian-28-reports-313-retry1`
 with either invocation below. Keep all scoped #28 cases and the unchanged owner
 fixture selected. The known owner gap may still fail the scoped/full commands;
@@ -275,6 +276,73 @@ no new installed Windows write qualification or hosted CI was executed.
 Diff/privacy/header/LF, empty-index and production/POSIX/real-owner/dependency
 preservation checks passed; existing constants retain their values. Nine files
 are modified, all unstaged/uncommitted at `04633b7`; no reset or branch change.
+
+## Retry1 setup evidence and fixture correction — 13 October 2026
+
+The supplied retry1 archive identifies maintainer continuation
+`849a3e2e503b27a18c924e5a6869f186d14b38da`. All **42 source SHA-256 entries**
+match that checkout. Archive SHA-256:
+`01c6f4324e01807e0acdf205664a011783dec2c9b92a901b78d246e8ad2325a0`.
+Fresh probes again measure Windows 11 Home build 26200, Git 2.55.0.windows.5
+and unelevated Store CPython 3.13.14/AMD64/64-bit, with matching direct/Poetry
+metadata. Poetry/PowerShell versions remain absent. Raw reports stay private.
+
+| Retry1 invocation | Passed | Failed | Skipped | Setup errors | Exit |
+| --- | --- | --- | --- | --- | --- |
+| Scoped #28 plus mandatory real-owner fixture | 18 | 1 | 16 | 31 | 1 |
+| Full diagnostic | 1049 | 1 | 612 | 31 | 1 |
+
+All **31 native #28 cases fail setup**, in the object-attribute diagnostic added
+for retry1. `_io_path` provides extended spelling for Python enumeration; passing
+that enumerated parent directly into `files._entry` incorrectly crosses the
+native guard's ordinary-drive-path boundary. The guard correctly refuses it.
+Git fixture initialization reached synthetic commits, but no #28 test body,
+object-attribute-mask property, native administration correction or selected
+worker termination was exercised. Retry1 provides no confirmation of the
+read-only attribute hypothesis and does not resolve initial #28 failures.
+
+The 18 scoped passes are 12 portable ACL-policy cases and six injected attribute
+observation regressions. Sixteen POSIX Git/injected-I/O cases skip on Windows.
+Full diagnostic again includes **61 passing native #27 lifecycle cases** and the
+unchanged mandatory owner-transition failure,
+`assignable_owner_group_available=False`. Setup errors, injected responses and
+that #29 fixture gap remain distinct. Preserve all earlier failed totals and
+retry5's separate six-case pass; none is relabeled by retry1.
+
+The repair changes **tests only**: retain extended spelling for observational
+enumeration, then rebuild each native entry from the original ordinary root and
+its enumerated relative path. The portable regression injects a distinct
+enumeration spelling and checks that native calls retain the complete original
+spaced Windows drive root, relative object names and deduplicated numeric masks.
+It is not native path/Git proof. Production code, the strict path guard,
+read-only administration handling, owner/DACL validators, real-owner assertions,
+CLI mutation/recovery/log-append gates, POSIX behavior, v1 format and dependencies
+are byte-identical to `849a3e2`. No filesystem naming refinement, #29 work,
+account/privilege/policy change or new recovery command is added.
+
+**Next #28 gate:** execute the revised fixture and unchanged administration
+correction with the existing native helper, using a fresh directory such as
+`obfuscidian-28-reports-313-retry2` and preserving both supplied archives. Keep
+all 31 native #28 cases and the unchanged owner fixture selected. The known
+owner gap may still fail commands; every #28 setup error/failure must be resolved
+with actual native evidence before acceptance. #29 owner proof, applicable
+host/storage/interpreter coverage, exact-commit hosted matrix, exchanged v1 and
+installed wheel/sdist write qualification remain mandatory. Both issues stay
+open; no Windows support or write enabling follows from this fixture repair.
+
+New local macOS ARM64 CPython 3.12.7 / Poetry 2.4.2 checks for this test-only
+repair: full synthetic suite **1545 passed / 149 platform skips**, exit 0, with
+permitted localhost TLS; dedicated #28 **35 passed / 31 native skips**, exit 0.
+The added spelling regression passes using injected enumeration/native entry
+responses. Ruff lint/format (123 files), strict Poetry lock, strict fresh Sphinx
+and local references across 39 HTML pages passed; external URLs were not
+requested. Full regression includes existing isolated packaging checks with
+available development dependencies. No native Windows rerun, hosted CI or new
+installed Windows write qualification ran here. Source byte preservation,
+ancestry, diff/privacy/header/LF and empty-index checks passed. Seven follow-up
+files are modified, all unstaged/uncommitted at `849a3e2` on the requested branch;
+the maintainer's commits are preserved. No agent Git history, remote delivery,
+issue closure or publication action occurred.
 
 ## Exact native validation procedure
 

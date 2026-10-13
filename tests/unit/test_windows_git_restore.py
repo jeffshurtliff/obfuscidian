@@ -11,6 +11,8 @@ from __future__ import annotations
 
 import os
 import struct
+from contextlib import contextmanager
+from pathlib import PureWindowsPath
 from types import SimpleNamespace
 
 import pytest
@@ -19,10 +21,37 @@ from obfuscidian import _windows_git_restore as win
 from obfuscidian import constants as const
 from obfuscidian import git_restore as git
 from obfuscidian._windows_native import _NativeSafetyError, _private_acl
+from tests.integration import test_windows_git_restore as native_tests
 from tests.integration.test_merge_restore import _git, _plan, _snapshot, repositories
 from tests.unit.test_windows_transactions import _ModelGuard, _security, model
 
 SID = b'\x01\x01\x00\x00\x00\x00\x00\x05\x15\x00\x00\x00'  # Synthetic parser SID only.
+
+
+def test_attribute_diagnostic_preserves_ordinary_native_bindings(tmp_path, monkeypatch):
+    """Inject the enumeration spelling only; this is not native path proof."""
+    root = PureWindowsPath('C:/synthetic spaced paths/origin repo/.git/objects')
+    enumeration = tmp_path / 'enumeration spelling'
+    names = ('ab/' + '1' * 38, 'cd/' + '2' * 38)
+    for name in names:
+        path = enumeration / name
+        path.parent.mkdir(parents=True)
+        path.write_bytes(b'SYNTHETIC OBJECT')
+    opened = []
+
+    @contextmanager
+    def entry(parent, name, directory):
+        opened.append((parent, name, directory))
+        yield SimpleNamespace(_identity=lambda: SimpleNamespace(attributes=0x21))
+
+    def spelling(path):
+        assert path == root
+        return enumeration
+
+    monkeypatch.setattr(native_tests, '_io_path', spelling)
+    monkeypatch.setattr(native_tests.files, '_entry', entry)
+    assert native_tests._object_attribute_masks(root) == '0x00000021'
+    assert set(opened) == {((root / name).parent, (root / name).name, False) for name in names}
 
 
 @pytest.fixture

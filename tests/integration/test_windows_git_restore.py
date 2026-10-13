@@ -16,6 +16,7 @@ import shlex
 import subprocess
 import sys
 import threading
+from pathlib import Path
 
 import pytest
 from click.testing import CliRunner
@@ -31,6 +32,20 @@ from tests.integration.test_merge_restore import _commit, _git
 from tests.integration.test_windows_native import _set_descriptor
 
 pytestmark = pytest.mark.skipif(os.name != 'nt', reason='Actual Git for Windows/native filesystem proof required.')
+
+
+def _object_attribute_masks(root: Path) -> str:
+    """Enumerate extended fixture paths while retaining ordinary native bindings."""
+    enumeration = _io_path(root)
+    masks = set()
+    for path in enumeration.rglob('*'):
+        if path.is_file():
+            # Extended spelling belongs only to observational Python I/O.
+            # Native guards must receive the original ordinary drive root.
+            logical = root / path.relative_to(enumeration)
+            with files._entry(logical.parent, logical.name, False) as handle:
+                masks.add(handle._identity().attributes)
+    return ','.join(f'0x{mask:08x}' for mask in sorted(masks))
 
 
 @pytest.fixture
@@ -66,12 +81,7 @@ def repositories(tmp_path, monkeypatch, record_property):
     _commit(origin)
     _git(origin, 'update-index', '--chmod=+x', 'base-only.bin')
     _git(origin, 'commit', '-qm', 'Recorded synthetic executable Git mode')
-    masks = set()
-    for path in _io_path(origin / '.git' / 'objects').rglob('*'):
-        if path.is_file():
-            with files._entry(path.parent, path.name, False) as handle:
-                masks.add(handle._identity().attributes)
-    record_property('git_object_attribute_masks', ','.join(f'0x{mask:08x}' for mask in sorted(masks)))
+    record_property('git_object_attribute_masks', _object_attribute_masks(origin / '.git' / 'objects'))
     files._mkdir(parent, source.name)
     files._write(source, 'note.md', b'SYNTHETIC BACKUP\r\n\x00\xff')
     files._write(source, 'ignored.bin', bytes(range(256)))
