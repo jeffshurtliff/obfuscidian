@@ -1,10 +1,11 @@
 # Private Windows lifecycle handoff — #27
 
-**Date:** 12 October 2026. **Target:** 2.0.0. **Status:** implementation candidate
-on the existing `feature/17-add-safe-native-windows-support` branch. Retry4's
-replacement-restore roundtrip passes; four new metadata interruption fixtures
-fail during payload inspection, plus the deferred owner-fixture failure. The
-test-only inspection correction awaits a targeted native rerun. Production Windows CLI mutation/recovery
+**Date:** 13 October 2026. **Target:** 2.0.0. **Status:** #27 private implementation
+and scoped native evidence ready for maintainer review on the existing
+`feature/17-add-safe-native-windows-support` branch. Retry4 confirms replacement
+restore; retry5 passes all six corrected metadata interruption cases. The full
+retry4 suite remains a failed diagnostic with the deferred owner-fixture failure.
+Production Windows CLI mutation/recovery
 and existing-log append remain refused. No qualified support claim is made.
 
 The clean starting checkout contained reviewed #26 continuation `2316457` and
@@ -555,13 +556,68 @@ repeat is warranted if these results expose a production change or further
 failure; unchanged native cases need not be repeated to diagnose this fixture.
 Other hosts/interpreters, exchanged artifacts and hosted CI remain unexecuted.
 
+### Retry5 metadata evidence and #27 review handoff — 13 October 2026
+
+The supplied targeted archive has SHA-256
+`ec8fc8253112a0bac23f5a23a6dc21b544e127736dac37f178b6548c6e31ab16`.
+Its recorded candidate is `cbd30bb5a1b56d1c8c2281587a3549f1a6fc078e`.
+The recorded lifecycle-test SHA-256,
+`2e7cebd7e5d70c937373afef0af714132e673817094e32041279966156466797`,
+matches that commit and the current checkout. Comparison with `33e8aab` confirms
+production source, dependencies and the real-owner test are unchanged; only
+protected-control test inspection and the accompanying docs changed.
+The archive contains no new interpreter/host probes, full source manifest or
+saved shell exit code. Retry4's Windows 11 Home build 26200 / unelevated Store
+CPython 3.13.14 / AMD64 / 64-bit metadata is earlier evidence, not newly measured
+metadata for this subset. Raw host-identifying output remains private.
+
+**Actual targeted result: 6 passed, 0 failures/errors/skips, 6 warnings**, in
+69.59 seconds. The warnings concern `record_property` with JUnit `xunit2`;
+the parsed XML still contains every named case and its observation property.
+No code/configuration change was made to suppress those warnings.
+
+| Actual worker-termination case | Creation-time drift observed | Verified result |
+| --- | --- | --- |
+| Forward, before metadata verification | Yes | Recovery refused; all artifacts and ownership retained without inverse writes |
+| Forward, after metadata verification | No | Explicit recovery restored the original binary tree and released ownership |
+| Proposal return, before metadata verification | No | Explicit recovery restored the original tree |
+| Proposal return, after metadata verification | No | Explicit recovery restored the original tree |
+| Inverse reconstruction, before metadata verification | Yes | Recovery refused; all artifacts and ownership retained without inverse writes |
+| Inverse reconstruction, after metadata verification | No | Explicit recovery completed the original tree |
+
+These are real native filesystem operations and verified actual child-process
+terminations; boundary selection uses the private synthetic observation hook.
+The two before-correction cases establish actual creation-time drift and strict
+preservation/refusal on this fixture. The four exact-state cases establish
+resumable recovery. Proposal-return cases did not produce drift and are not
+claimed as proof for a drifted proposal return. This does not guarantee recovery
+after arbitrary metadata interruption or prove the exact original retry3 cause.
+
+Together with retry4's replacement roundtrip, original 28 lifecycle termination
+cases, sharing/DACL/namespace refusals, authentication/retention checks and
+production CLI refusal cases, this closes the identified #27 implementation and
+fixture follow-ups on the supplied host. The private lifecycle and scoped native
+handoff are ready for maintainer review; no additional #27 code repair is
+identified. Full-suite totals are not recomputed or relabeled: retry4 remains
+**166 passed/5 failed** selected and **1027 passed/5 failed/596 skipped** full,
+both exit 1. Retry5 is a separate six-case success. The original real-owner
+fixture remains unchanged and unavailable; #26 r3 remains **907 passed/1 failed/
+596 skipped**, with three passing owner supplements.
+
+This review changes only three documentation files. Strict Sphinx, local
+references across **38 rendered HTML pages**, consistency/privacy and diff checks passed;
+no new local runtime, PowerShell or hosted execution is claimed. The earlier
+local full **1510 passed/118 skipped** and scoped **60 passed/111 Windows-only
+skips** remain earlier validation. Changes stay unstaged/uncommitted on the
+requested branch, HEAD `cbd30bb`; reviewed #26 continuation `2316457` is present.
+#17/#27 stay open pending maintainer review, with #28/#29 implementation unstarted.
+
 ## Remaining qualification and scope
 
-- Rerun/review the six metadata interruption fixtures after the protected-control
-  inspection correction. Retry4 confirms private replacement-restore success;
-  four new boundary recovery/refusal assertions remain unexecuted after correction.
-  Any failure must retain affected production gates and be fixed/retested within
-  the authorized thread before claiming native lifecycle proof.
+- Maintainer review/acceptance of the bounded private #27 lifecycle and its
+  native/injected evidence is the remaining #27 handoff step. No further native
+  rerun is needed for the resolved fixture on unchanged code. Additional failures
+  or implementation changes must be investigated and retested before acceptance.
 - #29 must clear the deferred actual changed-owner refusal proof and applicable
   exact-commit OS/Python matrix, exchanged synthetic v1 backups and installed
   wheel/sdist qualification. No account creation, privilege activation or injected

@@ -40,10 +40,12 @@ relax production owner/DACL checks or establish passing native qualification.
   qualification gates are satisfied. Existing-log append stays refused.
 
 #26 is ready for the internal #27 handoff under this exception. #17 remains in
-progress; #27 now has a [private implementation candidate](windows-lifecycle-validation.md)
-with retry4 native evidence: replacement restore now passes; four new metadata
-interruption fixtures fail during protected-control inspection, plus the deferred
-owner-fixture failure. The test-only correction needs a targeted native rerun within #27;
+progress; #27's [private implementation and scoped native handoff](windows-lifecycle-validation.md)
+are ready for maintainer review as of **13 October 2026**. Retry4 confirms
+replacement restore and retry5 passes all six corrected metadata interruption
+cases, including actual creation-time drift with preservation/refusal before
+correction. Retry4's failed diagnostic totals and deferred owner-fixture failure
+remain unchanged; this separate subset does not establish full qualification.
 #28/#29 implementation has not started.
 Issues remain open; this decision does
 not authorize closure, Git history changes, remote delivery or publication.
