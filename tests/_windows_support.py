@@ -4,7 +4,7 @@
 :Synopsis:          Private fixture I/O, worker termination and path-free failure diagnostics
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     12 Oct 2026
+:Modified Date:     13 Oct 2026
 """
 
 from __future__ import annotations
@@ -49,6 +49,10 @@ def _failure_details(error: BaseException) -> str:
             )
             if codes is not None:
                 status = ' [' + codes.group(1) + ']'
+            else:
+                attributes = re.fullmatch(r'Unsupported Windows Git attributes refused \((0x[0-9a-f]{8})\)\.', error.args[0])
+                if attributes is not None:
+                    status = ' [Git attributes ' + attributes.group(1) + ']'
         details.append(type(error).__name__ + status + (': ' + ' -> '.join(frames) if frames else ': no backend frame'))
         error = error.__cause__ if error.__cause__ is not None else error.__context__
     return 'Synthetic lifecycle failure chain (code locations/numeric API status only):\n' + '\n'.join(details)

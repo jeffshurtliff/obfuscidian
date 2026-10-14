@@ -1,9 +1,9 @@
 # Private Windows Git merge restore handoff — #28
 
 **Date:** 13 October 2026. **Target:** 2.0.0. **Status:** private implementation
-candidate; the first actual Git for Windows run failed and retry1 blocked all
-31 native #28 cases in fixture setup. The corrected fixture and administration
-attribute handling below need native confirmation. Production Windows
+candidate; retry2 resolves the read-only-object/fixture issues but has 12 scoped
+Git failures and the unchanged deferred owner-fixture failure. Root-control
+attribute handling and strengthened boundary diagnostics need native confirmation. Production Windows
 CLI mutation/recovery and existing-log append remain refused. This is neither
 qualified Windows support nor a supported Python library API.
 
@@ -69,7 +69,8 @@ The private candidate deliberately has a narrow envelope: explicitly protected
 owner-only origin and Git administration roots, exact owner-only explicit or
 inherited Git descendants, eligible local NTFS, supported attributes/no named
 streams, and existing per-file bounds. Read-only regular administration files
-are observed without repair; payloads/directories keep the original attribute
+are observed without repair, as is the hidden bit on the root regular `.git`
+control; payloads/directories keep the original attribute
 envelope. Each audited Git tree includes its root
 in the 256-entry/32-depth bound. Ordinary permissive repositories, larger Git
 administration trees, unsupported descriptors or uncertain sharing are refused.
@@ -343,6 +344,101 @@ ancestry, diff/privacy/header/LF and empty-index checks passed. Seven follow-up
 files are modified, all unstaged/uncommitted at `849a3e2` on the requested branch;
 the maintainer's commits are preserved. No agent Git history, remote delivery,
 issue closure or publication action occurred.
+
+## Retry2 native evidence and root-control candidate — 13 October 2026
+
+All **42 recorded source hashes** in the supplied retry2 archive match maintainer
+continuation `f0395ea0382689a0fb5058a91cc81e37be8f024f`. Archive SHA-256:
+`ee84f2d68923018bd6ef8b15612b21ae1269e04c95fb72762b52016288144a85`.
+Fresh probes measure Windows 11 Home build 26200, Git 2.55.0.windows.5 and
+unelevated Store CPython 3.13.14/AMD64/64-bit; direct/Poetry metadata agree.
+Poetry/PowerShell versions remain absent. Raw reports stay private.
+
+| Retry2 invocation | Passed | Failed | Skipped | Errors | Exit |
+| --- | --- | --- | --- | --- | --- |
+| Scoped #28 plus mandatory real-owner fixture | 38 | 13 | 16 | 0 | 1 |
+| Full diagnostic | 1069 | 13 | 612 | 0 | 1 |
+
+Native object masks measure **`0x00000021`**, and the mandatory read-only-object
+case proves exact observation of **nine Git-created read-only objects**, plus
+unchanged payload/default policy refusal. Retry1's setup correction works. Other
+bounded native passes cover five collisions, early branch/private-root ordinary
+cleanup, unsafe administration DACL refusal without repair, preview/production
+CLI refusal and actual termination at branch-created/private-root-created.
+
+The native #28 module reports **19 passed / 12 failed**. Seven of those reported
+passes are user-edit retention cases lacking an assertion that the selected
+`published` boundary executed. They can pass on an unrelated early retained
+failure; they are **not accepted as actual published user-edit proof**. The
+other 12 passing cases above provide bounded native evidence. Keep the original
+pytest totals intact rather than silently subtracting these fixture gaps.
+Scoped unit results are 19 portable/injected passes and 16 POSIX Git/model skips.
+Full diagnostic again has 61 passing native #27 lifecycle cases; its failed test
+names match the scoped invocation.
+
+The 12 #28 failures cover both successful-overlay variants; index-ready/published
+ordinary cleanup; reconstruction-edit retention; actual worktree/proposal sharing;
+hooks/filters/ambient selectors; inherited-control kernel denial; and the three
+later worker boundaries. The successful path stops before `worktree-added`,
+but the outer failure previously lost its underlying context. No successful
+published lifecycle, later termination, sharing or restricted-token enforcement
+proof is accepted from these failures. The remaining ordinary failure is the
+unchanged real-owner fixture, `assignable_owner_group_available=False`, still
+mandatory #29 under the 12 October deferral.
+
+The matching [Git Windows implementation](https://github.com/git-for-windows/git/blob/v2.55.0.windows.5/compat/mingw.c#L700)
+marks a newly created `.git` file hidden under its default `dotGitOnly` policy;
+see [Git configuration](https://git-scm.com/docs/git-config#Documentation/git-config.txt-corehideDotFiles).
+This is a leading explanation for the post-worktree refusal, **not a measured
+rejected control mask or confirmed cause** in retry2.
+
+The private correction permits observation of the hidden bit **only on the
+top-level regular `.git` control**, preserving it exactly without clearing,
+repairing or normalizing attributes. Hidden administration files, nested `.git`
+files, payloads, directories and other unsupported bits retain refusal. Read-only
+administration policy remains separate. Full native identity/content/metadata,
+streams and exact owner/DACL checks remain in force. All production owner/DACL,
+CLI mutation/recovery/log-append gates and the real-owner test are unchanged.
+
+Added a pre-audit `worktree-created` diagnostic observation and actual control-mask
+property in the successful native fixtures; this hook does not assert a successful
+audit or add a worker-death/recovery guarantee. The private failure wrapper keeps
+its original exception context in memory while suppressing normal presentation.
+The test helper reports only code locations and fully matched numeric native/API
+or Git-attribute templates. Worker failures use that filtered chain, never raw
+arguments or paths. Portable regressions verify suppression/privacy and exact
+root-only hidden observation/refusal.
+
+Native ordinary failure, user-edit and sharing tests now assert that their
+selected boundary actually executed. An earlier unrelated failure can no longer
+qualify a published-edit/sharing case. Prior seven reported passes remain recorded
+as fixture-limited evidence rather than being relabeled.
+
+**Next #28 gate:** run the revised source with the existing helper in a fresh
+`obfuscidian-28-reports-313-retry3` directory, preserving all supplied failed
+archives. Inspect measured control masks and filtered failure locations; keep all
+native #28 cases and the unchanged owner fixture selected. Resolve every scoped
+failure and fixture gap with actual native evidence before acceptance. #29 real
+owner transition/positive setup/production refusal/full preservation, applicable
+host/storage/interpreter coverage, exact-commit hosted matrix, exchanged v1 and
+installed wheel/sdist write qualification remain mandatory. No #29, new recovery,
+append, pruning, naming refinement, dependency/format change or support claim.
+
+New macOS ARM64 CPython 3.12.7 / Poetry 2.4.2 checks: full synthetic suite
+**1552 passed / 149 platform skips**, exit 0, with permitted localhost TLS;
+dedicated #28 **41 passed / 31 native skips**, exit 0; Git/diagnostic-helper
+selection **59 passed / 32 skips**, exit 0. New observation/diagnostic passes
+use injected responses and do not qualify native writes. Ruff lint/format
+(123 files), strict Poetry lock, Bandit (no findings), strict fresh Sphinx and
+local references across 39 HTML pages passed; external URLs were not requested.
+Full regression includes existing isolated packaging checks using available
+development dependencies. No revised native/helper execution, hosted CI,
+exchanged artifacts or new installed Windows write qualification ran here.
+Production/POSIX/owner/real-owner/gate/dependency byte preservation, unchanged
+existing constants, private-helper scope, privacy/header/LF, diff and empty-index
+checks passed. Eleven files are modified, all unstaged/uncommitted on the
+requested branch at `f0395ea`; the maintainer's continuation commits remain.
+No agent reset/branch change/stage/commit/push/PR/merge/closure/publication.
 
 ## Exact native validation procedure
 

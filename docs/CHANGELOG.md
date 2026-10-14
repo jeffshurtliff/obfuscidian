@@ -63,6 +63,15 @@ Package versions and encrypted backup-format versions are separate contracts.
 
 ### Fixed
 
+- Private #28 observation permits Git's hidden attribute only on the root regular
+  `.git` control without changing attributes or payload/production policy. Added
+  filtered suppressed-context/control-mask diagnostics and required selected
+  boundaries in native edit/sharing/fault tests. Retry2 confirms nine read-only
+  objects and early lifecycle cases; seven reported user-edit passes lack boundary
+  proof. Scoped 38 passed/13 failed/16 skipped and full 1069 passed/13 failed/612
+  skipped remain failed, exit 1. Hidden-control cause/correction needs native
+  confirmation; production gates and mandatory #29 owner proof remain unchanged.
+
 - Windows #28 object-attribute diagnostics rebuild ordinary native entry paths
   from the original fixture root after extended Python enumeration. Production
   guards and administration handling are unchanged. Retry1's 31 native setup

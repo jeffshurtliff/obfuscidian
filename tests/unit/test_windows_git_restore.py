@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import os
 import struct
+import traceback
 from contextlib import contextmanager
 from pathlib import PureWindowsPath
 from types import SimpleNamespace
@@ -21,6 +22,7 @@ from obfuscidian import _windows_git_restore as win
 from obfuscidian import constants as const
 from obfuscidian import git_restore as git
 from obfuscidian._windows_native import _NativeSafetyError, _private_acl
+from tests._windows_support import _failure_details
 from tests.integration import test_windows_git_restore as native_tests
 from tests.integration.test_merge_restore import _git, _plan, _snapshot, repositories
 from tests.unit.test_windows_transactions import _ModelGuard, _security, model
@@ -79,6 +81,48 @@ def test_readonly_administration_is_observed_exactly_without_relaxing_payload_po
         win._git_record(handle)
     with pytest.raises(_NativeSafetyError, match='Unsupported baseline'):
         win.files._record(handle)
+
+
+def test_hidden_git_control_is_observed_exactly_without_relaxing_payload_policy(observed_handle):
+    handle, identity = observed_handle
+    identity.attributes = 0x22
+    record = win._git_record(handle, _hidden_control=True)
+    assert record['attributes'] == identity.attributes == 0x22
+    with pytest.raises(_NativeSafetyError, match='0x00000022'):
+        win._git_record(handle)
+    with pytest.raises(_NativeSafetyError, match='0x00000022'):
+        win._git_record(handle, _readonly=True)
+    with pytest.raises(_NativeSafetyError, match='Unsupported baseline'):
+        win.files._record(handle)
+
+
+def test_hidden_attribute_is_scoped_to_root_git_file(tmp_path, monkeypatch, observed_handle):
+    handle, identity = observed_handle
+    (tmp_path / '.git').write_bytes(b'SYNTHETIC CONTROL')
+
+    @contextmanager
+    def entry(parent, name, directory, **kwargs):
+        identity.directory = directory
+        identity.attributes = 0x10 if directory else 0x22
+        yield handle
+
+    monkeypatch.setattr(win.files, '_entry', entry)
+    monkeypatch.setattr(win.files, '_names', lambda root: sorted(p.name for p in root.iterdir()))
+    assert win._git_tree(tmp_path)['.git']['attributes'] == 0x22
+    with pytest.raises(_NativeSafetyError, match='0x00000022'):
+        win._git_tree(tmp_path, _administrative=True)
+    (tmp_path / 'nested').mkdir()
+    (tmp_path / 'nested/.git').write_bytes(b'SYNTHETIC PAYLOAD')
+    with pytest.raises(_NativeSafetyError, match='0x00000022'):
+        win._git_tree(tmp_path)
+
+
+@pytest.mark.parametrize('attributes,directory', [(0x12, True), (0x23, False), (0x222, False)])
+def test_hidden_git_control_refuses_directories_readonly_and_unknown_bits(observed_handle, attributes, directory):
+    handle, identity = observed_handle
+    identity.attributes, identity.directory = attributes, directory
+    with pytest.raises(_NativeSafetyError, match='Unsupported Windows Git attributes'):
+        win._git_record(handle, _hidden_control=True)
 
 
 @pytest.mark.parametrize('attributes,directory', [(0x11, True), (0x23, False), (0x221, False), (0x821, False)])
@@ -187,6 +231,25 @@ def test_injected_git_lifecycle_preserves_bytes_index_origin_and_retained_eviden
     assert result.ignored == ('ignored.bin',)
     assert len(result.retained) == 1 and result.retained[0].is_dir()
     assert not list(output.parent.glob(const.GIT_STAGE_PREFIX + '*'))
+
+
+def test_private_git_failure_retains_suppressed_context_for_path_free_diagnostics(injected, monkeypatch):
+    original = OSError(2, 'SYNTHETIC SECRET', 'C:/private-fixture/secret.bin')
+
+    def fail(label):
+        if label == 'before-branch':
+            raise original
+
+    monkeypatch.setattr(win, '_boundary', fail)
+    with pytest.raises(git._MergeFailure) as caught:
+        win._publish_merge(_plan(injected))
+    error = caught.value
+    assert error.__context__ is original and error.__suppress_context__
+    details = _failure_details(error)
+    assert 'FileNotFoundError: obfuscidian._windows_git_restore._publish_merge:' in details
+    presentation = ''.join(traceback.format_exception(error))
+    for private in ('SYNTHETIC SECRET', 'C:/private-fixture', 'secret.bin'):
+        assert private not in details and private not in presentation
 
 
 @pytest.mark.parametrize('boundary', ['branch-created', 'private-root-created', 'index-ready', 'published'])

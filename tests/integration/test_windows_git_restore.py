@@ -130,14 +130,29 @@ def test_real_native_readonly_git_objects_keep_exact_attributes_and_payload_refu
 
 
 @pytest.mark.parametrize('preserve', [False, True])
-def test_real_native_git_overlay_privacy_binary_index_and_spaced_paths(repositories, preserve):
+def test_real_native_git_overlay_privacy_binary_index_and_spaced_paths(repositories, preserve, monkeypatch, record_property):
     origin, source, _, _, output = repositories
     before = _origin_state(origin)
     index, head = _git(origin, 'ls-files', '--stage', '-z'), _git(origin, 'rev-parse', 'HEAD')
+    observed = []
+
+    def observe(label):
+        if label == 'worktree-created':
+            with files._entry(output, const.GIT_METADATA, False) as handle:
+                observed.append(handle._identity().attributes)
+                record_property('worktree_git_control_attributes', f'0x{observed[-1]:08x}')
+
+    monkeypatch.setattr(win, '_boundary', observe)
     try:
         result = win._publish_merge(_plan(repositories, preserve_config=preserve))
     except git_restore._MergeFailure as error:
         pytest.fail(_failure_details(error), pytrace=False)
+    assert observed and observed[0] & const.WINDOWS_ATTRIBUTE_HIDDEN
+    with files._entry(output, const.GIT_METADATA, False) as handle:
+        record = win._git_record(handle, _hidden_control=True)
+        assert record['attributes'] == observed[0]
+        with pytest.raises(_NativeSafetyError, match='Unsupported baseline Windows attributes'):
+            files._record(handle)
     assert _origin_state(origin) == before
     assert _git(output, 'rev-parse', 'HEAD') == head
     assert _git(output, 'ls-files', '--stage', '-z') == index
@@ -207,14 +222,17 @@ def test_real_native_git_collisions_preserve_existing_data(repositories, monkeyp
 @pytest.mark.parametrize('boundary', ['branch-created', 'private-root-created', 'index-ready', 'published'])
 def test_real_native_git_ordinary_failures_cleanup_only_unchanged_artifacts(repositories, monkeypatch, boundary):
     before = _origin_state(repositories[0])
+    reached = []
 
     def fail(label):
         if label == boundary:
+            reached.append(label)
             raise OSError('SYNTHETIC ORDINARY FAILURE')
 
     monkeypatch.setattr(win, '_boundary', fail)
     with pytest.raises(git_restore._MergeFailure, match='cleaned safely'):
         win._publish_merge(_plan(repositories))
+    assert reached == [boundary]
     assert _origin_state(repositories[0]) == before
     assert not repositories[4].exists()
     assert b'obfuscidian/synthetic-review' not in _git(repositories[0], 'show-ref')
@@ -226,10 +244,12 @@ def test_real_native_git_ordinary_failures_cleanup_only_unchanged_artifacts(repo
 def test_real_native_git_user_edits_and_private_artifacts_retained(repositories, monkeypatch, edit):
     origin, _, _, _, output = repositories
     plan = _plan(repositories)
+    reached = []
 
     def mutate(label):
         if label != 'published':
             return
+        reached.append(label)
         if edit in {'payload', 'ignored', 'control'}:
             name = {'payload': 'note.md', 'ignored': 'ignored.bin', 'control': '.gitignore'}[edit]
             (output / name).write_bytes(b'SYNTHETIC USER EDIT')
@@ -251,6 +271,7 @@ def test_real_native_git_user_edits_and_private_artifacts_retained(repositories,
     monkeypatch.setattr(win, '_boundary', mutate)
     with pytest.raises(git_restore._MergeFailure) as caught:
         win._publish_merge(plan)
+    assert reached == ['published'], _failure_details(caught.value)
     if edit == 'reconstruction':
         assert any((p / 'user-edit.bin').exists() for p in caught.value.retained)
     else:
@@ -263,9 +284,11 @@ def test_real_native_git_user_edits_and_private_artifacts_retained(repositories,
 def test_real_native_git_sharing_denial_retains_worktree(repositories, monkeypatch):
     output = repositories[4]
     handles = []
+    reached = []
 
     def deny(label):
         if label == 'published':
+            reached.append(label)
             # A real deny-delete read handle must prevent Git's worktree cleanup.
             guard = _Guard(output)
             guard.__enter__()
@@ -279,6 +302,7 @@ def test_real_native_git_sharing_denial_retains_worktree(repositories, monkeypat
     try:
         with pytest.raises(git_restore._MergeFailure) as caught:
             win._publish_merge(_plan(repositories))
+        assert reached == ['published'], _failure_details(caught.value)
         assert output in caught.value.retained
         assert (output / 'note.md').read_bytes().startswith(b'SYNTHETIC BACKUP')
     finally:
@@ -290,9 +314,11 @@ def test_real_native_proposal_sharing_denial_retains_transaction_evidence(reposi
     origin, _, _, _, output = repositories
     before = _origin_state(origin)
     handles = []
+    reached = []
 
     def deny(label):
         if label == 'ready':
+            reached.append(label)
             workspace = next(
                 p for p in output.parent.glob(const.TRANSACTION_PREFIX + '*') if p.is_dir() and (p / 'stage/note.md').exists()
             )
@@ -309,6 +335,7 @@ def test_real_native_proposal_sharing_denial_retains_transaction_evidence(reposi
     try:
         with pytest.raises(git_restore._MergeFailure) as caught:
             win._publish_merge(_plan(repositories))
+        assert reached == ['ready'], _failure_details(caught.value)
         assert _origin_state(origin) == before
         assert any((p / 'stage/note.md').exists() for p in caught.value.retained if p.is_dir())
     finally:
@@ -465,9 +492,9 @@ win._boundary = observe
 try:
     win._publish_merge(win._plan_merge(origin, mirror, key, worktree=output, branch='synthetic-review'))
 except BaseException as error:
-    from obfuscidian._windows_native import _NativeSafetyError
+    from tests._windows_support import _failure_details
     # Never return a raw traceback, paths or arbitrary exception text to JUnit.
-    detail = str(error) if isinstance(error, _NativeSafetyError) else type(error).__name__
+    detail = _failure_details(error).replace('\n', ' | ')
     print('SYNTHETIC FAILURE', detail, flush=True)
     raise SystemExit(1) from None
 """

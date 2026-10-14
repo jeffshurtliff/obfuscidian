@@ -54,17 +54,20 @@ def _git_acl(security: dict, owner: bytes, *, directory: bool) -> None:
     _private_acl(bytes(explicit), owner, directory=directory)
 
 
-def _git_record(handle: _Handle, *, _readonly: bool = False) -> dict:
+def _git_record(handle: _Handle, *, _readonly: bool = False, _hidden_control: bool = False) -> dict:
     """Capture Git entries, permitting read-only files only in audited administration.
 
     Git creates immutable objects read-only. Observe that bit without clearing
     it, and bind the exact attributes into the snapshot. Payloads, directories,
-    unknown attributes and the production baseline policy remain unchanged.
+    The root .git file may also carry Git's hidden bit, without clearing it.
+    Unknown attributes and the production baseline policy remain unchanged.
     """
     before = handle._identity()
     supported = const.WINDOWS_SUPPORTED_ATTRIBUTES
     if _readonly and not before.directory:
         supported |= const.WINDOWS_ATTRIBUTE_READONLY
+    if _hidden_control and not before.directory:
+        supported |= const.WINDOWS_ATTRIBUTE_HIDDEN
     if before.attributes & ~supported:
         raise _fail(f'Unsupported Windows Git attributes refused (0x{before.attributes:08x}).')
     files._streams(handle)
@@ -107,7 +110,9 @@ def _git_tree(root: Path, *, excluded: set[str] = frozenset(), _administrative: 
                 continue
             path, relative = parent / name, prefix + name
             with files._entry(parent, name, path.is_dir()) as handle:
-                result[relative] = _git_record(handle, _readonly=_administrative)
+                result[relative] = _git_record(
+                    handle, _readonly=_administrative, _hidden_control=not _administrative and relative == const.GIT_METADATA
+                )
                 if result[relative]['id'][2]:
                     visit(path, relative + '/', depth + 1)
             if len(result) > const.WINDOWS_TRANSACTION_ENTRIES:
@@ -290,7 +295,7 @@ def _publish_merge(plan: git._MergePlan, *, dry_run: bool = False) -> git._Merge
     output_guard = None
     branch_attempted = created = False
     retained, warnings = [], []
-    failure = outcome = None
+    failure = outcome = failure_cause = None
     transaction = result = None
     transaction_names = frozenset()
     unsupported = set()
@@ -338,6 +343,7 @@ def _publish_merge(plan: git._MergePlan, *, dry_run: bool = False) -> git._Merge
                 raise _fail('Windows worktree root is no longer empty.')
             recheck()
             git._git(plan.executable, plan.origin, 'worktree', 'add', '--no-checkout', str(plan.output), plan.branch)
+            _boundary('worktree-created')  # Diagnostic observation before the complete native audit.
             recheck()
             if files._names(plan.output) != [const.GIT_METADATA]:
                 raise _fail('Windows Git created unexpected worktree entries.')
@@ -410,6 +416,7 @@ def _publish_merge(plan: git._MergePlan, *, dry_run: bool = False) -> git._Merge
                 warnings.append('Some modification times could not be preserved exactly.')
             outcome = ignored
         except BaseException as error:
+            failure_cause = error
             clean = not branch_attempted
             if created:
                 try:
@@ -459,7 +466,11 @@ def _publish_merge(plan: git._MergePlan, *, dry_run: bool = False) -> git._Merge
     if isinstance(failure, BaseException):
         raise failure
     if failure is not None:
-        raise git._MergeFailure(failure + (' ' + ' '.join(warnings) if warnings else ''), plan, tuple(retained)) from None
+        error = git._MergeFailure(failure + (' ' + ' '.join(warnings) if warnings else ''), plan, tuple(retained))
+        # Keep code-only diagnostic context in memory while suppressing its
+        # arbitrary arguments/paths in the normal exception presentation.
+        error.__context__ = failure_cause
+        raise error from None
     if workspace in retained:
         warnings.append('Private reconstruction cleanup incomplete; sensitive plaintext retained.')
     warnings.append('Completed private Windows transaction evidence retained; inspect before manual cleanup.')

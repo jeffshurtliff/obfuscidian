@@ -135,6 +135,7 @@ WINDOWS_OPEN_EXISTING = 3
 WINDOWS_OPEN_FLAGS = 0x02200000  # BACKUP_SEMANTICS | OPEN_REPARSE_POINT
 WINDOWS_ATTRIBUTE_DIRECTORY = 0x10
 WINDOWS_ATTRIBUTE_READONLY = 0x1  # Observational Git administration policy only; never payload mutation.
+WINDOWS_ATTRIBUTE_HIDDEN = 0x2  # Observational root .git file policy only; never payload mutation.
 WINDOWS_UNSAFE_ATTRIBUTES = 0x400 | 0x1000 | 0x4000  # reparse, offline, EFS
 WINDOWS_READ_ONLY_VOLUME = 0x00080000
 WINDOWS_DRIVE_FIXED = 3

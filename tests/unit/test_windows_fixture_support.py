@@ -4,7 +4,7 @@
 :Synopsis:          Long-path fixture regression and injected actual-worker termination checks
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     12 Oct 2026
+:Modified Date:     13 Oct 2026
 """
 
 from __future__ import annotations
@@ -44,6 +44,14 @@ def test_failure_context_cycle_is_bounded_without_reporting_arguments():
     details = support._failure_details(first)
     assert details.count('ValueError') == 1 and details.count('OSError') == 1
     assert 'SYNTHETIC FIRST' not in details and 'SYNTHETIC SECOND' not in details
+
+
+def test_git_attribute_status_requires_the_complete_numeric_template():
+    error = _NativeSafetyError('Unsupported Windows Git attributes refused (0x00000022).')
+    assert '[Git attributes 0x00000022]' in support._failure_details(error)
+    error = _NativeSafetyError('Unsupported Windows Git attributes refused (0x00000022). C:/private/secret.bin')
+    details = support._failure_details(error)
+    assert '0x00000022' not in details and 'C:/' not in details and 'secret.bin' not in details
 
 
 @pytest.mark.parametrize('code', ['WinError 32', 'NTSTATUS 0xC0000043, I/O 0xC0000043'])
