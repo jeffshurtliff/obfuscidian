@@ -32,8 +32,8 @@ metadata interruption cases. The maintainer accepted that private handoff for
 #28. The [private #28 Git lifecycle candidate](maintainers/windows-git-validation.md)
 adds protected reconstruction/worktree handling and native fixtures. Its first
 Git for Windows runs provide 30 passing retry3 cases and a separate successful
-retry4 kernel-denial/positive-control proof. The private handoff is ready for
-maintainer review; it is not a passing full-suite/matrix or supported-write claim.
+retry4 kernel-denial/positive-control proof. The maintainer accepted the private
+#28 handoff; it is not a passing full-suite/matrix or supported-write claim.
 Historical failed full-suite totals,
 mandatory owner proof and unexecuted qualification remain explicit in those
 records. No new support claim follows from these private candidates.

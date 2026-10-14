@@ -14,7 +14,7 @@ Package versions and encrypted backup-format versions are separate contracts.
   conservative ordinary-failure cleanup/retention. Added portable injected and
   real Git for Windows fixtures plus a source-reviewed native validation helper.
   Retry3 supplies 30 native passes and retry4 separately passes the corrected
-  kernel-denial/positive-control case; the private handoff is ready for review. Production Windows CLI
+  kernel-denial/positive-control case; the maintainer accepted the private handoff. Production Windows CLI
   mutation/recovery and existing-log append gates remain unchanged. No new Git
   recovery command, rollback pruning, dependencies or Fernet/v1 format change.
 

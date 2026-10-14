@@ -1,7 +1,7 @@
 # Private Windows Git merge restore handoff — #28
 
 **Date:** 13 October 2026. **Target:** 2.0.0. **Status:** private implementation
-handoff ready for maintainer review: retry3 passes 30 native Git cases and
+handoff accepted by the maintainer: retry3 passes 30 native Git cases and
 retry4 separately passes the corrected kernel-denial case. No scoped repair
 remains identified. The unchanged owner-fixture failure remains mandatory #29. Production Windows
 CLI mutation/recovery and existing-log append remain refused. This is neither
@@ -585,6 +585,22 @@ evidence. Five documents remain unstaged/uncommitted at `395454b` on the request
 branch; maintainer commits preserved. No agent reset/branch change/stage/commit/
 push/PR/merge/issue closure/publication. #17/#28 remain open pending review and
 qualification, with no production Windows write enabling.
+
+## Maintainer acceptance and successor boundary — 13 October 2026
+
+The maintainer reviewed and approved the #28 changes and bounded private handoff.
+**#28 is complete within its approved private scope.** No further #28 repair or
+native rerun is required on unchanged code. Retry3's 30 passes and the separate
+retry4 kernel pass remain distinct; failed full totals and the actual-owner gate
+are unchanged. This acceptance supersedes the pending-review boundary above.
+
+The next implementation task is **#29 in a new chat**, under its own bounded
+authorization. It remains unstarted in this chat. Retain all production gates
+until actual owner-transition and applicable qualification gates pass; no support
+claim or new bypass follows from #28 acceptance. Issue closure and Git history,
+remote delivery, CI dispatch or publication are not authorized by this approval.
+The accepted handoff is in maintainer commit `a92ab73`; approval-record edits remain
+unstaged/uncommitted on the same branch.
 
 ## Exact native validation procedure
 
