@@ -381,7 +381,7 @@ def test_real_native_git_hooks_filters_and_ambient_selectors_do_not_execute(repo
     assert not marker.exists() and (output / 'note.md').read_bytes().startswith(b'SYNTHETIC BACKUP')
 
 
-def test_real_native_inherited_git_control_kernel_denial_with_positive_control(repositories):
+def test_real_native_inherited_git_control_kernel_denial_with_positive_control(repositories, record_property):
     """Prove inherited Git control denial through native relative kernel opens.
 
     Open the synthetic root before impersonation so a parent's traverse denial
@@ -392,7 +392,9 @@ def test_real_native_inherited_git_control_kernel_denial_with_positive_control(r
     output = repositories[4]
     win._publish_merge(_plan(repositories))
     with files._entry(output, '.git', False) as handle:
-        before = win._git_record(handle)
+        before = win._git_record(handle, _hidden_control=True)
+    record_property('inherited_git_control_attributes', f'0x{before["attributes"]:08x}')
+    assert not before['security']['protected'], 'Actual inherited Git control policy is mandatory.'
     with _Guard(output) as guard:
         api, ptr = guard.api, ctypes.c_void_p
         wt = api.wt
@@ -431,8 +433,10 @@ def test_real_native_inherited_git_control_kernel_denial_with_positive_control(r
                 with pytest.raises(_NativeSafetyError, match='0xC0000022'):
                     with api._open_relative(guard.handles[-1], '.git', directory=False):
                         pytest.fail('Restricted token opened inherited private Git control.')
+                record_property('restricted_git_control_denied', True)
                 with api._open_relative(guard.handles[-1], 'positive-control.bin', directory=False) as positive:
                     assert positive._read(100) == b'SYNTHETIC POSITIVE'
+                record_property('restricted_positive_control_opened', True)
             finally:
                 api._check(api.advapi.RevertToSelf())
         finally:
@@ -442,7 +446,8 @@ def test_real_native_inherited_git_control_kernel_denial_with_positive_control(r
             if everyone.value:
                 api._check(api.kernel.LocalFree(everyone) is None)
     with files._entry(output, '.git', False) as handle:
-        assert win._git_record(handle) == before
+        assert win._git_record(handle, _hidden_control=True) == before
+    record_property('inherited_git_control_preserved_exactly', True)
 
 
 def test_real_native_git_preview_and_production_cli_refusal(repositories):

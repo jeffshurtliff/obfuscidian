@@ -63,6 +63,15 @@ Package versions and encrypted backup-format versions are separate contracts.
 
 ### Fixed
 
+- Windows #28 inherited-control kernel fixture selects the existing hidden root
+  `.git` observation policy before and after restricted-token checks. Added
+  explicit inherited-policy and denial/positive-open/exact-preservation evidence.
+  Retry3 passes 30 of 31 native Git cases, including publication, sharing, selected
+  edits and all worker boundaries. Preserve scoped 54 passed/2 failed/17 skipped
+  and full 1086 passed/2 failed/613 skipped, both exit 1. The corrected kernel
+  proof remains pending; all application code, production gates and mandatory
+  #29 ownership-transition proof remain unchanged.
+
 - Private #28 observation permits Git's hidden attribute only on the root regular
   `.git` control without changing attributes or payload/production policy. Added
   filtered suppressed-context/control-mask diagnostics and required selected

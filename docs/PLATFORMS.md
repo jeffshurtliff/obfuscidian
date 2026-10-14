@@ -31,9 +31,9 @@ evidence: retry4 confirms replacement restore and retry5 passes the six correcte
 metadata interruption cases. The maintainer accepted that private handoff for
 #28. The [private #28 Git lifecycle candidate](maintainers/windows-git-validation.md)
 adds protected reconstruction/worktree handling and native fixtures. Its first
-Git for Windows run failed; retry2 confirms read-only objects and the fixture
-repair, but 12 scoped Git failures remain. Published-edit retention fixtures now
-require their selected boundary; root-control handling needs native confirmation.
+Git for Windows run failed; retry3 passes 30 of 31 native Git cases, including
+publication, sharing, selected user edits and worker termination. A test-only
+kernel-denial observation correction needs targeted native confirmation.
 Historical failed full-suite totals,
 mandatory owner proof and unexecuted qualification remain explicit in those
 records. No new support claim follows from these private candidates.

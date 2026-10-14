@@ -48,9 +48,9 @@ correction. Retry4's failed diagnostic totals and deferred owner-fixture failure
 remain unchanged; this separate subset does not establish full qualification.
 #27's private handoff is accepted for the separately authorized #28 continuation.
 #28 now has a [private local Git lifecycle candidate](windows-git-validation.md),
-whose retry2 confirms read-only objects, fixture repair and bounded early lifecycle
-cases, with 12 scoped Git failures remaining. Root-control handling and strengthened
-published-boundary tests need native confirmation; production gates remain retained.
+whose retry3 passes 30 of 31 native Git cases, including publication, sharing,
+selected user edits and all worker boundaries. The kernel-denial test's control
+observation correction needs targeted native confirmation; production gates remain retained.
 #29 implementation has not started.
 Issues remain open; this decision does
 not authorize closure, Git history changes, remote delivery or publication.

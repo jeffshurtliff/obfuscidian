@@ -1,9 +1,9 @@
 # Private Windows Git merge restore handoff — #28
 
 **Date:** 13 October 2026. **Target:** 2.0.0. **Status:** private implementation
-candidate; retry2 resolves the read-only-object/fixture issues but has 12 scoped
-Git failures and the unchanged deferred owner-fixture failure. Root-control
-attribute handling and strengthened boundary diagnostics need native confirmation. Production Windows
+candidate; retry3 passes 30 of 31 native Git cases. The remaining kernel-denial
+case needs the test-only control observation correction below and a targeted
+native rerun. The unchanged owner-fixture failure remains mandatory #29. Production Windows
 CLI mutation/recovery and existing-log append remain refused. This is neither
 qualified Windows support nor a supported Python library API.
 
@@ -440,7 +440,154 @@ checks passed. Eleven files are modified, all unstaged/uncommitted on the
 requested branch at `f0395ea`; the maintainer's continuation commits remain.
 No agent reset/branch change/stage/commit/push/PR/merge/closure/publication.
 
+## Retry3 native lifecycle evidence and final fixture correction — 13 October 2026
+
+All **42 source hashes** in the supplied retry3 archive match maintainer
+continuation `e22b1c2c0caeec4db30e0fd065f9f2f43b4deb1c`. Archive SHA-256:
+`719465915100b4106f1209c34413ffefdabb9390b4f86f5c6c4834e6926ce5a7`.
+Fresh probes measure Windows 11 Home build 26200 / Git 2.55.0.windows.5 /
+unelevated Store CPython 3.13.14 AMD64/64-bit; direct/Poetry metadata agree.
+Poetry/PowerShell versions remain absent. Raw reports stay private.
+
+| Retry3 invocation | Passed | Failed | Skipped | Errors | Exit |
+| --- | --- | --- | --- | --- | --- |
+| Scoped #28 plus mandatory real-owner fixture | 54 | 2 | 17 | 0 | 1 |
+| Full diagnostic | 1086 | 2 | 613 | 0 | 1 |
+
+Actual native #28 results are **30 passed / 1 failed**. The unit selection has
+24 portable/injected passes and 17 POSIX Git/model skips. Full diagnostic again
+has 61 native #27 lifecycle passes and the same two failed test names.
+
+Root `.git` controls now measure **`0x00000022`** in both successful overlay
+variants, confirming hidden-control handling rather than the earlier inference.
+Read-only objects measure `0x21` and nine actual objects pass their regression.
+Native passes cover binary/CRLF preservation, spaced paths, index modes,
+ignored files/config preservation, uncommitted restored differences, origin and
+protected controls, collisions, ordinary cleanup, all eight selected user edits,
+real proposal/worktree sharing denial, artifact retention, hooks/filters/ambient
+selectors and all five actual worker termination boundaries. Strengthened
+boundary assertions pass; retry2's seven user-edit fixture gaps are resolved
+by this new evidence, without relabeling their earlier results.
+
+The remaining #28 test successfully publishes but fails its direct pre-kernel
+control observation: it calls `_git_record` without `_hidden_control=True` on
+the root hidden `.git` file. Restricted-token setup, denied leaf open and matching
+positive-control open are **not executed** in this failed case. The test-only
+repair selects the existing control policy for both before/after observations,
+requires an actual inherited descriptor, and records numeric control attributes,
+kernel-denial/positive-open and exact-preservation properties when reached.
+The actual kernel enforcement/positive-control proof still needs a native rerun.
+
+The other failure is the unchanged real-owner fixture,
+`assignable_owner_group_available=False`. It remains mandatory #29 under the
+12 October limited deferral. No ownership reassignment proof follows from the
+restricted-token test. Keep earlier #26/#27/#28 failed totals and retry5's
+separate six-case pass; do not calculate a new passing full total from a subset.
+
+All application modules, production owner/DACL and CLI mutation/recovery/log
+append gates, real-owner assertions, shared helper, native validation script,
+POSIX behavior, public interface, v1 format and dependencies remain byte-identical
+to `e22b1c2`. Only the kernel-denial test function changes within its Python module;
+the other 30 native cases and repository fixture are unchanged. No #29 work,
+account/privilege/policy change, new recovery, append, pruning or naming refinement.
+
+**Next #28 gate:** a targeted native rerun of the corrected kernel test is
+sufficient for this test-only repair. It does not select the unchanged owner
+fixture, does not discharge its recorded failure, and must not be described as
+a full-suite pass or #29 qualification. Preserve the full failed reports. Use
+the targeted procedure below with fresh `obfuscidian-28-reports-313-retry4`
+storage and source/host/interpreter evidence; the existing full helper remains
+available for a separately chosen diagnostic rerun. #29 ownership/positive setup/
+production refusal/full preservation, applicable storage/host/interpreter,
+exact-commit hosted matrix, exchanged v1 and installed wheel/sdist write
+qualification remain required. #17/#28 stay open pending this proof and review.
+
+New local checks: Git/diagnostic-helper selection **59 passed / 32 platform skips**,
+exit 0; Ruff lint/format (123 files) pass. Native kernel execution is skipped on
+macOS. The earlier full local **1552 passed / 149 skips** belongs to the preceding
+candidate, not a new full run of this test-only correction.
+Strict Poetry lock, strict fresh Sphinx/local references (39 HTML pages; external
+URLs not requested), AST/function and application/real-owner/helper/dependency
+byte preservation, diff/privacy/header/LF and empty-index checks pass. No new
+full runtime suite, native PowerShell/kernel run, hosted CI, exchanged artifacts
+or installed Windows write qualification executed here. Six files are modified,
+all unstaged/uncommitted at `e22b1c2` on the requested branch; maintainer commits
+remain preserved. No agent reset/branch change/stage/commit/push/PR/merge/closure/
+publication occurred.
+
 ## Exact native validation procedure
+
+### Targeted remaining kernel proof after retry3
+
+From the revised repository root on the existing unelevated Windows host, using
+the same installed 3.13 environment, run this source text in PowerShell. It
+changes no execution policy, accounts or privileges. Fresh output stays outside
+the checkout. This procedure is source-reviewed here; actual Windows execution
+of the corrected case remains pending. Return the directory as a private archive.
+
+```powershell
+$KernelRepository = (Resolve-Path '.').Path
+$KernelReports = [IO.Path]::GetFullPath((Join-Path $env:TEMP 'obfuscidian-28-reports-313-retry4'))
+if (Test-Path -LiteralPath $KernelReports) { throw 'Preserve earlier reports; use a fresh directory.' }
+if ($KernelReports.StartsWith($KernelRepository + [IO.Path]::DirectorySeparatorChar,
+                              [StringComparison]::OrdinalIgnoreCase) -or $KernelReports -eq $KernelRepository) {
+    throw 'Keep raw reports outside the checkout.'
+}
+New-Item -ItemType Directory -Path $KernelReports | Out-Null
+$KernelProbe = @'
+import ctypes, json, platform, struct, sys
+assert sys.implementation.name == 'cpython' and sys.version_info[:2] == (3, 13)
+assert platform.machine().upper() == 'AMD64' and struct.calcsize('P') == 8
+assert not ctypes.windll.shell32.IsUserAnAdmin(), 'Use an existing unelevated token'
+print(json.dumps({'implementation': platform.python_implementation(), 'version': platform.python_version(),
+                 'architecture': platform.machine(), 'bits': struct.calcsize('P') * 8,
+                 'store_package_path_detected': 'PythonSoftwareFoundation.Python.' in sys.executable,
+                 'elevated': False}))
+'@
+$KernelProbePath = Join-Path $KernelReports 'interpreter-probe.py'
+$KernelProbe | Set-Content -Encoding UTF8 -LiteralPath $KernelProbePath
+$KernelDirectProbe = @(& python $KernelProbePath)
+if ($LASTEXITCODE -ne 0 -or $KernelDirectProbe.Count -ne 1) { throw 'Direct interpreter/token probe failed.' }
+$KernelDirectProbe | Set-Content -Encoding UTF8 (Join-Path $KernelReports 'selected-interpreter.json')
+$KernelPoetryProbe = @(& poetry run python $KernelProbePath)
+if ($LASTEXITCODE -ne 0 -or $KernelPoetryProbe.Count -ne 1) { throw 'Poetry interpreter/token probe failed.' }
+$KernelPoetryProbe | Set-Content -Encoding UTF8 (Join-Path $KernelReports 'poetry-interpreter.json')
+$KernelDirect = Get-Content -Raw (Join-Path $KernelReports 'selected-interpreter.json') | ConvertFrom-Json
+$KernelPoetry = Get-Content -Raw (Join-Path $KernelReports 'poetry-interpreter.json') | ConvertFrom-Json
+if ($KernelDirect.version -ne $KernelPoetry.version) { throw 'Direct and Poetry interpreters differ.' }
+$KernelOS = Get-CimInstance Win32_OperatingSystem
+@{ os = $KernelOS.Caption; build = $KernelOS.BuildNumber; git = (& git --version);
+   powershell = $PSVersionTable.PSVersion.ToString(); poetry = ((& poetry --version) -join ' ') } |
+    ConvertTo-Json | Set-Content -Encoding UTF8 (Join-Path $KernelReports 'host-summary.json')
+$KernelSources = @(Get-ChildItem 'src/obfuscidian' -Filter '*.py' -File)
+$KernelSources += Get-ChildItem 'tests/unit' -Filter 'test_windows*.py' -File
+$KernelSources += Get-ChildItem 'tests/integration' -Filter 'test_windows*.py' -File
+$KernelSources += Get-Item 'tests/_windows_support.py', 'tests/integration/test_merge_restore.py', `
+    'tests/integration/test_packaging.py', 'tests/conftest.py', 'pyproject.toml', 'poetry.lock', `
+    '.github/scripts/check_windows_git_restore.ps1'
+$KernelSources | Sort-Object FullName | ForEach-Object {
+    $KernelRelative = $_.FullName.Substring($KernelRepository.Length + 1).Replace('\', '/')
+    '{0}  {1}' -f (Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant(), $KernelRelative
+} | Set-Content -Encoding UTF8 (Join-Path $KernelReports 'source-sha256.txt')
+if (Test-Path -LiteralPath '.git') {
+    $KernelBase = & git rev-parse HEAD
+    if ($LASTEXITCODE -ne 0) { throw 'Could not record the checkout base.' }
+} else { $KernelBase = 'Source snapshot without Git metadata; source hashes identify the candidate.' }
+$KernelBase | Set-Content -Encoding UTF8 (Join-Path $KernelReports 'base-commit.txt')
+$KernelNode = 'tests/integration/test_windows_git_restore.py::test_real_native_inherited_git_control_kernel_denial_with_positive_control'
+& poetry run python -m pytest -q -ra -o junit_family=xunit1 $KernelNode `
+    "--junitxml=$(Join-Path $KernelReports 'native-git.xml')" *> (Join-Path $KernelReports 'native-git.txt')
+$KernelExit = $LASTEXITCODE
+@{ native_exit = $KernelExit; scope = 'targeted corrected kernel case; no full diagnostic or owner proof' } |
+    ConvertTo-Json | Set-Content -Encoding UTF8 (Join-Path $KernelReports 'exit-codes.json')
+Write-Output "Targeted kernel case exit: $KernelExit"
+```
+
+This selection intentionally reruns the changed #28 case only. Do not modify,
+skip or xfail the real-owner fixture; its failed retry3 result remains recorded
+and mandatory #29. A targeted pass does not produce a new full-suite total.
+
+### Full scoped and diagnostic helper
 
 Use a reviewed source snapshot containing the new uncommitted files, or the
 maintainer's separately authorized local continuation commit. On an existing
