@@ -38,6 +38,15 @@ Historical failed full-suite totals,
 mandatory owner proof and unexecuted qualification remain explicit in those
 records. No new support claim follows from these private candidates.
 
+[#29 qualification preparation](maintainers/windows-qualification.md) now
+provides the real-owner handoff, generated exchange tools and exact-commit
+evidence collection. Actual owner transition, nine-job qualification, both
+Windows/POSIX exchange directions and installed Windows write commands remain
+pending. The proposed order for installed CLI checks requires maintainer
+authorization. All supported-command gates remain in place. Windows 11 and
+Server 2022 or newer on eligible local NTFS, AMD64 Python 3.12–3.14, are targets;
+the prior single-host evidence does not qualify every target or storage type.
+
 ## Validation evidence
 
 All nine Linux/macOS/Windows CI jobs passed on Python 3.12–3.14 in

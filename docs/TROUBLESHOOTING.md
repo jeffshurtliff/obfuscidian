@@ -12,7 +12,7 @@ verbose output, logs, keys or real vault names into public issues.
 | Replacement refused unattended | Preview first, then supply `--yes` only for an intended replacement. `--non-interactive` supplies no consent. |
 | Unsafe path, link or collision | Choose separate real directories and supported target names; do not rename/normalize encrypted records or bypass checks. |
 | Oversized file/manifest or insufficient space | Review the 50 MiB token cap and staged/rollback estimates. Exclusions do not purge old merge records. |
-| Native Windows mutation or log append refusal | Use supported read-only commands; vault writes/recovery and existing-log append remain unimplemented. |
+| Native Windows mutation or log append refusal | Use supported read-only commands; CLI vault writes/recovery remain gated pending qualification and existing-log append remains refused. |
 | Dirty Git origin or existing review output | Review tracked, untracked and ignored data; use a clean origin and new branch/worktree names after inspecting any retained output. |
 | Logging failed after publication | Inspect destination and retained recovery state before retrying; data may already be complete although the command failed. |
 
@@ -35,6 +35,10 @@ obfuscidian unshroud fresh --origin ./restored-vault --mirror ./mirror \
 
 Use this only after inspecting an actual pending restore, on a supported write
 platform. Recovery refusal preserves uncertain content for manual investigation.
+Native Windows `--recover` remains refused. Keep any private qualification
+artifacts for maintainer inspection; do not delete locks or invoke internal
+helpers to bypass the supported-command boundary. See the
+[Windows qualification handoff](maintainers/windows-qualification.md).
 Git merge restore has **no automated `--recover`**: inspect the new worktree,
 branch and private staging/journal manually before retrying. No branch pruning,
 stage, commit, push or merge is automatic. See [restore](RESTORE.md).

@@ -109,13 +109,13 @@ def artifacts(pytestconfig: pytest.Config, tmp_path_factory: pytest.TempPathFact
     return wheels[0], sdists[0]
 
 
-def _run(arguments: list[str], cwd: Path) -> subprocess.CompletedProcess[str]:
+def _run(arguments: list[str], cwd: Path, *, expected: int = 0) -> subprocess.CompletedProcess[str]:
     """Run a subprocess outside the checkout with no source-path overrides."""
     environment = os.environ.copy()
     for name in ('PYTHONPATH', 'PYTHONHOME', 'OBFUSCIDIAN_KEY_PATH', 'OBFUSCIDIAN_KEY_ALIAS', 'OBFUSCIDIAN_KEY_DIR'):
         environment.pop(name, None)
     result = subprocess.run(arguments, cwd=cwd, env=environment, capture_output=True, text=True, check=False, timeout=180)
-    assert result.returncode == 0, result.stdout + result.stderr
+    assert result.returncode == expected, result.stdout + result.stderr
     return result
 
 
@@ -635,6 +635,26 @@ else:
             assert fixture_git('rev-parse', 'obfuscidian/installed-review') == original_head
             assert (review_origin / '.git/index').read_bytes() == original_index
             (origin / 'renamed.md').rename(origin / 'note.md')
+        else:
+            # Installed Windows qualification is still gated. Exercise actual
+            # console/module refusals, without injecting platform/backend dispatch.
+            # These checks use the generated key, never a production vault or key.
+            parent_names = {path.name for path in tmp_path.parent.iterdir()}
+            names = {path.name for path in tmp_path.iterdir()}
+            before = {path.name: path.read_bytes() for path in origin.iterdir() if path.is_file()}
+            for mode, recover in (('fresh', False), ('merge', False), ('fresh', True)):
+                refused_arguments = list(arguments)
+                refused_arguments[1] = mode
+                if recover:
+                    refused_arguments += ['--recover', '--yes']
+                refused = _run([*entry_point, *refused_arguments], outside, expected=1)
+                assert 'Error:' in refused.stderr and 'Traceback' not in refused.stderr
+                assert str(origin) not in refused.stdout + refused.stderr
+                assert key.read_text() not in refused.stdout + refused.stderr
+                assert not mirror.exists()
+                assert {path.name for path in tmp_path.iterdir()} == names
+                assert {path.name for path in tmp_path.parent.iterdir()} == parent_names
+                assert {path.name: path.read_bytes() for path in origin.iterdir() if path.is_file()} == before
         assert (origin / 'note.md').read_bytes() == b'SYNTHETIC INSTALLED NOTE\r\n'
     if wheelhouse is not None:
         _run([str(python), '-m', 'pip', 'check'], outside)

@@ -76,14 +76,20 @@ jobs:
           poetry run ruff check .
           poetry run ruff format --check .
           poetry run bandit -r src/obfuscidian
+      - name: Record candidate and actual runtime observations
+        env:
+          OBFUSCIDIAN_QUALIFICATION_REF: ${{ inputs.release_ref || github.sha }}
+        run: poetry run python .github/scripts/record_qualification_environment.py --output qualification-environment.json
       - name: Run offline tests
         id: offline_tests
-        run: poetry run coverage run -m pytest -q -ra --junitxml=test-results.xml
+        run: poetry run coverage run -m pytest -q -ra -o junit_family=xunit1 --junitxml=test-results.xml
       - name: Report coverage even after test failures
         if: always() && steps.offline_tests.outcome != 'skipped'
         run: |
-          poetry run coverage report
-          poetry run coverage xml
+          # Diagnostic fixtures compile synthetic traceback filenames under an
+          # obfuscidian module name. Report real source files, never fake frames.
+          poetry run coverage report --include='src/obfuscidian/*'
+          poetry run coverage xml --include='src/obfuscidian/*'
       - name: Build and validate fresh artifacts
         run: poetry run python .github/scripts/check_artifacts.py
       - name: Retain test and coverage evidence
@@ -94,5 +100,6 @@ jobs:
           path: |
             test-results.xml
             coverage.xml
+            qualification-environment.json
           if-no-files-found: warn
           retention-days: 14

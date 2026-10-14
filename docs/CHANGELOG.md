@@ -7,6 +7,16 @@ Package versions and encrypted backup-format versions are separate contracts.
 
 ### Added
 
+- #29 qualification preparation: mandatory real-owner positive setup and exact
+  native identity/bytes/protected-DACL preservation assertions, read-only token
+  preflight and a private-report PowerShell handoff, generated synthetic v1
+  exchange tooling, installed Windows backup/recovery refusal checks, richer
+  exact-commit CI environment/JUnit evidence and a parent-criteria audit.
+  Owner proof, native/host/storage/matrix execution, both exchanged directions
+  and installed Windows writes remain pending. The installed CLI gate-order
+  change is a reviewable proposal requiring authorization; production Windows
+  mutation/recovery and existing-log append gates remain unchanged.
+
 - Private Windows Git merge restore candidate for
   [#28](https://github.com/jeffshurtliff/obfuscidian/issues/28), with authenticated
   private reconstruction, precreated private worktree roots, separate exact Git
@@ -63,6 +73,12 @@ Package versions and encrypted backup-format versions are separate contracts.
   outstanding real ownership-transition proof and CLI mutation gates (#26).
 
 ### Fixed
+
+- Qualification coverage reporting now selects real `src/obfuscidian` files.
+  The full test run records one intentionally synthetic diagnostic traceback
+  filename, which causes unfiltered coverage report/XML generation to fail.
+  All measured application files remain included; no test or runtime gate is
+  suppressed. The initial local report failure remains recorded under #29.
 
 - Windows #28 inherited-control kernel fixture selects the existing hidden root
   `.git` observation policy before and after restricted-token checks. Added

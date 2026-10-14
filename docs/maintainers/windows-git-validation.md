@@ -594,8 +594,9 @@ native rerun is required on unchanged code. Retry3's 30 passes and the separate
 retry4 kernel pass remain distinct; failed full totals and the actual-owner gate
 are unchanged. This acceptance supersedes the pending-review boundary above.
 
-The next implementation task is **#29 in a new chat**, under its own bounded
-authorization. It remains unstarted in this chat. Retain all production gates
+The successor **#29** now has separately authorized
+[qualification preparation](windows-qualification.md). Its actual owner proof
+and remaining external execution gates are pending. Retain all production gates
 until actual owner-transition and applicable qualification gates pass; no support
 claim or new bypass follows from #28 acceptance. Issue closure and Git history,
 remote delivery, CI dispatch or publication are not authorized by this approval.

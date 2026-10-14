@@ -54,6 +54,17 @@ Merge backups can resurrect deleted/excluded data on restore; fresh snapshots
 do not erase earlier copies or Git history. Native Windows vault writes/recovery
 and existing-log append still fail closed; see [platform validation](PLATFORMS.md).
 
+The private Windows candidate creates and validates owner-only protected DACLs
+on held handles, including independently private plaintext rollback copies.
+Moving old plaintext beneath a private parent does not make its own DACL private.
+The mandatory actual changed-owner refusal proof is still pending; injected
+descriptors and restricted-token access denial do not substitute for it. These
+controls do not protect against administrators, backup operators, already
+authorized open handles, malicious same-user processes or compromised endpoints.
+See [Windows qualification](maintainers/windows-qualification.md) for evidence
+classes and the narrow candidate storage/baseline envelope. No security
+certification, directory-flush equivalent or universal power-loss guarantee is claimed.
+
 ## Output privacy
 
 Unattended default output redacts paths. `--verbose` permits terminal names and

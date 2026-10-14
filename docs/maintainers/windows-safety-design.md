@@ -51,7 +51,9 @@ remain unchanged; this separate subset does not establish full qualification.
 whose retry3 passes 30 native Git cases and whose targeted retry4 passes the
 corrected inherited-control kernel-denial/positive-control proof. Its bounded
 private handoff is accepted by the maintainer; production gates remain retained.
-#29 implementation has not started.
+#29 [qualification preparation](windows-qualification.md) is now authorized.
+No eligible owner fixture is available in the macOS session; actual proof and
+applicable qualification remain pending, with all production gates retained.
 Issues remain open; this decision does
 not authorize closure, Git history changes, remote delivery or publication.
 The r3 diagnostic result remains **907 passed, 1 failed, 596 skipped**, with

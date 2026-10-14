@@ -634,7 +634,9 @@ original handoff dates; they are superseded by this continuation status.
   substitute is authorized. Hosted CI and exchanged artifacts were not run here.
 - #28 Git merge restore has 30 native retry3 passes and a separate successful
   retry4 kernel proof. Its bounded private handoff is accepted by the maintainer.
-  Historical failed full-suite totals remain unchanged. #29 remains unstarted.
+  Historical failed full-suite totals remain unchanged. #29 now has authorized
+  [qualification preparation](windows-qualification.md), with actual owner
+  proof and external execution still pending.
   No Windows write enabling or qualified 2.0.0 claim precedes these required gates.
 - #17/#27 remain open pending review/qualification. Source changes remain
   unstaged/uncommitted; no push, merge, PR, release or publication was performed.

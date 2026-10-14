@@ -4,7 +4,7 @@
 :Synopsis:          Native synthetic Windows primitive safety qualification tests
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     12 Oct 2026
+:Modified Date:     13 Oct 2026
 """
 
 from __future__ import annotations
@@ -22,6 +22,7 @@ import pytest
 
 from obfuscidian import _windows_native as native
 from obfuscidian import constants as const
+from tests._windows_owner import _owner_candidate, _security_state
 from tests._windows_support import _terminate_worker
 
 pytestmark = pytest.mark.skipif(os.name != 'nt', reason='Actual native Windows APIs required; mocks are not qualification.')
@@ -479,59 +480,71 @@ def test_changed_native_owner_refused_without_privilege_activation(parent: Path,
     """
     api = native._Api()
     wt, ptr = api.wt, ctypes.c_void_p
-
-    class _Group(ctypes.Structure):
-        _fields_ = [('sid', ptr), ('attributes', wt.DWORD)]
-
-    class _Groups(ctypes.Structure):
-        _fields_ = [('count', wt.DWORD), ('groups', _Group * 1)]
-
+    assert not ctypes.windll.shell32.IsUserAnAdmin(), 'Real owner proof requires an existing unelevated token.'
+    selected = _owner_candidate(api)
+    current, _ = api._owner()
+    record_property('assignable_owner_group_available', selected is not None)
+    assert selected is not None, 'Qualification needs an assignable owner-group fixture; do not elevate or create accounts.'
     api._bind(api.advapi, 'SetSecurityInfo', wt.DWORD, [wt.HANDLE, wt.DWORD, wt.DWORD, ptr, ptr, ptr, ptr])
-    token = wt.HANDLE()
-    api._check(api.advapi.OpenProcessToken(api.kernel.GetCurrentProcess(), const.WINDOWS_TOKEN_QUERY, ctypes.byref(token)))
-    try:
-        length = wt.DWORD()
-        api.advapi.GetTokenInformation(token, 2, None, 0, ctypes.byref(length))
-        assert 8 <= length.value <= const.WINDOWS_SECURITY_BYTES
-        buffer = ctypes.create_string_buffer(length.value)
-        api._check(api.advapi.GetTokenInformation(token, 2, buffer, len(buffer), ctypes.byref(length)))
-        count = _Groups.from_buffer(buffer).count
-        assert _Groups.groups.offset + count * ctypes.sizeof(_Group) <= len(buffer)
-        groups = (_Group * count).from_buffer(buffer, _Groups.groups.offset)
-        current, _ = api._owner()
-        selected = None
-        for group in groups:
-            if group.attributes & 8 and group.attributes & 4 and not group.attributes & 16:
-                assert api.advapi.IsValidSid(group.sid)
-                raw = ctypes.string_at(group.sid, api.advapi.GetLengthSid(group.sid))
-                if raw != current:
-                    selected = group.sid
-                    break
-        record_property('assignable_owner_group_available', selected is not None)
-        assert selected is not None, 'Qualification needs an assignable owner-group fixture; do not elevate or create accounts.'
-        with native._Guard(parent) as guard:
-            with guard._open_file('changed-owner', create=True) as record:
-                record._write(b'KEEP', 100)
-        raw = api.kernel.CreateFileW(
-            str(parent / 'changed-owner'), 0x80000 | const.WINDOWS_READ_CONTROL, 7, None, 3, const.WINDOWS_OPEN_FLAGS, None
+    with native._Guard(parent) as guard:
+        with guard._open_file('changed-owner', create=True) as record:
+            record._write(b'KEEP', 100)
+            record._private()
+            original = record._identity()
+    raw = api.kernel.CreateFileW(
+        str(parent / 'changed-owner'),
+        0x80000 | const.WINDOWS_READ_CONTROL | const.WINDOWS_GENERIC_READ,
+        7,
+        None,
+        3,
+        const.WINDOWS_OPEN_FLAGS,
+        None,
+    )
+    assert raw != wt.HANDLE(-1).value
+    with native._Handle(api, raw, str(parent / 'changed-owner')) as held:
+        held._private()  # Positive production acceptance before the actual owner setter.
+        before = _security_state(held)
+        assert before[0] == current and original._same_object(held._identity())
+        assert held._read(100) == b'KEEP'
+        identity = held._identity()
+        owner_buffer = ctypes.create_string_buffer(selected)
+        assert api.advapi.SetSecurityInfo(raw, 1, 1, owner_buffer, None, None, None) == 0
+        after = _security_state(held)
+        assert after[0] == selected and after[0] != current
+        assert after[1:] == before[1:]  # Exact descriptor control and protected DACL, without repair.
+        changed = held._identity()
+        assert identity._same_object(changed)  # Full 128-bit ID, volume and kind.
+        assert (identity.attributes, identity.size, identity.links, identity.created, identity.written) == (
+            changed.attributes,
+            changed.size,
+            changed.links,
+            changed.created,
+            changed.written,
         )
-        assert raw != wt.HANDLE(-1).value
-        try:
-            assert api.advapi.SetSecurityInfo(raw, 1, 1, selected, None, None, None) == 0
-            owner, descriptor = ptr(), ptr()
-            assert api.advapi.GetSecurityInfo(raw, 1, 1, ctypes.byref(owner), None, None, None, ctypes.byref(descriptor)) == 0
-            try:
-                assert ctypes.string_at(owner, api.advapi.GetLengthSid(owner)) != current
-            finally:
-                api._check(api.kernel.LocalFree(descriptor) is None)
-        finally:
-            api._check(api.kernel.CloseHandle(raw))
+        assert held._read(100) == b'KEEP'
+        refusal_identity = held._identity()
+        record_property('owner_fixture_positive_setup', True)
+        record_property('owner_fixture_storage', 'native guard verified local fixed NTFS with persistent ACLs')
+        record_property('actual_owner_before', before[0].hex())
+        record_property('actual_owner_after', after[0].hex())
+        record_property('actual_filesystem_owner_transition', True)
+        # Windows may update change/access time for the actual security update/read.
+        # Observe it; never rewrite timestamps to manufacture equality.
+        record_property('owner_setter_change_time_changed', changed.changed != identity.changed)
+        with pytest.raises(native._NativeSafetyError, match='Unexpected Windows artifact owner'):
+            held._private()
         with native._Guard(parent) as guard:
             with pytest.raises(native._NativeSafetyError, match='owner'):
                 guard._open_file('changed-owner')
-        assert (parent / 'changed-owner').read_bytes() == b'KEEP'
-    finally:
-        api._check(api.kernel.CloseHandle(token))
+        assert held._identity() == refusal_identity
+        assert _security_state(held) == after
+        assert held._read(100) == b'KEEP'
+        assert identity._same_object(held._identity())
+        record_property('production_handle_owner_refused', True)
+        record_property('full_native_identity_preserved', True)
+        record_property('original_bytes_preserved', True)
+        record_property('exact_protected_dacl_preserved', True)
+    assert (parent / 'changed-owner').read_bytes() == b'KEEP'
 
 
 def test_injected_native_owner_descriptor_refused_without_file_changes(
