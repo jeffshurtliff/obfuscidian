@@ -1,9 +1,9 @@
 # Private Windows Git merge restore handoff — #28
 
 **Date:** 13 October 2026. **Target:** 2.0.0. **Status:** private implementation
-candidate; retry3 passes 30 of 31 native Git cases. The remaining kernel-denial
-case needs the test-only control observation correction below and a targeted
-native rerun. The unchanged owner-fixture failure remains mandatory #29. Production Windows
+handoff ready for maintainer review: retry3 passes 30 native Git cases and
+retry4 separately passes the corrected kernel-denial case. No scoped repair
+remains identified. The unchanged owner-fixture failure remains mandatory #29. Production Windows
 CLI mutation/recovery and existing-log append remain refused. This is neither
 qualified Windows support nor a supported Python library API.
 
@@ -515,9 +515,85 @@ all unstaged/uncommitted at `e22b1c2` on the requested branch; maintainer commit
 remain preserved. No agent reset/branch change/stage/commit/push/PR/merge/closure/
 publication occurred.
 
+## Retry4 targeted kernel proof and scoped #28 handoff — 13 October 2026
+
+All **42 source hashes** in the supplied targeted archive match maintainer
+continuation `395454bf37c41e8b6a8ab976ade0da292f1b092c`. Archive SHA-256:
+`7ed5c87617921269d66aec14835991b1b03e5bb27065b1d1b99e856f45e38d77`.
+The targeted procedure freshly records Windows 11 Home build 26200, Git
+2.55.0.windows.5, Poetry **2.5.1**, PowerShell **5.1.26100.9444** and unelevated
+Store CPython **3.13.14 / AMD64 / 64-bit**. Direct/Poetry interpreter probes
+agree. Raw reports, identifying paths and hostnames remain private.
+
+The corrected kernel-denial case reports **1 passed / 0 failures / 0 errors /
+0 skips**, exit **0**, in **23.339 seconds**. It records:
+
+- Actual Git object attributes `0x00000021` and inherited root `.git` attributes
+  `0x00000022`, with an actual inherited descriptor required by the assertion.
+- `restricted_git_control_denied=True`: a native relative leaf open beneath
+  the pre-opened root refuses the inherited private `.git` control with the
+  expected access-denied status. Parent traverse denial cannot substitute for
+  the leaf proof because the matching positive control must open.
+- `restricted_positive_control_opened=True`: the same restricted token/rights
+  opens and reads the deliberately permissive synthetic leaf. No parent ACL
+  repair/propagation is performed.
+- `inherited_git_control_preserved_exactly=True`: the complete before/after
+  control record, including full native identity, bytes/digest, creation/write
+  times, exact attributes and exact owner/DACL, remains equal after reversion.
+
+All application modules, shared helper, native full-validation script, real-owner
+test and dependency files are byte-identical to retry3's `e22b1c2`. AST comparison
+confirms only the corrected kernel test function differs; the repository fixture
+and other **30 passing native cases are unchanged**. Reviewed #26 continuation
+`2316457` and #27 through `cbd30bb` remain ancestors; the lifecycle-test hash still
+matches retry5's `2e7cebd7e5d70c937373afef0af714132e673817094e32041279966156466797`.
+
+The private #28 implementation and bounded native handoff are **ready for
+maintainer review**. All 31 native cases have passing scoped evidence across
+retry3 and the separate retry4 subset on this recorded eligible host. This is
+not a single 31-case invocation or a passing full-suite/matrix claim. The
+previously remaining kernel fixture is resolved; no additional scoped #28 repair
+is identified. Source/authentication, protected plaintext/Git controls, bytes,
+uncommitted differences, collisions, conservative cleanup, sharing/user edits,
+retained artifacts and five worker-death limits remain covered as described above.
+
+Preserve retry3 **54 passed / 2 failed / 17 skipped** scoped and **1086 passed /
+2 failed / 613 skipped** full, both exit 1, plus all earlier failed totals.
+Retry4 contains **no full diagnostic** and **does not select the real-owner
+fixture**. Its previous `assignable_owner_group_available=False` failure is
+unchanged and remains mandatory #29 under the 12 October limited deferral.
+Restricted-token/kernel proof does not prove filesystem ownership transition.
+Do not recompute a new full total from the separate successful subset.
+
+**Remaining boundary:** maintainer review/acceptance of this scoped #28 handoff.
+The separately authorized successor would be #29; it has not started. Actual
+filesystem owner transition with positive setup, production refusal and unchanged
+full native identity/bytes/exact protected DACL; applicable storage/host/interpreter
+coverage; exact-commit nine-job hosted CI; exchanged synthetic v1 artifacts;
+installed wheel/sdist Windows write qualification and final support documentation
+remain mandatory before enabling writes or claiming qualified Windows support.
+All production CLI mutation/recovery/log-append gates and owner/DACL validators
+remain unchanged. No public bypass/API, new recovery, append, pruning, naming
+refinement, account/privilege activation/policy change or format/dependency change.
+
+This review changes documentation/changelog only. New strict fresh Sphinx/local
+reference, consistency/privacy/scope, diff and empty-index checks are recorded
+with the handoff. No new local runtime tests, hosted CI, artifact exchange or
+installed Windows writes were run during this review. Earlier local full
+1552 passed/149 skipped and Git/diagnostic 59 passed/32 skipped remain earlier
+evidence. Five documents remain unstaged/uncommitted at `395454b` on the requested
+branch; maintainer commits preserved. No agent reset/branch change/stage/commit/
+push/PR/merge/issue closure/publication. #17/#28 remain open pending review and
+qualification, with no production Windows write enabling.
+
 ## Exact native validation procedure
 
 ### Targeted remaining kernel proof after retry3
+
+This procedure produced the successful retry4 proof above. No repeat of the
+unchanged corrected case is required for the resolved fixture; preserve these
+commands as the reviewed historical procedure, using fresh storage for any
+separately chosen rerun.
 
 From the revised repository root on the existing unelevated Windows host, using
 the same installed 3.13 environment, run this source text in PowerShell. It

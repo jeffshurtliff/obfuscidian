@@ -13,7 +13,8 @@ Package versions and encrypted backup-format versions are separate contracts.
   inheritance validation, base index modes, uncommitted differences and
   conservative ordinary-failure cleanup/retention. Added portable injected and
   real Git for Windows fixtures plus a source-reviewed native validation helper.
-  The first native run failed and the correction below needs a rerun; production Windows CLI
+  Retry3 supplies 30 native passes and retry4 separately passes the corrected
+  kernel-denial/positive-control case; the private handoff is ready for review. Production Windows CLI
   mutation/recovery and existing-log append gates remain unchanged. No new Git
   recovery command, rollback pruning, dependencies or Fernet/v1 format change.
 
@@ -68,8 +69,10 @@ Package versions and encrypted backup-format versions are separate contracts.
   explicit inherited-policy and denial/positive-open/exact-preservation evidence.
   Retry3 passes 30 of 31 native Git cases, including publication, sharing, selected
   edits and all worker boundaries. Preserve scoped 54 passed/2 failed/17 skipped
-  and full 1086 passed/2 failed/613 skipped, both exit 1. The corrected kernel
-  proof remains pending; all application code, production gates and mandatory
+  and full 1086 passed/2 failed/613 skipped, both exit 1. Targeted retry4 separately
+  passes the corrected kernel case, 1 passed with no failures/errors/skips, exit 0,
+  proving actual denial, positive open and exact control preservation. No new
+  passing full total is inferred. All application code, production gates and mandatory
   #29 ownership-transition proof remain unchanged.
 
 - Private #28 observation permits Git's hidden attribute only on the root regular
@@ -78,8 +81,9 @@ Package versions and encrypted backup-format versions are separate contracts.
   boundaries in native edit/sharing/fault tests. Retry2 confirms nine read-only
   objects and early lifecycle cases; seven reported user-edit passes lack boundary
   proof. Scoped 38 passed/13 failed/16 skipped and full 1069 passed/13 failed/612
-  skipped remain failed, exit 1. Hidden-control cause/correction needs native
-  confirmation; production gates and mandatory #29 owner proof remain unchanged.
+  skipped remain failed, exit 1. Retry3 confirms the hidden-control mask/correction
+  and strengthened edit/sharing boundaries; production gates and mandatory #29
+  owner proof remain unchanged.
 
 - Windows #28 object-attribute diagnostics rebuild ordinary native entry paths
   from the original fixture root after extended Python enumeration. Production

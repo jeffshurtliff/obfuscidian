@@ -616,9 +616,9 @@ requested branch, HEAD `cbd30bb`; reviewed #26 continuation `2316457` is present
 
 The maintainer accepted this private #27 handoff for the separately authorized
 #28 continuation. The [private Windows Git candidate](windows-git-validation.md)
-implements only that lifecycle. Retry3 passes 30 of 31 native Git cases, including
-publication, sharing, selected user edits and all worker boundaries. The remaining
-kernel-denial observation correction needs targeted native confirmation, with all
+implements only that lifecycle. Retry3 passes 30 native Git cases and targeted
+retry4 passes the corrected inherited-control kernel-denial/positive-control
+proof. The private #28 handoff is ready for maintainer review, with all
 production gates retained. Historical unstarted statements above record their
 original handoff dates; they are superseded by this continuation status.
 
@@ -632,8 +632,9 @@ original handoff dates; they are superseded by this continuation status.
   exact-commit OS/Python matrix, exchanged synthetic v1 backups and installed
   wheel/sdist qualification. No account creation, privilege activation or injected
   substitute is authorized. Hosted CI and exchanged artifacts were not run here.
-- #28 Git merge restore has 30 native retry3 passes. The remaining kernel-denial
-  observation correction needs targeted native confirmation. #29 remains unstarted.
+- #28 Git merge restore has 30 native retry3 passes and a separate successful
+  retry4 kernel proof. Its bounded private handoff is ready for maintainer review.
+  Historical failed full-suite totals remain unchanged. #29 remains unstarted.
   No Windows write enabling or qualified 2.0.0 claim precedes these required gates.
 - #17/#27 remain open pending review/qualification. Source changes remain
   unstaged/uncommitted; no push, merge, PR, release or publication was performed.
