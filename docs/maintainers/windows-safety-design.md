@@ -54,6 +54,10 @@ private handoff is accepted by the maintainer; production gates remain retained.
 #29 [qualification preparation](windows-qualification.md) is now authorized.
 No eligible owner fixture is available in the macOS session; actual proof and
 applicable qualification remain pending, with all production gates retained.
+The [14 October fallback and existing CI audit](windows-qualification.md)
+record unsuitable group fixtures on both maintainer computers, six passing
+POSIX jobs and three failed elevated Windows jobs. Actual owner proof remains
+mandatory; no safe fixture or qualification pass is manufactured by deferral.
 Issues remain open; this decision does
 not authorize closure, Git history changes, remote delivery or publication.
 The r3 diagnostic result remains **907 passed, 1 failed, 596 skipped**, with

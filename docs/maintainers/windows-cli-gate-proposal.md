@@ -2,6 +2,17 @@
 
 **13 October 2026. Status: proposal only; no authorization or runtime change.**
 
+**14 October fallback:** both available maintainer computers lack the current
+owner-group fixture. Production Windows write qualification remains deferred;
+the [fallback record](windows-qualification.md)
+retains actual owner proof as a prerequisite. The existing hosted run has six
+passing POSIX jobs and three failed elevated Windows jobs. No prerequisite is
+waived and no installed CLI dispatch/order change is authorized here. The
+maintainer also confirms no second existing account on either computer and
+explicitly directs that Windows remain gated. The two-existing-account
+real-owner alternative is therefore unavailable and remains unimplemented;
+injected evidence cannot replace actual proof.
+
 The supported CLI still reaches POSIX transaction locking for backup, fresh
 restore and recovery; Git publication has a separate POSIX gate. Installed
 Windows write smoke tests cannot pass with those gates retained. Testing private

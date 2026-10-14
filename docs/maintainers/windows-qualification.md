@@ -1,10 +1,12 @@
 # Windows 2.0.0 qualification — #29
 
-**13 October 2026. Status: independent preparation; qualification blocked.**
+**Updated 14 October 2026. Status: fallback preparation; Windows qualification deferred.**
 The maintainer authorized only #29 on `feature/17-add-safe-native-windows-support`.
-The clean starting checkout is `2924999304f2b5f6f2d3b6204711a81036156487`, two
-commits ahead of its remote. Preserve the checkout, maintainer commits and any
-new edits. No production Windows mutation/recovery or existing-log append gate
+The 13 October preparation started at clean
+`2924999304f2b5f6f2d3b6204711a81036156487`, then two commits ahead of its remote.
+The 14 October fallback starts at the maintainer's clean, remotely tracked
+`7a7250e6392f5f59f3fd58b0181b9f3825d7948f`. Preserve the checkout, maintainer
+commits and any new edits. No production Windows mutation/recovery or existing-log append gate
 is removed by this work. No qualified Windows support is claimed.
 
 Read `AGENTS.md`, `CONTRIBUTING.md`, issues #17/#25–#29 and the
@@ -49,6 +51,43 @@ responses, platform skips and unexecuted CI.
 
 ## First gate: actual filesystem owner transition
 
+### Current fallback decision — 14 October 2026
+
+The maintainer confirms that the different available computer also has no
+enabled `SE_GROUP_OWNER` group and requests the fallback. This is
+maintainer-reported fixture availability, not a new native preflight or test run.
+Neither available computer can supply the current group-based owner fixture.
+Do not request another unchanged preflight or repeat its known failed setup.
+
+The safe fallback retains supported Windows key creation, authenticated
+verification and read-only planning, while deferring production Windows
+mutation/recovery qualification. Preserve the real-owner test and every
+mandatory assertion; do not skip, xfail, inject a substitute, remove it from
+the normal suite or calculate passing totals from failed runs. All production
+mutation/recovery gates, existing-log append refusal and the installed CLI
+proposal's prerequisites remain unchanged. #17/#29 remain open with the owner
+criterion unmet. No qualified Windows support or merge/release readiness follows.
+
+The documented two-existing-account strategy is a possible real-owner fallback
+that does not use an assignable group: one creator grants ownership rights only
+on a synthetic fixture, the second existing unelevated account takes ownership
+as itself, and the original protected DACL is restored before the creator checks
+production refusal and complete preservation. It needs two already-existing
+accounts on the same eligible host, a mutually accessible synthetic location
+and a reviewed implementation; it is not executed or qualified evidence.
+The maintainer now confirms that no second existing account is available on
+either computer and explicitly directs that Windows remain gated. This closes
+the fallback availability question: the two-account strategy cannot run on the
+available computers and remains unimplemented. Do not request another account
+check or attempt to provision a fixture. No new accounts,
+privilege activation, policy change or real-data permissions repair is authorized.
+
+Resume actual owner proof only if an eligible existing token or reviewed real-owner
+fixture becomes available. The commands below are retained for that future
+condition, not instructions to rerun on the two confirmed unsuitable computers.
+Any proposal to replace the mandatory actual-owner acceptance criterion requires
+a specific maintainer decision; none is applied by this fallback record.
+
 No eligible existing Windows token/host is available to this macOS session.
 The maintainer chose an owner-proof handoff. Do not rerun the unchanged known
 `assignable_owner_group_available=False` failure merely to obtain another total.
@@ -84,9 +123,9 @@ Restricted-token kernel denial and injected descriptors do not replace it.
 Microsoft documents the [owner-assignable group attributes](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-token_groups)
 and [handle-bound security setter](https://learn.microsoft.com/en-us/windows/win32/api/aclapi/nf-aclapi-setsecurityinfo).
 The two-existing-account strategy in the primitive record remains an unimplemented
-proposal. If no eligible token exists, supply two already-existing unelevated
-accounts and an eligible mutually accessible synthetic location for a separate
-fixture review. Do not create accounts, enable privileges or modify real owners.
+proposal, unavailable on both maintainer computers. Its commands/implementation
+need review only if suitable existing accounts and storage become available in
+the future. Do not create accounts, enable privileges or modify real owners.
 
 ### Next Windows action
 
@@ -148,14 +187,71 @@ Keep real worker death/wait, recovery/refusal and Git manual-inspection limits.
 `.github/workflows/test.yml` retains all nine OS/Python jobs. Prepared additions
 record candidate/runtime/storage/token observations and retain JUnit properties
 with `xunit1`. The environment recorder is read-only apart from its new report;
-it makes no qualification claim. Hosted execution has **not** occurred. All nine
-exact-commit rows remain pending:
+it makes no qualification claim. Hosted execution was unavailable at the
+13 October preparation handoff. The maintainer has since committed/pushed
+that preparation at `7a7250e`; the existing exact-commit run is audited below.
+The current matrix evidence is:
 
 | OS | Python 3.12 | Python 3.13 | Python 3.14 |
 | --- | --- | --- | --- |
-| Linux | Pending | Pending | Pending |
-| macOS | Pending | Pending | Pending |
-| Windows | Pending | Pending | Pending |
+| Linux | Passed at `7a7250e` | Passed at `7a7250e` | Passed at `7a7250e` |
+| macOS | Passed at `7a7250e` | Passed at `7a7250e` | Passed at `7a7250e` |
+| Windows | Failed; elevated fixture | Failed; elevated fixture | Failed; elevated fixture |
+
+### Existing exact-commit CI audit — 14 October 2026
+
+Read-only review of [Test run 38571560642](https://github.com/jeffshurtliff/obfuscidian/actions/runs/38571560642)
+verifies SHA `7a7250e6392f5f59f3fd58b0181b9f3825d7948f` and all nine retained
+JUnit/environment artifacts. Each records a clean source checkout at that SHA;
+all **171 tracked file hashes** in each of the nine reports match the actual
+immutable Git blobs at that commit.
+The run was already completed from a maintainer push; this fallback review
+neither dispatches nor reruns CI. Overall conclusion remains **failure**.
+
+| Job / actual CPython | Job ID | Passed | Failed | Errors | Skipped | Job outcome |
+| --- | ---: | ---: | ---: | ---: | ---: | --- |
+| Linux 3.12.15 | 115877799856 | 1568 | 0 | 0 | 149 | Success |
+| Linux 3.13.16 | 115877799817 | 1568 | 0 | 0 | 149 | Success |
+| Linux 3.14.8 | 115877800197 | 1568 | 0 | 0 | 149 | Success |
+| macOS 3.12.10 | 115877800023 | 1568 | 0 | 0 | 149 | Success |
+| macOS 3.13.15 | 115877799352 | 1568 | 0 | 0 | 149 | Success |
+| macOS 3.14.7 | 115877799929 | 1568 | 0 | 0 | 149 | Success |
+| Windows 3.12.10 | 115877799860 | 1098 | 3 | 31 | 585 | Failure |
+| Windows 3.13.15 | 115877800011 | 1098 | 3 | 31 | 585 | Failure |
+| Windows 3.14.7 | 115877799666 | 1098 | 3 | 31 | 585 | Failure |
+
+Linux records kernel `6.17.0-1022-azure`, x86_64/64-bit. macOS records Darwin
+`25.6.0`, ARM64/64-bit. Both record Git 2.55.0. Their six jobs pass style/security,
+tests/coverage and fresh isolated artifact validation. POSIX filesystem names
+are not recorded in these artifacts; storage/host coverage is not inferred from
+runner labels or successful regressions.
+
+Windows records Server 2025 version `10.0.26100`, AMD64/64-bit, Git
+2.55.0.windows.5, **elevated=true** and **assignable_owner_group_available=true**.
+This runner differs from the two maintainer computers. Its available group
+does not establish the required unelevated proof. The environment recorder's
+temporary-storage observation is unqualified with `_NativeSafetyError`; an
+actual qualifying storage report remains required, without inferring a cause.
+
+In each Windows job, the three failures are the two shell probe line-ending
+cases and the mandatory owner case. The owner case stops at its unelevated-token
+assertion. The probe cases report child exit 1 without retained child stderr;
+their probe source also requires an unelevated token, making the recorded
+elevation a leading explanation rather than independently observed child proof.
+All 31 Git integration cases fail fixture setup for the same elevated
+token; their test bodies do not run. Do not relax those checks or treat setup
+errors as a production Git defect. Windows diagnostics also record 29 primitive
+passes, 17 checkpoint passes, 61 lifecycle passes, five same-platform generated
+exchange passes and three shared-dependency installed packaging passes. Those
+modules mix native operations and injected supplements. Execution on this
+elevated runner does not qualify the approved unelevated envelope, actual owner
+transition, two-host exchange or installed Windows write commands. The separate
+fresh isolated artifact step is skipped after the Windows test failure.
+
+Keep all 585 skips per Windows job and all earlier failed totals. Nothing is
+deselected to create a passing nine-job result. Complete Windows qualification
+requires an eligible existing unelevated runner or reviewed real-owner strategy;
+the fallback leaves that evidence pending.
 
 Record run/job IDs and actual tested SHA, runner OS/build, storage, Python
 implementation/patch/architecture, Git, individual test names/counts, native
@@ -174,9 +270,10 @@ change volume/8.3 policies or claim universal sync/removal/power-loss coverage.
 
 ### Remote execution preparation
 
-No exact-commit qualification can identify uncommitted changes solely by HEAD.
-Review this diff, then separately authorize a focused local commit on the current
-branch. Remote delivery and CI execution need separate authorization; do not run
+The maintainer's `7a7250e` commit/push produced the audited run above. No
+exact-commit qualification can identify later uncommitted changes solely by HEAD.
+Review any new diff, then separately authorize a focused local commit on the current
+branch. Further remote delivery and CI execution need separate authorization; do not run
 the following commands now. Existing Test uses push/PR/workflow-call triggers,
 not `workflow_dispatch`; a branch push may automatically start CI and therefore
 requires authorization covering both delivery and that run.
@@ -264,7 +361,7 @@ anchors, not external URL availability. Do not claim unavailable commands passed
 | Native fresh/merge backup, fresh restore/recovery | Accepted private #27 implementation and bounded native evidence | Owner proof, applicable matrix/host/storage, installed supported CLI execution |
 | Native Git merge restore/manual review | Accepted #28 private implementation; 30 + 1 separate native passes | Applicable final matrix/installed CLI evidence; preserve interruption limits |
 | Unsupported/uncertain states fail closed; plaintext private | Actual scoped DACL/sharing/termination/refusal plus injected supplements | Actual owner transition and remaining host/storage qualification; no bypass |
-| Hosted native tests alongside POSIX regressions at exact commit | All nine jobs retained; richer evidence collection prepared | Git/remote authorization and successful exact-commit executions |
+| Hosted native tests alongside POSIX regressions at exact commit | Six POSIX jobs pass at `7a7250e`; three Windows jobs fail with elevated-token fixture limitations | Eligible unelevated Windows evidence and successful complete final matrix; any later remote execution needs authorization |
 | Existing CLI/Fernet/v1 compatibility | Application, dependency and frozen fixture bytes unchanged; generated exchange tool prepared | Actual both-direction exchange; supported installed CLI writes |
 | Accurate docs/changelog | Current gates, private recovery envelope and qualification limits documented | Final supported-operation copy after actual qualification/approved dispatch |
 | Maintainer acceptance/full Windows support | #26/#27/#28 bounded handoffs accepted | #29 review and every remaining gate; #17/#29 stay open |
@@ -273,6 +370,12 @@ No append, pruning, filesystem naming refinement, Python 3.15, new Git recovery,
 privileges/accounts/policy changes, dependencies or format changes are included.
 
 ## Actual local validation and handoff
+
+The remainder of this section is the historical **13 October 2026** local
+handoff. Its then-uncommitted Git state and unexecuted hosted-CI statements are
+superseded by the 14 October fallback and CI audit above. The maintainer's
+current continuation is `7a7250e`; this fallback changes documentation only,
+with production sources/tests/helpers and all gates preserved.
 
 Local preparation runs on macOS ARM64 CPython 3.12.7 / Poetry 2.4.2.
 Actual host: **macOS 27.0.1**, ARM64/64-bit, writable internal APFS. The storage

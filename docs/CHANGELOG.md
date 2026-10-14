@@ -62,6 +62,15 @@ Package versions and encrypted backup-format versions are separate contracts.
 
 ### Changed
 
+- Recorded the #29 fallback after both available maintainer computers lack the
+  owner-group fixture: native Windows mutation/recovery qualification remains
+  deferred, with mandatory real-owner assertions and all production gates
+  preserved. Audited existing exact-commit CI at `7a7250e`: six POSIX jobs pass;
+  three elevated Windows jobs retain their failed totals and fixture limitations.
+  The maintainer also confirmed no second existing account for the real-owner
+  alternative and explicitly directed that Windows remain gated.
+  No skip/xfail/injected substitute, support claim or dispatch change.
+
 - Accepted the #26 implementation handoff with the maintainer-approved limited
   real ownership-transition proof deferral to #29. Internal #27 development may
   proceed with Windows CLI mutation/recovery gates retained; the proof remains

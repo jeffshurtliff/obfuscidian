@@ -47,6 +47,17 @@ authorization. All supported-command gates remain in place. Windows 11 and
 Server 2022 or newer on eligible local NTFS, AMD64 Python 3.12–3.14, are targets;
 the prior single-host evidence does not qualify every target or storage type.
 
+On 14 October 2026 the maintainer confirmed that the different available
+computer also lacks the required owner-group fixture. The current fallback
+defers native Windows write/recovery qualification while preserving supported
+read-only commands and every production gate. The already-completed
+[Test run 38571560642](https://github.com/jeffshurtliff/obfuscidian/actions/runs/38571560642)
+at `7a7250e` passes all six Linux/macOS jobs, each with 1568 passes/149 skips.
+Each Windows job reports 1098 passes/3 failures/31 setup errors/585 skips on an
+elevated Server 2025 runner; it does not satisfy the unelevated qualification
+contract. Full counts, actual interpreters and limitations are in the
+[current qualification record](maintainers/windows-qualification.md).
+
 ## Validation evidence
 
 All nine Linux/macOS/Windows CI jobs passed on Python 3.12–3.14 in
