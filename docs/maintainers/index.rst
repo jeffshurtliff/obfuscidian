@@ -18,4 +18,5 @@ and release/publication actions each require explicit maintainer authorization.
    windows-owner-vm
    windows-arm64-beta-qualification-plan
    windows-arm64-cryptography-provenance-plan
+   windows-arm64-cryptography-stage1
    windows-cli-gate-proposal

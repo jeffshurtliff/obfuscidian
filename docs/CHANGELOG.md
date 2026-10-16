@@ -11,8 +11,11 @@ Package versions and encrypted backup-format versions are separate contracts.
   a sibling dependency under #17, using
   unchanged 50.0.2 source, explicit builder/input requirements, reproducibility,
   native validation and a separate artifact-origin/Poetry policy decision.
-  Only read-only inventory/input-pin preparation is approved, not yet executed.
-  #29 remains open and blocked for its ARM64 track. No compiler, build,
+  The bounded read-only inventory now supplies a feasibility report and input-pin
+  preparation manifest: native Python identity and selected inputs observed,
+  but no usable authorized existing builder established and build pins incomplete.
+  Stage 1 stops with a blocked finding. #29 remains open and blocked for its ARM64
+  track. No compiler, build,
   dependency or production gate change; AMD64 unqualified.
 
 - #29 ARM64 lab-beta qualification plan for the recorded VM and

@@ -12,8 +12,10 @@ criterion. The original broader #17/#29 criteria remain outstanding.
 The requested [cryptography build/provenance proposal](windows-arm64-cryptography-provenance-plan.md)
 is tracked separately in [#30](https://github.com/jeffshurtliff/obfuscidian/issues/30),
 a sibling of #29 under #17. Its read-only builder inventory and input-pin
-preparation stage is now approved, but not executed; later stages remain
-unapproved. Issue #29 stays open and blocked for this ARM64 track, retaining
+preparation stage has delivered a [blocked feasibility report](windows-arm64-cryptography-stage1.md)
+and incomplete input manifest; no usable authorized existing builder was
+established. Later stages remain unapproved. Issue #29 stays open and blocked for
+this ARM64 track, retaining
 native suites, matrix, exchange and installed-command qualification. The split
 does not change its broader criteria or close the original qualification effort.
 The artifact proposal uses unchanged 50.0.2 source, a reviewed

@@ -3,13 +3,16 @@
 **16 October issue boundary and handoff:**
 [#30](https://github.com/jeffshurtliff/obfuscidian/issues/30) now owns the trusted
 ARM64 cryptography artifact work as a sibling under #17. Its Stage 1 read-only
-builder inventory and input-pin preparation is approved but not executed; later
+builder inventory and input-pin preparation has delivered a
+[blocked feasibility report](windows-arm64-cryptography-stage1.md) and incomplete
+manifest. No usable authorized existing builder was established; later acquisition,
 build, installation and dependency-origin stages need separate approval.
 Issue #29 remains open and blocked for the selected ARM64 track, with its #28
 dependency preserved. Native suites, v1 exchange, matrix and installed-artifact
 qualification remain here. No broad criteria are waived, no dependency or gate
-changes occur, and AMD64 remains unqualified. Continue only #30 Stage 1 in a new
-chat; do not rerun accepted owner proof solely for the handoff.
+changes occur, and AMD64 remains unqualified. The separate #30 Stage 1 continuation
+now stops at its blocked handoff. Do not
+rerun accepted owner proof solely for the handoff or resume broader #29 execution.
 
 **16 October dependency-provenance proposal:** the requested
 [separate cryptography artifact plan](windows-arm64-cryptography-provenance-plan.md)

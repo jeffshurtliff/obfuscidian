@@ -1,13 +1,20 @@
 # Plan: trusted native ARM64 cryptography artifact — #30
 
-**16 October 2026. Status: Stage 1 read-only inventory/input-pin preparation approved; not yet executed.**
+**16 October 2026. Status: Stage 1 bounded read-only inventory delivered; build feasibility blocked.**
+
+The [Stage 1 report](windows-arm64-cryptography-stage1.md) and
+[input-pin preparation manifest](windows-arm64-cryptography-input-pins.json)
+record current guest observations and unresolved inputs. No usable authorized
+existing builder was established; the manifest is incomplete and not approved
+for build execution. No acquisition, installation or later stage follows from
+this blocked finding. The approval/handoff history below is preserved.
 
 [Issue #30](https://github.com/jeffshurtliff/obfuscidian/issues/30) owns this
 artifact work as a child of #17 and sibling of #29. Issue #29 remains open and
 blocked for its selected ARM64 track; application qualification stays there.
 The existing #28 dependency and original broad criteria remain intact. No
 compiler, build, candidate installation, dependency-origin change or production
-enabling approval follows from the split. Stage 1 will begin in a separate chat
+enabling approval follows from the split. Stage 1 continued in a separate chat
 on the existing branch, preserving all commits and any subsequent local work.
 The maintainer separately authorized committing and pushing the accumulated
 #17/#29/#30 handoffs on 16 October. Verify the actual current branch HEAD and
@@ -34,7 +41,7 @@ No elevation, new accounts, policy changes or compiler installation is proposed
 for the two existing standard test sessions. No external builder, credentials,
 spending, machine provisioning or remote CI is authorized by this document.
 
-The approved next task is **read-only build-feasibility and input-pin
+The approved Stage 1 task is **read-only build-feasibility and input-pin
 preparation only**: inventory already present tools, identify a suitable
 pre-provisioned builder if one exists, and finish the immutable input manifest.
 Use known task-relevant locations, with no broad private-file or credential
@@ -251,9 +258,10 @@ If cryptography, OpenSSL, compiler, Python ABI or build inputs change, freeze a
 new artifact identity and requalify affected evidence. A trusted source and hash
 do not provide a guarantee that native crypto code has no vulnerabilities.
 
-**Current authorization: Stage 1 read-only feasibility/inventory and input-pin
-preparation only.** Deliver a reviewable manifest and feasibility report, including
-unresolved inputs or a blocked result, then stop. Stage 1 has not been executed.
+**Authorization boundary: Stage 1 read-only feasibility/inventory and input-pin
+preparation only.** The bounded inventory has now delivered the linked report
+and incomplete manifest with a blocked builder finding. Stage 1 stops here;
+missing inputs do not authorize installation or another execution stage.
 No compiler install, build, custom wheel install,
 dependency/source/lock change, upstream contact, account creation, policy change,
 remote CI, stage/commit/push/PR/merge or publication follows from it. Later stages
@@ -262,6 +270,10 @@ is no guest build command to run yet. The accepted owner proof remains intact;
 production Windows mutation/recovery and append remain gated; AMD64 unqualified.
 
 ## Validation of this proposal
+
+For the subsequent Stage 1 inventory and validation evidence, see the
+[executed report](windows-arm64-cryptography-stage1.md). The paragraph below
+describes the preceding proposal preparation, not a new source/build execution.
 
 The preceding proposal preparation performed official-document research and
 hash-verified in-memory source inspection only, then documentation/privacy/diff

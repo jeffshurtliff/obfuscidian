@@ -1,0 +1,408 @@
+{
+  "manifest_kind": "Obfuscidian #30 Stage 1 input-pin preparation; not an executable or frozen build manifest",
+  "recorded_local_date": "2026-10-16",
+  "issue": 30,
+  "parent_issue": 17,
+  "consumer_issue": 29,
+  "status": "blocked: no usable authorized existing builder established; unresolved pins retained",
+  "input_freeze_complete": false,
+  "build_authorized": false,
+  "artifact_accepted": false,
+  "runtime_dependency_source": "unchanged canonical pyproject.toml and poetry.lock; this file is an inventory, not a second dependency list",
+  "repository": {
+    "branch": "feature/17-add-safe-native-windows-support",
+    "base_head": "d067d81340811d3b21319c670a4f6624e0d7e3b3",
+    "initial_tree": "clean",
+    "live_remote_tip_verified_at_start": "d067d81340811d3b21319c670a4f6624e0d7e3b3",
+    "canonical_file_sha256": {
+      "pyproject.toml": "1e66448aad2e0c5925d827afd85333791ac3635d885516a0fbcb5619d6f85fe5",
+      "poetry.lock": "b63c1714fcf641742a10be8cf46b4d641ea0329217a86835379d4105515e10fb"
+    },
+    "guest_snapshot_matches_host_commit": "not verified; frozen fix04 snapshot preserved"
+  },
+  "evidence_limits": [
+    "Guest results are maintainer-executed outputs reviewed by the agent, not independent agent VM execution.",
+    "Raw inventories and host/account paths remain private.",
+    "Negative discovery is bounded; it does not prove machine-wide absence.",
+    "Metadata hashes do not authenticate wheel archives or installed payloads.",
+    "No qualification evidence is transferred to the current OS revision or host commit."
+  ],
+  "guest_observations": {
+    "os_registry": {
+      "edition_id": "Core",
+      "display_version": "26H2",
+      "build": "26300",
+      "revision": 9711
+    },
+    "current_token": {
+      "observed_session": "Account A only",
+      "integrity": "Medium",
+      "administrators_group_listed": false,
+      "take_ownership_or_restore_privilege_listed": false,
+      "account_b_current_session": "not rechecked"
+    },
+    "python": {
+      "implementation": "cpython",
+      "version": "3.13.16",
+      "build_tag": "tags/v3.13.16:cbc944f",
+      "build_compiler_string": "MSC v.1944 64 bit (ARM64); not evidence of an installed compiler",
+      "bits": 64,
+      "process_machine": "0x0000",
+      "native_machine": "0xAA64",
+      "platform": "win-arm64",
+      "SOABI": "cp313-win_arm64",
+      "Py_GIL_DISABLED": 0,
+      "gil_enabled": true,
+      "execution": "existing explicit interpreter with -I -S -B; stdlib only"
+    }
+  },
+  "verified_observation_pins": {
+    "python_retained_installer": {
+      "filename": "python-3.13.16-arm64.exe",
+      "sha256": "696e2226062c6ec3622c13f143d28336a856968518e49cb4f4c62513215a4f5d",
+      "published_hash_matches": true,
+      "authenticode_status": "Valid",
+      "signer": "Python Software Foundation",
+      "official_release_url": "https://www.python.org/downloads/release/python-31316/",
+      "official_installer_url": "https://www.python.org/ftp/python/3.13.16/python-3.13.16-arm64.exe",
+      "upstream_arm64_status": "Experimental",
+      "sigstore_or_gpg_verification": "not performed",
+      "installed_tree_matches_installer_payload": "not established"
+    },
+    "python_selected_files": {
+      "python.exe": {
+        "sha256": "7f6216dc7f783f3d3e899b745ebc8e73a1253a2bbdfa6d24a71ff919c25d58b0",
+        "file_version": "3.13.16",
+        "pe_machine": "0xAA64",
+        "authenticode_status": "Valid",
+        "signer": "Python Software Foundation"
+      },
+      "python313.dll": {
+        "sha256": "ed06f7e74a32787895b35621eb66a494d83527e88abd2f0bbd2ddc1bf7278572",
+        "file_version": "3.13.16",
+        "pe_machine": "0xAA64",
+        "authenticode_status": "Valid",
+        "signer": "Python Software Foundation"
+      },
+      "python3.dll": {
+        "sha256": "81f0aff7b14d9f347109baf1b5e4965da9d38509e027f6ea4bc4b7963b9e84d0",
+        "file_version": "3.13.16",
+        "pe_machine": "0xAA64",
+        "authenticode_status": "Valid",
+        "signer": "Python Software Foundation"
+      },
+      "libs/python313.lib": {
+        "sha256": "de01e1954ec6fd3975ed093dcc336374a87e06227fc7a201faf99b4bf80d0225",
+        "machine_record_counts": {
+          "0xAA64": 1660
+        },
+        "other_members": {
+          "/": 2
+        },
+        "authenticode_status": "not checked for this file type"
+      },
+      "include/Python.h": {
+        "sha256": "1092f5e36a87909d0b0f5d0b0d8f8505454753c99a65c115df396bc13ced8cd0",
+        "authenticode_status": "not checked for this file type"
+      },
+      "include/patchlevel.h": {
+        "sha256": "2f59a34a9ce4dae7ca9d7b541574142e5a662fa02cb9c977e55a21329108c905",
+        "authenticode_status": "not checked for this file type"
+      },
+      "LICENSE.txt": {
+        "sha256": "62bec384df47b0328307db41455ff6ea2559e5546b394ac69148561b21703120",
+        "authenticode_status": "not checked for this file type"
+      }
+    }
+  },
+  "metadata_only_observations": {
+    "hash_semantics": {
+      "raw_metadata_sha256": "SHA-256 of selected installed METADATA file bytes",
+      "decoded_metadata_text_sha256": "SHA-256 after read_text decoding and UTF-8 re-encoding; not guaranteed to identify the original raw file",
+      "all": "neither authenticates a wheel archive or full installed payload"
+    },
+    "base_python": {
+      "pip": {
+        "version": "26.2.1",
+        "declared_license": "MIT",
+        "decoded_metadata_text_sha256": "3a561005822841f2c45f442f6c7a7505172c8c376c9fe274d876c8ac912968cb"
+      }
+    },
+    "poetry_tools": {
+      "poetry": {
+        "version": "2.5.1",
+        "declared_license": "MIT",
+        "decoded_metadata_text_sha256": "adfe784071bd62a0ddb9e769d0c9331e5ee0ba5c3eb7c7a5fd0a03eefe63c403"
+      },
+      "poetry-core": {
+        "version": "2.5.0",
+        "declared_license": "MIT",
+        "decoded_metadata_text_sha256": "45507f4d22420263020d19f5e6402a55950a68f5da7ace456164c176f390206e"
+      },
+      "pip": {
+        "version": "26.2.1",
+        "declared_license": "MIT",
+        "decoded_metadata_text_sha256": "3a561005822841f2c45f442f6c7a7505172c8c376c9fe274d876c8ac912968cb"
+      },
+      "packaging": {
+        "version": "26.3",
+        "declared_license": "Apache-2.0 OR BSD-2-Clause",
+        "decoded_metadata_text_sha256": "70fdb89fc4d4a9a043bf7372b8972bcc883fddff34ab55e9cf80d73875384763"
+      }
+    },
+    "cached_task_environments": {
+      "count": 2,
+      "configuration_python_version": "3.13.16",
+      "include_system_site_packages": false,
+      "both_have": {
+        "cffi": {
+          "version": "2.1.1",
+          "declared_license": "MIT-0",
+          "raw_metadata_sha256": "67b6a7595df7ede2195016a05d285faa7d362a8f57c238984edb8bb674b5770d",
+          "requires": [
+            "pycparser; implementation_name != \"PyPy\""
+          ]
+        },
+        "pycparser": {
+          "version": "3.0",
+          "declared_license": "BSD-3-Clause",
+          "raw_metadata_sha256": "f547a60b0ab54cc2f242213d1f87960ad80df7dd5dfeb98d17a444d48bfb6b93"
+        },
+        "packaging": {
+          "version": "26.3",
+          "declared_license": "Apache-2.0 OR BSD-2-Clause",
+          "raw_metadata_sha256": "70fdb89fc4d4a9a043bf7372b8972bcc883fddff34ab55e9cf80d73875384763"
+        },
+        "pip": {
+          "version": "26.2.1",
+          "declared_license": "MIT",
+          "raw_metadata_sha256": "3a561005822841f2c45f442f6c7a7505172c8c376c9fe274d876c8ac912968cb"
+        },
+        "poetry-core": {
+          "version": "2.5.0",
+          "declared_license": "MIT",
+          "raw_metadata_sha256": "45507f4d22420263020d19f5e6402a55950a68f5da7ace456164c176f390206e"
+        },
+        "pytest": {
+          "version": "9.1.1",
+          "declared_license": "MIT",
+          "raw_metadata_sha256": "c5d032518012789cabc870d46589aca3aeda36cf9fa4399ee88bda3d10438451"
+        }
+      },
+      "both_missing": [
+        "cryptography",
+        "cryptography-vectors",
+        "maturin",
+        "puccinialin",
+        "setuptools"
+      ],
+      "project_source_association": "not established"
+    },
+    "snapshot_local_venv": "absent",
+    "base_and_poetry_tool_environments_missing": [
+      "cffi",
+      "cryptography",
+      "cryptography-vectors",
+      "maturin",
+      "puccinialin",
+      "pycparser",
+      "setuptools",
+      "wheel"
+    ],
+    "direct_url": "not present for selected found base/Poetry-tool distributions; cached-environment direct_url was not checked",
+    "license_limit": "declared distribution metadata only; no independent compliance or payload notice audit"
+  },
+  "canonical_lock_declarations": {
+    "cryptography": {
+      "version": "50.0.2",
+      "source": {
+        "filename": "cryptography-50.0.2.tar.gz",
+        "sha256": "7b46165bb56eb4704e2eaaf86f3c940d19154535d9b0ca7d6d590b04060e00d5",
+        "evidence": "current canonical lock declaration only; artifact bytes not acquired in Stage 1"
+      }
+    },
+    "cffi": {
+      "version": "2.1.1",
+      "compatible_wheel": {
+        "filename": "cffi-2.1.1-cp313-cp313-win_arm64.whl",
+        "sha256": "63bbfd5ded17c4840ac07cd8f1c21ba9d9708141f840b324f422f41b207e3973",
+        "evidence": "current canonical lock declaration only; artifact bytes not acquired in Stage 1"
+      }
+    },
+    "pycparser": {
+      "version": "3.0",
+      "compatible_wheel": {
+        "filename": "pycparser-3.0-py3-none-any.whl",
+        "sha256": "b727414169a36b7d524c1c3e31839a521725078d7b2ff038656844266160a992",
+        "evidence": "current canonical lock declaration only; artifact bytes not acquired in Stage 1"
+      }
+    },
+    "poetry-core": {
+      "version": "2.5.0",
+      "compatible_wheel": {
+        "filename": "poetry_core-2.5.0-py3-none-any.whl",
+        "sha256": "98ee465b66f7e14bb9fbe68fb5e00d0cff184f036993ec94610ae4b5612f3add",
+        "evidence": "current canonical lock declaration only; artifact bytes not acquired in Stage 1"
+      },
+      "role": "Obfuscidian backend; not cryptography backend"
+    },
+    "private_wheel": "no accepted private wheel hash/origin in canonical lock; matching version would not authenticate a private binary"
+  },
+  "carried_forward_historical_evidence": {
+    "source": "committed windows-arm64-cryptography-provenance-plan.md and qualification handoffs; not reacquired in Stage 1",
+    "cryptography_50_0_2": {
+      "prior_sdist_bytes_matched_lock_and_pypi": true,
+      "maturin_constraint": ">=1.14.1,<2",
+      "cffi_constraint_for_selected_cpython": ">=2.0.0",
+      "setuptools_excluded_versions": [
+        "74.0.0",
+        "74.1.0",
+        "74.1.1",
+        "74.1.2"
+      ],
+      "rust_msrv": "1.83.0",
+      "maturin_cargo_locked": true,
+      "selected_recorded_cargo_versions": {
+        "pyo3": "0.29.2",
+        "openssl": "0.10.81",
+        "openssl-sys": "0.9.117"
+      },
+      "full_cargo_lock_sha256": null,
+      "full_crate_checksum_inventory": null
+    },
+    "owner_proof": "fix04: 1 passed in 215.27s, accepted only for recorded Windows 11 Home build 26300/internal fixed NTFS/native CPython 3.13.16 combination; original flags and snapshot unchanged",
+    "dependency_audit": "36/37 applicable package wheel metadata compatible; not new artifact, installation or native execution evidence",
+    "failed_source_installs": "two failures preserved; no retry or cache mutation"
+  },
+  "unresolved_inputs": [
+    {
+      "input": "C/C++ compiler and linker",
+      "version": null,
+      "host_architecture": null,
+      "target_architecture_required": "ARM64",
+      "sha256": null,
+      "provenance_license": "unestablished",
+      "ordinary_user_feasibility": "no usable existing installation established",
+      "observations": "cl/link/clang-cl/lld-link absent from PATH; checked standard Visual Studio roots and locator absent"
+    },
+    {
+      "input": "Windows SDK and ARM64 target libraries",
+      "version": null,
+      "sha256": null,
+      "provenance_license": "unestablished",
+      "ordinary_user_feasibility": "unestablished",
+      "observations": "rc/mt absent from PATH; checked Windows Kits roots absent; targeted registry returned no readable result, not distinguished from access failure; selected variables unset"
+    },
+    {
+      "input": "Rust/Cargo and ARM64 standard libraries",
+      "version": null,
+      "host_architecture": null,
+      "target": "aarch64-pc-windows-msvc subject to later recipe review",
+      "sha256": null,
+      "provenance_license": "unestablished for exact selected distribution",
+      "ordinary_user_feasibility": "unestablished",
+      "observations": "rustc/cargo/rustup absent from PATH; standard current-user roots absent; variables unset; earlier cache activity uninspected; no proxy invocation"
+    },
+    {
+      "input": "Complete Rust crate set",
+      "cargo_lock_sha256": null,
+      "crate_checksums": null,
+      "offline_availability": "unverified",
+      "provenance_license": "complete transitive review unresolved"
+    },
+    {
+      "input": "OpenSSL",
+      "candidate_version": "4.0.3",
+      "sha256": null,
+      "signature_trust_anchor": null,
+      "upstream_license_reference": "Apache-2.0; https://openssl-library.org/source/",
+      "license_for_acquired_input": "no source acquired or reviewed",
+      "ordinary_user_feasibility": "no development/build input set established",
+      "observations": "openssl absent from PATH; checked two standard roots absent; selected variables unset",
+      "build_configuration": null,
+      "linked_library_hashes": null,
+      "advisory_review": "not completed; no security clearance inferred"
+    },
+    {
+      "input": "OpenSSL auxiliary tools",
+      "exact_recipe": null,
+      "versions": null,
+      "sha256": null,
+      "provenance_license": "unestablished",
+      "ordinary_user_feasibility": "unestablished",
+      "observations": "Perl/nmake/NASM/CMake/Ninja absent from PATH; checked Strawberry Perl executable absent; applicable ARM64 tools still need recipe review"
+    },
+    {
+      "input": "maturin",
+      "version": null,
+      "sha256": null,
+      "transitive_build_requirements": null,
+      "provenance_license": "unestablished for a selected artifact",
+      "ordinary_user_feasibility": "metadata absent from checked environments; executable absent from PATH"
+    },
+    {
+      "input": "setuptools",
+      "version": null,
+      "sha256": null,
+      "provenance_license": "unestablished for a selected artifact",
+      "ordinary_user_feasibility": "metadata absent from checked environments"
+    },
+    {
+      "input": "Complete Python ABI/development files",
+      "full_tree_manifest_sha256": null,
+      "installer_to_payload_binding": "not established",
+      "license_review": "official Python terms referenced and installed LICENSE.txt hashed; all incorporated notices still require review"
+    },
+    {
+      "input": "CFFI and pycparser artifact/payload authentication",
+      "acquired_wheel_hashes": null,
+      "installed_record_or_native_payload_verification": "not performed; metadata presence and canonical wheel declarations only"
+    },
+    {
+      "input": "Matching upstream cryptography tests/vectors",
+      "required_version": "50.0.2",
+      "sha256": null,
+      "test_dependency_pins": null,
+      "provenance_license": "unestablished for complete test materials",
+      "observations": "matching package metadata absent from checked environments"
+    },
+    {
+      "input": "Auxiliary Git for later application qualification",
+      "version": null,
+      "sha256": null,
+      "provenance_license": "unestablished",
+      "observations": "absent from current PATH; application qualification remains #29"
+    },
+    {
+      "input": "Other authorized existing builder",
+      "identity": null,
+      "access": "none identified or assumed"
+    }
+  ],
+  "preserved_boundaries": [
+    "production Windows mutation/recovery gated",
+    "existing-log append refused",
+    "CLI gate order unchanged",
+    "AMD64 unqualified",
+    "POSIX/CLI/Fernet/v1/dependencies unchanged",
+    "existing Git interruption/power-loss limits retained",
+    "all later acquisition/build/acceptance/install/origin stages require separate approval"
+  ],
+  "checks_not_executed": [
+    "toolchain/backend/build execution",
+    "candidate installation/import",
+    "upstream/application native qualification",
+    "owner-proof rerun",
+    "reproducible wheel builds",
+    "v1 exchange",
+    "installed CLI qualification",
+    "remote CI"
+  ],
+  "official_references": [
+    "https://www.python.org/downloads/release/python-31316/",
+    "https://docs.python.org/3.13/license.html",
+    "https://cryptography.io/en/50.0.2/installation/",
+    "https://learn.microsoft.com/en-us/visualstudio/ide/user-permissions-and-visual-studio?view=visualstudio",
+    "https://openssl-library.org/source/"
+  ]
+}
