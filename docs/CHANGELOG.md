@@ -7,6 +7,13 @@ Package versions and encrypted backup-format versions are separate contracts.
 
 ### Added
 
+- #30 review-only acquisition/provisioning proposal for a separate disposable
+  native ARM64 builder copy, with exact candidate releases, primary-source
+  metadata references, explicit auxiliary-emulation and input-authentication
+  gaps, and separate acquisition/provisioning/build approvals. The next-chat
+  prompt authorizes only read-only metadata and approval-packet preparation;
+  no tool installation, build, dependency or production-gate change.
+
 - #30 native ARM64 cryptography build/provenance proposal, split from #29 as
   a sibling dependency under #17, using
   unchanged 50.0.2 source, explicit builder/input requirements, reproducibility,

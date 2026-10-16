@@ -19,4 +19,6 @@ and release/publication actions each require explicit maintainer authorization.
    windows-arm64-beta-qualification-plan
    windows-arm64-cryptography-provenance-plan
    windows-arm64-cryptography-stage1
+   windows-arm64-cryptography-acquisition-plan
+   windows-arm64-cryptography-next-chat
    windows-cli-gate-proposal

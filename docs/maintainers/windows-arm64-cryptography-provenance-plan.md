@@ -9,6 +9,13 @@ existing builder was established; the manifest is incomplete and not approved
 for build execution. No acquisition, installation or later stage follows from
 this blocked finding. The approval/handoff history below is preserved.
 
+After the authorized Stage 1 commit/push at `e0cadc3`, the maintainer requested
+a concrete [acquisition/provisioning proposal](windows-arm64-cryptography-acquisition-plan.md)
+and selected a separate disposable builder copy for proposal purposes only.
+Its [next-chat prompt](windows-arm64-cryptography-next-chat.md) starts read-only
+metadata/approval preparation. Acquisition, VM copying, administrator setup,
+provisioning and builds remain separately unapproved; #29 remains blocked.
+
 [Issue #30](https://github.com/jeffshurtliff/obfuscidian/issues/30) owns this
 artifact work as a child of #17 and sibling of #29. Issue #29 remains open and
 blocked for its selected ARM64 track; application qualification stays there.
