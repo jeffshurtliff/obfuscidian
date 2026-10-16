@@ -7,13 +7,42 @@ Package versions and encrypted backup-format versions are separate contracts.
 
 ### Added
 
+- #30 native ARM64 cryptography build/provenance proposal, split from #29 as
+  a sibling dependency under #17, using
+  unchanged 50.0.2 source, explicit builder/input requirements, reproducibility,
+  native validation and a separate artifact-origin/Poetry policy decision.
+  Only read-only inventory/input-pin preparation is approved, not yet executed.
+  #29 remains open and blocked for its ARM64 track. No compiler, build,
+  dependency or production gate change; AMD64 unqualified.
+
+- #29 ARM64 lab-beta qualification plan for the recorded VM and
+  CPython combination, with explicit proposed operation/matrix boundaries,
+  dependency-build stop conditions and separate dispatch/artifact approvals.
+  The maintainer approved its bounded qualification scope and non-installing
+  audit only. Official metadata lists compatible locked wheels for 36 of 37
+  applicable packages; cryptography 50.0.2 blocks provisioning. AMD64 remains
+  unqualified; no dependency, production gate or completed broad-criteria claim.
+
+- #29 explicit two-standard-account VM owner fixture and private-report handoff,
+  retaining the original mandatory test and all production owner-refusal/full
+  identity/bytes/exact protected-DACL assertions. Added positive guarded-open
+  evidence, retained DACL-write custody, source-bound isolated peer tooling and
+  actual guest/process architecture reporting. ARM evidence is diagnostic pending
+  a separate acceptance-scope decision. Two separate native attempts failed during
+  setup; a third performed the actual transition and production refusals but failed
+  a later last-access identity assertion. A fourth actual case passes with all
+  mandatory properties validated on native ARM64 Windows / CPython 3.13.16;
+  the maintainer accepts that owner evidence only for the recorded ARM
+  combination. Native AMD64 and broader qualification remain pending.
+  No production Windows mutation/recovery, CLI gate order or append change.
+
 - #29 qualification preparation: mandatory real-owner positive setup and exact
   native identity/bytes/protected-DACL preservation assertions, read-only token
   preflight and a private-report PowerShell handoff, generated synthetic v1
   exchange tooling, installed Windows backup/recovery refusal checks, richer
   exact-commit CI environment/JUnit evidence and a parent-criteria audit.
-  Owner proof, native/host/storage/matrix execution, both exchanged directions
-  and installed Windows writes remain pending. The installed CLI gate-order
+  Native AMD64 owner proof, applicable host/storage/matrix execution, both
+  exchanged directions and installed Windows writes remain pending. The installed CLI gate-order
   change is a reviewable proposal requiring authorization; production Windows
   mutation/recovery and existing-log append gates remain unchanged.
 
@@ -62,6 +91,16 @@ Package versions and encrypted backup-format versions are separate contracts.
 
 ### Changed
 
+- Corrected the #29 test-only local-account SID lookup to measure the validated
+  SID rather than treating the lookup buffer capacity as its actual length.
+  The native preflight failure remains recorded; both ARM64 account preflights
+  subsequently passed, while production owner checks remain unchanged.
+
+- Owner-group preflight now verifies actual native AMD64 guest/process codes;
+  an emulated process architecture string cannot qualify an ARM Windows guest.
+  The newly provisioned VM supersedes only the earlier two-account availability
+  blocker; historical failed totals and remaining qualification gates remain.
+
 - Recorded the #29 fallback after both available maintainer computers lack the
   owner-group fixture: native Windows mutation/recovery qualification remains
   deferred, with mandatory real-owner assertions and all production gates
@@ -82,6 +121,29 @@ Package versions and encrypted backup-format versions are separate contracts.
   outstanding real ownership-transition proof and CLI mutation gates (#26).
 
 ### Fixed
+
+- #29 owner-test measurement separates its later byte-verification read from the
+  complete identity interval around both production owner refusals. All original
+  assertion expressions remain, with access time still compared exactly across
+  refusals. The observer read retains byte/DACL and other metadata checks and
+  separately records access-time effects; no timestamp setter, policy change or
+  production relaxation is introduced. The corrected native ARM64 case passes,
+  including full identity across both refusals, while explicitly recording an
+  access-time change during the separate verification read. Portable regressions
+  preserve failures for every identity field changed by a refusal.
+
+- #29 test-only DACL continuation supplies a complete protected descriptor to a
+  retained native handle, rather than allowing automatic inheritance conversion
+  to change the fixture's control value. Exact original DACL/control assertions
+  and unknown-state retention remain intact; portable regression checks passed,
+  while fix03 passed DACL restoration but failed a later post-read identity
+  assertion; fix04 subsequently passed the whole owner case. All three failed
+  attempts and their artifacts remain separate. Production checks are unchanged.
+
+- #29 test-only retained leaf opener now requests explicit `SYNCHRONIZE` for its
+  synchronous native open. Preserve the first actual ARM64 owner-test failure
+  and synthetic artifacts separately from subsequent executions. Production
+  checks, grants and the mandatory owner obligation remain unchanged.
 
 - Qualification coverage reporting now selects real `src/obfuscidian` files.
   The full test run records one intentionally synthetic diagnostic traceback

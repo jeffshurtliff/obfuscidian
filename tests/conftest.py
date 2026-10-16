@@ -4,7 +4,7 @@
 :Synopsis:          Configure optional fully isolated artifact validation
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     07 Oct 2026
+:Modified Date:     15 Oct 2026
 """
 
 from __future__ import annotations
@@ -26,3 +26,8 @@ def pytest_addoption(parser: pytest.Parser) -> None:
     """Accept fresh artifacts and an offline dependency wheelhouse."""
     parser.addoption('--artifact-dir', type=Path, help='Directory containing exactly one fresh wheel and sdist.')
     parser.addoption('--wheelhouse', type=Path, help='Offline dependency wheels for fully isolated installation tests.')
+    parser.addoption(
+        '--owner-vm-two-account',
+        action='store_true',
+        help='Explicit interactive synthetic owner fixture with existing standard ObfOwnerA/ObfOwnerB VM accounts.',
+    )

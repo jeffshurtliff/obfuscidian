@@ -15,4 +15,7 @@ and release/publication actions each require explicit maintainer authorization.
    windows-lifecycle-validation
    windows-git-validation
    windows-qualification
+   windows-owner-vm
+   windows-arm64-beta-qualification-plan
+   windows-arm64-cryptography-provenance-plan
    windows-cli-gate-proposal

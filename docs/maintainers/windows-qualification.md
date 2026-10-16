@@ -1,5 +1,132 @@
 # Windows 2.0.0 qualification — #29
 
+**16 October issue boundary and handoff:**
+[#30](https://github.com/jeffshurtliff/obfuscidian/issues/30) now owns the trusted
+ARM64 cryptography artifact work as a sibling under #17. Its Stage 1 read-only
+builder inventory and input-pin preparation is approved but not executed; later
+build, installation and dependency-origin stages need separate approval.
+Issue #29 remains open and blocked for the selected ARM64 track, with its #28
+dependency preserved. Native suites, v1 exchange, matrix and installed-artifact
+qualification remain here. No broad criteria are waived, no dependency or gate
+changes occur, and AMD64 remains unqualified. Continue only #30 Stage 1 in a new
+chat; do not rerun accepted owner proof solely for the handoff.
+
+**16 October dependency-provenance proposal:** the requested
+[separate cryptography artifact plan](windows-arm64-cryptography-provenance-plan.md)
+is prepared for review. It does not approve compilers, builds, custom-wheel
+installation or dependency/lock changes. Builder feasibility, authenticated
+inputs, reproducibility, native validation and artifact-origin policy must be
+resolved; production Windows operations remain gated and AMD64 unqualified.
+
+**16 October approved target and audit result:** the maintainer approved only the
+bounded ARM64 qualification scope and non-installing dependency audit. Official
+metadata lists compatible locked wheels for **36 of 37** applicable runtime/dev
+entries, including the locked build backend; cryptography 50.0.2 is the sole
+binary blocker. Two Linux-only entries are excluded by existing markers.
+The guest's official-release query independently returned zero Windows ARM64
+cryptography wheels. No package artifacts were downloaded, installed or built.
+See the [executed audit and stop condition](windows-arm64-beta-qualification-plan.md).
+Compiler/custom-wheel/dependency routes require separate approval. Production
+Windows operations remain gated, AMD64 unqualified and broad #17/#29 criteria open.
+
+**16 October ARM-only proposal:** the maintainer has no native AMD64 environment
+available and requested a narrowly scoped ARM64 beta path. The
+[review-only plan](windows-arm64-beta-qualification-plan.md) proposes an exact
+VM/Python/storage envelope, new-destination operations with bound recovery,
+dependency/tooling prerequisites, an explicit matrix revision and later separate
+dispatch/artifact acceptance. This preceding proposal is now superseded only by
+the bounded scope/audit approval above; later phases remain unapproved. AMD64 remains
+unqualified and production Windows operations remain gated; the original broad
+criteria and historical outcomes below are not marked satisfied.
+
+**16 October 2026 acceptance:** the maintainer accepts fix04 owner-proof evidence
+only for the recorded Windows 11 Home build 26300 / internal fixed NTFS / native
+ARM64 CPython 3.13.16 combination. Production Windows operations remain gated.
+The saved reports retain their original approval flag and source identity;
+this later decision does not rewrite the executed evidence. Native AMD64 owner
+proof and all applicable qualification remain outstanding. The immediate next
+step is an eligible native AMD64 environment and existing unelevated owner
+fixture, with read-only environment/tooling verification before actual tests.
+No further account creation, privileges, policy or dependency changes are authorized.
+
+**15 October 2026 continuation:** the maintainer has newly provisioned two standard
+test accounts in a disposable UTM ARM64 Windows VM and authorized only a reviewed
+synthetic two-account owner fixture. The [VM owner handoff](windows-owner-vm.md)
+records the implemented fixture, actual environment observations, per-account
+commands and an explicit architecture acceptance-scope proposal. This supersedes
+the earlier account-availability blocker only for that VM. The fourth actual
+owner execution passed on native ARM64; architecture acceptance remains pending
+and no qualification criterion or production gate is waived.
+Preserve the dated historical fallback and failed totals below.
+
+**Current executed evidence — fix04:** the maintainer's original mandatory owner
+case passed **1 passed in 215.27s**, on Windows 11 Home build 26300 / local fixed
+NTFS / native ARM64 CPython 3.13.16, in two standard account sessions. The saved
+report summary has one case, zero problems, zero preflight/owner exits and all
+required positive acceptance, actual transition, production refusals and full
+identity/bytes/exact protected-DACL properties. Runner evidence validation is
+true; architecture-scope approval is false. A separate verification-read access
+time change is explicitly recorded. See the [executed snapshot and scoped
+decision proposal](windows-owner-vm.md) for provenance and the remaining
+qualification sequence. No native AMD64 owner pass or complete Windows suite,
+matrix, exchange or installed-write qualification is established by this result.
+
+**Current independent local checks:** macOS ARM64 / CPython 3.12.7 full regression
+**1,652 passed / 149 skipped**; lock validation, repository-wide Ruff and Bandit
+passed. Fresh local wheel/sdist builds, strict Twine checks and **three isolated
+packaging tests** passed. Strict Sphinx and local references across **42 HTML
+pages** passed; two heading warnings in the first post-proof build were corrected.
+External URLs were not checked. These checks establish neither native Windows branches
+skipped on macOS nor a new hosted matrix. The [post-proof qualification
+sequence](windows-owner-vm.md#remaining-qualification-sequence) retains native
+AMD64 proof, host/storage/Python, both v1 exchange directions and installed
+Windows write/recovery/Git execution as separate outstanding work. This update
+does not change the historical dated results below.
+
+## Preserved same-day preparation and failed attempts
+
+**Same-day VM execution continuation:** both read-only account preflights passed
+on native ARM64 CPython 3.13.16 with matching reviewed source hashes. The original
+owner node's first actual attempt under fix01 **failed: 1 failed in 0.14s** at
+A's retained-open setup (`0xC000000D`), before temporary B grants or owner change.
+Its synthetic artifacts/reports are retained. The test-only fix02 synchronous
+access correction has **52 passed / 30 skipped** local targeted evidence;
+fix02's second original-node execution then **failed: 1 failed in 0.12s** at exact
+temporary directory DACL/control readback, after positive production setup. The
+directory remained protected but acquired `SE_DACL_AUTO_INHERITED`; cleanup refused
+the unrecognized state. The leaf grant and B owner setter were not reached.
+Both failed fixtures/report sets are preserved. The private fix03 candidate
+supplies an exact protected descriptor through the retained native handle rather
+than masking control bits; its portable checks passed **64 / 30 skipped**, while
+native execution and actual owner proof remain pending. Two failed cryptography builds leave
+the complete application environment partial. See the VM handoff for preserved
+details; none of this establishes owner proof or AMD64/ARM support acceptance.
+
+**Third native attempt:** fix03 reached the actual two-account transition. B's
+source-bound peer returned success, and A's supplied traceback shows that exact
+DACL/control restoration, both production owner refusals and the first full
+post-refusal identity comparison passed. The case then **failed: 1 failed in
+11280.55s (3:08:00)** when only last-access time changed after the test's own
+additional `KEEP` verification read. The duration includes manual participation.
+Final properties/runner validation were not reached; a test-observation effect
+is plausible but not independently isolated. Preserve this third failed total
+and its artifacts/reports separately. Inspect the saved evidence and review
+measurement boundaries before another run; do not mask fields, rewrite times,
+relax production checks or claim the complete owner criterion is met.
+
+The saved JUnit summary confirms the partial transition/restoration/setup flags
+and failed run status. The reviewed fix04 test candidate retains all original
+assertion expressions and measures complete identity, including access time,
+before/after both production refusals and descriptor readback. It then separately
+performs and records the real byte-verification read, retaining bytes, exact DACL
+and all non-access metadata checks for that observer operation. No time is reset,
+field normalized across refusals or production check changed. Its portable model
+regressions passed **95 / 30 native Windows skipped**; the actual Windows rerun
+was pending at that preparation point. The passing fourth execution above
+supersedes that pending status, preserving all three failed totals separately.
+
+## Historical fallback — 14 October
+
 **Updated 14 October 2026. Status: fallback preparation; Windows qualification deferred.**
 The maintainer authorized only #29 on `feature/17-add-safe-native-windows-support`.
 The 13 October preparation started at clean
@@ -51,7 +178,7 @@ responses, platform skips and unexecuted CI.
 
 ## First gate: actual filesystem owner transition
 
-### Current fallback decision — 14 October 2026
+### Historical fallback decision — 14 October 2026
 
 The maintainer confirms that the different available computer also has no
 enabled `SE_GROUP_OWNER` group and requests the fallback. This is
@@ -358,9 +485,9 @@ anchors, not external URL availability. Do not claim unavailable commands passed
 
 | #17 acceptance criterion | Verified implementation/preparation | Remaining blocker |
 | --- | --- | --- |
-| Native fresh/merge backup, fresh restore/recovery | Accepted private #27 implementation and bounded native evidence | Owner proof, applicable matrix/host/storage, installed supported CLI execution |
+| Native fresh/merge backup, fresh restore/recovery | Accepted private #27 implementation; fix04 owner evidence accepted only for its recorded ARM combination | Native AMD64 owner proof, applicable matrix/host/storage, installed supported CLI execution |
 | Native Git merge restore/manual review | Accepted #28 private implementation; 30 + 1 separate native passes | Applicable final matrix/installed CLI evidence; preserve interruption limits |
-| Unsupported/uncertain states fail closed; plaintext private | Actual scoped DACL/sharing/termination/refusal plus injected supplements | Actual owner transition and remaining host/storage qualification; no bypass |
+| Unsupported/uncertain states fail closed; plaintext private | Actual scoped DACL/sharing/termination/refusal; bounded ARM owner evidence accepted; separately labeled injected supplements | Native AMD64 owner proof and remaining host/storage qualification; no bypass |
 | Hosted native tests alongside POSIX regressions at exact commit | Six POSIX jobs pass at `7a7250e`; three Windows jobs fail with elevated-token fixture limitations | Eligible unelevated Windows evidence and successful complete final matrix; any later remote execution needs authorization |
 | Existing CLI/Fernet/v1 compatibility | Application, dependency and frozen fixture bytes unchanged; generated exchange tool prepared | Actual both-direction exchange; supported installed CLI writes |
 | Accurate docs/changelog | Current gates, private recovery envelope and qualification limits documented | Final supported-operation copy after actual qualification/approved dispatch |
@@ -369,7 +496,7 @@ anchors, not external URL availability. Do not claim unavailable commands passed
 No append, pruning, filesystem naming refinement, Python 3.15, new Git recovery,
 privileges/accounts/policy changes, dependencies or format changes are included.
 
-## Actual local validation and handoff
+## Historical local validation and handoff — 13–14 October 2026
 
 The remainder of this section is the historical **13 October 2026** local
 handoff. Its then-uncommitted Git state and unexecuted hosted-CI statements are

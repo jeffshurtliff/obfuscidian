@@ -4,7 +4,7 @@
 :Synopsis:          Read-only token eligibility for mandatory real filesystem owner proof
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     13 Oct 2026
+:Modified Date:     15 Oct 2026
 """
 
 from __future__ import annotations
@@ -92,9 +92,16 @@ def _preflight() -> int:
     """Emit no SIDs/paths; unavailable setup is a blocker, never a qualification pass."""
     assert sys.platform == 'win32' and sys.implementation.name == 'cpython', 'Native Windows CPython required.'
     assert sys.version_info[:2] in ((3, 12), (3, 13), (3, 14)), 'Use supported Python 3.12–3.14.'
-    assert struct.calcsize('P') == 8 and platform.machine().upper() == 'AMD64', 'AMD64/64-bit required.'
+    assert struct.calcsize('P') == 8, '64-bit required.'
     assert not ctypes.windll.shell32.IsUserAnAdmin(), 'Use an existing unelevated token.'
-    available = _owner_candidate(native._Api()) is not None
+    from tests._windows_owner_vm import _runtime
+
+    api = native._Api()
+    runtime = _runtime(api)
+    assert runtime['native_machine_code'] == 0x8664 and runtime['process_machine_code'] == 0, (
+        'Native AMD64 guest/process required; ARM and emulation evidence is separate.'
+    )
+    available = _owner_candidate(api) is not None
     print(
         json.dumps(
             {
@@ -102,6 +109,8 @@ def _preflight() -> int:
                 'elevated': False,
                 'version': platform.python_version(),
                 'architecture': platform.machine(),
+                'native_machine_code': runtime['native_machine_code'],
+                'process_machine_code': runtime['process_machine_code'],
                 'bits': 64,
                 'store_package_path_detected': 'PythonSoftwareFoundation.Python.'
                 in getattr(sys, '_base_executable', sys.executable),

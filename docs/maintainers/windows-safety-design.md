@@ -1,5 +1,36 @@
 # Native Windows safety design for 2.0.0
 
+**16 October scope/audit approval:** the maintainer approved the narrow ARM64
+qualification target and non-installing dependency audit only. The unchanged
+lock has compatible binary metadata for 36 of 37 applicable entries; cryptography
+50.0.2 blocks provisioning. No native application execution, dependency/toolchain
+change or production enabling follows. AMD64 remains unqualified and Windows
+mutation/recovery/append gates remain retained.
+
+**16 October ARM-only review proposal:** a
+[separate lab-beta qualification path](windows-arm64-beta-qualification-plan.md)
+is prepared for the only available ARM64 VM. It does not change this design's
+approved eligibility or production owner/DACL checks. The explicit scope/matrix
+revisions, complete native qualification and later dispatch/order/enabling
+decisions remain unapproved; AMD64 remains unqualified and Windows writes gated.
+
+**16 October bounded acceptance:** the maintainer accepts the fix04 owner-proof
+evidence only for recorded Windows 11 Home build 26300 / internal fixed NTFS /
+native ARM64 CPython 3.13.16. This supersedes the pending acceptance status in
+the dated continuation below, without qualifying AMD64 or broader ARM support.
+Production Windows mutation/recovery and existing-log append remain gated.
+
+**15 October 2026 owner-fixture continuation:** two newly provisioned standard
+accounts in a disposable UTM ARM64 guest are authorized for the reviewed synthetic
+[two-account owner protocol](windows-owner-vm.md). This narrowly supersedes prior
+account-availability statements, without authorizing further account creation,
+privilege activation, policy changes or real-data access. The fourth original
+owner case passed on native ARM64 Windows / CPython 3.13.16 with all mandatory
+properties validated; three earlier failed attempts remain recorded separately.
+Architecture acceptance, native AMD64 owner proof and broader qualification
+remain pending. All production
+mutation/recovery and existing-log append gates remain unchanged.
+
 **Status:** #26 implementation handoff accepted with the limited qualification
 deferral approved on **12 October 2026**; no Windows write operation is enabled.
 **Design date:** 10 October 2026. **Parent:** [#17](https://github.com/jeffshurtliff/obfuscidian/issues/17).
@@ -52,8 +83,9 @@ whose retry3 passes 30 native Git cases and whose targeted retry4 passes the
 corrected inherited-control kernel-denial/positive-control proof. Its bounded
 private handoff is accepted by the maintainer; production gates remain retained.
 #29 [qualification preparation](windows-qualification.md) is now authorized.
-No eligible owner fixture is available in the macOS session; actual proof and
-applicable qualification remain pending, with all production gates retained.
+The macOS session itself supplies no native Windows owner proof. The separately
+executed 15 October ARM VM result above does not establish AMD64 or broader
+qualification; all production gates remain retained.
 The [14 October fallback and existing CI audit](windows-qualification.md)
 record unsuitable group fixtures on both maintainer computers, six passing
 POSIX jobs and three failed elevated Windows jobs. Actual owner proof remains

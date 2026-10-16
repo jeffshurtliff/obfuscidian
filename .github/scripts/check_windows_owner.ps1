@@ -44,7 +44,7 @@ try {
         }
     } else { throw 'Require Git source identity or a reviewed snapshot manifest.' }
     $Sources = @(Get-ChildItem 'src/obfuscidian' -Filter '*.py' -File)
-    $Sources += Get-Item 'tests/_windows_owner.py', 'tests/_windows_support.py', 'tests/conftest.py', `
+    $Sources += Get-Item 'tests/_windows_owner.py', 'tests/_windows_owner_vm.py', 'tests/_windows_support.py', 'tests/conftest.py', `
         'tests/integration/test_windows_native.py', 'pyproject.toml', 'poetry.lock', '.github/scripts/check_windows_owner.ps1'
     $Sources | Sort-Object FullName | ForEach-Object {
         $Relative = $_.FullName.Substring($Repository.Length + 1).Replace('\', '/')
@@ -66,6 +66,7 @@ try {
     }
     foreach ($Required in @('assignable_owner_group_available', 'owner_fixture_positive_setup', `
             'actual_filesystem_owner_transition', 'production_handle_owner_refused', `
+            'production_guarded_open_owner_refused', `
             'full_native_identity_preserved', 'original_bytes_preserved', 'exact_protected_dacl_preserved')) {
         $Property = $Cases[0].SelectSingleNode("properties/property[@name='$Required']")
         if (-not $Property -or $Property.value -ne 'True') { throw 'Required actual owner evidence property missing.' }

@@ -4,7 +4,7 @@
 :Synopsis:          Native synthetic Windows primitive safety qualification tests
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     13 Oct 2026
+:Modified Date:     15 Oct 2026
 """
 
 from __future__ import annotations
@@ -16,6 +16,7 @@ import struct
 import subprocess
 import sys
 import threading
+from contextlib import ExitStack
 from pathlib import Path
 
 import pytest
@@ -472,43 +473,53 @@ def test_explicit_terminal_release_and_closed_guard_refusal(parent: Path) -> Non
     assert (parent / 'pending').read_bytes() == b''
 
 
-def test_changed_native_owner_refused_without_privilege_activation(parent: Path, record_property) -> None:
-    """Assign a token-owned group to one synthetic file, then require rejection.
+def test_changed_native_owner_refused_without_privilege_activation(parent: Path, record_property, request) -> None:
+    """Actually change a synthetic file's owner, then require unchanged production refusal.
 
     No privilege is enabled and no account is created. Lack of an assignable
     owner group is an explicit qualification-fixture failure on this machine.
+    The explicit VM option uses two existing standard accounts with retained
+    custody; it keeps every actual-owner and preservation assertion below.
     """
     api = native._Api()
     wt, ptr = api.wt, ctypes.c_void_p
     assert not ctypes.windll.shell32.IsUserAnAdmin(), 'Real owner proof requires an existing unelevated token.'
-    selected = _owner_candidate(api)
-    current, _ = api._owner()
-    record_property('assignable_owner_group_available', selected is not None)
-    assert selected is not None, 'Qualification needs an assignable owner-group fixture; do not elevate or create accounts.'
-    api._bind(api.advapi, 'SetSecurityInfo', wt.DWORD, [wt.HANDLE, wt.DWORD, wt.DWORD, ptr, ptr, ptr, ptr])
-    with native._Guard(parent) as guard:
-        with guard._open_file('changed-owner', create=True) as record:
-            record._write(b'KEEP', 100)
-            record._private()
-            original = record._identity()
-    raw = api.kernel.CreateFileW(
-        str(parent / 'changed-owner'),
-        0x80000 | const.WINDOWS_READ_CONTROL | const.WINDOWS_GENERIC_READ,
-        7,
-        None,
-        3,
-        const.WINDOWS_OPEN_FLAGS,
-        None,
-    )
-    assert raw != wt.HANDLE(-1).value
-    with native._Handle(api, raw, str(parent / 'changed-owner')) as held:
-        held._private()  # Positive production acceptance before the actual owner setter.
-        before = _security_state(held)
-        assert before[0] == current and original._same_object(held._identity())
-        assert held._read(100) == b'KEEP'
-        identity = held._identity()
-        owner_buffer = ctypes.create_string_buffer(selected)
-        assert api.advapi.SetSecurityInfo(raw, 1, 1, owner_buffer, None, None, None) == 0
+    with ExitStack() as custody:
+        if request.config.getoption('--owner-vm-two-account'):
+            from tests._windows_owner_vm import _creator_fixture
+
+            parent, held, identity, before, current, selected = custody.enter_context(_creator_fixture(record_property))
+        else:
+            selected = _owner_candidate(api)
+            current, _ = api._owner()
+            record_property('assignable_owner_group_available', selected is not None)
+            assert selected is not None, (
+                'Qualification needs an assignable owner-group fixture; do not elevate or create accounts.'
+            )
+            api._bind(api.advapi, 'SetSecurityInfo', wt.DWORD, [wt.HANDLE, wt.DWORD, wt.DWORD, ptr, ptr, ptr, ptr])
+            with native._Guard(parent) as guard:
+                with guard._open_file('changed-owner', create=True) as record:
+                    record._write(b'KEEP', 100)
+                    record._private()
+                    original = record._identity()
+            raw = api.kernel.CreateFileW(
+                str(parent / 'changed-owner'),
+                0x80000 | const.WINDOWS_READ_CONTROL | const.WINDOWS_GENERIC_READ,
+                7,
+                None,
+                3,
+                const.WINDOWS_OPEN_FLAGS,
+                None,
+            )
+            assert raw != wt.HANDLE(-1).value
+            held = custody.enter_context(native._Handle(api, raw, str(parent / 'changed-owner')))
+            held._private()  # Positive production acceptance before the actual owner setter.
+            before = _security_state(held)
+            assert before[0] == current and original._same_object(held._identity())
+            assert held._read(100) == b'KEEP'
+            identity = held._identity()
+            owner_buffer = ctypes.create_string_buffer(selected)
+            assert api.advapi.SetSecurityInfo(raw, 1, 1, owner_buffer, None, None, None) == 0
         after = _security_state(held)
         assert after[0] == selected and after[0] != current
         assert after[1:] == before[1:]  # Exact descriptor control and protected DACL, without repair.
@@ -523,6 +534,8 @@ def test_changed_native_owner_refused_without_privilege_activation(parent: Path,
         )
         assert held._read(100) == b'KEEP'
         refusal_identity = held._identity()
+        record_property('actual_native_identity_before_refusal', repr(refusal_identity))
+        record_property('original_protected_dacl_hex', before[2].hex())
         record_property('owner_fixture_positive_setup', True)
         record_property('owner_fixture_storage', 'native guard verified local fixed NTFS with persistent ACLs')
         record_property('actual_owner_before', before[0].hex())
@@ -538,9 +551,44 @@ def test_changed_native_owner_refused_without_privilege_activation(parent: Path,
                 guard._open_file('changed-owner')
         assert held._identity() == refusal_identity
         assert _security_state(held) == after
+        # Close the production-refusal measurement before our next ReadFile.
+        # Reads can update access time; never charge that observer effect to the
+        # refusals or reset a timestamp to manufacture complete identity equality.
+        assert held._identity() == refusal_identity
+        after_refusal = held._identity()
+        assert after_refusal == refusal_identity  # Every field, including access/change time.
+        record_property('actual_native_identity_after_refusal', repr(after_refusal))
+        record_property('full_native_identity_measurement_scope', 'all fields before/after both production refusals')
+        record_property('refusal_protected_dacl_hex', _security_state(held)[2].hex())
         assert held._read(100) == b'KEEP'
         assert identity._same_object(held._identity())
+        after_verification = held._identity()
+        assert (
+            after_refusal.volume,
+            after_refusal.file_id,
+            after_refusal.directory,
+            after_refusal.attributes,
+            after_refusal.size,
+            after_refusal.links,
+            after_refusal.created,
+            after_refusal.written,
+            after_refusal.changed,
+        ) == (
+            after_verification.volume,
+            after_verification.file_id,
+            after_verification.directory,
+            after_verification.attributes,
+            after_verification.size,
+            after_verification.links,
+            after_verification.created,
+            after_verification.written,
+            after_verification.changed,
+        )
+        assert _security_state(held) == after
+        record_property('actual_native_identity_after_verification_read', repr(after_verification))
+        record_property('verification_read_access_time_changed', after_verification.accessed != after_refusal.accessed)
         record_property('production_handle_owner_refused', True)
+        record_property('production_guarded_open_owner_refused', True)
         record_property('full_native_identity_preserved', True)
         record_property('original_bytes_preserved', True)
         record_property('exact_protected_dacl_preserved', True)

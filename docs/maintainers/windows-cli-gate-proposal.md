@@ -1,5 +1,34 @@
 # Windows installed CLI gate-order proposal — #29
 
+**16 October scope/audit approval:** the ARM-only qualification target and
+non-installing dependency audit are approved. The audit is blocked at missing
+cryptography 50.0.2 Windows ARM64 binaries. This approval does not authorize this
+gate-order proposal, native application tests, production dispatch or dependencies.
+All production Windows operations remain gated; AMD64 stays unqualified.
+
+**16 October ARM-only alternative:** the
+[lab-beta qualification plan](windows-arm64-beta-qualification-plan.md) proposes
+a narrower operation/environment/matrix envelope. Adopting it would require an
+explicit prerequisites revision before a separate dispatch/order approval. The
+original broad proposal below is not silently applied to that narrower track;
+no order or production routing change is authorized by preparing the plan.
+
+**16 October decision:** the maintainer accepts owner-proof evidence only for the
+recorded native ARM64 fix04 combination. This does not approve this CLI gate-order
+proposal, satisfy native AMD64 qualification or enable production Windows
+operations. All prerequisites and production gates below remain retained.
+
+**15 October continuation:** the original mandatory two-account owner case passed
+on native ARM64 Windows / CPython 3.13.16: **1 passed in 215.27s**, with all mandatory
+properties validated. See the [executed fixture and architecture
+proposal](windows-owner-vm.md). Two earlier actual attempts failed during setup;
+the third failed only at the later verification-read identity comparison. Those
+failures remain separate. Fix04 preserves every identity field across both
+production refusals and records observer-read effects separately. Acceptance of
+this ARM evidence is still unapproved; native AMD64 and all other applicable
+qualification remain outstanding. No prerequisite, dispatch/order decision or
+production gate below is waived or changed.
+
 **13 October 2026. Status: proposal only; no authorization or runtime change.**
 
 **14 October fallback:** both available maintainer computers lack the current
