@@ -7,6 +7,26 @@ Package versions and encrypted backup-format versions are separate contracts.
 
 ### Added
 
+- #17/#29 AMD64 laptop continuation plan and bounded next-chat prompt, with
+  maintainer-reported CPU architecture, existing issue ownership, staged
+  chat-sized qualification/release tasks and a proposed smaller first Windows
+  scope. ARM64 custom-build work is parked with its evidence preserved; no
+  account setup, native tests, dependency change or Windows gate enabling.
+
+- #30 Phase A acquisition approval packet and revisioned metadata catalogue,
+  with exact candidate URLs/digests, native assembler and upstream crate/test
+  input proposals, licensing/resource/layout-host decisions and a blocking
+  Microsoft channel/catalog integrity mismatch. No tool/source/package payload
+  acquisition, provisioning, build, dependency or production-gate change.
+  A subsequent read-only metadata investigation reproduces that mismatch across
+  fixed/current channel, HEAD/GET and two HTTP clients; no authoritative correction
+  or root cause is established, and the acquisition hold remains.
+  Supported-release metadata comparison also finds mismatches for 18.11.0 and
+  legacy 16.11.60; no consistent alternative or release substitution is accepted.
+  Targeted official metadata discovery leaves the fixed 18.10.4 pair unresolved;
+  prior receipts and declarations are preserved, with no integrity result claimed
+  for that pair and no payload acquisition or Phase B.
+
 - #30 review-only acquisition/provisioning proposal for a separate disposable
   native ARM64 builder copy, with exact candidate releases, primary-source
   metadata references, explicit auxiliary-emulation and input-authentication

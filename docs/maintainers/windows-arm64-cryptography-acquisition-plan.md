@@ -2,6 +2,25 @@
 
 **16 October 2026. Status: proposal only; no acquisition or provisioning approved.**
 
+**Phase A follow-up:** the maintainer authorized read-only metadata research from
+proposal checkpoint `e54875bfc4c2aee1d55633be622de940a2d1883f`. The
+[concrete acquisition approval packet](windows-arm64-cryptography-acquisition-packet.md)
+and its revisioned metadata catalogue now record exact candidate inputs and a
+blocking Microsoft channel/catalog integrity mismatch. Full Phase B is not ready;
+no acquisition, copying, installation or later execution has been approved or
+performed. The original proposal and Stage 1 evidence below remain historical.
+The subsequent metadata-only investigation reproduces the mismatch with fixed
+and current channel reads, HEAD/GET, a diagnostic cache query and raw curl;
+all report cache hits. No root cause or authoritative corrected pair is established,
+and the Microsoft acquisition hold remains unchanged.
+The later supported-release metadata check also finds mismatches for fixed
+18.11.0 and legacy 16.11.60. A listed 18.10.4 fixed pair remains unresolved;
+no consistent alternative was established or selected, and no payload was acquired.
+A targeted 18.10.4 follow-up checks release notes/history, the public channel index,
+Update Catalog search metadata and one inferred channel-alias HEAD. The fixed pair
+remains unresolved; no integrity pass or mismatch is claimed for it. All earlier
+evidence and the Microsoft acquisition hold remain; Phase B has not started.
+
 The maintainer requested this proposal after authorizing delivery of Stage 1.
 The seven Stage 1 files were committed and pushed as
 `e0cadc3dd7132edbcc01266f07992bb1943fdce3`,

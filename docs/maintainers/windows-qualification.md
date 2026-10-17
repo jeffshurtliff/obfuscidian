@@ -1,5 +1,20 @@
 # Windows 2.0.0 qualification — #29
 
+**16 October AMD64 continuation decision:** the maintainer selected the previously
+used physical laptop for the next qualification work, prioritizing practical
+Windows use without maintaining a custom cryptography artifact. The maintainer
+reports `Win32_Processor` **Architecture=9, AddressWidth=64** there. Current
+Python/process/token/storage/account eligibility and a complete locked binary
+environment remain unverified; AMD64 is not qualified by this CPU observation.
+Follow the [AMD64 continuation plan](windows-amd64-continuation-plan.md) and
+[A1 next-chat prompt](windows-amd64-next-chat.md). #17 remains the parent; #29
+owns readiness/qualification. #30's ARM64 work is parked, with all acquisition
+and fix04 evidence preserved; it does not block an independently verified
+canonical AMD64 binary route. Earlier ARM-only/unavailable-AMD64 status below is
+historical. The smaller first-release scope and revised acceptance order remain
+proposals for review; no account setup, tests, CI, dependency changes, production
+Windows enabling or broad-criteria closure is authorized by this planning handoff.
+
 **16 October issue boundary and handoff:**
 [#30](https://github.com/jeffshurtliff/obfuscidian/issues/30) now owns the trusted
 ARM64 cryptography artifact work as a sibling under #17. Its Stage 1 read-only
