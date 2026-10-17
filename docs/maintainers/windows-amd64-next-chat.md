@@ -1,4 +1,115 @@
-# Next-chat prompt: A2 scope and setup review — #17 / #29
+# Next-chat prompt: A3 bounded laptop preparation — #17 / #29
+
+**17 October 2026. A2 proposal delivered; CPython 3.13.16 selected for both accounts.**
+
+The [current A2 plan and proposed A3 commands](windows-amd64-continuation-plan.md)
+use [revision 2 runtime/bootstrap/project pins](windows-amd64-a2-inputs-r2.json).
+The new target independently passes metadata checks for 44 exact bootstrap wheels
+and 7/37/59 canonical project profiles, with 45 modelled tags and no active
+dependency gaps. No payload, installation or AMD64 qualification follows.
+The original [3.13.14 A2 inputs](windows-amd64-a2-inputs.json),
+[A1 report](windows-amd64-readiness.md) and [A1 catalogue](windows-amd64-binary-audit.json)
+remain historical evidence, not measurements of the proposed PSF 3.13.16 accounts.
+
+No additional A2 metadata work is required. Administrator availability, account
+creation, private path mapping, future source archive/manifest and acquired-file
+trust remain **A3 prerequisites/checkpoints**, not established observations.
+The runner repairs belong to a later separately reviewed task before A4, not
+this setup kickoff. Gate-order/dispatch/CI/support decisions remain later reviews.
+
+**Submitting the prompt below in a new chat supplies bounded A3 authorization.**
+Preparing this file did not grant it or execute any step. The prompt names the
+setup boundaries and retains the source/trust review stops; it grants no A4
+fixture/test permission. Passwords are entered directly by the maintainer only.
+
+```text
+Continue only Obfuscidian #17/#29, task A3 bounded laptop preparation under
+docs/maintainers/windows-amd64-continuation-plan.md, sections A3.0–A3.5.
+
+Read AGENTS.md, CONTRIBUTING.md, live #17/#25–#30, the continuation plan,
+windows-amd64-next-chat.md, windows-amd64-readiness.md, qualification/owner/
+lifecycle/Git records and windows-cli-gate-proposal.md. Current acquisition pins:
+docs/maintainers/windows-amd64-a2-inputs-r2.json, SHA-256
+896c514996b6dedae97778272efa126b5bd9d6410e877b7fe63eda54aec5b7a3.
+Preserve the original A1 and 3.13.14 A2 catalogues as historical evidence.
+
+Use official PSF per-user native AMD64 standard-GIL CPython 3.13.16 in both
+ObfOwnerA and ObfOwnerB. The pinned x64 installer is
+https://www.python.org/ftp/python/3.13.16/python-3.13.16-amd64.exe,
+SHA-256 fb4f9f5d438b2396da0086dc70b935c530cb578e37adc6d354f7ad2037fee83b;
+HEAD declared 29,935,584 bytes. Verify actual bytes and Authenticode before
+execution. Use the exact 44-wheel Poetry 2.5.1/pip 26.2.1 bootstrap closure;
+canonical project installation is binary-only from unchanged pyproject.toml/
+poetry.lock (37 main/dev/build packages; docs not installed). Metadata success
+is not acquired-byte, installation, account-access or native qualification.
+
+I accept A2 as the basis for engineering-only preparation. Authorize only its
+named A3 boundaries: public-source snapshot/manifest preparation and reviewed
+transfer to a fresh source root; trusted-administrator creation of the two exact
+standard accounts; per-account private roots/runtime acquisition and per-user
+installation; A-only isolated Poetry/project environments and canonical binary
+installation; new-source-root-only A full/B read-execute grants; bounded runtime,
+dependency and reviewed project-root backend/editable-install/import checks.
+Retain every source/trust/permission review stop in the plan. This does not
+approve later CLI gate-order adoption, dispatch implementation or support claims.
+
+First inspect actual host tree/index/refs read-only and preserve every commit/
+local change. Last verified host HEAD/cached origin/live remote:
+9c2dd1b30b1fc9d5d975c65a9d4d0d10da8798fe on
+feature/17-add-safe-native-windows-support, with uncommitted A2 docs/catalogues.
+Laptop clean/aligned-at-64dcff0 remains A1 evidence, not a current measurement.
+Do not reset, replace, pull into or overwrite the laptop checkout. Freeze current
+public candidate bytes, archive/manifest hashes and line endings; inspect archive
+members and approve exact source/destination identities before transfer/execution.
+Do not invent APPROVED_* values or copy .git/local/credentials/real keys/vaults.
+
+Confirm trusted administrator availability and fresh private/shared paths before
+dependent writes. The administrator performs only named account creation in a
+separate session; all runtime/setup checks then use each account's ordinary
+Medium session, with no effective administrator or Administrators SID. The
+current account cannot replace A. I enter passwords directly; collect none.
+Give one reviewed PowerShell command/block at a time and wait for my sanitized
+result; reconstruct variables after account/session changes. No automated typing.
+Keep raw identities/paths/reports private. Recheck actual selected Python process
+image, 3.13.16/64-bit/GIL state, native 0x8664/process 0x0000, token and proposed
+storage. Do not repeat unchanged CPU or owner-group checks. No source/test/owner
+helper is a preparation shortcut; the documented stdlib observations are enough.
+
+Use fresh storage; preserve partial installs and prior reports. Enforce exact
+input hashes, complete source manifests, upstream wheel origins, locked versions,
+binary-only dependencies, isolated caches and disabled seed updates/downloads.
+Stop on existing paths, missing rights/tools/binaries, unsafe storage/DACLs,
+signer/hash/source/metadata mismatch, source fallback or failed preparation.
+No compiler/custom cryptography wheel, lock change, privilege/policy/machine
+PATH/launcher change, existing-data ACL/owner repair or automatic cleanup/retry.
+
+Do not edit or execute the VM-named owner/environment or lifecycle/Git helpers.
+Retain their physical-label/CPU-query/explicit-owner-option/stdin/source-report
+gaps for a separately reviewed tooling task. No fixture writes, owner probe or
+test, pytest, native/application/exchange/installed-artifact qualification,
+package build/backend beyond the expressly reviewed root install, A4 execution,
+VM/cloud/CI/runner registration, real data, Windows enabling or Git delivery.
+
+Keep #17 parent/open, #29 active/open, #25–#28 implementation history and #30 ARM
+acquisition/custom-build parked. Preserve ARM VM/frozen fix04 reports/flags and
+its ARM-only 1 passed in 215.27s, plus every historical failed total and broad
+all-nine/host/Python/operation requirement. Keep POSIX, CLI syntax, Fernet/v1 and
+existing-log append refusal. Open/close no issue; no stage/commit/push/PR/merge/
+tag/release/publication or label/milestone/relationship change.
+
+Post public-safe #17/#29 progress/handoff comments. Finish with actual per-account
+runtime/source/input/install/permission evidence, executed/unexecuted checks,
+precise blockers, private report references and Git status. Stop after A3 for
+review; A4 owner execution needs separate later approval even if setup succeeds.
+```
+
+## Historical A2 kickoff — preserved
+
+The preceding A3 prompt replaces this older kickoff for continuation purposes.
+The following A2/A1 authorization records remain historical; do not execute them
+automatically or treat their dated refs/runtime pins as the current proposal.
+
+### Original A2 scope and setup review — #17 / #29
 
 **17 October 2026. A1 delivered; next is A2 proposal/review only.**
 

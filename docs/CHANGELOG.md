@@ -7,6 +7,17 @@ Package versions and encrypted backup-format versions are separate contracts.
 
 ### Added
 
+- #17/#29 A2 review-only AMD64 operation/refusal and deferred-requirement matrix,
+  explicit CLI validation-order revision, per-account administrator/setup limits,
+  proposed PSF runtime and separately audited Poetry bootstrap pins/commands,
+  physical-host runner gap review and ordinary-user matrix strategy. Refreshed
+  all 59 exact project wheel metadata inputs; no payloads, setup, source/tooling
+  changes, tests, CI dispatch or Windows enabling. A3/A4 need separate approval.
+  The maintainer-selected 3.13.16 follow-up adds revision 2 official runtime,
+  bootstrap and complete project metadata pins, updates proposed A3 commands and
+  saves an A3-only kickoff. Prior 3.13.14 catalogues/measurements are preserved;
+  the runtime selection authorizes no setup or owner execution in this chat.
+
 - #17/#29 A1 AMD64 laptop readiness report, complete official metadata-only
   canonical binary audit and concrete A2 review packet/prompt. Current native
   CPython/session/storage facts and missing fixture accounts are recorded;

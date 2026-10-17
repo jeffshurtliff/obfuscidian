@@ -1,5 +1,62 @@
 # Windows installed CLI gate-order proposal — #29
 
+## A2 AMD64 revision proposal
+
+**17 October 2026: explicit replacement proposal for review, not approved order
+or routing.** Read the [A2 operation/environment/refusal matrix, deferred map and
+preparation boundaries](windows-amd64-continuation-plan.md).
+The historical broad proposal below remains in force until the maintainer
+explicitly accepts a revision. A2 changes documentation only.
+
+Recommend a synthetic-data personal engineering candidate on the measured
+Windows 11 Home/native AMD64/standard CPython 3.13 envelope, eligible fixed NTFS,
+two ordinary accounts; not a beta/stable claim. New-destination fresh backup and
+fresh restore plus positively bound recovery are the only proposed write routes.
+Keep verify/planning no-write, all POSIX behavior, CLI syntax, Fernet/v1 and
+existing-log append refusal. No public bypass or private API becomes supported.
+
+**17 October runtime follow-up:** the maintainer selected **CPython 3.13.16 in
+both accounts**, with the proposed official PSF per-user x64 runtime and refreshed
+[revision 2 runtime/bootstrap/project metadata](windows-amd64-a2-inputs-r2.json).
+A1 Store 3.13.14 observations remain historical. This version decision approves
+no A3/A4 execution, gate-order adoption or dispatch implementation. The A3 kickoff
+keeps later gate-order/CI/support decisions outside setup authority.
+
+| Gate | Revised proposal / evidence required |
+| --- | --- |
+| Before any approved local dispatch | Accepted A3 source/input/environment identity; actual AMD64 original mandatory owner proof; applicable private native guard/checkpoint/lifecycle/DACL/kernel-enforcement/competing-process/sharing/tamper/refusal and real worker-termination/recovery evidence; relevant POSIX regressions; **both independently generated v1 Windows↔POSIX exchanges**. Full diagnostics use explicit two-account fixture and retain actual failed/skipped totals |
+| Dispatch decision | Maintainer reviews the exact prerequisite evidence and **separately approves A6 implementation**. This proposal moves installed write acceptance after integration and final nine-job evidence to the final-candidate gate; it does not waive either. Current broad prerequisites apply until that revision is approved |
+| Integration | Scope-check before native mutation: absent mirror for fresh backup, absent destination for fresh restore, and positively established eligible new-destination recovery only. Recheck absence/identity at publication; no automatic existing-target fallback |
+| After integration | Fresh wheel and sdist independently installed with authenticated isolated dependencies; actual console **and** module help/version/import-location, new-destination backup/verify/restore, no-write previews, consent/privacy, kernel DACL checks, real child termination followed by ordinary production recovery, uncertainty and excluded-operation/log-append refusals. Private calls do not establish installed CLI acceptance |
+| Final exact candidate | Separately approved A7 exact-source/commit/artifact regressions, all required CI/checks, lock/style/Bandit/coverage/fresh artifacts/Twine/strict docs/references and installed acceptance. Original all-nine/broad-host/operation criteria remain #17/#29 obligations; approve and document any smaller release-envelope revision explicitly. Historical elevated Windows jobs remain failed |
+| Support / use / release | Explicit A8 purpose/support decision and accurate limitations, then separately approved real-data rehearsal or A9 release steps. Passing local installed smoke alone authorizes none of them |
+
+Proposed bounded call-site revision, replacing the broad routing table **only
+after explicit acceptance and implementation approval**:
+
+| Call site | Proposed AMD64 candidate path | Retained refusal / POSIX behavior |
+| --- | --- | --- |
+| `backup._publish_backup` | `_publish_windows_backup` only for validated fresh plan whose mirror baseline is absent | Existing mirror/update/merge refused before transaction artifacts; unchanged POSIX route |
+| `restore._publish_restore` | `_publish_windows_restore` only for validated absent destination | Empty/existing destinations and replacement refused; unchanged POSIX route |
+| `backup._recover_backup` / `restore._recover_restore` | After full source/key/plan/control authentication and positive operation/baseline binding, private Windows recovery for eligible interrupted new-destination operations | Existing-target/merge/foreign or ambiguous operations refused and retained; unchanged POSIX recovery |
+| `cli._unshroud_merge` / Git planner/publisher | No Windows route enabled in this first candidate | Keep public Windows Git refusal and private #28 source/evidence; unchanged POSIX Git |
+| Low-level POSIX locking and `output.py` | No change | Keep backend boundary and existing-log append refusal |
+
+Review whether existing recovery metadata proves original target absence. If
+it cannot, block the proposed recovery path pending a reviewed private-control
+design; never infer that fact from present absence or reuse a broad recovery
+route. The new restriction must preserve current consent/authentication and
+retained-state reporting. Unsupported environments and operations need real
+tested refusal before artifacts, not only a support-table footnote.
+
+Deferred installed merge/no-op/update/replacement/Git acceptance and other
+Windows/Server/Python/storage rows remain tracked under #17/#29. A manual commit/
+push of a verified completed encrypted mirror does not require enabling Git
+restore and does not satisfy its qualification. No test-only dispatch, environment
+bypass, criterion closure, workflow/runner registration or CI dispatch occurs here.
+
+---
+
 **16 October scope/audit approval:** the ARM-only qualification target and
 non-installing dependency audit are approved. The audit is blocked at missing
 cryptography 50.0.2 Windows ARM64 binaries. This approval does not authorize this
