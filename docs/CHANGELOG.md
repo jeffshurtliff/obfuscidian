@@ -7,6 +7,14 @@ Package versions and encrypted backup-format versions are separate contracts.
 
 ### Added
 
+- #17/#29 A1 AMD64 laptop readiness report, complete official metadata-only
+  canonical binary audit and concrete A2 review packet/prompt. Current native
+  CPython/session/storage facts and missing fixture accounts are recorded;
+  37/37 runtime/dev/build packages (59/59 including optional docs) have compatible
+  non-yanked hash-matched wheel metadata and checked dependency closure. No
+  payload acquisition, setup, tests, dependency or Windows gate changes; AMD64
+  remains unqualified and the ARM custom-build track remains parked.
+
 - #17/#29 AMD64 laptop continuation plan and bounded next-chat prompt, with
   maintainer-reported CPU architecture, existing issue ownership, staged
   chat-sized qualification/release tasks and a proposed smaller first Windows

@@ -1,5 +1,16 @@
 # Plan: practical AMD64 Windows qualification — #17 / #29
 
+**17 October A1 handoff:** read-only laptop readiness and a fresh complete
+canonical AMD64 metadata audit are delivered in the [A1 report and A2 decision
+packet](windows-amd64-readiness.md). Native Store CPython 3.13.14/AMD64 and current
+standard-token/storage/tool observations are recorded; all 37 runtime/dev/build
+packages (59 including optional docs) have compatible locked wheel metadata.
+Both owner accounts are absent; no setup, payload acquisition or tests occurred.
+Host and laptop refs agree at `64dcff0`, preserving the older checkpoint below.
+**Next: A2 proposal/review only**, using the [updated prompt](windows-amd64-next-chat.md).
+All detailed scope/matrix/prerequisite decisions remain unapproved and native
+AMD64 support remains unqualified. Historical 16 October planning follows.
+
 **16 October 2026. Selected direction: existing physical AMD64 laptop. Planning
 and handoff only; Windows write support is not qualified or enabled.**
 
@@ -97,8 +108,8 @@ merely because the earlier one passed.
 
 | Chat | Task and dependencies | Concrete output / exit check | Execution boundary |
 | --- | --- | --- | --- |
-| **A1 — next** | Read-only laptop readiness and canonical binary-route audit | Current environment/readiness report; exact known/unknown inputs; scope/setup decision packet; next prompt | Submitting the [saved kickoff](windows-amd64-next-chat.md) authorizes A1 only |
-| **A2** | Review first-release scope, owner-account setup and validation order; consumes A1 | Reviewed operation/environment matrix, deferred requirements, exact setup/install commands, resource/permission boundaries and proposed revised #17/#29/CLI prerequisites | Proposal only until maintainer explicitly approves the concrete scope and required setup |
+| **A1 — delivered** | Read-only laptop readiness and canonical binary-route audit | [Readiness report/A2 packet](windows-amd64-readiness.md), complete metadata catalogue and next prompt; no native qualification | A1 authorization stops at its handoff; no setup/tests |
+| **A2 — next** | Review first-release scope, owner-account setup and validation order; consumes A1 | Reviewed operation/environment matrix, deferred requirements, exact setup/install commands, resource/permission boundaries and proposed revised #17/#29/CLI prerequisites | [Saved A2 prompt](windows-amd64-next-chat.md) authorizes proposal preparation only; concrete scope and setup require maintainer review |
 | **A3** | Execute only approved laptop preparation; consumes A2 decisions | Isolated native AMD64 runtime/dev environment, verified canonical binary inputs, dependency/import checks and private paths; no source fallback | Separate approval for named account creation, installations, source transfer and environment writes; none follows from A1 |
 | **A4** | Prepare/review then execute real AMD64 owner proof; consumes verified A3 environment | One actual original mandatory owner case with all positive setup, transition/refusal/identity/bytes/exact-DACL evidence and fresh source manifest | Separate approval of synthetic fixture/runner/paths and execution; preserve ARM result and every failed attempt |
 | **A5** | Private native qualification and Windows/POSIX exchange; consumes accepted A4 and approved scope | Applicable primitives/checkpoints/lifecycle/DACL/termination tests, full diagnostic totals, two generated exchange directions and release-scope evidence audit | Separately approved synthetic execution; no public dispatch enabling |

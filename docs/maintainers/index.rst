@@ -16,6 +16,7 @@ and release/publication actions each require explicit maintainer authorization.
    windows-git-validation
    windows-qualification
    windows-amd64-continuation-plan
+   windows-amd64-readiness
    windows-amd64-next-chat
    windows-owner-vm
    windows-arm64-beta-qualification-plan

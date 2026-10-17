@@ -1,4 +1,114 @@
-# Next-chat prompt: AMD64 laptop readiness — #17 / #29
+# Next-chat prompt: A2 scope and setup review — #17 / #29
+
+**17 October 2026. A1 delivered; next is A2 proposal/review only.**
+
+Read the [A1 readiness report and A2 decision packet](windows-amd64-readiness.md)
+and [complete metadata-only AMD64 catalogue](windows-amd64-binary-audit.json).
+The current laptop is viable for further review: measured native AMD64 Store
+CPython 3.13.14, ordinary standard token, eligible-looking fixed NTFS metadata,
+Git/Poetry and aligned clean source checkout. Both designated owner accounts are
+absent. The canonical runtime/dev/build audit is 37/37; optional docs is 59/59.
+No installation or actual AMD64 owner/application qualification follows.
+
+Submitting the prompt below authorizes **A2 preparation only**, not the execution
+commands that A2 will propose. For the maintainer: review the proposed scope and
+state whether a trusted administrator can later create the two standard accounts.
+Do not create accounts, install anything, run tests or provide passwords now.
+
+```text
+Continue only Obfuscidian #17/#29, task A2 proposal/review preparation in
+docs/maintainers/windows-amd64-continuation-plan.md.
+
+A1 is delivered in docs/maintainers/windows-amd64-readiness.md; the complete
+metadata result is docs/maintainers/windows-amd64-binary-audit.json. Read those,
+AGENTS.md, CONTRIBUTING.md, live #17/#25-#30, qualification/owner/lifecycle/Git
+records and windows-cli-gate-proposal.md. #17 stays parent, #29 active; #25-#28
+are implementation history. #30 ARM acquisition/custom-build is parked.
+
+Reuse the existing checkout and preserve every commit/local change. Last A1
+host HEAD/cached origin/live remote and laptop reported refs:
+64dcff07f1ad456fd0aa38f775c6bcf9a4c8f592 on
+feature/17-add-safe-native-windows-support. A1 adds uncommitted documentation;
+inspect actual host tree/index/refs read-only and do not discard later work.
+Laptop tree/index were clean when measured, not newly checked in this chat.
+Do not reset, replace, pull into or overwrite the laptop checkout.
+
+A1 measured Windows 11 Home 25H2 / 26200.9711; PowerShell 5.1.26100.9711;
+Medium token, effective administrator false, Administrators SID absent;
+actual native AMD64 CPython 3.13.14 / 64-bit / process 0x0000 / native 0x8664,
+standard GIL build from the current account's Store package. Windows' native
+process-image query binds the selected package executable; sys.executable
+reports an execution alias and is not a directly hashable ordinary file.
+Git 2.55.0.windows.5, Poetry 2.5.1. Proposed parents report fixed writable NTFS,
+persistent ACL support and about 326 GiB free; this is metadata, not production
+storage/permission qualification. No runtime/dev installation completeness claim.
+
+Do not repeat the unchanged CPU/owner-group checks. Both ObfOwnerA/ObfOwnerB are
+absent on the laptop; the reviewed helper requires those exact local names.
+The current standard account cannot create them by assumption or replace A
+without explicit harness review. Prepare concrete administrator-performed
+account-creation boundaries and per-account ordinary-session setup for review,
+not execution. The maintainer enters passwords directly; collect none.
+
+Deliver a concrete operation/environment/refusal matrix for the proposed first
+scope: absent-mirror fresh backup, verify/no-write planning, absent-destination
+fresh restore and recovery bound to eligible new-destination operations;
+manual encrypted-mirror Git publication. Recommend the candidate purpose and
+explicitly review personal engineering candidate versus beta/stable ambitions.
+Map every deferred broad #17/#29 requirement, including other hosts/Pythons,
+existing-target/merge/Git restore operations and all-nine-job evidence. Preserve
+historical failures; do not silently waive, close or mark broad criteria done.
+
+Prepare an explicit revision proposal for CLI gate order and validation order,
+with AMD64 owner proof, applicable private native safety/lifecycle/DACL/worker
+termination and both generated v1 exchanges before approved dispatch, actual
+installed wheel/sdist console/module acceptance after integration, and final
+approved exact-candidate regression/CI/support gates. No runtime routing changes.
+Review the ordinary-user Windows matrix/runner strategy; no public-PR runner on
+this personal laptop. Existing elevated Windows failures remain failed.
+
+Freeze proposed per-account runtime choice, versions and exact official
+installer/bootstrap metadata if acquisition is required. The measured Store
+registration does not establish A/B access. Review existing Store use versus a
+pinned official per-user x64 PSF runtime, separate Poetry bootstrap closure,
+canonical-lock binary-only installation commands, shared source manifests,
+private reports/work paths and fresh storage. A1 models 45 target tags and checks
+all 37 main/dev/build packages and 59 including docs, including exact selected
+wheel metadata hashes and active dependencies. It does not acquire any package
+or audit a new Poetry installer closure. Refresh metadata if target/choice changes;
+no source fallback, custom cryptography wheel or lock modification.
+
+Return exact proposed A3 commands, acquisition/install/write/permission limits,
+required maintainer actions, remaining decisions and stop conditions. Review the
+existing VM-named owner runner for later physical-host reuse, source identity,
+A/B executable selection, barriers, retained custody and fresh reports, preserving
+the original mandatory node and all safety properties. A4 owner execution is a
+separate later approval; do not run an install-and-test helper as preparation.
+Review the identified runner gaps: lifecycle/Git helpers do not pass the explicit
+two-account owner option; the VM environment helper repeats the unchanged CPU
+query; owner report scope needs an accurate physical-host label. Propose bounded
+future tooling changes without executing helpers or changing their sources now.
+
+A2 is proposal only: no payload acquisition/import, account/privilege/policy/ACL
+changes, environments/installations, source transfer, fixture writes, tests,
+builds/backends, VMs/cloud, CI dispatch, Windows enabling or real data. No stage,
+commit, push, PR, merge, tag, issue opening/closure, label/milestone/relationship
+changes or publication. Keep POSIX, CLI syntax, Fernet/v1 and existing-log append
+refusal. Preserve ARM VM/frozen fix04 reports/flags/failures and its scoped
+1 passed in 215.27s; never relabel it AMD64 or rerun it.
+
+Use public-safe issue progress/handoff comments on #17/#29 and documentation
+checks proportionate to proposal changes. Keep raw identities/paths private.
+No Python change is expected; if specifically authorized and actually changed,
+headers use Jeff Shurtliff (via GPT-6.1 Sol) and the current local date.
+Stop for concrete maintainer review before any A3 setup or A4 test execution.
+```
+
+## Historical A1 kickoff — retained from 16 October
+
+The following prompt is preserved as the original A1 authorization record.
+A1 is now delivered above; do not rerun it automatically or treat its historical
+checkpoint as the current source state.
 
 **16 October 2026. A1 only: read-only readiness and decision-packet preparation.**
 

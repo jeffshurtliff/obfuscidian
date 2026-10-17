@@ -1,5 +1,18 @@
 # Windows 2.0.0 qualification — #29
 
+**17 October A1 readiness handoff:** the [AMD64 readiness report and A2 decision
+packet](windows-amd64-readiness.md) records actual laptop session/process/storage
+metadata and a fresh official canonical-lock binary audit: **37/37** runtime/dev/
+build packages, **59/59** with optional docs, with exact selected-wheel metadata
+hashes and complete applicable dependency constraints checked. No package payload
+was acquired or imported. Both dedicated fixture accounts are absent on the
+laptop; A2 must review their preparation and revised first-scope/matrix/gate-order
+proposals before later setup. Native AMD64 owner/application/installed-command
+qualification remains pending, all production gates remain unchanged, and #30's
+ARM track stays parked. Historical failures, scoped ARM fix04 acceptance and
+the broad #17/#29 criteria below are preserved. The [next prompt](windows-amd64-next-chat.md)
+starts A2 proposal/review only; no setup, tests or CI follow from A1.
+
 **16 October AMD64 continuation decision:** the maintainer selected the previously
 used physical laptop for the next qualification work, prioritizing practical
 Windows use without maintaining a custom cryptography artifact. The maintainer
@@ -7,7 +20,7 @@ reports `Win32_Processor` **Architecture=9, AddressWidth=64** there. Current
 Python/process/token/storage/account eligibility and a complete locked binary
 environment remain unverified; AMD64 is not qualified by this CPU observation.
 Follow the [AMD64 continuation plan](windows-amd64-continuation-plan.md) and
-[A1 next-chat prompt](windows-amd64-next-chat.md). #17 remains the parent; #29
+[next-chat handoff](windows-amd64-next-chat.md). #17 remains the parent; #29
 owns readiness/qualification. #30's ARM64 work is parked, with all acquisition
 and fix04 evidence preserved; it does not block an independently verified
 canonical AMD64 binary route. Earlier ARM-only/unavailable-AMD64 status below is
