@@ -250,8 +250,9 @@ recovery. Retain uncertain artifacts and make an explicit manual recovery
 decision before retrying with new names. Journaled publication attempts
 rollback to the new worktree's prior state under tested ordinary failures;
 it does not guarantee atomic Git/filesystem publication or power-loss recovery.
-Native Windows writes remain fail-closed pending native publication/ACL
-implementation. Synthetic temporary-repository tests and the
+Native Windows writes remain fail-closed pending
+[native qualification](maintainers/windows-qualification.md) and approved
+supported-command integration. Synthetic temporary-repository tests and the
 Linux/macOS/Windows Python 3.12–3.14 matrix passed with these retained limits;
 see [platform validation](PLATFORMS.md). Universal filesystem, cloud-sync and
 power-loss guarantees are not established by that matrix.

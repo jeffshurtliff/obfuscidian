@@ -7,6 +7,11 @@ semantics are in the [backup](BACKUP.md), [restore](RESTORE.md),
 [Platform validation](PLATFORMS.md) distinguishes passing CI from native Windows
 vault mutation and existing-log append, which remain refused.
 
+The [2.0.0 Windows qualification](maintainers/windows-qualification.md) is
+incomplete. Private backend tests do not enable supported CLI writes or recovery.
+There is no flag or environment override for these gates; `--yes` supplies
+consent only. Installed wheel/sdist write qualification remains pending.
+
 ## Discovery and option placement
 
 `obfuscidian` and `python -m obfuscidian` have equivalent help, output and exit

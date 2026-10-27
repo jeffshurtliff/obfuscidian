@@ -8,6 +8,9 @@ You will leave your real vault untouched.
 [Install Obfuscidian](installation.md), then open a terminal on Linux or macOS.
 Keep the same terminal open for all four steps. These commands use a temporary
 practice folder; native Windows does not support the backup/restore writes.
+The [2.0.0 Windows qualification](../maintainers/windows-qualification.md) remains
+incomplete; use supported Windows key creation, verification and read-only previews
+while write/recovery gates remain in place.
 
 ## 1. Create a practice vault and key
 

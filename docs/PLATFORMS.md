@@ -5,6 +5,59 @@ supports key creation, authenticated verification and read-only planning;
 vault mutation/recovery and existing-log append are refused. The table below
 distinguishes tested behavior from unavailable writes.
 
+Microsoft Store CPython is included in the Windows compatibility target for
+the supported Python versions. A separate `py` launcher or traditional
+installer is not required; select the actual interpreter with `python` (or its
+versioned executable) and validate the version. The maintainer's Store-based
+CPython 3.13.14/AMD64/64-bit virtualenv returned 907 passes, one unavailable
+ownership-fixture failure and 596 platform skips in the #26 r3 diagnostic run;
+it did not produce passing native qualification. See the
+[primitive validation record](maintainers/windows-primitive-validation.md)
+for the precise candidate, 12 October interpreter metadata follow-up and
+remaining proof gaps. Store-specific path
+redirection still requires the same storage, identity and ACL checks; Windows
+backup/restore mutation and existing-log append remain refused.
+
+The maintainer accepted #26's implementation handoff on 12 October 2026 with
+actual ownership-transition proof deferred to #29. This permits internal
+lifecycle development with production Windows CLI gates retained; the deferred
+proof remains mandatory before Windows writes are enabled or 2.0.0 Windows
+support is described as qualified. It does not change current supported behavior.
+
+The [private #27 lifecycle candidate](maintainers/windows-lifecycle-validation.md)
+adds synthetic backup/restore/recovery fixtures with production gates retained.
+Its portable injected model checks are distinct from actual native Windows
+evidence: retry4 confirms replacement restore and retry5 passes the six corrected
+metadata interruption cases. The maintainer accepted that private handoff for
+#28. The [private #28 Git lifecycle candidate](maintainers/windows-git-validation.md)
+adds protected reconstruction/worktree handling and native fixtures. Its first
+Git for Windows runs provide 30 passing retry3 cases and a separate successful
+retry4 kernel-denial/positive-control proof. The maintainer accepted the private
+#28 handoff; it is not a passing full-suite/matrix or supported-write claim.
+Historical failed full-suite totals,
+mandatory owner proof and unexecuted qualification remain explicit in those
+records. No new support claim follows from these private candidates.
+
+[#29 qualification preparation](maintainers/windows-qualification.md) now
+provides the real-owner handoff, generated exchange tools and exact-commit
+evidence collection. Actual owner transition, nine-job qualification, both
+Windows/POSIX exchange directions and installed Windows write commands remain
+pending. The proposed order for installed CLI checks requires maintainer
+authorization. All supported-command gates remain in place. Windows 11 and
+Server 2022 or newer on eligible local NTFS, AMD64 Python 3.12–3.14, are targets;
+the prior single-host evidence does not qualify every target or storage type.
+
+On 14 October 2026 the maintainer confirmed that the different available
+computer also lacks the required owner-group fixture. The current fallback
+defers native Windows write/recovery qualification while preserving supported
+read-only commands and every production gate. The already-completed
+[Test run 38571560642](https://github.com/jeffshurtliff/obfuscidian/actions/runs/38571560642)
+at `7a7250e` passes all six Linux/macOS jobs, each with 1568 passes/149 skips.
+Each Windows job reports 1098 passes/3 failures/31 setup errors/585 skips on an
+elevated Server 2025 runner; it does not satisfy the unelevated qualification
+contract. Full counts, actual interpreters and limitations are in the
+[current qualification record](maintainers/windows-qualification.md).
+
 ## Validation evidence
 
 All nine Linux/macOS/Windows CI jobs passed on Python 3.12–3.14 in
@@ -30,7 +83,7 @@ backup/restore still preserves vault bytes independently of Git text conversion.
 | Key creation | Exclusive private POSIX file | Exclusive protected owner-only DACL; persistent ACL storage required |
 | Inventory and read-only backup/restore/Git planning | Anchored no-follow directory reads | Absolute binary reads with component and pre/post identity checks |
 | Matching fresh/merge backup no-op | No locks, staging or token replacement | Same read-only contract; native matrix passed |
-| Fresh/merge backup and fresh/Git merge restore mutation | POSIX ownership/private staging/recovery | Fails closed; private directory ACL and publication/recovery primitives remain unimplemented |
+| Fresh/merge backup and fresh/Git merge restore mutation | POSIX ownership/private staging/recovery | Production CLI fails closed; private implementation/evidence does not establish qualified write support |
 | New operational log | Private POSIX file | Protected owner-only DACL; ACL capability checked before creation |
 | Existing operational log append | Requires private mode and stable identity | Refused pending file ownership/DACL validation |
 

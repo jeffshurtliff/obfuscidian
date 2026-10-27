@@ -14,7 +14,10 @@ roots, overlap, missing parents, links/junctions, special files, nested reposito
 payloads, unsafe Git controls, unmanaged mirrors, inadequate access, and inadequate
 estimated free space. The caller must provide actual target naming rules and a
 staging estimate. The estimate includes staged bytes and any caller-owned copies;
-rename-based rollback retains existing allocation. A separate metadata reserve
+POSIX rename-based rollback retains existing allocation. Windows read-only
+estimates now include both saved private copies and separate inverse copies,
+including allocation reserves. Production Windows mutation/recovery remains
+gated; see the [private lifecycle candidate](maintainers/windows-lifecycle-validation.md). A separate metadata reserve
 is checked too. This is a preflight estimate, not a disk reservation or a quota;
 actual writes can still fail. Large journals fail at a bounded 16 MiB limit.
 
@@ -35,11 +38,33 @@ nonblocking OS lifetime lock; a live competing writer keeps ownership.
 
 Mutation currently requires POSIX `flock`, anchored no-follow directory handles,
 mode-0600 ownership/journals, and mode-0700 workspaces. Native Windows mutation
-fails closed before creating artifacts; Windows locking, owner-only directory
-ACLs and native publication/recovery remain unimplemented on Windows.
+fails closed before creating artifacts. Private Windows locking, owner-only
+DACL and copy-based publication/recovery implementations exist, but remain
+unavailable through supported write commands pending qualification.
 The passing matrix validates this refusal; see [platform validation](PLATFORMS.md).
 Read-only observation and consent helpers do not create artifacts. Linux hosted validation and native
 Windows execution must be reported separately from local macOS tests.
+
+### Private Windows qualification boundary
+
+The following publication/recovery sections describe the supported POSIX
+backend. The private Windows candidate uses separate `windows-copy-1` recovery
+metadata and immutable checkpoints; it leaves the POSIX reader and encrypted
+v1 format unchanged. Before removing original data, it verifies independently
+private saved copies. Inverse reconstruction retains those copies and may give
+recreated files new IDs; surviving originals, roots and protected controls keep
+their identities. It requires a current-user-owned, restorable protected baseline
+with supported explicit allow ACEs, attributes and no named streams; ordinary
+inherited/unprotected payloads and unsupported metadata are conservatively refused.
+The private Git envelope additionally requires eligible protected administration
+and exact owner-only Git inheritance. These are candidate limits, not general
+Windows repository support. Completed Windows copy workspaces remain retained.
+
+Actual owner-transition proof and applicable native/matrix/artifact gates remain
+mandatory. Read the [qualification handoff](maintainers/windows-qualification.md)
+and [private lifecycle record](maintainers/windows-lifecycle-validation.md).
+Process-interruption tests do not prove universal OS/power-loss recovery.
+Git interruption still requires manual inspection; no new Git recovery exists.
 
 ## Stage, validate, publish
 

@@ -1,0 +1,2428 @@
+{
+  "record_kind": "Obfuscidian #30 Phase A acquisition proposal r1; metadata catalogue, not a lockfile or frozen build manifest",
+  "recorded_local_date": "2026-10-16",
+  "proposal_checkpoint": "e54875bfc4c2aee1d55633be622de940a2d1883f",
+  "historical_stage1_checkpoint": "e0cadc3dd7132edbcc01266f07992bb1943fdce3",
+  "phase_a": "authorized metadata research only; packet delivered for review",
+  "phase_b_authorized": false,
+  "phase_c_authorized": false,
+  "phase_d_authorized": false,
+  "build_authorized": false,
+  "input_freeze_complete": false,
+  "artifact_accepted": false,
+  "canonical_dependency_files_unchanged": true,
+  "evidence_semantics": {
+    "expected_sha256": "published metadata or unchanged lock declaration; not an acquired-payload result",
+    "observed_metadata_sha256": "hash of the saved response body only, including any content encoding",
+    "head_content_length_bytes": "HEAD response metadata; no artifact body read",
+    "license": "declared label, not complete included-notice or entitlement acceptance"
+  },
+  "microsoft": {
+    "version": "17.14.42",
+    "installer_build": "17.14.37806.7",
+    "release_history_url": "https://learn.microsoft.com/en-us/visualstudio/releases/2022/release-history",
+    "bootstrapper": {
+      "filename": "vs_BuildTools.exe",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/c95450be-0a45-4779-b142-33f567ccfd6e/68978bb28916156802e60e04c5ee50b94348d802fe151a3ca24433f27984187b/vs_BuildTools.exe",
+      "head_content_length_bytes": 4474848,
+      "expected_sha256": null,
+      "url_digest_segment_is_not_accepted_as_a_published_checksum": true,
+      "authenticode_required_publisher": "Microsoft Corporation with valid trusted chain/timestamp",
+      "authenticode_verified": false,
+      "artifact_body_acquired": false,
+      "architecture": "bootstrapper/helper process architectures unverified; native ARM64 compiler/linker required"
+    },
+    "channel": {
+      "discovery_url": "https://aka.ms/vs/17/release/channel",
+      "fixed_url": "https://download.visualstudio.microsoft.com/download/pr/c95450be-0a45-4779-b142-33f567ccfd6e/f24aa010ba2fd5079d502e47bf40f5932f097df4bd716234dc68175b39649401/VisualStudio.17.Release.chman",
+      "observed_sha256": "4f0f290bb4d58a061a49a2fa893357a8c9e7e2b49fc91873f533ab8f791e4fa0",
+      "signature_verified": false
+    },
+    "catalog": {
+      "url": "https://download.visualstudio.microsoft.com/download/pr/c95450be-0a45-4779-b142-33f567ccfd6e/a871a5ff41acebbe5037455fd6f51fcd4907b47d8f3c9860871ea0b222a2fd45/VisualStudio.vsman",
+      "declared_sha256": "a871a5ff41acebbe5037455fd6f51fcd4907b47d8f3c9860871ea0b222a2fd45",
+      "declared_size_bytes": 30443686,
+      "observed_sha256": "99dda859c4ae3c446eb25620d1a6237bb135d95d14d55cd1d30a15340bb39d80",
+      "observed_size_bytes": 17954770,
+      "identity_encoding_recheck_same_bytes": true,
+      "integrity_matches": false,
+      "signature_verified": false,
+      "status": "BLOCKED; preserve discrepancy; no accepted dependency closure or payload authorization"
+    },
+    "requested_components": [
+      "Microsoft.VisualStudio.Workload.VCTools",
+      "Microsoft.VisualStudio.Component.VC.14.44.17.14.ARM64",
+      "Microsoft.VisualStudio.Component.Windows11SDK.26100"
+    ],
+    "catalog_observations_not_accepted": {
+      "arm64_tool_package_version": "14.44.35229",
+      "sdk_component_version": "17.14.37011.9",
+      "sdk_display_title_version": "10.0.26100.7705",
+      "sdk_bundle_package_version": "10.0.26100.15",
+      "sdk_bundle_payload_count": 229
+    },
+    "accepted_package_closure": null,
+    "accepted_closure_download_bytes": null,
+    "installer_engine_pin": null,
+    "full_phase_b_execution_ready": false,
+    "metadata_investigation": {
+      "recorded_local_date": "2026-10-16",
+      "authorization": "Phase A read-only official metadata investigation only; no payload acquisition or Phase B",
+      "result": "mismatch reproduced; authoritative correction and root cause not established",
+      "request_count": 6,
+      "observations": [
+        {
+          "request_url": "https://download.visualstudio.microsoft.com/download/pr/c95450be-0a45-4779-b142-33f567ccfd6e/f24aa010ba2fd5079d502e47bf40f5932f097df4bd716234dc68175b39649401/VisualStudio.17.Release.chman",
+          "method": "GET",
+          "status": 200,
+          "body_bytes": 91688,
+          "body_sha256": "4f0f290bb4d58a061a49a2fa893357a8c9e7e2b49fc91873f533ab8f791e4fa0",
+          "probe": "fixed_channel",
+          "content_length_bytes": 91688,
+          "content_encoding": null,
+          "content_range": "not recorded for this probe; later query/curl probes recorded no header",
+          "cache_result": "HIT, HIT",
+          "receipt_sha256": "f8eb3cea302ba359ab281110811007424689ef3c8407a314c3ee56b92a3e7d08",
+          "content_range_header_recorded": false
+        },
+        {
+          "request_url": "https://aka.ms/vs/17/release/channel",
+          "method": "GET",
+          "status": 200,
+          "body_bytes": 91688,
+          "body_sha256": "4f0f290bb4d58a061a49a2fa893357a8c9e7e2b49fc91873f533ab8f791e4fa0",
+          "probe": "current_channel",
+          "content_length_bytes": 91688,
+          "content_encoding": null,
+          "content_range": "not recorded for this probe; later query/curl probes recorded no header",
+          "cache_result": "HIT, HIT",
+          "receipt_sha256": "32003639b2a390478b17dadfbecb5aec329e901e859a4fecc72a87c96b1d49aa",
+          "content_range_header_recorded": false
+        },
+        {
+          "request_url": "https://download.visualstudio.microsoft.com/download/pr/c95450be-0a45-4779-b142-33f567ccfd6e/a871a5ff41acebbe5037455fd6f51fcd4907b47d8f3c9860871ea0b222a2fd45/VisualStudio.vsman",
+          "method": "HEAD",
+          "status": 200,
+          "body_bytes": 0,
+          "body_sha256": null,
+          "probe": "fixed_catalog_head",
+          "content_length_bytes": 17954770,
+          "content_encoding": null,
+          "content_range": "not recorded for this probe; later query/curl probes recorded no header",
+          "cache_result": "HIT, HIT",
+          "receipt_sha256": "4bb1da0a44c67619e5a0f8e7eab689c54135fb3e2314e6705ab0f4fa5872dd15",
+          "content_range_header_recorded": false
+        },
+        {
+          "request_url": "https://download.visualstudio.microsoft.com/download/pr/c95450be-0a45-4779-b142-33f567ccfd6e/a871a5ff41acebbe5037455fd6f51fcd4907b47d8f3c9860871ea0b222a2fd45/VisualStudio.vsman",
+          "method": "GET",
+          "status": 200,
+          "body_bytes": 17954770,
+          "body_sha256": "99dda859c4ae3c446eb25620d1a6237bb135d95d14d55cd1d30a15340bb39d80",
+          "probe": "fixed_catalog_identity",
+          "content_length_bytes": 17954770,
+          "content_encoding": null,
+          "content_range": "not recorded for this probe; later query/curl probes recorded no header",
+          "cache_result": "HIT, HIT",
+          "receipt_sha256": "bf5e1fe3d15dbd6ed8b31ba71cc7dc431435509f3da0ec215b3f77973cc8ab3b",
+          "content_range_header_recorded": false
+        },
+        {
+          "request_url": "https://download.visualstudio.microsoft.com/download/pr/c95450be-0a45-4779-b142-33f567ccfd6e/a871a5ff41acebbe5037455fd6f51fcd4907b47d8f3c9860871ea0b222a2fd45/VisualStudio.vsman?obfuscidian-metadata-check=20261016",
+          "method": "GET",
+          "status": 200,
+          "body_bytes": 17954770,
+          "body_sha256": "99dda859c4ae3c446eb25620d1a6237bb135d95d14d55cd1d30a15340bb39d80",
+          "probe": "fixed_catalog_cache_query",
+          "content_length_bytes": 17954770,
+          "content_encoding": null,
+          "content_range": null,
+          "cache_result": "HIT, HIT",
+          "receipt_sha256": "24ebcf0cb767210055b76c221dae1ece4209898214c3cca0a51290da17bc96a8",
+          "content_range_header_recorded": true
+        },
+        {
+          "request_url": "https://download.visualstudio.microsoft.com/download/pr/c95450be-0a45-4779-b142-33f567ccfd6e/a871a5ff41acebbe5037455fd6f51fcd4907b47d8f3c9860871ea0b222a2fd45/VisualStudio.vsman",
+          "method": "GET",
+          "status": 200,
+          "body_bytes": 17954770,
+          "body_sha256": "99dda859c4ae3c446eb25620d1a6237bb135d95d14d55cd1d30a15340bb39d80",
+          "probe": "fixed_catalog_curl",
+          "content_length_bytes": 17954770,
+          "content_encoding": null,
+          "content_range": null,
+          "cache_result": "HIT, HIT",
+          "receipt_sha256": "72150b34139efdc92231fcf21392e2189962130271b2d7d0c0d15deba8093e3b",
+          "content_range_header_recorded": true
+        }
+      ],
+      "all_saved_original_bodies_preserved": true,
+      "fixed_and_current_channel_bodies_identical_to_original": true,
+      "all_three_new_catalog_bodies_identical_to_original": true,
+      "channel_and_catalog_report_same_semantic_version": "17.14.42+37806.7",
+      "declared_catalog_size_and_hash_unchanged": true,
+      "catalog_http_size_matches_received_body": true,
+      "complete_json_parse_passed": true,
+      "no_encoding_or_partial_response_explanation_observed": true,
+      "all_probes_cache_hit": true,
+      "independent_network_or_origin_response_established": false,
+      "embedded_metadata_signatures_verified": false,
+      "authoritative_corrected_pair_found": false,
+      "accepted_package_closure_established": false,
+      "full_phase_b_execution_ready": false,
+      "interpretation": "Two existing HTTP clients reproduce the response. Client hashing/JSON reserialization is not used to repair or replace expected pins. Cache headers cannot locate the publishing/CDN/intermediary cause. A matching release label does not authenticate catalog bytes."
+    },
+    "alternative_release_checks": {
+      "recorded_local_date": "2026-10-16",
+      "scope": "official support/history/channel/catalog metadata only; no Phase B or candidate substitution",
+      "result": "No consistent official channel/catalog pair found in the two additional releases tested; not an exhaustive archive search.",
+      "original_17_14_42_candidate_and_evidence_preserved": true,
+      "support_references": [
+        "https://learn.microsoft.com/en-us/visualstudio/releases/2022/servicing-vs2022",
+        "https://learn.microsoft.com/en-us/visualstudio/releases/2026/servicing-vs",
+        "https://learn.microsoft.com/en-us/visualstudio/releases/2026/release-rhythm",
+        "https://learn.microsoft.com/en-us/visualstudio/releases/2019/servicing-vs2019",
+        "https://learn.microsoft.com/en-us/visualstudio/install/visual-studio-on-arm-devices?view=visualstudio"
+      ],
+      "support_boundary_notes": [
+        "2022 Current policy requires latest servicing release; 17.12 LTSC ended July 2026. Older available 17.x bootstrappers do not establish a currently supported alternative.",
+        "2026 latest Stable channel/history identify 18.11.0, build 18.11.12306.390; no 2026 LTSC is established before its documented November 2026 availability.",
+        "2019 16.11 is a supported legacy baseline, but native ARM64 host tooling began with 2022 17.4; legacy supported product status does not supply the required native builder.",
+        "MSVC component lifecycles are separate from installer/product support; no toolset version is silently changed."
+      ],
+      "tested_alternatives": [
+        {
+          "release": "18.11.0",
+          "build": "18.11.12306.390",
+          "support_classification": "2026 latest Stable release in current official history/channel; Stable support policy reviewed",
+          "native_arm64_host_route_candidate": true,
+          "fixed_bootstrapper_url": "https://download.visualstudio.microsoft.com/download/pr/4ee8a2e7-bc71-435a-8180-6703ab4d2017/89341fb2edf12ef29977078fdc72a9e47767ce6895cc297f274bc4a379db4c71/vs_BuildTools.exe",
+          "bootstrapper_body_acquired": false,
+          "bootstrapper_sha256": null,
+          "fixed_channel_url": "https://download.visualstudio.microsoft.com/download/pr/4ee8a2e7-bc71-435a-8180-6703ab4d2017/6b171cb5a6addabf1c0aec1ad31b6bc60f55a03bf0d83cc01642988637ad657f/VisualStudio.18.Release.chman",
+          "observed_channel_sha256": "b526439707f8c93c8a59636849a9cf995d74bce9e75a9fe9845fd13baade4437",
+          "observed_channel_bytes": 118417,
+          "channel_signature_verified": false,
+          "channel_and_catalog_release_identity_match": true,
+          "catalog_url": "https://download.visualstudio.microsoft.com/download/pr/4ee8a2e7-bc71-435a-8180-6703ab4d2017/db509503e199e75b45c99fc473dd01de6b5a8f2bfe85a4eda8c0bb2b49fb2b80/VisualStudio.vsman",
+          "declared_catalog_sha256": "db509503e199e75b45c99fc473dd01de6b5a8f2bfe85a4eda8c0bb2b49fb2b80",
+          "declared_catalog_bytes": 31254503,
+          "observed_catalog_sha256": "8feeff2606390c54ea2943f2d7cec739cc7360322b3c161ab1ef5028664a2a98",
+          "observed_catalog_bytes": 18403028,
+          "catalog_http_content_length_matches_body": true,
+          "catalog_content_encoding": null,
+          "catalog_content_range": null,
+          "catalog_size_and_hash_match_declaration": false,
+          "catalog_signature_verified": false,
+          "selected_as_replacement": false,
+          "tool_source_package_payloads_acquired": false
+        },
+        {
+          "release": "16.11.60",
+          "build": "16.11.37627.13",
+          "support_classification": "2019 supported 16.11 baseline through April 2029; current retrieved history/channel both report 16.11.60",
+          "native_arm64_host_route_candidate": false,
+          "fixed_bootstrapper_url": "https://download.visualstudio.microsoft.com/download/pr/e2324e87-3765-4b14-85e5-1234d99f6254/56c889adadf638062ef8e7b9421a988e8cb5441b3730e5ed28f777a538d9f69e/vs_BuildTools.exe",
+          "bootstrapper_body_acquired": false,
+          "bootstrapper_sha256": null,
+          "fixed_channel_url": "https://download.visualstudio.microsoft.com/download/pr/e2324e87-3765-4b14-85e5-1234d99f6254/67d1892e69945c592dd0409c0054d80e5ec8816b874c243616fc8d426fab9120/VisualStudio.16.Release.chman",
+          "observed_channel_sha256": "ce478cd78cce92c5c8bdcf4bd5cb17f90ec7be245a772a030563cc7aa096c4c6",
+          "observed_channel_bytes": 134478,
+          "channel_signature_verified": false,
+          "channel_and_catalog_release_identity_match": true,
+          "catalog_url": "https://download.visualstudio.microsoft.com/download/pr/e2324e87-3765-4b14-85e5-1234d99f6254/fb642c3f891b70947e0152275e1722ffb3cca7e8700eea0f0fa0f3a7645584cc/VisualStudio.vsman",
+          "declared_catalog_sha256": "fb642c3f891b70947e0152275e1722ffb3cca7e8700eea0f0fa0f3a7645584cc",
+          "declared_catalog_bytes": 19253644,
+          "observed_catalog_sha256": "406969c30f4eb8bf0075a0850e339340ac83942705b76269156bb5b70f01b631",
+          "observed_catalog_bytes": 11154648,
+          "catalog_http_content_length_matches_body": true,
+          "catalog_content_encoding": null,
+          "catalog_content_range": null,
+          "catalog_size_and_hash_match_declaration": false,
+          "catalog_signature_verified": false,
+          "selected_as_replacement": false,
+          "tool_source_package_payloads_acquired": false
+        }
+      ],
+      "additional_18_11_0_checks": {
+        "catalog_head_content_length": 18403028,
+        "head_body_bytes_read": 0,
+        "raw_curl_catalog_body_matches_python": true,
+        "same_host_network": true,
+        "independent_origin_or_network_established": false
+      },
+      "listed_but_untested": [
+        {
+          "version": "18.10.4",
+          "history_build_number": "12306.391",
+          "release_date": "2026-10-13",
+          "fixed_bootstrapper_url": "https://download.visualstudio.microsoft.com/download/pr/2c69ffd0-d38e-457c-9c18-020fe133868c/f4ad61ca6e875e784d3e3e7412c6115d2c471220575ac1c908fa23fffc736761/vs_BuildTools.exe",
+          "head_status": 200,
+          "head_content_length": 5694384,
+          "head_body_bytes_read": 0,
+          "manifest_reference_in_head_headers": false,
+          "fixed_channel_catalog_pair_resolved": false,
+          "reason": "History lists a servicing release but the read-only metadata inspected did not provide its fixed channel/catalog pair; no binary acquisition or guessed URL/hash used to fill it.",
+          "supported_pair_claimed": false,
+          "integrity_pass_claimed": false
+        }
+      ],
+      "failed_metadata_requests": [
+        {
+          "url": "https://learn.microsoft.com/en-us/visualstudio/releases/2026/system-requirements",
+          "result": "HTTP 404; not evidence of supported guest eligibility"
+        }
+      ],
+      "metadata_receipts": [
+        {
+          "id": "arm_host_docs",
+          "url": "https://learn.microsoft.com/en-us/visualstudio/install/visual-studio-on-arm-devices?view=visualstudio",
+          "receipt_sha256": "cc4ef2b720f2c71a6ef0be6443a27d31b1e6745765cde44d562e8a4320cbd356",
+          "observed_metadata_bytes": 52401,
+          "observed_metadata_sha256": "11884570bf2131e67aed98455e701c9504a874b7cc6c9cab0b7e8ebc3166827e"
+        },
+        {
+          "id": "channel2019",
+          "url": "https://aka.ms/vs/16/release/channel",
+          "receipt_sha256": "0df03e6f8a50f24eaeb5a792d8aa0ef719c8827c9476e627c83bc6446ec9eb35",
+          "observed_metadata_bytes": 134478,
+          "observed_metadata_sha256": "ce478cd78cce92c5c8bdcf4bd5cb17f90ec7be245a772a030563cc7aa096c4c6"
+        },
+        {
+          "id": "fixed_18104_bootstrapper_head",
+          "url": "https://download.visualstudio.microsoft.com/download/pr/2c69ffd0-d38e-457c-9c18-020fe133868c/f4ad61ca6e875e784d3e3e7412c6115d2c471220575ac1c908fa23fffc736761/vs_BuildTools.exe",
+          "receipt_sha256": "8e67f299e5c9a519200b9076ca74c98f90bb074e8efec5b5a9c97a1d05bb4cb6",
+          "artifact_body_bytes_read": 0
+        },
+        {
+          "id": "fixed_18110_catalog",
+          "url": "https://download.visualstudio.microsoft.com/download/pr/4ee8a2e7-bc71-435a-8180-6703ab4d2017/db509503e199e75b45c99fc473dd01de6b5a8f2bfe85a4eda8c0bb2b49fb2b80/VisualStudio.vsman",
+          "receipt_sha256": "744ed201596b6186a15fa9fa2a4367f1e16ba5b5d058fc35efbfb1b62f991443",
+          "observed_metadata_bytes": 18403028,
+          "observed_metadata_sha256": "8feeff2606390c54ea2943f2d7cec739cc7360322b3c161ab1ef5028664a2a98"
+        },
+        {
+          "id": "fixed_18110_catalog_curl",
+          "url": "https://download.visualstudio.microsoft.com/download/pr/4ee8a2e7-bc71-435a-8180-6703ab4d2017/db509503e199e75b45c99fc473dd01de6b5a8f2bfe85a4eda8c0bb2b49fb2b80/VisualStudio.vsman",
+          "receipt_sha256": "cec6de0185b1cf8ac9651bac3dc1a824c4227c939e6508c720a85a8395bda8be",
+          "observed_metadata_bytes": 18403028,
+          "observed_metadata_sha256": "8feeff2606390c54ea2943f2d7cec739cc7360322b3c161ab1ef5028664a2a98"
+        },
+        {
+          "id": "fixed_18110_catalog_head",
+          "url": "https://download.visualstudio.microsoft.com/download/pr/4ee8a2e7-bc71-435a-8180-6703ab4d2017/db509503e199e75b45c99fc473dd01de6b5a8f2bfe85a4eda8c0bb2b49fb2b80/VisualStudio.vsman",
+          "receipt_sha256": "a408734253bb01b321c42090263b0893cbab1da03b5eb3afd06b2d8aefd4b25d",
+          "artifact_body_bytes_read": 0
+        },
+        {
+          "id": "fixed_18110_channel",
+          "url": "https://download.visualstudio.microsoft.com/download/pr/4ee8a2e7-bc71-435a-8180-6703ab4d2017/6b171cb5a6addabf1c0aec1ad31b6bc60f55a03bf0d83cc01642988637ad657f/VisualStudio.18.Release.chman",
+          "receipt_sha256": "655008aa2fe2efae87d3c9daa085912104beb1046d521210b9d72aa9a1472acd",
+          "observed_metadata_bytes": 118417,
+          "observed_metadata_sha256": "b526439707f8c93c8a59636849a9cf995d74bce9e75a9fe9845fd13baade4437"
+        },
+        {
+          "id": "fixed_2019_catalog",
+          "url": "https://download.visualstudio.microsoft.com/download/pr/e2324e87-3765-4b14-85e5-1234d99f6254/fb642c3f891b70947e0152275e1722ffb3cca7e8700eea0f0fa0f3a7645584cc/VisualStudio.vsman",
+          "receipt_sha256": "8e585edf85e0ba66555fb40af2c7b1b5f970f38e7bede7446e2db11c4fa6f30d",
+          "observed_metadata_bytes": 11154648,
+          "observed_metadata_sha256": "406969c30f4eb8bf0075a0850e339340ac83942705b76269156bb5b70f01b631"
+        },
+        {
+          "id": "fixed_2019_channel",
+          "url": "https://download.visualstudio.microsoft.com/download/pr/e2324e87-3765-4b14-85e5-1234d99f6254/67d1892e69945c592dd0409c0054d80e5ec8816b874c243616fc8d426fab9120/VisualStudio.16.Release.chman",
+          "receipt_sha256": "d102f2d6845e8793804c4345f9460cdee5ffbc58a99bf522e8c4aad2ebd525d4",
+          "observed_metadata_bytes": 134478,
+          "observed_metadata_sha256": "ce478cd78cce92c5c8bdcf4bd5cb17f90ec7be245a772a030563cc7aa096c4c6"
+        },
+        {
+          "id": "history2019",
+          "url": "https://learn.microsoft.com/en-us/visualstudio/releases/2019/history",
+          "receipt_sha256": "8aaaaec3516c6481dfb1cbba80350cb87ee01ffe99ca85adb532e7ed56b4ebbe",
+          "observed_metadata_bytes": 231307,
+          "observed_metadata_sha256": "2ed842533e6e6c7629c83197142d26329eeb11964ab510db304cd50f4c1a2ceb"
+        },
+        {
+          "id": "history2022",
+          "url": "https://learn.microsoft.com/en-us/visualstudio/releases/2022/release-history",
+          "receipt_sha256": "42678bba3df6c282b35f2512f520b1592058082863973154bd523728fabdbd3f",
+          "observed_metadata_bytes": 289899,
+          "observed_metadata_sha256": "2576e31f4efa79ceb12c9c135b9e1fffeebd0518966e68107e26d1c1a6125e20"
+        },
+        {
+          "id": "history2026",
+          "url": "https://learn.microsoft.com/en-us/visualstudio/releases/2026/release-history",
+          "receipt_sha256": "b633846dd74b1f7707d6b1b1a7abfd53bf36e8c4b1f7d96491ca8c4922714e69",
+          "observed_metadata_bytes": 76120,
+          "observed_metadata_sha256": "715eee67f50802c7524f2c0bf6ab7b67329e062da8c5e9faaa3d801fc27d1a5e"
+        },
+        {
+          "id": "policy2019",
+          "url": "https://learn.microsoft.com/en-us/visualstudio/releases/2019/servicing",
+          "receipt_sha256": "a35c7d2074f51451d37092211cbe6e9e26b8750559efd2b42f0df0b3015465d4",
+          "observed_metadata_bytes": 49304,
+          "observed_metadata_sha256": "f3ea5aed55ce9945e11631e8b93c17f87c0f45428244bcfa2d0946e994c3cec7"
+        },
+        {
+          "id": "policy2022",
+          "url": "https://learn.microsoft.com/en-us/visualstudio/releases/2022/servicing-vs2022",
+          "receipt_sha256": "61b38e21cd702dcb122ac7fdb21af973522effd4bf5b819c453faebdc9cbc284",
+          "observed_metadata_bytes": 61155,
+          "observed_metadata_sha256": "febfaed6af05d84e08f4d281b4c2b6ab6ac7ad65527cf515c2293c7b11a295dd"
+        },
+        {
+          "id": "policy2026",
+          "url": "https://learn.microsoft.com/en-us/visualstudio/releases/2026/servicing-vs",
+          "receipt_sha256": "596ff8c8518abfca4f310a87391a3b8f1b1a202b5a3674cfa379712f5f89dd17",
+          "observed_metadata_bytes": 60100,
+          "observed_metadata_sha256": "f09561963e2efa70a66ab928847f80a74ee694e7aab4cb12140ff5ab827bb72e"
+        },
+        {
+          "id": "rhythm2026",
+          "url": "https://learn.microsoft.com/en-us/visualstudio/releases/2026/release-rhythm",
+          "receipt_sha256": "1695a74ca3693ee042094798ea4451341a73004aa704e646c945249b5d17f15d",
+          "observed_metadata_bytes": 49195,
+          "observed_metadata_sha256": "da1d9a1987b2a856d2a2ee714fe267442e70c39fd3e35a0131a1a5d8b564351d"
+        },
+        {
+          "id": "stable_channel",
+          "url": "https://aka.ms/vs/stable/channel",
+          "receipt_sha256": "ea3d0224f1d50755d951507ee6688dc09c1dc9a23e8c1edc28c98c9c4d16271d",
+          "observed_metadata_bytes": 118417,
+          "observed_metadata_sha256": "b526439707f8c93c8a59636849a9cf995d74bce9e75a9fe9845fd13baade4437"
+        }
+      ],
+      "acquisition_hold_unchanged": true,
+      "phase_b_authorized": false,
+      "accepted_compiler_sdk_closure": null,
+      "accepted_installer_engine_pin": null
+    },
+    "fixed_18_10_4_metadata_followup": {
+      "recorded_local_date": "2026-10-16",
+      "scope": "official documentation, public channel-index and Update Catalog metadata; channel-alias HEAD only; no payload or Phase B",
+      "result": "Fixed 18.10.4 channel/catalog pair remains unresolved in the bounded metadata checked; neither an integrity pass nor a mismatch was measured for that pair.",
+      "historical_alternative_release_checks_preserved": true,
+      "release": "18.10.4",
+      "history_build_number": "12306.391",
+      "full_build_from_fixed_manifest": null,
+      "release_date": "2026-10-13",
+      "fixed_bootstrapper_url": "https://download.visualstudio.microsoft.com/download/pr/2c69ffd0-d38e-457c-9c18-020fe133868c/f4ad61ca6e875e784d3e3e7412c6115d2c471220575ac1c908fa23fffc736761/vs_BuildTools.exe",
+      "prior_bootstrapper_head": {
+        "status": 200,
+        "content_length": 5694384,
+        "body_bytes_read": 0,
+        "channel_reference_in_headers": false
+      },
+      "bootstrapper_body_acquired": false,
+      "bootstrapper_sha256_verified": null,
+      "fixed_channel_url": null,
+      "fixed_channel_expected_sha256": null,
+      "fixed_catalog_url": null,
+      "fixed_catalog_expected_bytes": null,
+      "fixed_catalog_expected_sha256": null,
+      "fixed_pair_metadata_acquired": false,
+      "fixed_pair_integrity_pass": null,
+      "metadata_signatures_verified": false,
+      "discovery_checks": {
+        "release_history_rechecked": {
+          "url": "https://learn.microsoft.com/en-us/visualstudio/releases/2026/release-history",
+          "row_confirms_version_date_build_and_fixed_bootstrapper": true,
+          "fixed_channel_or_catalog_link_found": false
+        },
+        "release_notes": {
+          "url": "https://learn.microsoft.com/en-us/visualstudio/releases/2026/release-notes",
+          "servicing_release_18_10_4_confirmed": true,
+          "fixed_channel_or_catalog_link_found": false
+        },
+        "public_channel_index": {
+          "discovery_url": "https://aka.ms/vs/channels",
+          "fixed_response_url": "https://download.visualstudio.microsoft.com/download/pr/cb58ec12-925e-46a0-a119-68d8fd9b9ba6/3e513d06629684d7306dca29cdb2f282/channels.json",
+          "observed_metadata_bytes": 49962,
+          "observed_metadata_sha256": "b7138d6e11c5affbc22472d07b8f8164c323b99672234b6e3308d0873b47eddd",
+          "entry_count": 6,
+          "stable_entry": {
+            "channelUri": "https://aka.ms/vs/18/stable/channel",
+            "channelId": "VisualStudio.18.Release",
+            "version": "18.11.12306.390",
+            "displayVersion": "18.11.0"
+          },
+          "contains_18_10_4_reference": false,
+          "archive_completeness_claimed": false
+        },
+        "inferred_alias_head": {
+          "url": "https://aka.ms/vs/stable.18.10/channel",
+          "derivation": "Inference from official command-parameter example stable.18.0/channel, not a published exact 18.10.4 URL.",
+          "http_status": 302,
+          "redirect_target": "https://www.bing.com/?ref=aka&shorturl=vs/stable.18.10/channel",
+          "redirect_followed": false,
+          "body_bytes_read": 0,
+          "manifest_resolved": false,
+          "attempt_count": 2,
+          "first_guard_failure_retained": true
+        },
+        "update_catalog_search": {
+          "url": "https://www.catalog.update.microsoft.com/Search.aspx?q=Visual%20Studio%202026%2018.10.4",
+          "title": "Visual Studio 2026 Security Update (18.10.4)",
+          "update_id": "a27c8988-7811-43f2-9069-93717f5d9dba",
+          "listed_bytes": 103365464,
+          "listed_date": "2026-10-13",
+          "fixed_channel_or_catalog_link_found_in_search_response": false,
+          "update_details_or_download_dialog_requested": false,
+          "update_payload_acquired": false,
+          "note": "Listed administrator update size is not a Build Tools bootstrapper size, layout size or catalog digest."
+        }
+      },
+      "limits": [
+        "No published exact fixed channel/catalog reference was found in the inspected metadata; this does not prove that none exists elsewhere.",
+        "The latest channel and index are discovery metadata, not substitutes for fixed 18.10.4 metadata; no URL/hash was synthesized from the bootstrapper path.",
+        "Official servicing policy covers servicing updates to the last monthly update; 18.10.4 is not classified unsupported merely because latest Stable is 18.11.0. No supported consistent pair is established.",
+        "No independent network/origin, metadata signature verification, bootstrapper authentication, native architecture/toolset/SDK closure or license/guest eligibility acceptance occurred."
+      ],
+      "next_required_evidence": "Publisher-referenced direct fixed 18.10.4 channel metadata and its declared catalog URL/size/hash; verify exact release identity, received-byte integrity and applicable authentication before proposing substitution or layout execution.",
+      "selected_as_replacement": false,
+      "microsoft_acquisition_hold_preserved": true,
+      "tool_source_package_payloads_acquired": false,
+      "phase_b_authorized": false,
+      "metadata_receipts": [
+        {
+          "id": "catalog_search",
+          "url": "https://www.catalog.update.microsoft.com/Search.aspx?q=Visual%20Studio%202026%2018.10.4",
+          "method": "GET",
+          "receipt_sha256": "5950545eb44329ca02528dd8b6042db38f724f6c7f63873712d037750e6961a0",
+          "body_bytes_read": 50611,
+          "status": 200,
+          "final_url": "https://www.catalog.update.microsoft.com/Search.aspx?q=Visual%20Studio%202026%2018.10.4",
+          "body_sha256": "40198aaa77f48e7c7da520d73c7c7e670f84a99ae02a06f8e47effc63711fd5a",
+          "redirects": []
+        },
+        {
+          "id": "channel_index",
+          "url": "https://download.visualstudio.microsoft.com/download/pr/cb58ec12-925e-46a0-a119-68d8fd9b9ba6/3e513d06629684d7306dca29cdb2f282/channels.json",
+          "method": "GET",
+          "receipt_sha256": "4d51076a500a9bdb31dcb0e94675117381fe3084605e83af4cbc58fb68edf2a5",
+          "body_bytes_read": 49962,
+          "status": 200,
+          "final_url": "https://download.visualstudio.microsoft.com/download/pr/cb58ec12-925e-46a0-a119-68d8fd9b9ba6/3e513d06629684d7306dca29cdb2f282/channels.json",
+          "body_sha256": "b7138d6e11c5affbc22472d07b8f8164c323b99672234b6e3308d0873b47eddd"
+        },
+        {
+          "id": "channel_index_head",
+          "url": "https://aka.ms/vs/channels",
+          "method": "HEAD",
+          "receipt_sha256": "a02bc654a14bb337fa03d69fc969bc0f716f123aa0a2ec6371e5a3a9be3742b5",
+          "body_bytes_read": 0,
+          "status": 200,
+          "final_url": "https://download.visualstudio.microsoft.com/download/pr/cb58ec12-925e-46a0-a119-68d8fd9b9ba6/3e513d06629684d7306dca29cdb2f282/channels.json",
+          "body_sha256": null,
+          "redirects": [
+            {
+              "status": 301,
+              "from": "https://aka.ms/vs/channels",
+              "to": "https://download.visualstudio.microsoft.com/download/pr/cb58ec12-925e-46a0-a119-68d8fd9b9ba6/3e513d06629684d7306dca29cdb2f282/channels.json"
+            }
+          ]
+        },
+        {
+          "id": "command_parameters",
+          "url": "https://learn.microsoft.com/en-us/visualstudio/install/use-command-line-parameters-to-install-visual-studio?view=visualstudio",
+          "method": "GET",
+          "receipt_sha256": "630f5be12f723fcad91db9fb84a60d69e818ffdb369ad9f0eb94336817b9bd06",
+          "body_bytes_read": 102260,
+          "status": 200,
+          "final_url": "https://learn.microsoft.com/en-us/visualstudio/install/use-command-line-parameters-to-install-visual-studio?view=visualstudio",
+          "body_sha256": "41a373fa2cd3dd1135a998104c271da764dd187fa26d6d9ba182f578a715ff7f"
+        },
+        {
+          "id": "history2026",
+          "url": "https://learn.microsoft.com/en-us/visualstudio/releases/2026/release-history",
+          "method": "GET",
+          "receipt_sha256": "60287b0d079cd17a6913b9b2dab16e35da979d6936f4404ef99bd92febb1c3f4",
+          "body_bytes_read": 76120,
+          "status": 200,
+          "final_url": "https://learn.microsoft.com/en-us/visualstudio/releases/2026/release-history",
+          "body_sha256": "715eee67f50802c7524f2c0bf6ab7b67329e062da8c5e9faaa3d801fc27d1a5e"
+        },
+        {
+          "id": "layout_docs",
+          "url": "https://learn.microsoft.com/en-us/visualstudio/install/create-a-network-installation-of-visual-studio?view=visualstudio",
+          "method": "GET",
+          "receipt_sha256": "7313214f6feaff05a1da8d3852a22707c3dc60c0a84a27006f4eb8c6ba50aca1",
+          "body_bytes_read": 94026,
+          "status": 200,
+          "final_url": "https://learn.microsoft.com/en-us/visualstudio/install/create-a-network-installation-of-visual-studio?view=visualstudio",
+          "body_sha256": "af2193fb9fcded96ad5dd9bbb220dd3e55e868e79e9efcc1443d8fb82aca855c",
+          "redirects": []
+        },
+        {
+          "id": "release_notes",
+          "url": "https://learn.microsoft.com/en-us/visualstudio/releases/2026/release-notes",
+          "method": "GET",
+          "receipt_sha256": "fb43e7ffe0bb894b1c96008e9d4367f5c235664403366ed6e5f5cb1c74957a74",
+          "body_bytes_read": 467744,
+          "status": 200,
+          "final_url": "https://learn.microsoft.com/en-us/visualstudio/releases/2026/release-notes",
+          "body_sha256": "1a2f53079cfae772e90b9cee1cfd1cee115b0d581560e970bf8ae0a6921f5f71",
+          "redirects": []
+        },
+        {
+          "id": "stable_1810_head",
+          "url": "https://aka.ms/vs/stable.18.10/channel",
+          "method": "HEAD",
+          "receipt_sha256": "0d64d3cb23f8bbd57687b2b48c874d570953d75b5749369030929e4214474b74",
+          "body_bytes_read": 0,
+          "error": "Redirect outside official metadata allowlist"
+        },
+        {
+          "id": "stable_1810_head_trace",
+          "url": "https://aka.ms/vs/stable.18.10/channel",
+          "method": "HEAD",
+          "receipt_sha256": "4729c7fdba8e146196d8c0ca3079ae35944e9101f23059659556b99e0c2b473a",
+          "body_bytes_read": 0,
+          "error": "Redirect outside official metadata allowlist",
+          "redirects": [
+            {
+              "status": 302,
+              "from": "https://aka.ms/vs/stable.18.10/channel",
+              "to": "https://www.bing.com/?ref=aka&shorturl=vs/stable.18.10/channel"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "cryptography_source": {
+    "name": "cryptography",
+    "version": "50.0.2",
+    "role": "unchanged source archive, not a wheel",
+    "filename": "cryptography-50.0.2.tar.gz",
+    "url": "https://files.pythonhosted.org/packages/9d/af/182eb91b0df3fe75c4d9f26fe70684569566745f6ba7e5c9c73a862c5252/cryptography-50.0.2.tar.gz",
+    "expected_sha256": "7b46165bb56eb4704e2eaaf86f3c940d19154535d9b0ca7d6d590b04060e00d5",
+    "expected_size_bytes": 880623,
+    "architecture": "source; no binary qualification",
+    "declared_license": "Apache-2.0 OR BSD-3-Clause",
+    "requires_python": "!=3.9.0,!=3.9.1,>=3.9",
+    "requires_dist": [
+      "cffi>=2.0.0; platform_python_implementation != \"PyPy\"",
+      "typing-extensions>=4.13.2; python_full_version < \"3.11\"",
+      "bcrypt>=3.1.5; extra == \"ssh\""
+    ],
+    "yanked": false,
+    "artifact_body_acquired": false,
+    "artifact_hash_verified": false,
+    "build_backend": "maturin",
+    "build_requirements_from_tag_manifest": [
+      "maturin>=1.14.1,<2",
+      "cffi>=2.0.0 for selected CPython",
+      "setuptools!=74.0.0,!=74.1.0,!=74.1.1,!=74.1.2"
+    ],
+    "sdist_contents_inspected_this_phase": false
+  },
+  "source_metadata": {
+    "tag": "50.0.2",
+    "tag_object": "ccdf2da1cce4798ab0ea226693a074eef536c16e",
+    "commit": "4dda5c7fe4ae71b8925f2551910a0ef959df9c7a",
+    "github_tag_verification": {
+      "verified": false,
+      "reason": "bad_cert"
+    },
+    "cargo_lock_url": "https://raw.githubusercontent.com/pyca/cryptography/4dda5c7fe4ae71b8925f2551910a0ef959df9c7a/Cargo.lock",
+    "cargo_lock_sha256": "98778208027ce05bfff0db88c290f28355eb20e685f0c728775359fb91a1a4c4",
+    "cargo_lock_git_blob_sha1": "c40011072488099d4caf558b3407ada49829d805",
+    "git_blob_matches_tree": true,
+    "sdist_to_tag_manifest_comparison_performed_this_phase": false,
+    "registry_package_count": 32,
+    "workspace_package_count": 8,
+    "git_dependencies_in_lock": 0,
+    "test_python_files_declared_in_tag_tree": 117
+  },
+  "rust": {
+    "version": "1.99.1",
+    "date": "2026-10-15",
+    "host_target": "aarch64-pc-windows-msvc",
+    "manifest_url": "https://static.rust-lang.org/dist/channel-rust-1.99.1.toml",
+    "dated_manifest_url": "https://static.rust-lang.org/dist/2026-10-15/channel-rust-1.99.1.toml",
+    "manifest_sha256": "fb152be80975c194aa5fc684b2aec3a6e14e2b855efe2faa4e5f8ae6e590f463",
+    "manifest_checksum_matches": true,
+    "manifest_detached_signature_verified": true,
+    "verified_signing_key_fingerprint": "108F66205EAEB0AAA8DD5E1C85AB96E6FA1BE5FE",
+    "key_url": "https://static.rust-lang.org/rust-key.gpg.ascii",
+    "selected_components": [
+      {
+        "name": "rustc",
+        "version": "1.99.1",
+        "filename": "rustc-1.99.1-aarch64-pc-windows-msvc.tar.xz",
+        "url": "https://static.rust-lang.org/dist/2026-10-15/rustc-1.99.1-aarch64-pc-windows-msvc.tar.xz",
+        "expected_sha256": "4d89c7f3f9d8637c667332adf77b55f43c322ae0ff038e75493bb28e16369af2",
+        "head_content_length_bytes": 62551604,
+        "signature_url": "https://static.rust-lang.org/dist/2026-10-15/rustc-1.99.1-aarch64-pc-windows-msvc.tar.xz.asc",
+        "checksum_url": "https://static.rust-lang.org/dist/2026-10-15/rustc-1.99.1-aarch64-pc-windows-msvc.tar.xz.sha256",
+        "host": "aarch64-pc-windows-msvc",
+        "target": "aarch64-pc-windows-msvc",
+        "artifact_body_acquired": false,
+        "artifact_hash_verified": false,
+        "archive_signature_verified": false
+      },
+      {
+        "name": "cargo",
+        "version": "1.99.1",
+        "filename": "cargo-1.99.1-aarch64-pc-windows-msvc.tar.xz",
+        "url": "https://static.rust-lang.org/dist/2026-10-15/cargo-1.99.1-aarch64-pc-windows-msvc.tar.xz",
+        "expected_sha256": "28ae5b9b72ae43aa01d2f6c1b285be59f8aef6eafc96f9e16b912c3c1363a638",
+        "head_content_length_bytes": 10186152,
+        "signature_url": "https://static.rust-lang.org/dist/2026-10-15/cargo-1.99.1-aarch64-pc-windows-msvc.tar.xz.asc",
+        "checksum_url": "https://static.rust-lang.org/dist/2026-10-15/cargo-1.99.1-aarch64-pc-windows-msvc.tar.xz.sha256",
+        "host": "aarch64-pc-windows-msvc",
+        "target": "aarch64-pc-windows-msvc",
+        "artifact_body_acquired": false,
+        "artifact_hash_verified": false,
+        "archive_signature_verified": false
+      },
+      {
+        "name": "rust-std",
+        "version": "1.99.1",
+        "filename": "rust-std-1.99.1-aarch64-pc-windows-msvc.tar.xz",
+        "url": "https://static.rust-lang.org/dist/2026-10-15/rust-std-1.99.1-aarch64-pc-windows-msvc.tar.xz",
+        "expected_sha256": "044748841f47007a222dd5b3f5e9dacec1dae7386d7d308c5172d07ea7112fa0",
+        "head_content_length_bytes": 23729852,
+        "signature_url": "https://static.rust-lang.org/dist/2026-10-15/rust-std-1.99.1-aarch64-pc-windows-msvc.tar.xz.asc",
+        "checksum_url": "https://static.rust-lang.org/dist/2026-10-15/rust-std-1.99.1-aarch64-pc-windows-msvc.tar.xz.sha256",
+        "host": "aarch64-pc-windows-msvc",
+        "target": "aarch64-pc-windows-msvc",
+        "artifact_body_acquired": false,
+        "artifact_hash_verified": false,
+        "archive_signature_verified": false
+      }
+    ],
+    "install_recipe": "B static archive review must establish a native Windows per-user copy layout; no rustup or shell/tool addition approved",
+    "declared_license": "MIT OR Apache-2.0 plus distribution third-party notices"
+  },
+  "openssl": {
+    "name": "OpenSSL",
+    "version": "4.0.3",
+    "filename": "openssl-4.0.3.tar.gz",
+    "url": "https://github.com/openssl/openssl/releases/download/openssl-4.0.3/openssl-4.0.3.tar.gz",
+    "expected_sha256": "325b5c806167c13b40b1ffeadfe0248197c00eccc4cf123ec1e28d2d2fd216d9",
+    "expected_size_bytes": 55235667,
+    "architecture": "source; later native ARM64 static build proposed",
+    "declared_license": "Apache-2.0 plus incorporated notices",
+    "checksum_url": "https://github.com/openssl/openssl/releases/download/openssl-4.0.3/openssl-4.0.3.tar.gz.sha256",
+    "signature_url": "https://github.com/openssl/openssl/releases/download/openssl-4.0.3/openssl-4.0.3.tar.gz.asc",
+    "public_key_url": "https://openssl-library.org/source/pubkeys.asc",
+    "primary_fingerprint": "B146647E45A7B33947AB226B2A2C87D161692D40",
+    "signature_packet_issuer_fingerprint": "C46ED3F2CBEFDA1FDAADA44264ED7B1DCCE71CB2",
+    "signature_packet_matches_published_key_subkey": true,
+    "source_signature_verified": false,
+    "artifact_body_acquired": false,
+    "artifact_hash_verified": false,
+    "proposed_target": "VC-WIN64-CLANGASM-ARM; recipe and runtime/link flags unapproved",
+    "notes_url": "https://raw.githubusercontent.com/openssl/openssl/openssl-4.0.3/NOTES-WINDOWS.md",
+    "notes_sha256": "8c5152abe3471618583791a3fb8107a1cdac563b1952f3b5ba9235f4531798ab",
+    "support_catalogue_eol": "2027-05-14",
+    "security_review": "current catalogue/advisory metadata read; no blanket advisory clearance; refresh before freeze"
+  },
+  "assembler": {
+    "name": "LLVM",
+    "version": "23.1.3",
+    "filename": "clang+llvm-23.1.3-aarch64-pc-windows-msvc.tar.xz",
+    "url": "https://github.com/llvm/llvm-project/releases/download/llvmorg-23.1.3/clang%2Bllvm-23.1.3-aarch64-pc-windows-msvc.tar.xz",
+    "expected_sha256": "4a42903db59f990a10c245eb32999f1e3247c37ba66de87f8f8dc2338ed9a79b",
+    "expected_size_bytes": 763913356,
+    "host": "aarch64-pc-windows-msvc; PE unverified",
+    "role": "clang-cl as OpenSSL ARM64 assembler only; MSVC remains C compiler/linker",
+    "declared_license": "Apache-2.0 WITH LLVM-exception plus bundled notices to inspect",
+    "signature_url": "https://github.com/llvm/llvm-project/releases/download/llvmorg-23.1.3/clang%2Bllvm-23.1.3-aarch64-pc-windows-msvc.tar.xz.sig",
+    "attestation_url": "https://github.com/llvm/llvm-project/releases/download/llvmorg-23.1.3/clang%2Bllvm-23.1.3-aarch64-pc-windows-msvc.tar.xz.jsonl",
+    "attestation_subject_digest_compared": true,
+    "signature_or_attestation_verified": false,
+    "artifact_body_acquired": false,
+    "artifact_hash_verified": false
+  },
+  "auxiliary_perl": {
+    "name": "Strawberry Perl",
+    "version": "5.42.3.1",
+    "filename": "strawberry-perl-5.42.3.1-64bit-portable.zip",
+    "url": "https://github.com/StrawberryPerl/Perl-Dist-Strawberry/releases/download/SP_54231_64bit/strawberry-perl-5.42.3.1-64bit-portable.zip",
+    "expected_sha256": "6a081a811781c30aca51dbc036afd93092af91e3297901f02c17043795a10690",
+    "expected_size_bytes": 304765269,
+    "host_architecture": "MSWin32-x64-multi-thread",
+    "role": "conditional x64 emulated auxiliary Perl only",
+    "emulation_approved": false,
+    "declared_license": "Perl Artistic/GPL alternatives and bundled third-party licenses require archive review",
+    "publisher_signature_verified": false,
+    "artifact_body_acquired": false,
+    "artifact_hash_verified": false
+  },
+  "python_reference": {
+    "version": "3.13.16",
+    "architecture": "native ARM64, GIL-enabled, cp313-win_arm64",
+    "action": "reuse preserved copied runtime; no reinstallation or installer download selected",
+    "installer_url": "https://www.python.org/ftp/python/3.13.16/python-3.13.16-arm64.exe",
+    "expected_sha256": "696e2226062c6ec3622c13f143d28336a856968518e49cb4f4c62513215a4f5d",
+    "evidence": "Stage 1 verified retained installer and selected installed files; full tree not frozen; current official release metadata reviewed",
+    "experimental": true,
+    "full_installed_headers_libs_runtime_manifest_complete": false,
+    "installer_hash_matches_current_release_metadata": true
+  },
+  "python_build_tools": [
+    {
+      "name": "maturin",
+      "version": "1.15.0",
+      "role": "isolated cryptography build tool; no extras",
+      "filename": "maturin-1.15.0-py3-none-win_arm64.whl",
+      "url": "https://files.pythonhosted.org/packages/8b/10/15d4314edf130955edf2dc237aa393a8a7c10f2b9b57b89fa2f61f915659/maturin-1.15.0-py3-none-win_arm64.whl",
+      "expected_sha256": "c7dc0c66c78d3debdd9c5aa807e861fbcbf07f3505d34b125df74c03986b0f48",
+      "expected_size_bytes": 9713795,
+      "architecture": "ARM64 tag; PE unverified",
+      "declared_license": "MIT OR Apache-2.0",
+      "requires_python": ">=3.7",
+      "requires_dist": [
+        "tomli>=1.1.0; python_full_version < \"3.11\"",
+        "patchelf; extra == \"patchelf\"",
+        "ziglang>=0.10.0; extra == \"zig\""
+      ],
+      "yanked": false,
+      "artifact_body_acquired": false,
+      "artifact_hash_verified": false
+    },
+    {
+      "name": "setuptools",
+      "version": "84.0.0",
+      "role": "isolated cryptography build tool; no extras",
+      "filename": "setuptools-84.0.0-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/95/9c/c510029fc6ef33a6275cd2c5d3cecd6613dfd6aa401d57c54f1c18852ccf/setuptools-84.0.0-py3-none-any.whl",
+      "expected_sha256": "51a52592b3b99e102b609654876bd65f19f999935166d1352678931132b0c670",
+      "expected_size_bytes": 818216,
+      "architecture": "Python universal tag; contents unverified",
+      "declared_license": "MIT",
+      "requires_python": ">=3.10",
+      "requires_dist": [
+        "pytest!=8.1.*,>=6; extra == \"test\"",
+        "virtualenv>=13.0.0; extra == \"test\"",
+        "wheel>=0.44.0; extra == \"test\"",
+        "pip>=19.1; extra == \"test\"",
+        "packaging>=24.2; extra == \"test\"",
+        "jaraco.envs>=2.2; extra == \"test\"",
+        "pytest-xdist>=3; extra == \"test\"",
+        "jaraco.path>=3.7.2; extra == \"test\"",
+        "build[virtualenv]>=1.0.3; extra == \"test\"",
+        "filelock>=3.4.0; extra == \"test\"",
+        "ini2toml[lite]>=0.14; extra == \"test\"",
+        "tomli-w>=1.0.0; extra == \"test\"",
+        "pytest-timeout; extra == \"test\"",
+        "pytest-perf; sys_platform != \"cygwin\" and extra == \"test\"",
+        "jaraco.develop>=7.21; (python_version >= \"3.9\" and sys_platform != \"cygwin\") and extra == \"test\"",
+        "pytest-home>=0.5; extra == \"test\"",
+        "pytest-subprocess; extra == \"test\"",
+        "pyproject-hooks!=1.1; extra == \"test\"",
+        "jaraco.test>=5.5; extra == \"test\"",
+        "sphinx>=3.5; extra == \"doc\"",
+        "jaraco.packaging>=9.3; extra == \"doc\"",
+        "rst.linker>=1.9; extra == \"doc\"",
+        "furo; extra == \"doc\"",
+        "sphinx-lint; extra == \"doc\"",
+        "jaraco.tidelift>=1.4; extra == \"doc\"",
+        "pygments-github-lexers==0.0.5; extra == \"doc\"",
+        "sphinx-favicon; extra == \"doc\"",
+        "sphinx-inline-tabs; extra == \"doc\"",
+        "sphinx-reredirects; extra == \"doc\"",
+        "sphinxcontrib-towncrier; extra == \"doc\"",
+        "sphinx-notfound-page<2,>=1; extra == \"doc\"",
+        "pyproject-hooks!=1.1; extra == \"doc\"",
+        "towncrier<24.7; extra == \"doc\"",
+        "packaging>=24.2; extra == \"core\"",
+        "more_itertools>=8.8; extra == \"core\"",
+        "jaraco.text>=3.7; extra == \"core\"",
+        "importlib_metadata>=6; python_version < \"3.10\" and extra == \"core\"",
+        "tomli>=2.0.1; python_version < \"3.11\" and extra == \"core\"",
+        "wheel>=0.43.0; extra == \"core\"",
+        "jaraco.functools>=4; extra == \"core\"",
+        "more_itertools; extra == \"core\"",
+        "pytest-checkdocs>=2.14; extra == \"check\"",
+        "pytest-ruff>=0.2.1; sys_platform != \"cygwin\" and extra == \"check\"",
+        "ruff>=0.13.0; sys_platform != \"cygwin\" and extra == \"check\"",
+        "pytest-cov; extra == \"cover\"",
+        "pytest-enabler>=3.4; extra == \"enabler\"",
+        "pytest-mypy>=1.0.1; platform_python_implementation != \"PyPy\" and extra == \"type\"",
+        "mypy==1.18.*; extra == \"type\"",
+        "importlib_metadata>=7.0.2; python_version < \"3.10\" and extra == \"type\"",
+        "jaraco.develop>=7.21; sys_platform != \"cygwin\" and extra == \"type\""
+      ],
+      "yanked": false,
+      "artifact_body_acquired": false,
+      "artifact_hash_verified": false
+    },
+    {
+      "name": "cffi",
+      "version": "2.1.1",
+      "role": "isolated cryptography build tool; no extras",
+      "filename": "cffi-2.1.1-cp313-cp313-win_arm64.whl",
+      "url": "https://files.pythonhosted.org/packages/01/9a/11f687cb39d6a3504060d5242f04f48c735afb4d3d533958a20594890cb2/cffi-2.1.1-cp313-cp313-win_arm64.whl",
+      "expected_sha256": "63bbfd5ded17c4840ac07cd8f1c21ba9d9708141f840b324f422f41b207e3973",
+      "expected_size_bytes": 180078,
+      "architecture": "ARM64 tag; PE unverified",
+      "declared_license": "MIT-0",
+      "requires_python": ">=3.10",
+      "requires_dist": [
+        "pycparser; implementation_name != \"PyPy\""
+      ],
+      "yanked": false,
+      "artifact_body_acquired": false,
+      "artifact_hash_verified": false
+    },
+    {
+      "name": "pycparser",
+      "version": "3.0",
+      "role": "isolated cryptography build tool; no extras",
+      "filename": "pycparser-3.0-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/0c/c3/44f3fbbfa403ea2a7c779186dc20772604442dde72947e7d01069cbe98e3/pycparser-3.0-py3-none-any.whl",
+      "expected_sha256": "b727414169a36b7d524c1c3e31839a521725078d7b2ff038656844266160a992",
+      "expected_size_bytes": 48172,
+      "architecture": "Python universal tag; contents unverified",
+      "declared_license": "BSD-3-Clause",
+      "requires_python": ">=3.10",
+      "requires_dist": [],
+      "yanked": false,
+      "artifact_body_acquired": false,
+      "artifact_hash_verified": false
+    }
+  ],
+  "upstream_test_inputs": {
+    "scope": "base test dependency-group metadata closure for Windows ARM64 CPython 3.13.16; coverage[toml] only inherited extra",
+    "runtime_requirement_source": "unchanged upstream pyproject at selected release; these are isolated test inputs, not Obfuscidian runtime requirements",
+    "metadata_marker_and_version_closure_check_passed": true,
+    "payload_import_fixture_and_complete_sdist_test_inventory_review_pending": true,
+    "selected_wheels": [
+      {
+        "name": "pytest",
+        "version": "9.1.1",
+        "role": "isolated upstream base test-group candidate; no application dependency change",
+        "filename": "pytest-9.1.1-py3-none-any.whl",
+        "url": "https://files.pythonhosted.org/packages/24/25/1de2678b631f5a49215c6c96fff41ba892b0a34df68d6d80292b1b48aa7f/pytest-9.1.1-py3-none-any.whl",
+        "expected_sha256": "37a86b45efb9a47a61a36449063e8e18d0cab3161329fc099eb21783169c4f0c",
+        "expected_size_bytes": 386536,
+        "architecture": "Python universal tag; contents unverified",
+        "declared_license": "MIT",
+        "requires_python": ">=3.10",
+        "requires_dist": [
+          "colorama>=0.4; sys_platform == \"win32\"",
+          "exceptiongroup>=1; python_version < \"3.11\"",
+          "iniconfig>=1.0.1",
+          "packaging>=22",
+          "pluggy<2,>=1.5",
+          "pygments>=2.7.2",
+          "tomli>=1; python_version < \"3.11\"",
+          "argcomplete; extra == \"dev\"",
+          "attrs>=19.2; extra == \"dev\"",
+          "hypothesis>=3.56; extra == \"dev\"",
+          "mock; extra == \"dev\"",
+          "requests; extra == \"dev\"",
+          "setuptools; extra == \"dev\"",
+          "xmlschema; extra == \"dev\""
+        ],
+        "yanked": false,
+        "artifact_body_acquired": false,
+        "artifact_hash_verified": false
+      },
+      {
+        "name": "certifi",
+        "version": "2026.7.22",
+        "role": "isolated upstream base test-group candidate; no application dependency change",
+        "filename": "certifi-2026.7.22-py3-none-any.whl",
+        "url": "https://files.pythonhosted.org/packages/0b/a7/71ac2cff56fec219ed242bb11b8efb69fcc4bec75db06fb7bfe35de520e6/certifi-2026.7.22-py3-none-any.whl",
+        "expected_sha256": "62f22742b58a1a33014a2b6b706588a8d7e2a88ae7bd1a6ebe8c992928483775",
+        "expected_size_bytes": 136983,
+        "architecture": "Python universal tag; contents unverified",
+        "declared_license": "MPL-2.0",
+        "requires_python": ">=3.7",
+        "requires_dist": [],
+        "yanked": false,
+        "artifact_body_acquired": false,
+        "artifact_hash_verified": false
+      },
+      {
+        "name": "coverage",
+        "version": "7.16.2",
+        "role": "isolated upstream base test-group candidate; no application dependency change",
+        "filename": "coverage-7.16.2-cp313-cp313-win_arm64.whl",
+        "url": "https://files.pythonhosted.org/packages/1b/d9/9ef6845367600b336ff75d000444a0d32497d6972c833141bd39356abf68/coverage-7.16.2-cp313-cp313-win_arm64.whl",
+        "expected_sha256": "28ff850182a67d117990fa2ce5ea1032836d8c9630dae867e8bdd3bff4533b79",
+        "expected_size_bytes": 226409,
+        "architecture": "ARM64 tag; PE unverified",
+        "declared_license": "Apache-2.0",
+        "requires_python": ">=3.10",
+        "requires_dist": [
+          "tomli; python_full_version <= \"3.11.0a6\" and extra == \"toml\""
+        ],
+        "yanked": false,
+        "artifact_body_acquired": false,
+        "artifact_hash_verified": false
+      },
+      {
+        "name": "iniconfig",
+        "version": "2.3.0",
+        "role": "isolated upstream base test-group candidate; no application dependency change",
+        "filename": "iniconfig-2.3.0-py3-none-any.whl",
+        "url": "https://files.pythonhosted.org/packages/cb/b1/3846dd7f199d53cb17f49cba7e651e9ce294d8497c8c150530ed11865bb8/iniconfig-2.3.0-py3-none-any.whl",
+        "expected_sha256": "f631c04d2c48c52b84d0d0549c99ff3859c98df65b3101406327ecc7d53fbf12",
+        "expected_size_bytes": 7484,
+        "architecture": "Python universal tag; contents unverified",
+        "declared_license": "MIT",
+        "requires_python": ">=3.10",
+        "requires_dist": [],
+        "yanked": false,
+        "artifact_body_acquired": false,
+        "artifact_hash_verified": false
+      },
+      {
+        "name": "packaging",
+        "version": "26.3",
+        "role": "isolated upstream base test-group candidate; no application dependency change",
+        "filename": "packaging-26.3-py3-none-any.whl",
+        "url": "https://files.pythonhosted.org/packages/63/34/ba1c580383c9eada3711951fef0795c80b829a078d72188184bcab9dd527/packaging-26.3-py3-none-any.whl",
+        "expected_sha256": "d7193f7c8e4e93f444fde0262bf90af30e16fa0ad0ad44cb553c87339b23cd1c",
+        "expected_size_bytes": 129956,
+        "architecture": "Python universal tag; contents unverified",
+        "declared_license": "Apache-2.0 OR BSD-2-Clause",
+        "requires_python": ">=3.9",
+        "requires_dist": [],
+        "yanked": false,
+        "artifact_body_acquired": false,
+        "artifact_hash_verified": false
+      },
+      {
+        "name": "pluggy",
+        "version": "1.6.0",
+        "role": "isolated upstream base test-group candidate; no application dependency change",
+        "filename": "pluggy-1.6.0-py3-none-any.whl",
+        "url": "https://files.pythonhosted.org/packages/54/20/4d324d65cc6d9205fabedc306948156824eb9f0ee1633355a8f7ec5c66bf/pluggy-1.6.0-py3-none-any.whl",
+        "expected_sha256": "e920276dd6813095e9377c0bc5566d94c932c33b27a3e3945d8389c374dd4746",
+        "expected_size_bytes": 20538,
+        "architecture": "Python universal tag; contents unverified",
+        "declared_license": "MIT",
+        "requires_python": ">=3.9",
+        "requires_dist": [
+          "pre-commit; extra == \"dev\"",
+          "tox; extra == \"dev\"",
+          "pytest; extra == \"testing\"",
+          "pytest-benchmark; extra == \"testing\"",
+          "coverage; extra == \"testing\""
+        ],
+        "yanked": false,
+        "artifact_body_acquired": false,
+        "artifact_hash_verified": false
+      },
+      {
+        "name": "colorama",
+        "version": "0.4.6",
+        "role": "isolated upstream base test-group candidate; no application dependency change",
+        "filename": "colorama-0.4.6-py2.py3-none-any.whl",
+        "url": "https://files.pythonhosted.org/packages/d1/d6/3965ed04c63042e047cb6a3e6ed1a63a35087b6a609aa3a15ed8ac56c221/colorama-0.4.6-py2.py3-none-any.whl",
+        "expected_sha256": "4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6",
+        "expected_size_bytes": 25335,
+        "architecture": "Python universal tag; contents unverified",
+        "declared_license": "",
+        "requires_python": "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,!=3.5.*,!=3.6.*,>=2.7",
+        "requires_dist": [],
+        "yanked": false,
+        "artifact_body_acquired": false,
+        "artifact_hash_verified": false
+      },
+      {
+        "name": "Pygments",
+        "version": "2.21.0",
+        "role": "isolated upstream base test-group candidate; no application dependency change",
+        "filename": "pygments-2.21.0-py3-none-any.whl",
+        "url": "https://files.pythonhosted.org/packages/71/46/17f022dd3e953bf20a04a028a21ec746d942f8d2af30fa0f124fa0e6a684/pygments-2.21.0-py3-none-any.whl",
+        "expected_sha256": "2363c69b61c4a97c838da3b130dcd6468f4848992b21a82f2a63ec34377137d9",
+        "expected_size_bytes": 1250147,
+        "architecture": "Python universal tag; contents unverified",
+        "declared_license": "BSD-2-Clause",
+        "requires_python": ">=3.9",
+        "requires_dist": [
+          "colorama>=0.4.6; extra == \"windows-terminal\""
+        ],
+        "yanked": false,
+        "artifact_body_acquired": false,
+        "artifact_hash_verified": false
+      },
+      {
+        "name": "pytest-benchmark",
+        "version": "5.3.0",
+        "role": "isolated upstream base test-group candidate; no application dependency change",
+        "filename": "pytest_benchmark-5.3.0-py3-none-any.whl",
+        "url": "https://files.pythonhosted.org/packages/eb/42/7e80f7cfa191e0a766d1de99b4661847415ad5db34f8209d81fd42175b59/pytest_benchmark-5.3.0-py3-none-any.whl",
+        "expected_sha256": "920ab1dfcffa718d49aa15ba144c7e357bda59216a0dc308016cc1c7236f719d",
+        "expected_size_bytes": 48401,
+        "architecture": "Python universal tag; contents unverified",
+        "declared_license": "BSD-2-Clause",
+        "requires_python": ">=3.10",
+        "requires_dist": [
+          "py-cpuinfo2>=10.1",
+          "pytest>=8.1",
+          "aspectlib; extra == \"aspect\"",
+          "elasticsearch; extra == \"elasticsearch\"",
+          "pygal; extra == \"histogram\"",
+          "pygaljs; extra == \"histogram\"",
+          "setuptools; extra == \"histogram\""
+        ],
+        "yanked": false,
+        "artifact_body_acquired": false,
+        "artifact_hash_verified": false
+      },
+      {
+        "name": "pytest-cov",
+        "version": "7.1.0",
+        "role": "isolated upstream base test-group candidate; no application dependency change",
+        "filename": "pytest_cov-7.1.0-py3-none-any.whl",
+        "url": "https://files.pythonhosted.org/packages/9d/7a/d968e294073affff457b041c2be9868a40c1c71f4a35fcc1e45e5493067b/pytest_cov-7.1.0-py3-none-any.whl",
+        "expected_sha256": "a0461110b7865f9a271aa1b51e516c9a95de9d696734a2f71e3e78f46e1d4678",
+        "expected_size_bytes": 22876,
+        "architecture": "Python universal tag; contents unverified",
+        "declared_license": "MIT",
+        "requires_python": ">=3.9",
+        "requires_dist": [
+          "coverage[toml]>=7.10.6",
+          "pluggy>=1.2",
+          "pytest>=7",
+          "process-tests; extra == \"testing\"",
+          "pytest-xdist; extra == \"testing\"",
+          "virtualenv; extra == \"testing\""
+        ],
+        "yanked": false,
+        "artifact_body_acquired": false,
+        "artifact_hash_verified": false
+      },
+      {
+        "name": "pytest-xdist",
+        "version": "3.8.0",
+        "role": "isolated upstream base test-group candidate; no application dependency change",
+        "filename": "pytest_xdist-3.8.0-py3-none-any.whl",
+        "url": "https://files.pythonhosted.org/packages/ca/31/d4e37e9e550c2b92a9cbc2e4d0b7420a27224968580b5a447f420847c975/pytest_xdist-3.8.0-py3-none-any.whl",
+        "expected_sha256": "202ca578cfeb7370784a8c33d6d05bc6e13b4f25b5053c30a152269fd10f0b88",
+        "expected_size_bytes": 46396,
+        "architecture": "Python universal tag; contents unverified",
+        "declared_license": "MIT",
+        "requires_python": ">=3.9",
+        "requires_dist": [
+          "execnet>=2.1",
+          "pytest>=7.0.0",
+          "filelock; extra == \"testing\"",
+          "psutil>=3.0; extra == \"psutil\"",
+          "setproctitle; extra == \"setproctitle\""
+        ],
+        "yanked": false,
+        "artifact_body_acquired": false,
+        "artifact_hash_verified": false
+      },
+      {
+        "name": "pretend",
+        "version": "1.0.9",
+        "role": "isolated upstream base test-group candidate; no application dependency change",
+        "filename": "pretend-1.0.9-py2.py3-none-any.whl",
+        "url": "https://files.pythonhosted.org/packages/49/1f/3d4f0579913edd3ad5b23ad52fcc42531cb736ad52af2ba6c057da8785b6/pretend-1.0.9-py2.py3-none-any.whl",
+        "expected_sha256": "e389b12b7073604be67845dbe32bf8297360ad9a609b24846fe15d86e0b7dc01",
+        "expected_size_bytes": 3848,
+        "architecture": "Python universal tag; contents unverified",
+        "declared_license": "BSD",
+        "requires_python": "",
+        "requires_dist": [],
+        "yanked": false,
+        "artifact_body_acquired": false,
+        "artifact_hash_verified": false
+      },
+      {
+        "name": "py-cpuinfo2",
+        "version": "10.1.1",
+        "role": "isolated upstream base test-group candidate; no application dependency change",
+        "filename": "py_cpuinfo2-10.1.1-py3-none-any.whl",
+        "url": "https://files.pythonhosted.org/packages/23/0a/ba69d2dde1ae12ef1d389ea5a216384c5ff6ef7a1e7a48d1e9b6686f6790/py_cpuinfo2-10.1.1-py3-none-any.whl",
+        "expected_sha256": "adc53396bfb206e6498d078ec2ab407f85799ecd819584ac36a8f80a2d4d762d",
+        "expected_size_bytes": 23791,
+        "architecture": "Python universal tag; contents unverified",
+        "declared_license": "MIT",
+        "requires_python": ">=3.9",
+        "requires_dist": [],
+        "yanked": false,
+        "artifact_body_acquired": false,
+        "artifact_hash_verified": false
+      },
+      {
+        "name": "execnet",
+        "version": "2.1.2",
+        "role": "isolated upstream base test-group candidate; no application dependency change",
+        "filename": "execnet-2.1.2-py3-none-any.whl",
+        "url": "https://files.pythonhosted.org/packages/ab/84/02fc1827e8cdded4aa65baef11296a9bbe595c474f0d6d758af082d849fd/execnet-2.1.2-py3-none-any.whl",
+        "expected_sha256": "67fba928dd5a544b783f6056f449e5e3931a5c378b128bc18501f7ea79e296ec",
+        "expected_size_bytes": 40708,
+        "architecture": "Python universal tag; contents unverified",
+        "declared_license": "MIT",
+        "requires_python": ">=3.8",
+        "requires_dist": [
+          "hatch; extra == \"testing\"",
+          "pre-commit; extra == \"testing\"",
+          "pytest; extra == \"testing\"",
+          "tox; extra == \"testing\""
+        ],
+        "yanked": false,
+        "artifact_body_acquired": false,
+        "artifact_hash_verified": false
+      },
+      {
+        "name": "cryptography_vectors",
+        "version": "50.0.2",
+        "role": "isolated upstream base test-group candidate; no application dependency change",
+        "filename": "cryptography_vectors-50.0.2-py3-none-any.whl",
+        "url": "https://files.pythonhosted.org/packages/83/a4/a95842e91abd69710682f6e552bdb271c959ad3793b8d5d1e00ca6dc10d5/cryptography_vectors-50.0.2-py3-none-any.whl",
+        "expected_sha256": "51641f03a3eb4edbe9fb68e3a3574d25f86aa502d06391fffa886330d02778a0",
+        "expected_size_bytes": 56362804,
+        "architecture": "Python universal tag; contents unverified",
+        "declared_license": "Apache-2.0 OR BSD-3-Clause",
+        "requires_python": null,
+        "requires_dist": [],
+        "yanked": false,
+        "artifact_body_acquired": false,
+        "artifact_hash_verified": false
+      }
+    ]
+  },
+  "registry_crates": [
+    {
+      "name": "asn1",
+      "version": "0.24.1",
+      "registry": "registry+https://github.com/rust-lang/crates.io-index",
+      "url": "https://static.crates.io/crates/asn1/asn1-0.24.1.crate",
+      "metadata_url": "https://crates.io/api/v1/crates/asn1/0.24.1",
+      "expected_sha256": "c9795210620c0cb3f9a7ce4f882808c38e1ef7b347c90591dceae0886e031fb1",
+      "expected_size_bytes": 50502,
+      "declared_license": "BSD-3-Clause",
+      "yanked": false,
+      "lock_and_api_checksum_match": true,
+      "artifact_body_acquired": false,
+      "artifact_hash_verified": false
+    },
+    {
+      "name": "asn1_derive",
+      "version": "0.24.1",
+      "registry": "registry+https://github.com/rust-lang/crates.io-index",
+      "url": "https://static.crates.io/crates/asn1_derive/asn1_derive-0.24.1.crate",
+      "metadata_url": "https://crates.io/api/v1/crates/asn1_derive/0.24.1",
+      "expected_sha256": "909e307f1cc32bb8bccbd98f446e6d1bf03fa30f7b53a4337da7181ad30fa11a",
+      "expected_size_bytes": 9534,
+      "declared_license": "BSD-3-Clause",
+      "yanked": false,
+      "lock_and_api_checksum_match": true,
+      "artifact_body_acquired": false,
+      "artifact_hash_verified": false
+    },
+    {
+      "name": "base64",
+      "version": "0.23.0",
+      "registry": "registry+https://github.com/rust-lang/crates.io-index",
+      "url": "https://static.crates.io/crates/base64/base64-0.23.0.crate",
+      "metadata_url": "https://crates.io/api/v1/crates/base64/0.23.0",
+      "expected_sha256": "b25655df2c3cdd83c5e5b293b88acd880332b2ddadd7c30ac43144fdc0033da9",
+      "expected_size_bytes": 93578,
+      "declared_license": "MIT OR Apache-2.0",
+      "yanked": false,
+      "lock_and_api_checksum_match": true,
+      "artifact_body_acquired": false,
+      "artifact_hash_verified": false
+    },
+    {
+      "name": "bitflags",
+      "version": "2.13.1",
+      "registry": "registry+https://github.com/rust-lang/crates.io-index",
+      "url": "https://static.crates.io/crates/bitflags/bitflags-2.13.1.crate",
+      "metadata_url": "https://crates.io/api/v1/crates/bitflags/2.13.1",
+      "expected_sha256": "b588b76d00fde79687d7646a9b5bdf3cc0f655e0bbd080335a95d7e96f3587da",
+      "expected_size_bytes": 51395,
+      "declared_license": "MIT OR Apache-2.0",
+      "yanked": false,
+      "lock_and_api_checksum_match": true,
+      "artifact_body_acquired": false,
+      "artifact_hash_verified": false
+    },
+    {
+      "name": "cc",
+      "version": "1.4.0",
+      "registry": "registry+https://github.com/rust-lang/crates.io-index",
+      "url": "https://static.crates.io/crates/cc/cc-1.4.0.crate",
+      "metadata_url": "https://crates.io/api/v1/crates/cc/1.4.0",
+      "expected_sha256": "5add81bb678e6cb321aff7fa0dc7689ad82b112dbc032cea19f91d6b8e3582b9",
+      "expected_size_bytes": 97878,
+      "declared_license": "MIT OR Apache-2.0",
+      "yanked": false,
+      "lock_and_api_checksum_match": true,
+      "artifact_body_acquired": false,
+      "artifact_hash_verified": false
+    },
+    {
+      "name": "cfg-if",
+      "version": "1.0.4",
+      "registry": "registry+https://github.com/rust-lang/crates.io-index",
+      "url": "https://static.crates.io/crates/cfg-if/cfg-if-1.0.4.crate",
+      "metadata_url": "https://crates.io/api/v1/crates/cfg-if/1.0.4",
+      "expected_sha256": "9330f8b2ff13f34540b44e946ef35111825727b38d33286ef986142615121801",
+      "expected_size_bytes": 9360,
+      "declared_license": "MIT OR Apache-2.0",
+      "yanked": false,
+      "lock_and_api_checksum_match": true,
+      "artifact_body_acquired": false,
+      "artifact_hash_verified": false
+    },
+    {
+      "name": "find-msvc-tools",
+      "version": "0.1.9",
+      "registry": "registry+https://github.com/rust-lang/crates.io-index",
+      "url": "https://static.crates.io/crates/find-msvc-tools/find-msvc-tools-0.1.9.crate",
+      "metadata_url": "https://crates.io/api/v1/crates/find-msvc-tools/0.1.9",
+      "expected_sha256": "5baebc0774151f905a1a2cc41989300b1e6fbb29aff0ceffa1064fdd3088d582",
+      "expected_size_bytes": 31493,
+      "declared_license": "MIT OR Apache-2.0",
+      "yanked": false,
+      "lock_and_api_checksum_match": true,
+      "artifact_body_acquired": false,
+      "artifact_hash_verified": false
+    },
+    {
+      "name": "foreign-types",
+      "version": "0.3.2",
+      "registry": "registry+https://github.com/rust-lang/crates.io-index",
+      "url": "https://static.crates.io/crates/foreign-types/foreign-types-0.3.2.crate",
+      "metadata_url": "https://crates.io/api/v1/crates/foreign-types/0.3.2",
+      "expected_sha256": "f6f339eb8adc052cd2ca78910fda869aefa38d22d5cb648e6485e4d3fc06f3b1",
+      "expected_size_bytes": 7504,
+      "declared_license": "MIT/Apache-2.0",
+      "yanked": false,
+      "lock_and_api_checksum_match": true,
+      "artifact_body_acquired": false,
+      "artifact_hash_verified": false
+    },
+    {
+      "name": "foreign-types-shared",
+      "version": "0.1.1",
+      "registry": "registry+https://github.com/rust-lang/crates.io-index",
+      "url": "https://static.crates.io/crates/foreign-types-shared/foreign-types-shared-0.1.1.crate",
+      "metadata_url": "https://crates.io/api/v1/crates/foreign-types-shared/0.1.1",
+      "expected_sha256": "00b0228411908ca8685dba7fc2cdd70ec9990a6e753e89b6ac91a84c40fbaf4b",
+      "expected_size_bytes": 5672,
+      "declared_license": "MIT/Apache-2.0",
+      "yanked": false,
+      "lock_and_api_checksum_match": true,
+      "artifact_body_acquired": false,
+      "artifact_hash_verified": false
+    },
+    {
+      "name": "heck",
+      "version": "0.5.0",
+      "registry": "registry+https://github.com/rust-lang/crates.io-index",
+      "url": "https://static.crates.io/crates/heck/heck-0.5.0.crate",
+      "metadata_url": "https://crates.io/api/v1/crates/heck/0.5.0",
+      "expected_sha256": "2304e00983f87ffb38b55b444b5e3b60a884b5d30c0fca7d82fe33449bbe55ea",
+      "expected_size_bytes": 11517,
+      "declared_license": "MIT OR Apache-2.0",
+      "yanked": false,
+      "lock_and_api_checksum_match": true,
+      "artifact_body_acquired": false,
+      "artifact_hash_verified": false
+    },
+    {
+      "name": "itoa",
+      "version": "1.0.18",
+      "registry": "registry+https://github.com/rust-lang/crates.io-index",
+      "url": "https://static.crates.io/crates/itoa/itoa-1.0.18.crate",
+      "metadata_url": "https://crates.io/api/v1/crates/itoa/1.0.18",
+      "expected_sha256": "8f42a60cbdf9a97f5d2305f08a87dc4e09308d1276d28c869c684d7777685682",
+      "expected_size_bytes": 15935,
+      "declared_license": "MIT OR Apache-2.0",
+      "yanked": false,
+      "lock_and_api_checksum_match": true,
+      "artifact_body_acquired": false,
+      "artifact_hash_verified": false
+    },
+    {
+      "name": "libc",
+      "version": "0.2.189",
+      "registry": "registry+https://github.com/rust-lang/crates.io-index",
+      "url": "https://static.crates.io/crates/libc/libc-0.2.189.crate",
+      "metadata_url": "https://crates.io/api/v1/crates/libc/0.2.189",
+      "expected_sha256": "3eaf3ede3fee6db1a4c2ee091bf8a8b4dccdc6d17f656fb07896ee72867612f2",
+      "expected_size_bytes": 851502,
+      "declared_license": "MIT OR Apache-2.0",
+      "yanked": false,
+      "lock_and_api_checksum_match": true,
+      "artifact_body_acquired": false,
+      "artifact_hash_verified": false
+    },
+    {
+      "name": "once_cell",
+      "version": "1.21.4",
+      "registry": "registry+https://github.com/rust-lang/crates.io-index",
+      "url": "https://static.crates.io/crates/once_cell/once_cell-1.21.4.crate",
+      "metadata_url": "https://crates.io/api/v1/crates/once_cell/1.21.4",
+      "expected_sha256": "9f7c3e4beb33f85d45ae3e3a1792185706c8e16d043238c593331cc7cd313b50",
+      "expected_size_bytes": 35010,
+      "declared_license": "MIT OR Apache-2.0",
+      "yanked": false,
+      "lock_and_api_checksum_match": true,
+      "artifact_body_acquired": false,
+      "artifact_hash_verified": false
+    },
+    {
+      "name": "openssl",
+      "version": "0.10.81",
+      "registry": "registry+https://github.com/rust-lang/crates.io-index",
+      "url": "https://static.crates.io/crates/openssl/openssl-0.10.81.crate",
+      "metadata_url": "https://crates.io/api/v1/crates/openssl/0.10.81",
+      "expected_sha256": "77823a27f0babb03091cb9ed9ef80af3b39dbc82f97e8fa530374b7dafd87a45",
+      "expected_size_bytes": 311187,
+      "declared_license": "Apache-2.0",
+      "yanked": false,
+      "lock_and_api_checksum_match": true,
+      "artifact_body_acquired": false,
+      "artifact_hash_verified": false
+    },
+    {
+      "name": "openssl-macros",
+      "version": "0.1.1",
+      "registry": "registry+https://github.com/rust-lang/crates.io-index",
+      "url": "https://static.crates.io/crates/openssl-macros/openssl-macros-0.1.1.crate",
+      "metadata_url": "https://crates.io/api/v1/crates/openssl-macros/0.1.1",
+      "expected_sha256": "a948666b637a0f465e8564c73e89d4dde00d72d4d473cc972f390fc3dcee7d9c",
+      "expected_size_bytes": 5601,
+      "declared_license": "MIT/Apache-2.0",
+      "yanked": false,
+      "lock_and_api_checksum_match": true,
+      "artifact_body_acquired": false,
+      "artifact_hash_verified": false
+    },
+    {
+      "name": "openssl-sys",
+      "version": "0.9.117",
+      "registry": "registry+https://github.com/rust-lang/crates.io-index",
+      "url": "https://static.crates.io/crates/openssl-sys/openssl-sys-0.9.117.crate",
+      "metadata_url": "https://crates.io/api/v1/crates/openssl-sys/0.9.117",
+      "expected_sha256": "b47e7e6bb2c38cd930d25a23b40fa52e068c10e85f3e03a7f5ba5aaca5713695",
+      "expected_size_bytes": 76045,
+      "declared_license": "MIT",
+      "yanked": false,
+      "lock_and_api_checksum_match": true,
+      "artifact_body_acquired": false,
+      "artifact_hash_verified": false
+    },
+    {
+      "name": "pem",
+      "version": "4.0.0",
+      "registry": "registry+https://github.com/rust-lang/crates.io-index",
+      "url": "https://static.crates.io/crates/pem/pem-4.0.0.crate",
+      "metadata_url": "https://crates.io/api/v1/crates/pem/4.0.0",
+      "expected_sha256": "d354a98a3d1251555de99e8fdd8afda05573c31b82f59063a7b0a29b5527f120",
+      "expected_size_bytes": 18770,
+      "declared_license": "MIT",
+      "yanked": false,
+      "lock_and_api_checksum_match": true,
+      "artifact_body_acquired": false,
+      "artifact_hash_verified": false
+    },
+    {
+      "name": "pkg-config",
+      "version": "0.3.33",
+      "registry": "registry+https://github.com/rust-lang/crates.io-index",
+      "url": "https://static.crates.io/crates/pkg-config/pkg-config-0.3.33.crate",
+      "metadata_url": "https://crates.io/api/v1/crates/pkg-config/0.3.33",
+      "expected_sha256": "19f132c84eca552bf34cab8ec81f1c1dcc229b811638f9d283dceabe58c5569e",
+      "expected_size_bytes": 21590,
+      "declared_license": "MIT OR Apache-2.0",
+      "yanked": false,
+      "lock_and_api_checksum_match": true,
+      "artifact_body_acquired": false,
+      "artifact_hash_verified": false
+    },
+    {
+      "name": "portable-atomic",
+      "version": "1.14.0",
+      "registry": "registry+https://github.com/rust-lang/crates.io-index",
+      "url": "https://static.crates.io/crates/portable-atomic/portable-atomic-1.14.0.crate",
+      "metadata_url": "https://crates.io/api/v1/crates/portable-atomic/1.14.0",
+      "expected_sha256": "3d20d5497ef88037a52ff98267d066e7f11fcc5e99bbfbd58a42336193aacec3",
+      "expected_size_bytes": 200703,
+      "declared_license": "Apache-2.0 OR MIT",
+      "yanked": false,
+      "lock_and_api_checksum_match": true,
+      "artifact_body_acquired": false,
+      "artifact_hash_verified": false
+    },
+    {
+      "name": "proc-macro2",
+      "version": "1.0.107",
+      "registry": "registry+https://github.com/rust-lang/crates.io-index",
+      "url": "https://static.crates.io/crates/proc-macro2/proc-macro2-1.0.107.crate",
+      "metadata_url": "https://crates.io/api/v1/crates/proc-macro2/1.0.107",
+      "expected_sha256": "985e7ec9bb745e6ce6535b544d84d6cd6f7ad8bd711c398938ae983b91a766d9",
+      "expected_size_bytes": 59588,
+      "declared_license": "MIT OR Apache-2.0",
+      "yanked": false,
+      "lock_and_api_checksum_match": true,
+      "artifact_body_acquired": false,
+      "artifact_hash_verified": false
+    },
+    {
+      "name": "pyo3",
+      "version": "0.29.2",
+      "registry": "registry+https://github.com/rust-lang/crates.io-index",
+      "url": "https://static.crates.io/crates/pyo3/pyo3-0.29.2.crate",
+      "metadata_url": "https://crates.io/api/v1/crates/pyo3/0.29.2",
+      "expected_sha256": "4688ddedf473e32662b9b067670129a8afb8c18e351482c70d62ba4a88171e8b",
+      "expected_size_bytes": 1255741,
+      "declared_license": "MIT OR Apache-2.0",
+      "yanked": false,
+      "lock_and_api_checksum_match": true,
+      "artifact_body_acquired": false,
+      "artifact_hash_verified": false
+    },
+    {
+      "name": "pyo3-build-config",
+      "version": "0.29.2",
+      "registry": "registry+https://github.com/rust-lang/crates.io-index",
+      "url": "https://static.crates.io/crates/pyo3-build-config/pyo3-build-config-0.29.2.crate",
+      "metadata_url": "https://crates.io/api/v1/crates/pyo3-build-config/0.29.2",
+      "expected_sha256": "f41027e41b4bd03f6e60f9f417fe24a6341a6bb744edd62b6f709f2a52ea30e9",
+      "expected_size_bytes": 41104,
+      "declared_license": "MIT OR Apache-2.0",
+      "yanked": false,
+      "lock_and_api_checksum_match": true,
+      "artifact_body_acquired": false,
+      "artifact_hash_verified": false
+    },
+    {
+      "name": "pyo3-ffi",
+      "version": "0.29.2",
+      "registry": "registry+https://github.com/rust-lang/crates.io-index",
+      "url": "https://static.crates.io/crates/pyo3-ffi/pyo3-ffi-0.29.2.crate",
+      "metadata_url": "https://crates.io/api/v1/crates/pyo3-ffi/0.29.2",
+      "expected_sha256": "e591a95526fead067432c3b3a33fc74770b87b1e04e73671090d9c2055a2b327",
+      "expected_size_bytes": 90029,
+      "declared_license": "MIT OR Apache-2.0",
+      "yanked": false,
+      "lock_and_api_checksum_match": true,
+      "artifact_body_acquired": false,
+      "artifact_hash_verified": false
+    },
+    {
+      "name": "pyo3-macros",
+      "version": "0.29.2",
+      "registry": "registry+https://github.com/rust-lang/crates.io-index",
+      "url": "https://static.crates.io/crates/pyo3-macros/pyo3-macros-0.29.2.crate",
+      "metadata_url": "https://crates.io/api/v1/crates/pyo3-macros/0.29.2",
+      "expected_sha256": "73225868fc1cd84eef2c3c230ddb91273bf1de46aeb8a4248da76d32a0924a1c",
+      "expected_size_bytes": 9044,
+      "declared_license": "MIT OR Apache-2.0",
+      "yanked": false,
+      "lock_and_api_checksum_match": true,
+      "artifact_body_acquired": false,
+      "artifact_hash_verified": false
+    },
+    {
+      "name": "pyo3-macros-backend",
+      "version": "0.29.2",
+      "registry": "registry+https://github.com/rust-lang/crates.io-index",
+      "url": "https://static.crates.io/crates/pyo3-macros-backend/pyo3-macros-backend-0.29.2.crate",
+      "metadata_url": "https://crates.io/api/v1/crates/pyo3-macros-backend/0.29.2",
+      "expected_sha256": "571575aa3749fa6216757dd47d2a3e7ef360f329a40f0666a9fbd14889024952",
+      "expected_size_bytes": 93749,
+      "declared_license": "MIT OR Apache-2.0",
+      "yanked": false,
+      "lock_and_api_checksum_match": true,
+      "artifact_body_acquired": false,
+      "artifact_hash_verified": false
+    },
+    {
+      "name": "quote",
+      "version": "1.0.47",
+      "registry": "registry+https://github.com/rust-lang/crates.io-index",
+      "url": "https://static.crates.io/crates/quote/quote-1.0.47.crate",
+      "metadata_url": "https://crates.io/api/v1/crates/quote/1.0.47",
+      "expected_sha256": "1fbf4db142a473a8d80c26bbf18454ed458bf8d26c8219c331daecfdbd079001",
+      "expected_size_bytes": 31622,
+      "declared_license": "MIT OR Apache-2.0",
+      "yanked": false,
+      "lock_and_api_checksum_match": true,
+      "artifact_body_acquired": false,
+      "artifact_hash_verified": false
+    },
+    {
+      "name": "self_cell",
+      "version": "1.3.0",
+      "registry": "registry+https://github.com/rust-lang/crates.io-index",
+      "url": "https://static.crates.io/crates/self_cell/self_cell-1.3.0.crate",
+      "metadata_url": "https://crates.io/api/v1/crates/self_cell/1.3.0",
+      "expected_sha256": "2ab42ca02749e120097e328d91d415325bdf43b1c72c4c8badf37375fe40a813",
+      "expected_size_bytes": 23869,
+      "declared_license": "Apache-2.0 OR GPL-2.0-only",
+      "yanked": false,
+      "lock_and_api_checksum_match": true,
+      "artifact_body_acquired": false,
+      "artifact_hash_verified": false
+    },
+    {
+      "name": "shlex",
+      "version": "2.0.1",
+      "registry": "registry+https://github.com/rust-lang/crates.io-index",
+      "url": "https://static.crates.io/crates/shlex/shlex-2.0.1.crate",
+      "metadata_url": "https://crates.io/api/v1/crates/shlex/2.0.1",
+      "expected_sha256": "f8fadd59c855ef2080decdef8ff161eb6661b86933c9d82e5ba29dc602a55aba",
+      "expected_size_bytes": 19332,
+      "declared_license": "MIT OR Apache-2.0",
+      "yanked": false,
+      "lock_and_api_checksum_match": true,
+      "artifact_body_acquired": false,
+      "artifact_hash_verified": false
+    },
+    {
+      "name": "syn",
+      "version": "2.0.119",
+      "registry": "registry+https://github.com/rust-lang/crates.io-index",
+      "url": "https://static.crates.io/crates/syn/syn-2.0.119.crate",
+      "metadata_url": "https://crates.io/api/v1/crates/syn/2.0.119",
+      "expected_sha256": "872831b642d1a07999a962a351ed35b955ea2cfc8f3862091e2a240a84f17297",
+      "expected_size_bytes": 307407,
+      "declared_license": "MIT OR Apache-2.0",
+      "yanked": false,
+      "lock_and_api_checksum_match": true,
+      "artifact_body_acquired": false,
+      "artifact_hash_verified": false
+    },
+    {
+      "name": "target-lexicon",
+      "version": "0.13.5",
+      "registry": "registry+https://github.com/rust-lang/crates.io-index",
+      "url": "https://static.crates.io/crates/target-lexicon/target-lexicon-0.13.5.crate",
+      "metadata_url": "https://crates.io/api/v1/crates/target-lexicon/0.13.5",
+      "expected_sha256": "adb6935a6f5c20170eeceb1a3835a49e12e19d792f6dd344ccc76a985ca5a6ca",
+      "expected_size_bytes": 26928,
+      "declared_license": "Apache-2.0 WITH LLVM-exception",
+      "yanked": false,
+      "lock_and_api_checksum_match": true,
+      "artifact_body_acquired": false,
+      "artifact_hash_verified": false
+    },
+    {
+      "name": "unicode-ident",
+      "version": "1.0.24",
+      "registry": "registry+https://github.com/rust-lang/crates.io-index",
+      "url": "https://static.crates.io/crates/unicode-ident/unicode-ident-1.0.24.crate",
+      "metadata_url": "https://crates.io/api/v1/crates/unicode-ident/1.0.24",
+      "expected_sha256": "e6e4313cd5fcd3dad5cafa179702e2b244f760991f45397d14d4ebf38247da75",
+      "expected_size_bytes": 49298,
+      "declared_license": "(MIT OR Apache-2.0) AND Unicode-3.0",
+      "yanked": false,
+      "lock_and_api_checksum_match": true,
+      "artifact_body_acquired": false,
+      "artifact_hash_verified": false
+    },
+    {
+      "name": "vcpkg",
+      "version": "0.2.15",
+      "registry": "registry+https://github.com/rust-lang/crates.io-index",
+      "url": "https://static.crates.io/crates/vcpkg/vcpkg-0.2.15.crate",
+      "metadata_url": "https://crates.io/api/v1/crates/vcpkg/0.2.15",
+      "expected_sha256": "accd4ea62f7bb7a82fe23066fb0957d48ef677f6eeb8215f372f52e48bb32426",
+      "expected_size_bytes": 228735,
+      "declared_license": "MIT/Apache-2.0",
+      "yanked": false,
+      "lock_and_api_checksum_match": true,
+      "artifact_body_acquired": false,
+      "artifact_hash_verified": false
+    }
+  ],
+  "pypi_provenance_metadata": {
+    "maturin": {
+      "url": "https://pypi.org/integrity/maturin/1.15.0/maturin-1.15.0-py3-none-win_arm64.whl/provenance",
+      "publishers": [
+        {
+          "environment": "pypi",
+          "kind": "GitHub",
+          "repository": "PyO3/maturin",
+          "workflow": "release.yml"
+        }
+      ],
+      "subjects": [
+        [
+          {
+            "name": "maturin-1.15.0-py3-none-win_arm64.whl",
+            "digest": {
+              "sha256": "c7dc0c66c78d3debdd9c5aa807e861fbcbf07f3505d34b125df74c03986b0f48"
+            }
+          }
+        ]
+      ],
+      "statement_digest_compared_to_release_metadata": true,
+      "cryptographic_verification_performed": false
+    },
+    "cryptography": {
+      "url": "https://pypi.org/integrity/cryptography/50.0.2/cryptography-50.0.2.tar.gz/provenance",
+      "publishers": [
+        {
+          "environment": null,
+          "kind": "GitHub",
+          "repository": "pyca/cryptography",
+          "workflow": "pypi-publish.yml"
+        }
+      ],
+      "subjects": [
+        [
+          {
+            "name": "cryptography-50.0.2.tar.gz",
+            "digest": {
+              "sha256": "7b46165bb56eb4704e2eaaf86f3c940d19154535d9b0ca7d6d590b04060e00d5"
+            }
+          }
+        ]
+      ],
+      "statement_digest_compared_to_release_metadata": true,
+      "cryptographic_verification_performed": false
+    },
+    "cryptography_vectors": {
+      "url": "https://pypi.org/integrity/cryptography-vectors/50.0.2/cryptography_vectors-50.0.2-py3-none-any.whl/provenance",
+      "publishers": [
+        {
+          "environment": null,
+          "kind": "GitHub",
+          "repository": "pyca/cryptography",
+          "workflow": "pypi-publish.yml"
+        }
+      ],
+      "subjects": [
+        [
+          {
+            "name": "cryptography_vectors-50.0.2-py3-none-any.whl",
+            "digest": {
+              "sha256": "51641f03a3eb4edbe9fb68e3a3574d25f86aa502d06391fffa886330d02778a0"
+            }
+          }
+        ]
+      ],
+      "statement_digest_compared_to_release_metadata": true,
+      "cryptographic_verification_performed": false
+    },
+    "setuptools": {
+      "provenance_endpoint_observation": "HTTP 404 on selected file endpoint; not proof that publisher identity is invalid",
+      "cryptographic_verification_performed": false
+    },
+    "cffi": {
+      "provenance_endpoint_observation": "HTTP 404 on selected file endpoint; not proof that publisher identity is invalid",
+      "cryptographic_verification_performed": false
+    },
+    "pycparser": {
+      "provenance_endpoint_observation": "HTTP 404 on selected file endpoint; not proof that publisher identity is invalid",
+      "cryptographic_verification_performed": false
+    }
+  },
+  "metadata_receipts": [
+    {
+      "id": "cargo_checksum",
+      "url": "https://static.rust-lang.org/dist/2026-10-15/cargo-1.99.1-aarch64-pc-windows-msvc.tar.xz.sha256",
+      "observed_metadata_sha256": "6bb29fa907dda219ecd8b864d6f480f487a2632183ab8ea9b83f3bca462868f5",
+      "observed_metadata_bytes": 110
+    },
+    {
+      "id": "cargo_signature",
+      "url": "https://static.rust-lang.org/dist/2026-10-15/cargo-1.99.1-aarch64-pc-windows-msvc.tar.xz.asc",
+      "observed_metadata_sha256": "fba64d04412c10b7bd5ff4e5e8172bafa50ddc024989c180e2f501abc26a1726",
+      "observed_metadata_bytes": 801
+    },
+    {
+      "id": "certifi",
+      "url": "https://pypi.org/pypi/certifi/2026.7.22/json",
+      "observed_metadata_sha256": "c6fe912677e373608eab51e324946005998faeb0fa999e6ddada24676e3556d3",
+      "observed_metadata_bytes": 4584
+    },
+    {
+      "id": "cffi",
+      "url": "https://pypi.org/pypi/cffi/2.1.1/json",
+      "observed_metadata_sha256": "2255e530e3f80593a354e3d84a29966924d0e10309d1e3a6d50f845ab7d8df66",
+      "observed_metadata_bytes": 89333
+    },
+    {
+      "id": "colorama",
+      "url": "https://pypi.org/pypi/colorama/0.4.6/json",
+      "observed_metadata_sha256": "43fb351344384a44c2b7d7fff1c63496b89ac830aea714301525c1f3718addd1",
+      "observed_metadata_bytes": 19759
+    },
+    {
+      "id": "coverage",
+      "url": "https://pypi.org/pypi/coverage/7.16.2/json",
+      "observed_metadata_sha256": "0d31972356705dff010938f4de1bc47ed0277a05e45dbc303c5c0cb6a055add6",
+      "observed_metadata_bytes": 114885
+    },
+    {
+      "id": "crate_asn1",
+      "url": "https://crates.io/api/v1/crates/asn1/0.24.1",
+      "observed_metadata_sha256": "91394e406b047e60068d6089836c1747d43185fcde11f8c0b227d5408998cf07",
+      "observed_metadata_bytes": 1228
+    },
+    {
+      "id": "crate_asn1_derive",
+      "url": "https://crates.io/api/v1/crates/asn1_derive/0.24.1",
+      "observed_metadata_sha256": "85c0f5691b1b86b11a3c687aff5d88a00b9688371f3ca575c07677f4c9d432bc",
+      "observed_metadata_bytes": 1175
+    },
+    {
+      "id": "crate_base64",
+      "url": "https://crates.io/api/v1/crates/base64/0.23.0",
+      "observed_metadata_sha256": "f66acc3a9c28a042fcd93bd2f13a6abb311494264427ac1b7f10b607005da49f",
+      "observed_metadata_bytes": 1684
+    },
+    {
+      "id": "crate_bitflags",
+      "url": "https://crates.io/api/v1/crates/bitflags/2.13.1",
+      "observed_metadata_sha256": "b36a95492ba277dc6c8996e1b8ee6911563b674174d1613be81f689658fdb9ff",
+      "observed_metadata_bytes": 1690
+    },
+    {
+      "id": "crate_cc",
+      "url": "https://crates.io/api/v1/crates/cc/1.4.0",
+      "observed_metadata_sha256": "1bcd6b09185640a664cb7723ef99893d5252d9d2d2d9808c5a8bc72c6a81c048",
+      "observed_metadata_bytes": 1422
+    },
+    {
+      "id": "crate_cfg-if",
+      "url": "https://crates.io/api/v1/crates/cfg-if/1.0.4",
+      "observed_metadata_sha256": "f6d3c53e9cff3454431a326439f943956fae1627238f98a3e460f021019a57f4",
+      "observed_metadata_bytes": 1719
+    },
+    {
+      "id": "crate_find-msvc-tools",
+      "url": "https://crates.io/api/v1/crates/find-msvc-tools/0.1.9",
+      "observed_metadata_sha256": "427179777b8ef2ad2687ea6d156bfbbd9e31acd08012aa50690f0c4057721bf7",
+      "observed_metadata_bytes": 1296
+    },
+    {
+      "id": "crate_foreign-types-shared",
+      "url": "https://crates.io/api/v1/crates/foreign-types-shared/0.1.1",
+      "observed_metadata_sha256": "563817c7973891b2310094bc3e383aae6d04fbaffcf0007ce370ed07dc097212",
+      "observed_metadata_bytes": 1115
+    },
+    {
+      "id": "crate_foreign-types",
+      "url": "https://crates.io/api/v1/crates/foreign-types/0.3.2",
+      "observed_metadata_sha256": "c1392279103ce28c38f926fbebe933c370879ca33dc56207adfcf524e39abfe1",
+      "observed_metadata_bytes": 1075
+    },
+    {
+      "id": "crate_heck",
+      "url": "https://crates.io/api/v1/crates/heck/0.5.0",
+      "observed_metadata_sha256": "26dfbcbaa753594f79cb333ae43eb9a27d4d5058501c7e563a443d881a850e4a",
+      "observed_metadata_bytes": 1512
+    },
+    {
+      "id": "crate_itoa",
+      "url": "https://crates.io/api/v1/crates/itoa/1.0.18",
+      "observed_metadata_sha256": "bc1b3dada407aedc643e5204f5179224f4b5d797c6a421ee3057c364a6bf9c19",
+      "observed_metadata_bytes": 1544
+    },
+    {
+      "id": "crate_libc",
+      "url": "https://crates.io/api/v1/crates/libc/0.2.189",
+      "observed_metadata_sha256": "f7b434f3c51d88ff79b6d501b414bbc3f12e773baf36d4907b4f4aca4cc74d26",
+      "observed_metadata_bytes": 1777
+    },
+    {
+      "id": "crate_once_cell",
+      "url": "https://crates.io/api/v1/crates/once_cell/1.21.4",
+      "observed_metadata_sha256": "3f7175381a1fd9cab957361eb97c189d18248536c6142376c7c6ca5cff55ec95",
+      "observed_metadata_bytes": 1839
+    },
+    {
+      "id": "crate_openssl-macros",
+      "url": "https://crates.io/api/v1/crates/openssl-macros/0.1.1",
+      "observed_metadata_sha256": "7e0cb7e5287fea933e6818f93163c7c46f5007b8c647b17323e758367a8d7704",
+      "observed_metadata_bytes": 1541
+    },
+    {
+      "id": "crate_openssl-sys",
+      "url": "https://crates.io/api/v1/crates/openssl-sys/0.9.117",
+      "observed_metadata_sha256": "db13d589ba9dda68f8d2706c240df206d241ca9e880fc2d5b5941c3032998f66",
+      "observed_metadata_bytes": 1717
+    },
+    {
+      "id": "crate_openssl",
+      "url": "https://crates.io/api/v1/crates/openssl/0.10.81",
+      "observed_metadata_sha256": "395541702fafd2b823b5d542f1951283747b4a8fa9bc7d6b6d30e5317cbf86f4",
+      "observed_metadata_bytes": 1726
+    },
+    {
+      "id": "crate_pem",
+      "url": "https://crates.io/api/v1/crates/pem/4.0.0",
+      "observed_metadata_sha256": "f0fae878916b5dd20f0a4a0d07d76613d8ed11bfb673c6298a8e362b41fb8f05",
+      "observed_metadata_bytes": 1661
+    },
+    {
+      "id": "crate_pkg-config",
+      "url": "https://crates.io/api/v1/crates/pkg-config/0.3.33",
+      "observed_metadata_sha256": "8cbb3287de5c254770bf906d97950d6dcdf6d2711a1713aa12851fc1656b0b8f",
+      "observed_metadata_bytes": 1664
+    },
+    {
+      "id": "crate_portable-atomic",
+      "url": "https://crates.io/api/v1/crates/portable-atomic/1.14.0",
+      "observed_metadata_sha256": "d7108b06c098169e3e29d14aec7493b05f0dbf0bfc7c29adf52b1d64fb6bf391",
+      "observed_metadata_bytes": 1516
+    },
+    {
+      "id": "crate_proc-macro2",
+      "url": "https://crates.io/api/v1/crates/proc-macro2/1.0.107",
+      "observed_metadata_sha256": "2bf47850d78d1668db24c8b10666b4070d66fb1be2cb217d3f0f7810a2ca5f53",
+      "observed_metadata_bytes": 1773
+    },
+    {
+      "id": "crate_pyo3-build-config",
+      "url": "https://crates.io/api/v1/crates/pyo3-build-config/0.29.2",
+      "observed_metadata_sha256": "08e2f6bd407b0ace454bd8ffd2e19955ab8fb6a5c507cf6a60c8f353d5607504",
+      "observed_metadata_bytes": 1329
+    },
+    {
+      "id": "crate_pyo3-ffi",
+      "url": "https://crates.io/api/v1/crates/pyo3-ffi/0.29.2",
+      "observed_metadata_sha256": "c4f7d265f784b88388994603d13d43a4c1dac793fa64cd73dfb9cc0379ce277e",
+      "observed_metadata_bytes": 1598
+    },
+    {
+      "id": "crate_pyo3-macros-backend",
+      "url": "https://crates.io/api/v1/crates/pyo3-macros-backend/0.29.2",
+      "observed_metadata_sha256": "3fedf0bc5fe0747e1a84af0991ef9541f66cdc3372e9f40c5a4c0dfd1eccf0bf",
+      "observed_metadata_bytes": 1304
+    },
+    {
+      "id": "crate_pyo3-macros",
+      "url": "https://crates.io/api/v1/crates/pyo3-macros/0.29.2",
+      "observed_metadata_sha256": "b75bc1443345de09c6b3929465322e919f3879bb08c90cbc83f5d05a00b36dfe",
+      "observed_metadata_bytes": 1348
+    },
+    {
+      "id": "crate_pyo3",
+      "url": "https://crates.io/api/v1/crates/pyo3/0.29.2",
+      "observed_metadata_sha256": "a86623cd9ebf86004d9fceb9b1715ccf95cd46f6e60a8ebac15068186ce911bf",
+      "observed_metadata_bytes": 2945
+    },
+    {
+      "id": "crate_quote",
+      "url": "https://crates.io/api/v1/crates/quote/1.0.47",
+      "observed_metadata_sha256": "9d8cec8088a0c5dd1eae684ed76acfe62802aa4dd5baaeed26830760f7888e20",
+      "observed_metadata_bytes": 1609
+    },
+    {
+      "id": "crate_self_cell",
+      "url": "https://crates.io/api/v1/crates/self_cell/1.3.0",
+      "observed_metadata_sha256": "d6956e0c21eca595989c98b61d3ebfa679b5e164a15e7bebc57ac0da81fd5612",
+      "observed_metadata_bytes": 1658
+    },
+    {
+      "id": "crate_shlex",
+      "url": "https://crates.io/api/v1/crates/shlex/2.0.1",
+      "observed_metadata_sha256": "6e42e0e9d66e3bd4f00466c9a0ca69471e8b92af26284597db3ba9c94517602f",
+      "observed_metadata_bytes": 1544
+    },
+    {
+      "id": "crate_syn",
+      "url": "https://crates.io/api/v1/crates/syn/2.0.119",
+      "observed_metadata_sha256": "8c1db7fdd79c15788b0828e4f869fc94a3793d5413d63fd0ea8be018d30f6acb",
+      "observed_metadata_bytes": 1885
+    },
+    {
+      "id": "crate_target-lexicon",
+      "url": "https://crates.io/api/v1/crates/target-lexicon/0.13.5",
+      "observed_metadata_sha256": "2492d0d2fbbcd472526bd03c43f995700cba511988eac07fdf7eeacf69995820",
+      "observed_metadata_bytes": 1724
+    },
+    {
+      "id": "crate_unicode-ident",
+      "url": "https://crates.io/api/v1/crates/unicode-ident/1.0.24",
+      "observed_metadata_sha256": "93b4a4443debde7ddcc5cb3c8758313d046ebb40b32d8ce4a29ea04474a7ab84",
+      "observed_metadata_bytes": 1703
+    },
+    {
+      "id": "crate_vcpkg",
+      "url": "https://crates.io/api/v1/crates/vcpkg/0.2.15",
+      "observed_metadata_sha256": "7972fc799a640bfeb6da4ce484be00a45cc246e6b838c0eb1bba32fff3cf8874",
+      "observed_metadata_bytes": 1667
+    },
+    {
+      "id": "cryptography",
+      "url": "https://pypi.org/pypi/cryptography/50.0.2/json",
+      "observed_metadata_sha256": "7423990cc0948676ef47a71ea62a476ece4c76245e6bebd1c3a71f03c4ffc0f4",
+      "observed_metadata_bytes": 57201
+    },
+    {
+      "id": "cryptography_attestation",
+      "url": "https://pypi.org/integrity/cryptography/50.0.2/cryptography-50.0.2.tar.gz/provenance",
+      "observed_metadata_sha256": "af4ae1687f8d3c17d306082b9db34bfa66af06511920904ea8c0915b21a10a07",
+      "observed_metadata_bytes": 9932
+    },
+    {
+      "id": "cryptography_cargo_lock",
+      "url": "https://raw.githubusercontent.com/pyca/cryptography/50.0.2/Cargo.lock",
+      "observed_metadata_sha256": "98778208027ce05bfff0db88c290f28355eb20e685f0c728775359fb91a1a4c4",
+      "observed_metadata_bytes": 8528
+    },
+    {
+      "id": "cryptography_cargo_manifest",
+      "url": "https://raw.githubusercontent.com/pyca/cryptography/50.0.2/Cargo.toml",
+      "observed_metadata_sha256": "3394db0f684339a40b53827888616f5b855c2547a857631dfddafb609b5edd9f",
+      "observed_metadata_bytes": 987
+    },
+    {
+      "id": "cryptography_pyproject",
+      "url": "https://raw.githubusercontent.com/pyca/cryptography/50.0.2/pyproject.toml",
+      "observed_metadata_sha256": "c2a9d817e811d622f086ef4af0b90168392231f2b972ce5dd8ca4b19e9e11701",
+      "observed_metadata_bytes": 6372
+    },
+    {
+      "id": "cryptography_tag",
+      "url": "https://api.github.com/repos/pyca/cryptography/git/ref/tags/50.0.2",
+      "observed_metadata_sha256": "be73a9d28e3813018418f3feb28acf3cfae47453d4baf6ada6ce3f6ccef00904",
+      "observed_metadata_bytes": 337
+    },
+    {
+      "id": "cryptography_tag_object",
+      "url": "https://api.github.com/repos/pyca/cryptography/git/tags/ccdf2da1cce4798ab0ea226693a074eef536c16e",
+      "observed_metadata_sha256": "461a1c9d8059089714ac87cbf8f946c6d3fba47484097e05dac8e58ae47ea912",
+      "observed_metadata_bytes": 4134
+    },
+    {
+      "id": "cryptography_tree",
+      "url": "https://api.github.com/repos/pyca/cryptography/git/trees/50.0.2?recursive=1",
+      "observed_metadata_sha256": "ce1f2fe52c7e363816c8e9eaa79e0859caeabe842f2d3dedb1aeca67bae970db",
+      "observed_metadata_bytes": 904989
+    },
+    {
+      "id": "cryptography_vectors",
+      "url": "https://pypi.org/pypi/cryptography_vectors/50.0.2/json",
+      "observed_metadata_sha256": "e2ed1782aded9a562303f41b1a1d27d9760b103c594c9a5cd56f3c642f449bd9",
+      "observed_metadata_bytes": 2904
+    },
+    {
+      "id": "cryptography_vectors_attestation",
+      "url": "https://pypi.org/integrity/cryptography-vectors/50.0.2/cryptography_vectors-50.0.2-py3-none-any.whl/provenance",
+      "observed_metadata_sha256": "54c5272d09033b9aa3aae66a16973ac53e46ffdf037fc3046cddb7eabfc2729a",
+      "observed_metadata_bytes": 9960
+    },
+    {
+      "id": "execnet",
+      "url": "https://pypi.org/pypi/execnet/json",
+      "observed_metadata_sha256": "b8bd2a72aa166333940facf5a89dcbfd4e05f9030ac55d48f96d05270b787e05",
+      "observed_metadata_bytes": 44000
+    },
+    {
+      "id": "execnet_fixed",
+      "url": "https://pypi.org/pypi/execnet/2.1.2/json",
+      "observed_metadata_sha256": "07188a4c9ac3b0c37c039fb8dd112f05996c4768b8d5da1171985ada0edfd8c0",
+      "observed_metadata_bytes": 4993
+    },
+    {
+      "id": "iniconfig",
+      "url": "https://pypi.org/pypi/iniconfig/2.3.0/json",
+      "observed_metadata_sha256": "10a4699a386b2309a98d4c368b6696e80562cefebe20107610337447d7f13f65",
+      "observed_metadata_bytes": 4687
+    },
+    {
+      "id": "llvm_attestation",
+      "url": "https://github.com/llvm/llvm-project/releases/download/llvmorg-23.1.3/clang%2Bllvm-23.1.3-aarch64-pc-windows-msvc.tar.xz.jsonl",
+      "observed_metadata_sha256": "52a1997c1d79312f4d224a97706b0141d7c2ad1ce943b730e55f2ef89d162205",
+      "observed_metadata_bytes": 11308
+    },
+    {
+      "id": "llvm_fixed_release",
+      "url": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-23.1.3",
+      "observed_metadata_sha256": "a48f36ab2b26edb1746129caf9aee4517d6146d392d3e0e57150e8b19875da4e",
+      "observed_metadata_bytes": 73904
+    },
+    {
+      "id": "llvm_release",
+      "url": "https://api.github.com/repos/llvm/llvm-project/releases/latest",
+      "observed_metadata_sha256": "a48f36ab2b26edb1746129caf9aee4517d6146d392d3e0e57150e8b19875da4e",
+      "observed_metadata_bytes": 73904
+    },
+    {
+      "id": "llvm_security",
+      "url": "https://llvm.org/docs/Security.html",
+      "observed_metadata_sha256": "800af4aa1f37e071cab598aa88fca2d30bbb669b840327ae71d3727dc424cf54",
+      "observed_metadata_bytes": 82441
+    },
+    {
+      "id": "llvm_signature",
+      "url": "https://github.com/llvm/llvm-project/releases/download/llvmorg-23.1.3/clang%2Bllvm-23.1.3-aarch64-pc-windows-msvc.tar.xz.sig",
+      "observed_metadata_sha256": "0d013c06780dbdc7c7ba0d501d4f3f6f857522742ddbfd2d534a7da627cd39f7",
+      "observed_metadata_bytes": 466
+    },
+    {
+      "id": "maturin",
+      "url": "https://pypi.org/pypi/maturin/1.15.0/json",
+      "observed_metadata_sha256": "fc4a6bace60149d4db8fab29703c8a695a47268f6d206dd7440a0c0d4985406e",
+      "observed_metadata_bytes": 30214
+    },
+    {
+      "id": "maturin_attestation",
+      "url": "https://pypi.org/integrity/maturin/1.15.0/maturin-1.15.0-py3-none-win_arm64.whl/provenance",
+      "observed_metadata_sha256": "1dadcf2a3f26cc81ae34ed6b21c23609d5444e69db327f874ec354be232151d3",
+      "observed_metadata_bytes": 9584
+    },
+    {
+      "id": "openssl",
+      "url": "https://openssl-library.org/source/",
+      "observed_metadata_sha256": "6e7cc333f10217752a20639963da6eb34d370d5222b00831feaab9730f40e742",
+      "observed_metadata_bytes": 45864
+    },
+    {
+      "id": "openssl_advisories",
+      "url": "https://openssl-library.org/news/vulnerabilities/",
+      "observed_metadata_sha256": "df5b2fd3e82718c85b806e93a716f13336dd0f20e37a8799c9e0f4afb827bb8d",
+      "observed_metadata_bytes": 759579
+    },
+    {
+      "id": "openssl_checksum",
+      "url": "https://github.com/openssl/openssl/releases/download/openssl-4.0.3/openssl-4.0.3.tar.gz.sha256",
+      "observed_metadata_sha256": "ffded23b33b94d84ba776ba925b1879d7d4dfbf944a9fa74c1f72b474796a8a6",
+      "observed_metadata_bytes": 87
+    },
+    {
+      "id": "openssl_install_notes",
+      "url": "https://raw.githubusercontent.com/openssl/openssl/openssl-4.0.3/INSTALL.md",
+      "observed_metadata_sha256": "9007adc7d4f553220ff0a522566b0e7efe73183c75d51fe86ef1d24d417e688a",
+      "observed_metadata_bytes": 71903
+    },
+    {
+      "id": "openssl_keys",
+      "url": "https://openssl-library.org/source/pubkeys.asc",
+      "observed_metadata_sha256": "56e106cd1c44bdb117aec24795f6dfbecaa9bfa0a2901b85331f0059aad16d53",
+      "observed_metadata_bytes": 45049
+    },
+    {
+      "id": "openssl_perl_notes",
+      "url": "https://raw.githubusercontent.com/openssl/openssl/openssl-4.0.3/NOTES-PERL.md",
+      "observed_metadata_sha256": "2d5b6d027a60fc65b9f1a0e994e6ad1b94f36d6b9f126da6598601c314cdedeb",
+      "observed_metadata_bytes": 4995
+    },
+    {
+      "id": "openssl_release",
+      "url": "https://api.github.com/repos/openssl/openssl/releases/tags/openssl-4.0.3",
+      "observed_metadata_sha256": "b1293b70f57e5bfd4ce23b1b076f421739c67271697472bab2d1d19cc8af4dc9",
+      "observed_metadata_bytes": 11559
+    },
+    {
+      "id": "openssl_signature",
+      "url": "https://github.com/openssl/openssl/releases/download/openssl-4.0.3/openssl-4.0.3.tar.gz.asc",
+      "observed_metadata_sha256": "72c5a02be0ea5265093710f078c3eb30103d55ff2ce97004fb4f3b534a9fa3db",
+      "observed_metadata_bytes": 931
+    },
+    {
+      "id": "openssl_windows_notes",
+      "url": "https://raw.githubusercontent.com/openssl/openssl/openssl-4.0.3/NOTES-WINDOWS.md",
+      "observed_metadata_sha256": "8c5152abe3471618583791a3fb8107a1cdac563b1952f3b5ba9235f4531798ab",
+      "observed_metadata_bytes": 13872
+    },
+    {
+      "id": "packaging",
+      "url": "https://pypi.org/pypi/packaging/26.3/json",
+      "observed_metadata_sha256": "4f190d2f0b312b3086058cee64ab4333bf3ce67fb78b4c2bdb43899049b29f4d",
+      "observed_metadata_bytes": 5748
+    },
+    {
+      "id": "perl",
+      "url": "https://strawberryperl.com/releases.json",
+      "observed_metadata_sha256": "88a8eee85b18cdedb55f0688eff8bc557053581e6dc0053b575e4f69c14444c1",
+      "observed_metadata_bytes": 211001
+    },
+    {
+      "id": "perl_release_notes",
+      "url": "https://strawberryperl.com/release-notes/5.42.3.1-64bit.html",
+      "observed_metadata_sha256": "10c90ff73af3cd19f8df35bfaeb4e5d3b57937345934e15c7b62757c4f01eff8",
+      "observed_metadata_bytes": 46218
+    },
+    {
+      "id": "pluggy",
+      "url": "https://pypi.org/pypi/pluggy/1.6.0/json",
+      "observed_metadata_sha256": "597beede1e3bfb71dcf93f583c52f9b6ff64c7aca4c7cddcf365f0c6d5c0ade8",
+      "observed_metadata_bytes": 7064
+    },
+    {
+      "id": "pretend",
+      "url": "https://pypi.org/pypi/pretend/1.0.9/json",
+      "observed_metadata_sha256": "be736368e7297ae60fab36ae35da9c0a1b15dc921e9a0a8482f157b4a30787c4",
+      "observed_metadata_bytes": 6665
+    },
+    {
+      "id": "py-cpuinfo2",
+      "url": "https://pypi.org/pypi/py-cpuinfo2/json",
+      "observed_metadata_sha256": "31d078499f9d305594391c23b5371309522190ba7303d282239b628e697faf7d",
+      "observed_metadata_bytes": 14588
+    },
+    {
+      "id": "py_cpuinfo2_fixed",
+      "url": "https://pypi.org/pypi/py-cpuinfo2/10.1.1/json",
+      "observed_metadata_sha256": "3429121e8143413246f7d314c11d849085c21d70314530578ced54811760ef7f",
+      "observed_metadata_bytes": 9906
+    },
+    {
+      "id": "pycparser",
+      "url": "https://pypi.org/pypi/pycparser/3.0/json",
+      "observed_metadata_sha256": "5eb63b17852f6bec41e2ea542377ae6ad61185467916bf9947eb24f86c0fd132",
+      "observed_metadata_bytes": 10557
+    },
+    {
+      "id": "pygments",
+      "url": "https://pypi.org/pypi/pygments/2.21.0/json",
+      "observed_metadata_sha256": "330104a10adc8a587e3f98f4e207557125ca0c1d489e129334da5acb2b813a03",
+      "observed_metadata_bytes": 4500
+    },
+    {
+      "id": "pytest-benchmark",
+      "url": "https://pypi.org/pypi/pytest-benchmark/5.3.0/json",
+      "observed_metadata_sha256": "8c23f84d8746d5c66031df3e291bf28a535a94514fc0947cdaffe5411b37630b",
+      "observed_metadata_bytes": 34138
+    },
+    {
+      "id": "pytest-cov",
+      "url": "https://pypi.org/pypi/pytest-cov/7.1.0/json",
+      "observed_metadata_sha256": "2f14c20e86c2a4aece613433b31653ba37f4dd9dce122c9a66ba13df4d1adbaa",
+      "observed_metadata_bytes": 35294
+    },
+    {
+      "id": "pytest-xdist",
+      "url": "https://pypi.org/pypi/pytest-xdist/3.8.0/json",
+      "observed_metadata_sha256": "61f60b83ce3a389e5c62d7c15d1a9c339f6e44e2669afadbf0487124c93f07e0",
+      "observed_metadata_bytes": 5104
+    },
+    {
+      "id": "pytest",
+      "url": "https://pypi.org/pypi/pytest/9.1.1/json",
+      "observed_metadata_sha256": "8ed48304ba7fd0ae974a041f117487b499d553b40e5ce55a9ece677e946f68dd",
+      "observed_metadata_bytes": 9742
+    },
+    {
+      "id": "python_license",
+      "url": "https://docs.python.org/3.13/license.html",
+      "observed_metadata_sha256": "4470e50d5c4495ad24a0cad01b57daf4b30158355369ed14f48f2a0c2eb0f6e6",
+      "observed_metadata_bytes": 87025
+    },
+    {
+      "id": "python_release",
+      "url": "https://www.python.org/downloads/release/python-31316/",
+      "observed_metadata_sha256": "301a085e4a32e477bcb5789b07cb8101e97c8ea5b56590ec9338ee88d2e014e6",
+      "observed_metadata_bytes": 12665
+    },
+    {
+      "id": "rust-std_checksum",
+      "url": "https://static.rust-lang.org/dist/2026-10-15/rust-std-1.99.1-aarch64-pc-windows-msvc.tar.xz.sha256",
+      "observed_metadata_sha256": "61046310f7ff9c270b7bc0b1f8213c3e4c63a8c97e291f146bd44aa25660526d",
+      "observed_metadata_bytes": 113
+    },
+    {
+      "id": "rust-std_signature",
+      "url": "https://static.rust-lang.org/dist/2026-10-15/rust-std-1.99.1-aarch64-pc-windows-msvc.tar.xz.asc",
+      "observed_metadata_sha256": "62daabca183f00c75aae9b49f0e3c3d43b007807d3a1d8f757e92661c7dd059e",
+      "observed_metadata_bytes": 801
+    },
+    {
+      "id": "rust",
+      "url": "https://static.rust-lang.org/dist/channel-rust-1.99.1.toml",
+      "observed_metadata_sha256": "fb152be80975c194aa5fc684b2aec3a6e14e2b855efe2faa4e5f8ae6e590f463",
+      "observed_metadata_bytes": 943486
+    },
+    {
+      "id": "rust_1991_release",
+      "url": "https://blog.rust-lang.org/2026/10/15/Rust-1.99.1/",
+      "observed_metadata_sha256": "1b4bcf8f6c0cc680ca6bafda173750d059db641f1d69d23f556b858a14461db1",
+      "observed_metadata_bytes": 10920
+    },
+    {
+      "id": "rust_checksum",
+      "url": "https://static.rust-lang.org/dist/channel-rust-1.99.1.toml.sha256",
+      "observed_metadata_sha256": "6809083d25066807a6c8e28c787a1badb5bd8f8e923c2b2eebde2ae2eebe8680",
+      "observed_metadata_bytes": 91
+    },
+    {
+      "id": "rust_key_guidance",
+      "url": "https://forge.rust-lang.org/infra/other-installation-methods.html",
+      "observed_metadata_sha256": "36569a4b8bf72eb9228e09f3d111f80ba46a6f6d860ddd0d684a9ae7d29ab255",
+      "observed_metadata_bytes": 83162
+    },
+    {
+      "id": "rust_keys",
+      "url": "https://static.rust-lang.org/rust-key.gpg.ascii",
+      "observed_metadata_sha256": "e54b09a439647e006b4831eec9785cbaaf3e07ab371c3a6ee6a68e1bdb9fbc6b",
+      "observed_metadata_bytes": 5326
+    },
+    {
+      "id": "rust_msi_checksum",
+      "url": "https://static.rust-lang.org/dist/2026-10-15/rust-1.99.1-aarch64-pc-windows-msvc.msi.sha256",
+      "observed_metadata_sha256": "f85b974adaf1c106f60246d54907842d8843890e5652d92cca628a30efd65412",
+      "observed_metadata_bytes": 106
+    },
+    {
+      "id": "rust_signature",
+      "url": "https://static.rust-lang.org/dist/channel-rust-1.99.1.toml.asc",
+      "observed_metadata_sha256": "c841f374796b18294ad27045a13da75f6d31708b0c8c07821ef3de469b1830dc",
+      "observed_metadata_bytes": 801
+    },
+    {
+      "id": "rustc_checksum",
+      "url": "https://static.rust-lang.org/dist/2026-10-15/rustc-1.99.1-aarch64-pc-windows-msvc.tar.xz.sha256",
+      "observed_metadata_sha256": "a8c5375024fad17fe3ee7199f182c41168e0dc6a337bfa826563528aae6119e6",
+      "observed_metadata_bytes": 110
+    },
+    {
+      "id": "rustc_signature",
+      "url": "https://static.rust-lang.org/dist/2026-10-15/rustc-1.99.1-aarch64-pc-windows-msvc.tar.xz.asc",
+      "observed_metadata_sha256": "bf0361383b35a768d8ea6a9d9d595fa28eea6a5d59e80216db337fd003264f96",
+      "observed_metadata_bytes": 801
+    },
+    {
+      "id": "setuptools",
+      "url": "https://pypi.org/pypi/setuptools/84.0.0/json",
+      "observed_metadata_sha256": "24d07932459261bbf9e66e5cfdebfeba23a977234ab24bf9c3a1df053c53ba21",
+      "observed_metadata_bytes": 8162
+    },
+    {
+      "id": "vs_arm",
+      "url": "https://learn.microsoft.com/en-us/visualstudio/install/visual-studio-on-arm-devices?view=vs-2022",
+      "observed_metadata_sha256": "e36613147afa60264cc4bd940f751f3621d0dad831df3baa09a0f698728e2653",
+      "observed_metadata_bytes": 52391
+    },
+    {
+      "id": "vs_catalog",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/c95450be-0a45-4779-b142-33f567ccfd6e/a871a5ff41acebbe5037455fd6f51fcd4907b47d8f3c9860871ea0b222a2fd45/VisualStudio.vsman",
+      "observed_metadata_sha256": "99dda859c4ae3c446eb25620d1a6237bb135d95d14d55cd1d30a15340bb39d80",
+      "observed_metadata_bytes": 17954770
+    },
+    {
+      "id": "vs_channel",
+      "url": "https://aka.ms/vs/17/release/channel",
+      "observed_metadata_sha256": "4f0f290bb4d58a061a49a2fa893357a8c9e7e2b49fc91873f533ab8f791e4fa0",
+      "observed_metadata_bytes": 91688
+    },
+    {
+      "id": "vs_history",
+      "url": "https://learn.microsoft.com/en-us/visualstudio/releases/2022/release-history",
+      "observed_metadata_sha256": "2576e31f4efa79ceb12c9c135b9e1fffeebd0518966e68107e26d1c1a6125e20",
+      "observed_metadata_bytes": 289899
+    },
+    {
+      "id": "vs_license",
+      "url": "https://visualstudio.microsoft.com/license-terms/vs2022-ga-diagnosticbuildtools/",
+      "observed_metadata_sha256": "7b7f3c26dd293dc942b6492ce382d22691b619f58ffb00f8fae2e58a9edb7127",
+      "observed_metadata_bytes": 236687
+    },
+    {
+      "id": "vs_license_actual",
+      "url": "https://go.microsoft.com/fwlink/?LinkId=2179911",
+      "observed_metadata_sha256": "7b7f3c26dd293dc942b6492ce382d22691b619f58ffb00f8fae2e58a9edb7127",
+      "observed_metadata_bytes": 236687
+    },
+    {
+      "id": "vs_license_document",
+      "url": "https://visualstudio.microsoft.com/wp-content/uploads/2024/03/Visual-Studio-2022-Diagnostic-Build-Tools-Agent-License_Update-March-2024_EN.docx",
+      "observed_metadata_sha256": "2f66b86a00e8d9833789897ce23d05a4a2dbea370cf39c8c1098dbc17d0e7bdc",
+      "observed_metadata_bytes": 34395
+    },
+    {
+      "id": "vs_offline",
+      "url": "https://learn.microsoft.com/en-us/visualstudio/install/create-an-offline-installation-of-visual-studio?view=vs-2022",
+      "observed_metadata_sha256": "588821a55d5df44553ae279ad7b63f8764d70351830311dadb4c8ae1e0df35b4",
+      "observed_metadata_bytes": 60140
+    },
+    {
+      "id": "vs_parameters",
+      "url": "https://learn.microsoft.com/en-us/visualstudio/install/use-command-line-parameters-to-install-visual-studio?view=vs-2022",
+      "observed_metadata_sha256": "a1a117f01ca78b0c4b94750764d08a62206919c6fb20d4eb1118b6f53b5ea003",
+      "observed_metadata_bytes": 102105
+    },
+    {
+      "id": "vs_requirements",
+      "url": "https://learn.microsoft.com/en-us/visualstudio/releases/2022/system-requirements",
+      "observed_metadata_sha256": "1d2604658b47ad5e9dd29af032507f201638a0fd2be03960d0018d4fed48f96a",
+      "observed_metadata_bytes": 49870
+    },
+    {
+      "id": "windows_release_info",
+      "url": "https://learn.microsoft.com/en-us/windows/release-health/windows11-release-information",
+      "observed_metadata_sha256": "0fbb40ce155f1c353e1380eeba350b60b47228c62b999046eda822b572b51d92",
+      "observed_metadata_bytes": 134058
+    },
+    {
+      "id": "workspace_manifest_src_rust_Cargo.toml",
+      "url": "https://raw.githubusercontent.com/pyca/cryptography/4dda5c7fe4ae71b8925f2551910a0ef959df9c7a/src/rust/Cargo.toml",
+      "observed_metadata_sha256": "255631745bb2f077f26cf7cdbfa9ee831f96ed0c013e9fa0dce3e78af43abc54",
+      "observed_metadata_bytes": 1526
+    },
+    {
+      "id": "workspace_manifest_src_rust_cryptography-cffi_Cargo.toml",
+      "url": "https://raw.githubusercontent.com/pyca/cryptography/4dda5c7fe4ae71b8925f2551910a0ef959df9c7a/src/rust/cryptography-cffi/Cargo.toml",
+      "observed_metadata_sha256": "e533932e1d882f258105f50601013c18888a44a56e3fbd8153a01b07ac5970be",
+      "observed_metadata_bytes": 458
+    },
+    {
+      "id": "workspace_manifest_src_rust_cryptography-crypto_Cargo.toml",
+      "url": "https://raw.githubusercontent.com/pyca/cryptography/4dda5c7fe4ae71b8925f2551910a0ef959df9c7a/src/rust/cryptography-crypto/Cargo.toml",
+      "observed_metadata_sha256": "5d3499ad8c4e564a789453bcd721782250435735e94407d8de061dc7fc57b32d",
+      "observed_metadata_bytes": 235
+    },
+    {
+      "id": "workspace_manifest_src_rust_cryptography-keepalive_Cargo.toml",
+      "url": "https://raw.githubusercontent.com/pyca/cryptography/4dda5c7fe4ae71b8925f2551910a0ef959df9c7a/src/rust/cryptography-keepalive/Cargo.toml",
+      "observed_metadata_sha256": "abe27146fda8c55a9ff3758bbcf34527b7fa42c677d7166d746cc9e541d37732",
+      "observed_metadata_bytes": 235
+    },
+    {
+      "id": "workspace_manifest_src_rust_cryptography-key-parsing_Cargo.toml",
+      "url": "https://raw.githubusercontent.com/pyca/cryptography/4dda5c7fe4ae71b8925f2551910a0ef959df9c7a/src/rust/cryptography-key-parsing/Cargo.toml",
+      "observed_metadata_sha256": "69904d1b1a7383a415924e379c496303f15e87bcb7a45a94512a43887b71480b",
+      "observed_metadata_bytes": 788
+    },
+    {
+      "id": "workspace_manifest_src_rust_cryptography-openssl_Cargo.toml",
+      "url": "https://raw.githubusercontent.com/pyca/cryptography/4dda5c7fe4ae71b8925f2551910a0ef959df9c7a/src/rust/cryptography-openssl/Cargo.toml",
+      "observed_metadata_sha256": "3109ef1f8a226c07e5728ac5a9475893a721694529d7d4dba4ef241bfb237399",
+      "observed_metadata_bytes": 608
+    },
+    {
+      "id": "workspace_manifest_src_rust_cryptography-x509-verification_Cargo.toml",
+      "url": "https://raw.githubusercontent.com/pyca/cryptography/4dda5c7fe4ae71b8925f2551910a0ef959df9c7a/src/rust/cryptography-x509-verification/Cargo.toml",
+      "observed_metadata_sha256": "a3e20dcc02bc1ac52bdcd8f0b919b04b23d4d6dec03e1d487a16b387b511af3e",
+      "observed_metadata_bytes": 338
+    },
+    {
+      "id": "workspace_manifest_src_rust_cryptography-x509_Cargo.toml",
+      "url": "https://raw.githubusercontent.com/pyca/cryptography/4dda5c7fe4ae71b8925f2551910a0ef959df9c7a/src/rust/cryptography-x509/Cargo.toml",
+      "observed_metadata_sha256": "70252c64c92650285f8f6effac3cfc0a9ecc65c4af047ff33ae828e8ed1efb87",
+      "observed_metadata_bytes": 230
+    }
+  ],
+  "remaining_decisions": [
+    "Resolve Microsoft channel/catalog integrity mismatch; authenticate and freeze installer engine and exact ARM64 required closure before any layout execution.",
+    "Confirm rights for a separate Windows VM and Build Tools compile/develop/test licensing before copying/provisioning.",
+    "Approve native LLVM assembler candidate and Perl-only x64 auxiliary emulation explicitly.",
+    "Approve private paths/capacity/download budgets and original/copy disk independence.",
+    "Resolve layout-host ordering: host download-only B1, separately approved copy C1, then B2 layout in that copy; no original guest layout.",
+    "Verify all acquired hashes/signatures/attestations, included notices, archive paths/native payloads and sdist-to-tag metadata in B.",
+    "Freeze CPython complete development/runtime tree and exact offline extraction/provisioning recipe before C/D acceptance.",
+    "Review OpenSSL flags/static CRT/static linkage/full applicable tests and two reproducibility runs separately before Stage 2."
+  ],
+  "preserved_boundaries": [
+    "original owner VM/frozen fix04/reports/caches preserved",
+    "no tool/source/package artifact body acquisition in A",
+    "no layout/bootstrapper/backend/Cargo/Configure execution",
+    "no VM copy/provisioning/install/policy/privilege/account changes",
+    "no runtime/dependency/lock/CLI gate order/Fernet/v1/POSIX changes",
+    "production Windows mutation/recovery and existing-log append gated; AMD64 unqualified",
+    "no #29 qualification or owner rerun; no CI dispatch/Git delivery/closure/release/publication"
+  ],
+  "windows_release_metadata": {
+    "url": "https://learn.microsoft.com/en-us/windows/release-health/windows11-release-information",
+    "published_version": "26H2",
+    "published_latest_build": "26300.9711",
+    "published_servicing_option": "General Availability Channel",
+    "guest_remeasured_in_phase_a": false,
+    "guest_channel_s_mode_and_utm_acceleration_verified": false
+  }
+}

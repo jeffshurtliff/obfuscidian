@@ -4,7 +4,7 @@
 :Synopsis:          Secure keys, encrypted backups, fresh/Git restore and read-only verification CLI
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     10 Oct 2026
+:Modified Date:     12 Oct 2026
 """
 
 from __future__ import annotations
@@ -400,6 +400,9 @@ def shroud(
 
     .. versionadded:: 1.0.0
 
+    .. versionchanged:: 2.0.0
+       Windows read-only estimates include saved and inverse rollback copies; mutation stays gated.
+
     :param mode: Required fresh or additive merge mode.
     :param origin: Explicit source or environment fallback.
     :param mirror: Explicit destination or environment fallback.
@@ -677,6 +680,9 @@ def unshroud(
     \f
 
     .. versionadded:: 1.0.0
+
+    .. versionchanged:: 2.0.0
+       Fresh Windows read-only estimates include saved and inverse rollback copies; writes stay gated.
 
     :param mode: Required fresh replacement or additive Git merge restore.
     :param origin: Explicit plaintext destination or environment fallback.

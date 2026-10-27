@@ -164,7 +164,8 @@ recovery. Failures cannot report successful publication.
 ## Limits and deferred work
 
 Mutation currently requires POSIX transaction facilities. Native Windows writes
-fail closed pending native publication/ACL implementation; read-only dry runs remain available. Filesystem
+fail closed pending [native qualification](maintainers/windows-qualification.md)
+and approved supported-command integration; read-only dry runs remain available. Filesystem
 limits are read without writing a probe. Backup creates only fixed lowercase
 ASCII managed names and hexadecimal IDs, whose comparisons agree across case
 policies. Conservative case/Unicode lock comparison also serializes destination

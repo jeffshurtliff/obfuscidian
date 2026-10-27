@@ -4,7 +4,7 @@
 :Synopsis:          Internal staged publication and conservative explicit recovery
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     06 Oct 2026
+:Modified Date:     12 Oct 2026
 """
 
 from __future__ import annotations
@@ -70,6 +70,7 @@ class _TransactionPlan:
     target_rules: _TargetRules
     before: dict = field(repr=False)
     protected: dict = field(repr=False)
+    windows_copy_bytes: int = 0
 
 
 @dataclass(frozen=True, repr=False)
@@ -202,6 +203,14 @@ def _select_parent(source: Path, destination: Path) -> Path:
     raise _ConfigurationError('No writable same-filesystem staging location outside vaults and Git worktrees is available.')
 
 
+def _windows_copy_reserve(entries: dict) -> int:
+    """Estimate both saved and inverse Windows copies without native probes."""
+    return sum(
+        2 * (entry.get('size', 0) + const.RESTORE_ENTRY_RESERVE_BYTES) + _windows_copy_reserve(entry.get('children', {}))
+        for entry in entries.values()
+    )
+
+
 def _plan_transaction(
     source: Path,
     destination: Path,
@@ -274,6 +283,8 @@ def _plan_transaction(
             _verify_mirror(destination, fernet)
             if _observe(destination, preserve_config) != (before, protected):
                 raise _OperationalError('Mirror changed during transaction preflight.')
+        windows_copy_bytes = _windows_copy_reserve(before) if os.name == 'nt' else 0
+        required_bytes += windows_copy_bytes
         if shutil.disk_usage(parent).free < required_bytes + const.TRANSACTION_RESERVE_BYTES:
             raise _OperationalError('Insufficient free space for staging and retained recovery data.')
         _recheck_path(source_state)
@@ -293,6 +304,7 @@ def _plan_transaction(
             target_rules,
             before,
             protected,
+            windows_copy_bytes,
         )
     except OSError:
         raise _OperationalError('Transaction preflight failed; check permissions and space.') from None
