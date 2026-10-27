@@ -1,5 +1,110 @@
 # Next-chat prompt: A3 bounded laptop preparation — #17 / #29
 
+## Current A3 checkpoint — source-location review stop
+
+**17 October 2026. A3 is authorized but incomplete. No A4 execution is authorized.**
+The maintainer submitted the bounded A3 kickoff below and accepted A2 only as the
+basis for engineering preparation. Gate-order adoption, dispatch, support claims,
+tooling repairs and later qualification remain separate reviews. This checkpoint
+supersedes the older proposal-only/setup-not-started status for continuation;
+the original kickoff and A2/A1 records below remain historical authorization text.
+
+### Completed preparation and evidence limits
+
+- Initial host tree/index were clean on `feature/17-add-safe-native-windows-support`
+  at `f7df6994e934480c9049861f4934f8c3c9b05c20`; cached origin and a successful
+  read-only live-ref check agreed. The newer maintainer commit was preserved.
+  An initial restricted-network DNS failure remains a failed observation, followed
+  by the successful live check. No fetch, reset, checkout or Git delivery occurred.
+- Prepared and inspected a complete source freeze from those clean working-tree
+  bytes: **190 tracked regular public files**, **7,694,550 source bytes**. Every
+  archive member and byte matches the sorted manifest. The manifest records
+  relative names, lengths, SHA-256, raw line-ending counts, the original mandatory
+  owner-node slice and explicit helper/native/constants/canonical-input hashes.
+  Git metadata, ignored private material, environments, caches and reports are
+  excluded; documented public synthetic v1 compatibility fixtures remain source
+  fixtures, not real keys or an executed test. No transfer has occurred.
+- The trusted administrator created only `ObfOwnerA` and `ObfOwnerB` after exact
+  absence checks. Both separate account checks report enabled, not locked out,
+  password required, local Users membership only and no Administrators membership.
+  Passwords were entered directly; none were collected. The administrator session
+  was left before A's ordinary-session checks.
+- A's actual PowerShell token reports **Medium**, effective administrator false
+  and Administrators SID absent. B's ordinary token and both selected Python
+  processes remain unobserved; account configuration does not establish them.
+- The proposed private A attempt and Public Documents source paths were absent;
+  existing ancestor metadata showed ordinary directories without reparse points.
+  Both report fixed NTFS and about **324.2 GiB** available. The Windows drive's
+  backing metadata reports NVMe, boot disk/partition, online and not read-only.
+  These are metadata observations, not opened-handle/storage qualification or a
+  capacity reservation. Both paths use the Windows drive and lie outside the
+  reported session OneDrive root; the maintainer confirms no other sync tool.
+- A's Local AppData ancestors show inherited full control only for A, SYSTEM and
+  Administrators. Higher ancestors include unidentified read/traverse trustees;
+  those identities still need bounded review. No private task root was created.
+
+Laptop observations above are maintainer-executed sanitized results supplied in
+the chat, not independent inspection of transferred raw reports. The laptop
+checkout remains untouched; its clean/aligned `64dcff0` measurement is A1 history.
+
+### Frozen source identity
+
+| Input | Frozen value |
+| --- | --- |
+| Public-source ZIP length | 5,401,317 bytes |
+| ZIP SHA-256 | `54bb56b02919ccfb4c31e8fbf5e15fce5ac1d2a8c260f340c668f3bc853ba6e6` |
+| Complete manifest SHA-256 | `532b4f3b21aec29e4c09d8e647fafebde6b3a0a4314f168eaede7da8f9330f25` |
+| Manifest-order source-list SHA-256 | `24216d99f80ab03a0a0433a32730bc2c427390af681a6ccc8694c107afc3c071` |
+| Revision-2 A2 catalogue SHA-256 | `896c514996b6dedae97778272efa126b5bd9d6410e877b7fe63eda54aec5b7a3` |
+
+Archive/manifest/empty source-and-index diffs/line-ending receipts and subsequent
+account/storage checkpoint records remain in private host temporary storage.
+The private location map is retained in this chat; publish no raw paths, SIDs or
+host reports. These three current tracking-document edits postdate the source
+freeze and are **not** silently incorporated into the frozen archive. Reuse only
+accepted exact bytes; review and refreeze if the candidate itself changes.
+
+### Blocker and smallest proposed remedy
+
+**Do not use the proposed Public Documents source destination.** Its existing
+parent grants Interactive, Service and Batch trustees `001301FF` with inheritance;
+Interactive is present in A's ordinary token. These grants include write and
+delete-child access on the parent. A protected A-full/B-read-execute DACL on a
+new child source root would not remove those existing parent rights. This fails
+the source-location review; no fixture or destructive access test was attempted.
+See Microsoft's [parent delete-child permission explanation](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-deletefilew).
+
+Do not repair Public Documents, any profile or another existing ancestor. The
+administrator's authorized work ended with named account creation. No runtime
+acquisition, installer, task directory, source transfer, source ACL grant,
+environment, project install/import, helper, fixture, test or A4 execution has run.
+
+**Conditionally accepted replacement, still awaiting path/permission checks:** a fresh source
+root at A's `%LOCALAPPDATA%\Obf29Amd64\public-source-candidate-01`, as a sibling
+of A's private `attempt-01`, separate from its reports/runtime/work. Only the new
+source root would receive A full/B read-execute grants. The maintainer approved
+this conditional replacement in the same A3 chat; that decision is not measured
+storage or permission evidence. First check freshness and exact path
+identity, resolve relevant ancestor trustees, review DACL/inheritance/ownership,
+and independently verify B's ordinary token and direct source access. Do not
+assume B can traverse A's profile; do not grant parent access or enable privileges
+to make it work. Inability to obtain the required access within those limits is
+another review stop. The source contains public bytes only.
+
+This replaces only the rejected source-location proposal; it authorizes no
+parent ACL change, privilege change, A4 execution or qualification shortcut.
+
+Keep the installer/44-wheel bootstrap/canonical 37-package project inputs and
+all original A3 source/trust/install review stops unchanged. Resume dependent
+writes only after the location blocker and required reviews are resolved.
+Retain partial account setup and every prior receipt; do not recreate accounts,
+reset passwords, clean up or retry automatically. A3 still needs actual per-account
+runtime/source/input/install/permission evidence. The A4 kickoff will be prepared
+only at A3's completed, reviewed handoff; physical-host tooling gaps still need
+their separately authorized review before owner execution.
+
+## Historical A3 kickoff — preserved
+
 **17 October 2026. A2 proposal delivered; CPython 3.13.16 selected for both accounts.**
 
 The [current A2 plan and proposed A3 commands](windows-amd64-continuation-plan.md)

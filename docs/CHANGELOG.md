@@ -7,6 +7,14 @@ Package versions and encrypted backup-format versions are separate contracts.
 
 ### Added
 
+- #17/#29 bounded A3 preparation checkpoint: exact public-source freeze,
+  maintainer-executed two-standard-account configuration, A's ordinary token and
+  read-only storage/access-control observations. Preparation stops at the shared
+  source-parent permission review; a replacement location is conditionally
+  accepted, with freshness, ancestor permissions and peer access still unverified.
+  No runtime payload, installation, source transfer, fixture/test execution or
+  Windows enabling follows from the partial setup.
+
 - #17/#29 A2 review-only AMD64 operation/refusal and deferred-requirement matrix,
   explicit CLI validation-order revision, per-account administrator/setup limits,
   proposed PSF runtime and separately audited Poetry bootstrap pins/commands,

@@ -1,5 +1,18 @@
 # Plan: practical AMD64 Windows qualification — #17 / #29
 
+**17 October A3 execution checkpoint:** the maintainer accepted bounded A3.0–A3.5
+preparation only. The [current checkpoint](windows-amd64-next-chat.md)
+records the preserved newer host commit, exact 190-file source freeze, completed
+two-account creation/configuration checks, A's ordinary Medium token and current
+storage/DACL observations. A3 stops before runtime acquisition or task-directory
+writes because the proposed Public Documents source parent fails permission
+review. The maintainer conditionally accepted a fresh source sibling beneath A's
+Local AppData; freshness, ancestor permissions and B access remain unverified.
+This is not measured storage acceptance. No existing-parent permission repair,
+tooling change, A4 execution, gate-order adoption, dispatch or support claim follows.
+The dated A2/A1 text below remains historical and does not undo this bounded
+authorization or turn incomplete preparation into qualification.
+
 (amd64-a2-review)=
 ## A2 review proposal — 17 October 2026
 
