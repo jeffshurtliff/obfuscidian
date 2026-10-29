@@ -315,6 +315,11 @@ Package versions and encrypted backup-format versions are separate contracts.
 
 ### Security
 
+- Raised the runtime Certifi minimum to `2026.10.19` and refreshed the lockfile
+  to exclude the compromised emSign CA trust reported in
+  [GHSA-6q48-6c7w-9gw2](https://github.com/certifi/python-certifi/security/advisories/GHSA-6q48-6c7w-9gw2)
+  (Dependabot alert #2).
+
 ## [1.0.1] - 2026-10-10
 
 Maintenance release with packaging checks, release-workflow hardening and

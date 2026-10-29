@@ -4,7 +4,7 @@
 :Synopsis:          Build, inspect, and install package artifacts offline
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     13 Oct 2026
+:Modified Date:     28 Oct 2026
 """
 
 from __future__ import annotations
@@ -133,7 +133,7 @@ def _assert_metadata(data: bytes, project_version: str) -> None:
         'cryptography (>=50.0.2)',
         'urllib3 (>=2.8,<3)',
         'packaging (>=26,<27)',
-        'certifi (>=2026.7.22)',
+        'certifi (>=2026.10.19)',
     }
 
 
